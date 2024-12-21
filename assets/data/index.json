@@ -898,5 +898,11 @@
         "img": "assets/icons/147.jpeg",
         "url": "studyguide/btts2/index.html",
         "desc": "Sequel to the fun cube game."
+    },
+    {
+        "name": "CS:GO Clicker",
+        "img": "assets/icons/148.jpeg",
+        "url": "studyguide/cgc/index.html",
+        "desc": "Addictive clicker based on the popular shooter CS:GO."
     }
 ]
