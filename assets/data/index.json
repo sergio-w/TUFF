@@ -886,5 +886,11 @@
         "img": "assets/icons/145.jpeg",
         "url": "studyguide/bd3d/index.html",
         "desc": "Fun dummy game, rushed and in Russian."
+    },
+    {
+        "name": "Boom Slingers",
+        "img": "assets/icons/146.jpeg",
+        "url": "studyguide/bs/index.html",
+        "desc": "Battle game similar to Worms."
     }
 ]
