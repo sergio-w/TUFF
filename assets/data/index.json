@@ -879,6 +879,12 @@
         "name": "Block Blast",
         "img": "assets/icons/144.png",
         "url": "studyguide/blb.html",
-        "desc": "Viral block puzzle using Tetris logic"
+        "desc": "Viral block puzzle using Tetris logic."
+    },
+    {
+        "name": "Body Drop 3D",
+        "img": "assets/icons/145.jpeg",
+        "url": "studyguide/bd3d/index.html",
+        "desc": "Fun dummy game, rushed and in Russian."
     }
 ]
