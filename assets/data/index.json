@@ -874,5 +874,11 @@
         "img": "assets/icons/143.png",
         "url": "studyguide/bj-p/index.html",
         "desc": "Test your luck and skill in this classic card game."
+    },
+    {
+        "name": "Block Blast",
+        "img": "assets/icons/144.png",
+        "url": "studyguide/blb.html",
+        "desc": "Viral block puzzle using Tetris logic"
     }
 ]
