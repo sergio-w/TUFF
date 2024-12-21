@@ -414,3 +414,37 @@ body {
        font-size: 1vw;
        text-align: center;
     }
+    
+    .mainbox {
+        transform: translateX(0vh);
+        transition-duration: 0.4s;
+        -webkit-transition-duration: 0.4s;
+        -ms-transition-duration: 0.4s;
+        -moz-transition-duration: 0.4s;
+        z-index: 1;
+        width: 75%;
+        height: 85vh;
+        backdrop-filter: blur(5px) saturate(180%);
+        -webkit-backdrop-filter: blur(5px) saturate(180%);
+        background-color: rgba(255, 255, 255, 0.2);
+        outline: 0.3vh solid white;
+        margin-top: 1%;
+        margin-bottom: 1%;
+        border-radius: 0.4em;
+        box-shadow: 0px 10px 10px;
+        overflow-y: scroll;
+        scrollbar-width: none;
+        scroll-behavior: smooth;
+    }
+    
+    #main-panel {
+        transform: translateX(0vh);
+        transition-duration: 0.4s;
+        -webkit-transition-duration: 0.4s;
+        -ms-transition-duration: 0.4s;
+        -moz-transition-duration: 0.4s;
+    }
+
+    #main-panel.open {
+        transform: translateX(-24vh);
+    }
