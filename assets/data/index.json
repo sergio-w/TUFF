@@ -891,6 +891,12 @@
         "name": "Boom Slingers",
         "img": "assets/icons/146.jpeg",
         "url": "studyguide/bs/index.html",
-        "desc": "Battle game similar to Worms."
+        "desc": "Battle game, similar to Worms."
+    },
+    {
+        "name": "Big Tower Tiny Square 2",
+        "img": "assets/icons/147.jpeg",
+        "url": "studyguide/btts2/index.html",
+        "desc": "Sequel to the fun cube game."
     }
 ]
