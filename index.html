@@ -28,9 +28,9 @@
     
     <!-- start of what i added -->
     <div class="icon-bar">
-        <a class="active" href="qa.html"> <i class="fa fa-question"></i><span>Q&A</span></a>
+        <a class="active" href="qa.html"> <i class="fa fa-question" style="width: auto;"></i><span>Q&A</span></a>
         <a class="active" onclick="toggleSettings()"> <i class="fa fa-cog"></i><span>Settings</span></a>   
-        <a class="active">
+        <a class="active" id = "search-bar-holder">
           <i class="fa fa-search"></i>
           <input type="text" class="search-bar" id ="search-bar" placeholder="Search">
         </a>
@@ -96,14 +96,14 @@
     </script>
     <!-- for the sneaky will here is what i added this update. it was supprisingly easy-->
       <div class="settings-box setting" id="settings-box">
-        <h2 class="white-text" style="text-align: center;">Settings / apps <span class="badge text-bg-danger">New</span> </h2> 
+        <h2 class="white-text" style="text-align: center;">Settings / apps</h2> 
         <div class="setting">
             <center>
-            <div class="btn-group">
             <hr class="rounded">
+            <h3 class="white-text"style="text-align: center;"> Page Options </h3>
             <div class="dropdown" id="TabCloakOption" >
                 <button class="btn btn-warning dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="SettingDropdown">
-                  Tab Cloaker - JustStudy
+                  Tab Cloaker - JustStudy - CE
                 </button>
                 <ul class="dropdown-menu dropdown-menu-dark">
                   <li><a class="dropdown-item" onclick="TabCloak('JustStudy','assets/img/favicon.ico' , 'JustStudy' )">JustStudy</a></li>
@@ -115,47 +115,56 @@
                   <li><a class="dropdown-item"   onclick="TabCloak('Tassomai ', 'assets/img/TabCloak/Tassomai.ico' , 'Tassomai')">Tassomai</a></li>
                 </ul>
               </div>
-              <a class="btn btn-outline-warning" href="./txeditor.html" style="text-align: left;">
-              <i class="fa fa-code" aria-hidden="true"></i>Text Editor 
-              </a>
-
-            </div>
-            </center>
               <hr class="rounded">
-              <h3 style="text-align: center;"> bootstrapper </h3>
-                <!-- Url to be fixed :(
+              <h3 class="white-text"style="text-align: center;"> bootstrapper </h3>
+               
               <div class="mb-3 outline-warning">
                 <label for="basic-url" class="form-label">Url</label>
                 <div class="input-group">
                   <span class="input-group-text" id="basic-addon3">https://</span>
                   <input type="text" class="form-control" id="UrlBt" aria-describedby="basic-addon3 basic-addon4">
-                  <button class="btn btn-outline-warning" type="button" onclick="" id="UrlButton">Submit</button>
+                  <button class="btn btn-outline-warning" type="button" onclick="" id="UrlButton">Open File</button>
                 </div>
                 <div class="form-text" id="basic-addon4"></div>
-              </div> -->
+              </div>
               <!-- Files -->
               <label for="basic-url" class="form-label">File</label>
               <div class="input-group">
                 <input type="file" class="form-control" id="FileInputBt" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
-          <button class="btn btn-outline-warning" type="button" id="inputGroupFileAddon04" onmousedown="applyBootstrapFile()">Submit</button>
+          <button class="btn btn-outline-warning" type="button" id="inputGroupFileAddon04" onmousedown="applyBootstrapFile()">Open File</button>
               </div>
               <hr class="rounded">
+              <h3 class="white-text"style="text-align: center;"> Extra </h3>
+              <a class="btn btn-outline-warning" href="./txeditor.html" style="text-align: left;"><i class="fa fa-code" aria-hidden="true"></i>Text Editor</a>
+            </center>   
         </div>
   </div>
   
   <div class="fade-under-settings" id="fade-under-settings"></div>
       <script>
-        // url bootstrap
+        // url bootstrap (thanks 3kh0 :D)
         function applyBootstrapUrl() {
-        var data = document.getElementById('UrlBt').value;
-        var newdata = 'https://' + data;
-        window.open().document.write(newdata,"_blank");
-        window.open().document.title = "about:blank"
+            const url = document.getElementById("url-target");
+            const urlObj = new window.URL(window.location.href);
+            var data = document.getElementById('UrlBt').value;
+            var newdata = 'https://' + data;
+            const win = window.open();
+            win.document.body.style.margin = "0";
+            win.document.body.style.height = "100vh";
+            const iframe = win.document.createElement("iframe");
+            iframe.style.border = "none";
+            iframe.style.width = "100%";
+            iframe.style.height = "100%";
+            iframe.style.margin = "0";
+            iframe.referrerpolicy = "no-referrer";
+            iframe.allow = "fullscreen";
+            iframe.src = newdata;
+            win.document.body.appendChild(iframe);
         }
         document.getElementById('UrlButton').onclick = function(){
             applyBootstrapUrl()
         }
-        // file bootstrap :)))
+        // file bootstrap :))) (my own)
          function applyBootstrapFile() {
              const fileInput = document.getElementById('FileInputBt').files[0]; 
              const reader = new FileReader();
@@ -169,6 +178,25 @@
              };
              reader.readAsText(fileInput);
             }
+      </script>
+      <script>
+        function keepSearchBarOpen() {
+        var x = document.getElementById("search-bar");
+        var y = document.getElementById("search-bar-holder");
+        
+        if (x.value.trim() !== "" || y.matches(":hover")) {
+            y.style = "background-color: rgb(148, 84, 196); transition: width 0.6s ease-out-in; padding: 1vw 1vw; padding-right: 8.5vw;";
+            x.style = "width: 8vw; padding-right: 20px; opacity: 1; display: block; transition: width 0.6s ease-out-in;"
+
+        } else {
+            y.style = "background-color: #c375ff; transition: width 0.6s ease-out-in; padding: 0.5vw 0vw;";
+             x.style = "display: none; opacity: 0; transition: width 0.6s ease-out-in;"
+        }
+        }
+
+        document.getElementById("search-bar").addEventListener("input", keepSearchBarOpen);
+        document.getElementById("search-bar-holder").addEventListener("mouseover", keepSearchBarOpen);
+        document.getElementById("search-bar-holder").addEventListener("mouseout", keepSearchBarOpen);
       </script>
       <script>
         document.getElementById('toggleButton').addEventListener('click', toggleMenu);
