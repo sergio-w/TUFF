@@ -28,33 +28,17 @@
     
     <!-- start of what i added -->
     <div class="icon-bar">
-        <a class="active" href="qa.html"> <i class="fa fa-question"></i><span>Q&A</span></a>
+        <a class="active" href="qa.html"> <i class="fa fa-question" style="width: auto;"></i><span>Q&A</span></a>
         <a class="active" onclick="toggleSettings()"> <i class="fa fa-cog"></i><span>Settings</span></a>   
-        <a class="active">
+        <!--<a class="active" id = "search-bar-holder">
           <i class="fa fa-search"></i>
           <input type="text" class="search-bar" id ="search-bar" placeholder="Search">
-        </a>
+        </a> -->
         <a class="active" onclick="toggleNews()" id="CardBT"> <i class="fa fa-newspaper-o"></i><span>News</span></a>
         <a class="active" onclick="FeelingLucky()" id="CardBT"> <i class="fa fa-random"></i><span>Random</span></a>
       </div>
     </div>
-    <script>
-    function handleSearch() {
-    const searchTerm = document.getElementById("search-bar").value.toLowerCase();
-    const gridItems = document.querySelectorAll(".griditem");
-  
-      gridItems.forEach(item => {
-         const itemName = item.querySelector(".listing-text").textContent.toLowerCase();
-         if (itemName.includes(searchTerm)) {
-             item.style.display = "block";
-          } else {
-             item.style.display = "none";
-         }
-      });
-    }
 
-   document.getElementById("search-bar").addEventListener("input", handleSearch);
-    </script>
     <div class="toast-container position-fixed  text-white bottom-0 end-0 p-3">
         <div id="welcomeToast" class="toast Not_color_bottom" role="alert" aria-live="assertive" aria-atomic="true">
           <div class="toast-header Not_color_top">
@@ -95,15 +79,15 @@
        })
     </script>
     <!-- for the sneaky will here is what i added this update. it was supprisingly easy-->
-      <div class="settings-box setting" id="settings-box">
-        <h2 class="white-text" style="text-align: center;">Settings / apps <span class="badge text-bg-danger">New</span> </h2> 
+      <div class="settings-box setting scrollable" style="text-align: center;" id="settings-box">
+        <h2 class="white-text" style="text-align: center;">Settings / apps</h2> 
         <div class="setting">
             <center>
-            <div class="btn-group">
             <hr class="rounded">
-            <div class="dropdown" id="TabCloakOption" >
+            <h3 class="white-text"style="text-align: center;"> Page Options </h3>
+            <div class="dropdown" id="TabCloakOption" style="width: 20vw;">
                 <button class="btn btn-warning dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="SettingDropdown">
-                  Tab Cloaker - JustStudy
+                  Tab Cloaker - JustStudy - CE
                 </button>
                 <ul class="dropdown-menu dropdown-menu-dark">
                   <li><a class="dropdown-item" onclick="TabCloak('JustStudy','assets/img/favicon.ico' , 'JustStudy' )">JustStudy</a></li>
@@ -115,47 +99,56 @@
                   <li><a class="dropdown-item"   onclick="TabCloak('Tassomai ', 'assets/img/TabCloak/Tassomai.ico' , 'Tassomai')">Tassomai</a></li>
                 </ul>
               </div>
-              <a class="btn btn-outline-warning" href="./txeditor.html" style="text-align: left;">
-              <i class="fa fa-code" aria-hidden="true"></i>Text Editor 
-              </a>
-
-            </div>
-            </center>
               <hr class="rounded">
-              <h3 style="text-align: center;"> bootstrapper </h3>
-                <!-- Url to be fixed :(
+              <h3 class="white-text"style="text-align: center;"> bootstrapper </h3>
+               
               <div class="mb-3 outline-warning">
                 <label for="basic-url" class="form-label">Url</label>
                 <div class="input-group">
                   <span class="input-group-text" id="basic-addon3">https://</span>
                   <input type="text" class="form-control" id="UrlBt" aria-describedby="basic-addon3 basic-addon4">
-                  <button class="btn btn-outline-warning" type="button" onclick="" id="UrlButton">Submit</button>
+                  <button class="btn btn-outline-warning" type="button" onclick="" id="UrlButton">Open File</button>
                 </div>
                 <div class="form-text" id="basic-addon4"></div>
-              </div> -->
+              </div>
               <!-- Files -->
               <label for="basic-url" class="form-label">File</label>
               <div class="input-group">
                 <input type="file" class="form-control" id="FileInputBt" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
-          <button class="btn btn-outline-warning" type="button" id="inputGroupFileAddon04" onmousedown="applyBootstrapFile()">Submit</button>
+          <button class="btn btn-outline-warning" type="button" id="inputGroupFileAddon04" onmousedown="applyBootstrapFile()">Open File</button>
               </div>
               <hr class="rounded">
+              <h3 class="white-text"style="text-align: center;"> Extra </h3>
+              <a class="btn btn-outline-warning" href="./txeditor.html" style="text-align: left;"><i class="fa fa-code" aria-hidden="true"></i>Text Editor</a>
+            </center>   
         </div>
   </div>
   
   <div class="fade-under-settings" id="fade-under-settings"></div>
       <script>
-        // url bootstrap
+        // url bootstrap (thanks 3kh0 :D)
         function applyBootstrapUrl() {
-        var data = document.getElementById('UrlBt').value;
-        var newdata = 'https://' + data;
-        window.open().document.write(newdata,"_blank");
-        window.open().document.title = "about:blank"
+            const url = document.getElementById("url-target");
+            const urlObj = new window.URL(window.location.href);
+            var data = document.getElementById('UrlBt').value;
+            var newdata = 'https://' + data;
+            const win = window.open();
+            win.document.body.style.margin = "0";
+            win.document.body.style.height = "100vh";
+            const iframe = win.document.createElement("iframe");
+            iframe.style.border = "none";
+            iframe.style.width = "100%";
+            iframe.style.height = "100%";
+            iframe.style.margin = "0";
+            iframe.referrerpolicy = "no-referrer";
+            iframe.allow = "fullscreen";
+            iframe.src = newdata;
+            win.document.body.appendChild(iframe);
         }
         document.getElementById('UrlButton').onclick = function(){
             applyBootstrapUrl()
         }
-        // file bootstrap :)))
+        // file bootstrap :))) (my own)
          function applyBootstrapFile() {
              const fileInput = document.getElementById('FileInputBt').files[0]; 
              const reader = new FileReader();
@@ -169,6 +162,25 @@
              };
              reader.readAsText(fileInput);
             }
+      </script>
+      <script>
+        function keepSearchBarOpen() {
+        var x = document.getElementById("search-bar");
+        var y = document.getElementById("search-bar-holder");
+        
+        if (x.value.trim() !== "" || y.matches(":hover")) {
+            y.style = "background-color: rgb(148, 84, 196); transition: width 0.6s ease-out-in; padding: 1vw 1vw; padding-right: 8.5vw;";
+            x.style = "width: 8vw; padding-right: 20px; opacity: 1; display: block; transition: width 0.6s ease-out-in;"
+
+        } else {
+            y.style = "background-color: #c375ff; transition: width 0.6s ease-out-in; padding: 0.5vw 0vw;";
+             x.style = "display: none; opacity: 0; transition: width 0.6s ease-out-in;"
+        }
+        }
+
+        document.getElementById("search-bar").addEventListener("input", keepSearchBarOpen);
+        document.getElementById("search-bar-holder").addEventListener("mouseover", keepSearchBarOpen);
+        document.getElementById("search-bar-holder").addEventListener("mouseout", keepSearchBarOpen);
       </script>
       <script>
         document.getElementById('toggleButton').addEventListener('click', toggleMenu);
@@ -210,7 +222,32 @@
     <!-- end of what i added-->
     
     <div class="gradient" id="gradient"></div>
-    <h1 class="page-title glow" style="font-size: 80px; text-align: center; color: #0084ff;">JustStudy </h1> <!-- <center> <div class="devbox"> <h6>this aint the main site, only dev.<a href="https://metalfoxdev.codeberg.page/juststudy-site/"> Click here to go to the main one</h6> </div> </center> -->
+    <div style="display: flex; align-items: center; width: 50vw; margin: 0 auto; position: relative;">
+      <button style="position: absolute; left: 0; width: 5vw; height: 5vh; font-size: 1vw;">X</button>
+      <h1 class="page-title glow" style="font-size: 8vh; color: #0084ff; margin: 0; text-align: center; flex-grow: 1;">JustStudy</h1>
+      <input style="position: absolute; right: 0; width: 10vw; height: 5vh; font-size: 1vw;" type="text" id="search-bar" placeholder="Search">
+      <i style="position: absolute; right: 0; width: 1vw; height: 2vh; font-size: 1vw; right: -2vw;"class="fa fa-search"></i>
+    </div>
+    
+
+    <script>
+      function handleSearch() {
+      const searchTerm = document.getElementById("search-bar").value.toLowerCase();
+      const gridItems = document.querySelectorAll(".griditem");
+    
+        gridItems.forEach(item => {
+           const itemName = item.querySelector(".listing-text").textContent.toLowerCase();
+           if (itemName.includes(searchTerm)) {
+               item.style.display = "block";
+            } else {
+               item.style.display = "none";
+           }
+        });
+      }
+  
+     document.getElementById("search-bar").addEventListener("input", handleSearch);
+      </script>
+     <!-- <center> <div class="devbox"> <h6>this aint the main site, only dev.<a href="https://metalfoxdev.codeberg.page/juststudy-site/"> Click here to go to the main one</h6> </div> </center> -->
     <script>
     function FeelingLucky() {
       fetch('assets/data/index.json')
@@ -313,77 +350,13 @@
     <!-- Load Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <div class="News" id="CardBox">
-      <center><h1> News <span class="badge text-bg-warning"></span> </h1></center>
+      <center><h1 style="font-size: 3vw;"> News <span class="badge text-bg-warning"></span> </h1></center>
       <img class="news-image" src="./assets/img/change_Log/changelog_V0.0.9.png" alt="Changelog_V0.0.5">
       <button class="closebt" onclick="toggleNews()">X</button> 
       <div class="news-info">
           <center>
-          <h2><span class="badge text-bg-danger">The info</span></h2>
-          <h3><span class="badge text-bg-danger">tam saylor needs to chill</span></h3>
+          <h2><span class="badge text-bg-danger" style="font-size: 2vw;">The info</span></h2>
           </center>
-          <video width="100%" height="70%" style="margin: 0px; padding: 0px; border-radius: 15px;" autoplay loop muted class="News-media">
-            <source src="./assets/Vids/calmdowntaylor.mp4" type="video/mp4">
-        </video>
-          <div class=" card-group  row-cols-md-3">
-              <div class="col">
-                  <div class="card text-bg-danger h-100" style="max-height: 50%;">
-                      <img src="./assets/img/New_Img/pengi.png" height ="200px" class="card-img-top" alt="taylor">
-                      <div class="card-body">
-                          <h5 class="card-title">Vote</h5>
-                          <script type="text/javascript" charset="utf-8" id="hpoll_5m8a9l" src="https://static.handypolls.com/e/v2/5m8a9l/poll.js"></script><noscript><a href="https://handypolls.com/p/5m8a9l">Do you want club penguin to be added?</a></noscript>
-                      </div>
-                  </div>
-              </div>
-              <div class="col">
-                  <div class="card text-bg-warning h-100">
-                      <img src="./assets/img/New_Img/bored.png" class="card-img-top" alt="happy">
-                      <div class="card-body"> 
-                          <h5 class="card-title">Added a random link button</h5>
-                          <p class="card-text">If you get bored it will load a random game</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col">
-                  <div class="card text-bg-success h-100">
-                      <img src="./assets/img/New_Img/fatchunkymonkeymorrit.jpg" class="card-img-top" alt="dummy">
-                      <div class="card-body">
-                          <h5 class="card-title">Chunky monkey morrit</h5>
-                          <p class="card-text">Why did you request this</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col">
-                  <div class="card text-bg-info h-100">
-                      <div class="d-flex justify-content-center align-items-center">
-                          <video width="194" height="240" autoplay loop muted class="News-media">
-                              <source src="./assets/Vids/SideBar_tut.mp4" type="video/mp4">
-                          </video>
-                      </div>
-                      <div class="card-body">
-                          <h5 class="card-title">Use the Sidebar</h5>
-                          <p class="card-text">It's pretty handy.</p>
-                      </div>
-                  </div>
-              </div>
-              <div class="col">
-                <div class="card text-bg-success h-100">
-                    <img src="./assets/img/New_Img/sad.jpg" class="card-img-top" alt="stop asking">
-                    <div class="card-body">
-                        <h5 class="card-title">Motor bike games</h5>
-                        <p class="card-text">i couldnt find any good bike games to that one guy who asked for them</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-              <div class="card text-bg-warning h-100">
-                  <img src="./assets/img/New_Img/dumsimple.png" class="card-img-top" alt="happy">
-                  <div class="card-body">
-                      <h5 class="card-title">STOP ASKING FOR PC GAMES</h5>
-                      <p class="card-text">Just cus i have some doesnt mean i can add real pc games. dumasses</p>
-                  </div>
-              </div>
-          </div>
-          </div>
         </div>
     </div>
   <script>
@@ -433,10 +406,10 @@
     
     <script src="assets/js/renderlist.js" defer></script>
 
-    <div class="text-center bottom-text">
+    <div class="text-center bottom-text" style="height:auto;">
         <p>JustStudy CE is proudly ad-free and open source! Get the source code on <a href="https://github.com/JustStudy-CE/juststudy-ce">Github</a>.</p>
         <p>Hit counter:</p>
-        <script type="text/javascript" src="//counter.websiteout.com/js/2/0/0/0"></script>
+        <div id="sfclgnnbjtbxbmm1wazq994sb9zl8p86jmw"></div><script type="text/javascript" src="https://counter6.optistats.ovh/private/counter.js?c=lgnnbjtbxbmm1wazq994sb9zl8p86jmw&down=async" async></script>
     </div>
     <!-- Start of Woopra Code -->
     <script>
