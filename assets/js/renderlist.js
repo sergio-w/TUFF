@@ -14,14 +14,14 @@ function renderList() {
               listItem.innerHTML = `
               <div class="card_margin">
                 <div class="col zoom-effect">
-                    <img src="${item.img}" class="img-fluid grid-img rounded-4 img-hover-shadow" alt="Image">
+                    <img src="${item.img}" class="img-fluid grid-img img-hover-shadow" style="border-radius: 1vw;"alt="Image">
                     <p class="text-center listing-text">${item.name}</p>
                 </div>
             </div>
               `;
               container.appendChild(listItem);
           });
-      })
+      })    
       .catch((error) => console.error("Error:", error))
       .finally(() => {
           document.getElementById("loader").style.display = "none";
