@@ -450,3 +450,17 @@ body {
       .scrollable::-webkit-scrollbar-button {
         display: none;
       }
+    .topBarItems {
+        position: absolute;
+        right: 0;
+        font-size: 1vw;
+    }
+    .searchBar {
+        width: 10vw;
+        height: 5vh;
+        font-size: 1vw;
+        border-radius: 1vw;
+        backdrop-filter: blur(16px) saturate(180%);
+        -webkit-backdrop-filter: blur(16px) saturate(180%);
+        background-color: rgba(116, 116, 116, 0.2);
+    }
