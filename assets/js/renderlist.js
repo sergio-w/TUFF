@@ -37,8 +37,14 @@ function renderList() {
                     const mouseX = event.clientX - parentRect.left + container.scrollLeft;
                     const mouseY = event.clientY - parentRect.top + container.scrollTop;
 
-                    descBox.style.left = `${mouseX + 310}px`;
-                    descBox.style.top = `${mouseY + 10}px`;
+                    // Convert pixels to viewport width (vw)
+                    const viewportWidth = window.innerWidth;
+                    const viewportHeight = window.innerHeight;
+                    const mouseXvw = (mouseX / viewportWidth) * 100;
+                    const mouseYvh = (mouseY / viewportHeight) * 100;
+
+                    descBox.style.left = `${mouseXvw + 5}vw`;
+                    descBox.style.top = `${mouseYvh + 1}vh`;
                 });
 
                 imgElement.addEventListener('mouseleave', () => {
