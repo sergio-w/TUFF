@@ -263,6 +263,9 @@ body {
     left: 50%;
     top: 50%;
     pointer-events: auto;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background-color: rgba(116, 116, 116, 0.2);
     }
 
     .fadeInAnimation {
