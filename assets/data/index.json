@@ -856,5 +856,11 @@
         "img": "assets/icons/148.jpeg",
         "url": "studyguide/cgc/index.html",
         "desc": "Addictive clicker based on the popular shooter CS:GO."
+    },
+    {
+        "name": "Jellycar World",
+        "img": "assets/icons/149.jpeg",
+        "url": "studyguide/jcw/index.html",
+        "desc": "Unique car game with fun physics."
     }
 ]
