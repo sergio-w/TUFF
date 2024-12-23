@@ -467,13 +467,14 @@ body {
     
     .descBox {
         position: absolute;
-        width: 150px;
-        height: 150px;
-        background-color: rgba(0, 128, 255, 0.6);
+        width: 10vw;
+        height: 4vw;
+        background-color: rgba(68, 68, 68, 0.6);
         border-radius: 10px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         pointer-events: none;
         transition: transform 0.1s ease-out;
+        color: white;
         z-index: 50;
-        display: box;
+        display: none;
     }

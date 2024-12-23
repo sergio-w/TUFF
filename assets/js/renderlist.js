@@ -1,63 +1,57 @@
 function renderList() {
-  document.getElementById("loader").style.display = "block";
-  const container = document.getElementById("itembox");
-  
-  fetch('assets/data/index.json')
-      .then(response => response.json())
-      .then(data => {
-          data.sort((a, b) => (a.name > b.name) ? 1 : -1);
-          container.innerHTML = '';
-          data.forEach(item => {
-              const listItem = document.createElement("a")
-              listItem.classList.add("griditem")
-              listItem.href = item.url
-              listItem.innerHTML = `
-              <div class="card_margin">
-                <div class="col zoom-effect">
-                    <img src="${item.img}" class="img-fluid grid-img img-hover-shadow" style="border-radius: 1vw;"alt="Image">
-                    <p class="text-center listing-text">${item.name}</p>
+    document.getElementById("loader").style.display = "block";
+    const container = document.getElementById("itembox");
+
+    fetch('assets/data/index.json')
+        .then(response => response.json())
+        .then(data => {
+            data.sort((a, b) => (a.name > b.name) ? 1 : -1);
+            container.innerHTML = ''; // Clear the container before appending items
+
+            data.forEach(item => {
+                const listItem = document.createElement("a");
+                listItem.classList.add("griditem");
+                listItem.href = item.url;
+                listItem.innerHTML = `
+                <div class="card_margin">
+                  <div class="col zoom-effect">
+                      <img src="${item.img}" class="img-fluid grid-img img-hover-shadow" style="border-radius: 1vw;" alt="Image">
+                      <p class="text-center listing-text">${item.name}</p>
+                  </div>
                 </div>
-              </div>
-              <div class="descBox" id="descBox">
-                <p class="descText">${item.desc}</p>
-              </div>
-              `;
-              container.appendChild(listItem);
-          });
-      })    
-      .catch((error) => console.error("Error:", error))
-      .finally(() => {
-          console.log("");
-      });
-    // Get all elements with the class 'hover-target'
-        const targets = document.getElementsByClassName('grid-img');
-        const floatingBox = document.getElementById('descBox');
+                <div class="descBox" style="display: none; position: absolute;">
+                  <p class="descText">${item.desc}</p>
+                </div>
+                `;
 
-        // Function to update the floating box position based on mouse position
-        function updateFloatingBoxPosition(event) {
-            const mouseX = event.clientX;
-            const mouseY = event.clientY;
-            floatingBox.style.left = `${mouseX + 10}px`;  // 10px offset to avoid overlap
-            floatingBox.style.top = `${mouseY + 10}px`;
-        }
+                // Add hover functionality for the `descBox`
+                const imgElement = listItem.querySelector('.grid-img');
+                const descBox = listItem.querySelector('.descBox');
 
-        // Loop through each target and add event listeners
-        for (let i = 0; i < targets.length; i++) {
-            const target = targets[i];
+                imgElement.addEventListener('mouseenter', (event) => {
+                    descBox.style.display = 'block';
+                });
 
-            // Show floating box when mouse enters a target
-            target.addEventListener('mouseenter', function() {
-                floatingBox.style.display = 'box';
-                document.addEventListener('mousemove', updateFloatingBoxPosition);
+                imgElement.addEventListener('mousemove', (event) => {
+                    const parentRect = container.getBoundingClientRect();
+                    const mouseX = event.clientX - parentRect.left + container.scrollLeft;
+                    const mouseY = event.clientY - parentRect.top + container.scrollTop;
+
+                    descBox.style.left = `${mouseX + 310}px`;
+                    descBox.style.top = `${mouseY + 10}px`;
+                });
+
+                imgElement.addEventListener('mouseleave', () => {
+                    descBox.style.display = 'none';
+                });
+
+                container.appendChild(listItem);
             });
-
-            // Hide floating box when mouse leaves the target
-            target.addEventListener('mouseleave', function() {
-                floatingBox.style.display = 'none';
-                document.removeEventListener('mousemove', updateFloatingBoxPosition);
-            });
-        }
-    document.getElementById("loader").style.display = "none";
+        })
+        .catch(error => console.error("Error:", error))
+        .finally(() => {
+            document.getElementById("loader").style.display = "none";
+        });
 }
 
-renderList(); 
+renderList();
