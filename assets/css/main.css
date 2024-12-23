@@ -464,3 +464,16 @@ body {
         -webkit-backdrop-filter: blur(16px) saturate(180%);
         background-color: rgba(116, 116, 116, 0.2);
     }
+    
+    .descBox {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        background-color: rgba(0, 128, 255, 0.6);
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        pointer-events: none;
+        transition: transform 0.1s ease-out;
+        z-index: 50;
+        display: box;
+    }
