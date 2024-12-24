@@ -41,21 +41,6 @@
           </div>
         </div>
     </div>
-    
-    <script>
-        // Get the floating box element
-        const floatingBox = document.getElementById('floatingBox');
-
-        // Add mousemove event listener to track mouse position
-        document.addEventListener('mousemove', (event) => {
-            const mouseX = event.clientX;
-            const mouseY = event.clientY;
-
-            // Position the floating box based on mouse position
-            floatingBox.style.left = `${mouseX + 10}px`; // 10px offset to avoid exact overlap
-            floatingBox.style.top = `${mouseY + 10}px`;
-        });
-    </script>
 
     <!-- BEGIN Notify Scripts -->
     <script>
@@ -127,7 +112,11 @@
             </center>   
         </div>
   </div>
-  
+  <div class="mainbox" style="align-items: center;" id="iframe-box">
+    <div class="mainbox-top-margin">
+    </div>
+    <iframe id="frame-main" src="" width="95%" height="95%"> </iframe>
+</div>
   <div class="fade-under-settings" id="fade-under-settings"></div>
       <script>
         // url bootstrap (thanks 3kh0 :D)
@@ -166,25 +155,6 @@
              };
              reader.readAsText(fileInput);
             }
-      </script>
-      <script>
-        function keepSearchBarOpen() {
-        var x = document.getElementById("search-bar");
-        var y = document.getElementById("search-bar-holder");
-        
-        if (x.value.trim() !== "" || y.matches(":hover")) {
-            y.style = "background-color: rgb(148, 84, 196); transition: width 0.6s ease-out-in; padding: 1vw 1vw; padding-right: 8.5vw;";
-            x.style = "width: 8vw; padding-right: 20px; opacity: 1; display: block; transition: width 0.6s ease-out-in;"
-
-        } else {
-            y.style = "background-color: #c375ff; transition: width 0.6s ease-out-in; padding: 0.5vw 0vw;";
-             x.style = "display: none; opacity: 0; transition: width 0.6s ease-out-in;"
-        }
-        }
-
-        document.getElementById("search-bar").addEventListener("input", keepSearchBarOpen);
-        document.getElementById("search-bar-holder").addEventListener("mouseover", keepSearchBarOpen);
-        document.getElementById("search-bar-holder").addEventListener("mouseout", keepSearchBarOpen);
       </script>
       <script>
         document.getElementById('toggleButton').addEventListener('click', toggleMenu);
@@ -392,7 +362,7 @@
           }
           NewsOpen = !NewsOpen;
       }
-      var SettingOpen = true;
+      var SettingOpen = false;
 
     function toggleSettings() {
         var Card = document.getElementById('settings-box');
@@ -423,7 +393,26 @@
     </center>
     
     <script src="assets/js/renderlist.js" defer></script>
+    <script>
 
+      function openFrame(url) {
+        optimizeForIframe()
+        var Card = document.getElementById('iframe-box');
+        var iframe = document.getElementById('frame-main');
+        Card.style.display = 'block';
+        Card.classList.remove('FrameFadeInAnimation');
+        Card.classList.add('FrameFadeOutAnimation');
+        Card.classList.remove('FrameFadeOutAnimation');
+        Card.classList.add('FrameFadeInAnimation');
+        iframe.src = url;
+      }
+      document.addEventListener('DOMContentLoaded', function () {
+        var Card = document.getElementById('iframe-box');
+        Card.classList.remove('FrameFadeInAnimation');
+        Card.classList.add('FrameFadeOutAnimation');
+        Card.style.display = 'none';
+      });
+    </script>
     <div class="text-center bottom-text" style="height:auto;">
         <p>JustStudy CE is proudly ad-free and open source! Get the source code on <a href="https://github.com/JustStudy-CE/juststudy-ce">Github</a>.</p>
         <p>Hit counter:</p>
@@ -442,6 +431,41 @@
         
         woopra.track();
     </script>
+    <script>
+      // Reference to the iframe
+      const iframe = document.getElementById("frame-main");
+    
+      // Optimization functions
+      function optimizeForIframe() {
+        console.log("Optimizing for iframe...");
+        document.body.classList.add("optimized");
+        const gradient = document.getElementById("gradient");
+        gradient.style.animationPlayState = "paused";
+      }
+    
+      function restoreDefaultState() {
+        console.log("Restoring default state...");
+        document.body.classList.remove("optimized");
+        const gradient = document.getElementById("gradient");
+        gradient.style.animationPlayState = "running";
+      }
+    
+      iframe.addEventListener("focus", optimizeForIframe);
+      iframe.addEventListener("blur", restoreDefaultState);
+      window.addEventListener("blur", () => {
+        if (document.activeElement !== iframe) {
+          restoreDefaultState();
+        }
+      });
+      document.addEventListener("DOMContentLoaded", () => {
+        if (document.activeElement === iframe) {
+          optimizeForIframe();
+        } else {
+          restoreDefaultState();
+        }
+      });
+    </script>
+    
   <!-- End of Woopra Code -->
   </body>
 </html>

@@ -127,7 +127,7 @@ body {
         height: 80%;
         transform: translate(-30%,-25%);
         padding-bottom: 100px;
-        margin: 50px auto;
+        margin: 5vw auto;
         position: absolute;
         left: 40%;
         z-index: 2;
@@ -455,3 +455,44 @@ body {
     .descText{
         font-size: 0.9vw;
     }
+    #iframe-box{
+        top: 50%;
+        left: 50%;
+        z-index: 2;
+        position: fixed;
+        top: 0;
+        transform: translate(-50%,8%);
+    }
+    .FrameFadeInAnimation {
+        animation: FrameFadeInAnimation ease 1s forwards;
+        pointer-events: auto;
+    }
+
+    @keyframes FrameFadeInAnimation {
+        0% {
+            top: 1000%;
+        }
+        100% {
+            top: 0%;
+        }
+    }
+
+    .FrameFadeOutAnimation {
+        animation: FrameFadeOutAnimation ease 1s forwards;
+        pointer-events: none;
+    }
+
+    @keyframes FrameFadeOutAnimation {
+        0% {
+            top: 0%;
+        }
+        100% {
+            top: 1000%;
+        }
+    }
+    .optimized {
+        pointer-events: none; /* Disable interactions outside the iframe */
+        opacity: 0.7; /* Dim the page to indicate optimization */
+        z-index: 1;
+      }
+      
