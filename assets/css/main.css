@@ -302,11 +302,15 @@ body {
     width: 58vw;
     height: 86vh;
     transform: translate(70%, 0%);
-    background-color: #9454c4;
     border-radius: 1.5vw;
     overflow: scroll;
     -ms-overflow-style: none;
     scrollbar-width: none;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background-color: #000000;
+    outline: 0.3vh solid white;
+    opacity: 0.5
     }   
     .news-info::-webkit-scrollbar {
         display: none;
