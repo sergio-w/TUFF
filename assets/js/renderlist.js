@@ -11,12 +11,12 @@ function renderList() {
             data.forEach(item => {
                 const listItem = document.createElement("a");
                 listItem.classList.add("griditem");
-                //listItem.href = item.url;
                 listItem.href = item.url;
+                //listItem.onclick="openFrame('${item.url}')"
                 listItem.innerHTML = `
                 <div class="card_margin">
                 <div class="col zoom-effect">
-                    <img src="${item.img}" onclick="openFrame('${item.url}')" class="img-fluid grid-img img-hover-shadow" style="border-radius: 1vw;" alt="Image">
+                    <img src="${item.img}" class="img-fluid grid-img img-hover-shadow" style="border-radius: 1vw;" alt="Image">
                     <p class="text-center listing-text">${item.name}</p>
                 </div>
                 </div>`;

@@ -429,7 +429,7 @@ body {
     }
     .searchBar {
         width: 10vw;
-        height: 5vh;
+        height: 2.5vw;
         font-size: 1vw;
         backdrop-filter: blur(16px) saturate(180%);
         -webkit-backdrop-filter: blur(16px) saturate(180%);
@@ -491,8 +491,8 @@ body {
         }
     }
     .optimized {
-        pointer-events: none; /* Disable interactions outside the iframe */
-        opacity: 0.7; /* Dim the page to indicate optimization */
+        pointer-events: none;
+        opacity: 0.7;
         z-index: 1;
       }
       

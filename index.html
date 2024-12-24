@@ -64,6 +64,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
           document.getElementById('settings-box').style.display = 'none';
+          document.getElementById('News').style.display = 'none';
           document.getElementById('fade-under-settings').style.display = 'none';
        })
     </script>
@@ -79,9 +80,9 @@
                   Tab Cloaker - JustStudy - CE
                 </button>
                 <ul class="dropdown-menu dropdown-menu-dark">
-                  <li><a class="dropdown-item" onclick="TabCloak('JustStudy','assets/img/favicon.ico' , 'JustStudy' )">JustStudy</a></li>
+                  <li><a class="dropdown-item" onclick="TabCloak('JustStudy','assets/img/favicon.ico' , 'JustStudy CE' )">JustStudy CE</a></li>
                   <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item"   onclick="TabCloak('Sceneca - Learn 2x Faster','assets/img/TabCloak/sceneca.ico' , 'Sceneca' )">Sceneca</a></li>
+                  <li><a class="dropdown-item"   onclick="TabCloak('Seneca - Learn 2x Faster','assets/img/TabCloak/Seneca.ico' , 'Seneca' )">Seneca</a></li>
                   <li><hr class="dropdown-divider"></li>
                   <li><a class="dropdown-item"   onclick="TabCloak('Sparx Maths', 'assets/img/TabCloak/Sparx.ico', 'Sparx Maths')">Sparx</a></li>
                   <li><hr class="dropdown-divider""></li>
@@ -184,7 +185,7 @@
             if (TitleData === null) {
             document.title = "JustStudy";
             document.querySelector("link[rel='shortcut icon']").href = 'assets/img/favicon.ico';
-            document.getElementById("SettingDropdown").innerHTML = "TabCloaker - JustStudy";
+            document.getElementById("SettingDropdown").innerHTML = "TabCloaker - JustStudy CE";
             }
             else {
                 document.title = TitleData;
@@ -362,7 +363,7 @@
           }
           NewsOpen = !NewsOpen;
       }
-      var SettingOpen = false;
+      var SettingOpen = true;
 
     function toggleSettings() {
         var Card = document.getElementById('settings-box');
