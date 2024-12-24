@@ -12,7 +12,7 @@ function renderList() {
                 const listItem = document.createElement("a");
                 listItem.classList.add("griditem");
                 //listItem.href = item.url;
-                listItem.onclick = `openFrame('${item.url}')`;
+                listItem.href = item.url;
                 listItem.innerHTML = `
                 <div class="card_margin">
                 <div class="col zoom-effect">
