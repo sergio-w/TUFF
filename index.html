@@ -27,17 +27,6 @@
   <body onload="LoadData()">
     
     <!-- start of what i added -->
-    <div class="icon-bar">
-        <a class="active" href="qa.html"> <i class="fa fa-question" style="width: auto;"></i><span>Q&A</span></a>
-        <a class="active" onclick="toggleSettings()"> <i class="fa fa-cog"></i><span>Settings</span></a>   
-        <!--<a class="active" id = "search-bar-holder">
-          <i class="fa fa-search"></i>
-          <input type="text" class="search-bar" id ="search-bar" placeholder="Search">
-        </a> -->
-        <a class="active" onclick="toggleNews()" id="CardBT"> <i class="fa fa-newspaper-o"></i><span>News</span></a>
-        <a class="active" onclick="FeelingLucky()" id="CardBT"> <i class="fa fa-random"></i><span>Random</span></a>
-      </div>
-    </div>
 
     <div class="toast-container position-fixed  text-white bottom-0 end-0 p-3">
         <div id="welcomeToast" class="toast Not_color_bottom" role="alert" aria-live="assertive" aria-atomic="true">
@@ -238,10 +227,25 @@
     
     <div class="gradient" id="gradient"></div>
     <div style="display: flex; align-items: center; width: 50vw; margin: 0 auto; position: relative;">
-      <button style="position: absolute; left: 0; width: 5vw; height: 5vh;" class="topBarItems">X</button>
-      <h1 class="page-title glow" style="font-size: 8vh; color: #0084ff; margin: 0; text-align: center; flex-grow: 1;">JustStudy</h1>
+      <a class="active" href="qa.html" style="margin: 0 auto; position: relative; right: 8vw; cursor: pointer;">
+        <img src="assets/img/qna.png" style="width: 3vw; height: 3vw; position: fixed; top: 50%; transform: translate(20%,-50%);">
+      </a>
+      <a class="active" onclick="FeelingLucky()" style="margin: 0 auto; position: relative; right: 7vw; cursor: pointer;">
+        <img src="assets/img/random.png" style="width: 3vw; height: 3vw; position: fixed; top: 50%; transform: translate(20%,-50%);">
+      </a>
+      <a class="active" onclick="toggleNews()" style="margin: 0 auto; position: relative; right: 6vw; cursor: pointer;">
+        <img src="assets/img/news.png" style="width: 3vw; height: 3vw; position: fixed; top: 50%; transform: translate(20%,-50%);">
+      </a>
+      <a class="active" onclick="toggleSettings()" style="margin: 0 auto; position: relative; right: 5vw; cursor: pointer;">
+        <img src="assets/img/cog.png" style="width: 4vw; height: 4vw; position: fixed;">
+      </a>
+      <h1 class="page-title glow" style="font-size: 4vw; color: white; margin: 0; text-align: center; flex-grow: 1; position: relative; right: 8vw; z-index: -1;">
+        JustStudy
+      </h1>
       <input class="topBarItems searchBar" type="text" id="search-bar" placeholder="Search">
     </div>
+    
+    
     
 
     <script>

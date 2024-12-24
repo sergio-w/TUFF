@@ -11,6 +11,7 @@ body {
         font-size: 4vw;
         color: #d0ced2;
         text-align: center;
+        width: 10vw;
     }
     .glow {
         -webkit-animation: glow 1s ease-in-out infinite alternate;
@@ -169,31 +170,7 @@ body {
       padding-right: 5px; 
       position: relative;
       z-index: 3;
-    }
-    i.fa{
-        width: 2.5vw;
-        height: 2vw;
-    }
-    .icon-bar a:hover {
-     background-color: rgb(148, 84, 196);
-     transition: width 0.6s ease-out-in; 
-     padding: 1vw 1vw;
-     padding-right: 8.5vw; 
-    }
-    
-    .icon-bar a span {
-      display: none;
-      position: absolute;
-      top: 53.25vh;
-      left: 53.5vw;
-      font-size: 2.5vh;
-      transform: translate(-50vw, -50vh);
-    }
-
-    .icon-bar a:hover span {
-      display: block;
-    }
-        
+    }  
     .white-text {
     color: white;
     font-size: 4vh;
@@ -204,25 +181,20 @@ body {
         
     .active {
      background-color: #c375ff;
+     margin-top: 0.5vh;
+     color: white;
+     height: 4vw;
+     width: 4vw;
+     border-radius: 1vw;
+     backdrop-filter: blur(20px) saturate(180%);
+     -webkit-backdrop-filter: blur(20px) saturate(180%);
+     background-color: rgba(116, 116, 116, 0.2);
+     outline: 0.3vh solid white;
+     transition: transform 0.5s ease-out all;
     }
-        
     .curve1 {
      border-radius: 1vw;
     }    
-
-    .icon-bar a:hover .search-bar {
-    width: 8vw;
-    padding-right: 20px;
-    opacity: 1;
-    }
-
-    .search-bar {
-
-    }      
-
-    .search-bar::placeholder {
-      color: white;
-    } 
     .Not_color_bottom {
         background-color: #c375ff;
     }
@@ -247,7 +219,7 @@ body {
     }
 
      a {
-    color: #000000; /* Will ik you told me you think chatgpt helped me with this. yes. but im getting better so im using it less */
+    color: #000000;
     text-decoration: underline;
     }
     .News {
@@ -459,10 +431,12 @@ body {
         width: 10vw;
         height: 5vh;
         font-size: 1vw;
-        border-radius: 1vw;
         backdrop-filter: blur(16px) saturate(180%);
         -webkit-backdrop-filter: blur(16px) saturate(180%);
         background-color: rgba(116, 116, 116, 0.2);
+        outline: 0.3vh solid white;
+        border-radius: 0.5vw;
+        color: white; 
     }
     
     .descBox {
@@ -470,8 +444,8 @@ body {
         width: 10vw;
         height: 5vw;
         background-color: rgba(68, 68, 68, 0.6);
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        border-radius: 0.5vw;
+        box-shadow: 0 0.4vw 1vww rgba(0, 0, 0, 0.2);
         pointer-events: none;
         transition: transform 0.1s ease-out;
         color: white;
