@@ -11,5 +11,5 @@ function LoadData(){
         document.querySelector("link[rel='shortcut icon']").href = "/" + FaviData;
     }
     
-}
+};
 LoadData();
