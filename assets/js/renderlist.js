@@ -19,37 +19,7 @@ function renderList() {
                       <p class="text-center listing-text">${item.name}</p>
                   </div>
                 </div>
-                <div class="descBox" style="display: none; position: absolute;">
-                  <p class="descText">${item.desc}</p>
-                </div>
                 `;
-
-                // Add hover functionality for the `descBox`
-                const imgElement = listItem.querySelector('.grid-img');
-                const descBox = listItem.querySelector('.descBox');
-
-                imgElement.addEventListener('mouseenter', (event) => {
-                    descBox.style.display = 'block';
-                });
-
-                imgElement.addEventListener('mousemove', (event) => {
-                    const parentRect = container.getBoundingClientRect();
-                    const mouseX = event.clientX - parentRect.left + container.scrollLeft;
-                    const mouseY = event.clientY - parentRect.top + container.scrollTop;
-
-                    // Convert pixels to viewport width (vw)
-                    const viewportWidth = window.innerWidth;
-                    const viewportHeight = window.innerHeight;
-                    const mouseXvw = (mouseX / viewportWidth) * 100;
-                    const mouseYvh = (mouseY / viewportHeight) * 100;
-
-                    descBox.style.left = `${mouseXvw + 5}vw`;
-                    descBox.style.top = `${mouseYvh + 1}vh`;
-                });
-
-                imgElement.addEventListener('mouseleave', () => {
-                    descBox.style.display = 'none';
-                });
 
                 container.appendChild(listItem);
             });
