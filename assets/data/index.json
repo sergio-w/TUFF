@@ -862,5 +862,11 @@
         "img": "assets/icons/149.jpeg",
         "url": "studyguide/jcw/index.html",
         "desc": "Unique car game with fun physics."
+    },
+    {
+        "name": "Sling Kong",
+        "img": "assets/icons/150.png",
+        "url": "studyguide/sk/index.html",
+        "desc": ""
     }
 ]
