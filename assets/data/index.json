@@ -576,7 +576,7 @@
         "desc": "Groove to the beat in this popular rhythm game."
     },
     {
-        "name": "SandBoxels (not working)",
+        "name": "SandBoxels",
         "img": "assets/icons/98.jpg",
         "url": "studyguide/sb/index.html",
         "desc": "Create and explore in this sandbox game."
@@ -880,5 +880,83 @@
         "img": "assets/icons/152.png",
         "url": "studyguide/rsm/index.html",
         "desc": "Rodeo Stampede lets you lasso animals, build a sky zoo, and ride through endless wild terrains."
+    },
+    {
+        "name": "Daily Dadish",
+        "img": "assets/icons/153.png",
+        "url": "studyguide/dl-d/index.html",
+        "desc": "If dadish had a new level every day!"
+    },
+    {
+        "name": "Ragdoll Archers",
+        "img": "assets/icons/154.png",
+        "url": "studyguide/r-a/index.html",
+        "desc": "Shoot endless waves of ragdolls and upgrade your gear."
+    },
+    {
+        "name": "Mowing Mazes",
+        "img": "assets/icons/155.png",
+        "url": "studyguide/m-m/index.html",
+        "desc": "Mow mazes while playing a fun puzzle!"
+    },
+    {
+        "name": "Zooplop",
+        "img": "assets/icons/156.png",
+        "url": "studyguide/zpl/index.html",
+        "desc": "A fun suika game with a nice style"
+    },
+    {
+        "name": "Red ball 4",
+        "img": "assets/icons/157.png",
+        "url": "studyguide/rb4/index.html",
+        "desc": "Explore over 70 levels as an amazing red ball!"
+    },
+    {
+        "name": "Roller Builder Tycoon 2",
+        "img": "assets/icons/158.png",
+        "url": "studyguide/rcb2/index.html",
+        "desc": "Create and manage your own tycoon"
+    },
+    {
+        "name": "Gold Digger frvr",
+        "img": "assets/icons/159.png",
+        "url": "studyguide/gdfrv/index.html",
+        "desc": "Mine, collect, upgrade in this 2D infinate mining game!"
+    },
+    {
+        "name": "Total Party Kill",
+        "img": "assets/icons/160.png",
+        "url": "studyguide/tpk/index.html",
+        "desc": "Eliminate your allies to get to the end!"
+    },
+    {
+        "name": "GladiHoppers",
+        "img": "assets/icons/161.png",
+        "url": "studyguide/gh/index.html",
+        "desc": "Hop and fight gladiator style"
+    },
+    {
+        "name": "GladiHoppers",
+        "img": "assets/icons/161.png",
+        "url": "studyguide/gh/index.html",
+        "desc": "Hop and fight gladiator style"
+    },
+    {
+        "name": "Level Devil",
+        "img": "assets/icons/162.png",
+        "url": "studyguide/l-d/index.html",
+        "desc": "In this puzzle platformer dont trust anything."
+    },
+    {
+        "name": "Golf Champions",
+        "img": "assets/icons/163.png",
+        "url": "studyguide/gcmp/index.html",
+        "desc": "Play golf on a variety of levels!"
+    },
+    {
+        "name": "Gun Spin",
+        "img": "assets/icons/164.png",
+        "url": "studyguide/gsp/index.html",
+        "desc": "Shoot your gun to get as far as possible!"
     }
 ]
