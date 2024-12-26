@@ -46,7 +46,7 @@ body {
         margin-top: 1vh;
         margin-bottom: 1vh;
         border-radius: 1vh;
-        box-shadow: 0px 10px 10px;
+        box-shadow: 0px 1vw 1vw;
         overflow-y: scroll;
         scrollbar-width: none;
         scroll-behavior: smooth;
@@ -234,7 +234,7 @@ body {
     display: block;
     transform: translate(-50%, -50%);
     left: 50%;
-    top: 50%;
+    top: 200%;
     overflow-y: hidden;
     pointer-events: auto;
     backdrop-filter: blur(16px) saturate(180%);
@@ -286,20 +286,20 @@ body {
         border: none;
         position: fixed;
         outline: none;
-        padding: 10px 15px;
-        font-size: 12px;
+        padding: 0.5vw 0.75vw;
+        font-size: 0.6vw;
         font-weight: 700;
         color: #fff;
-        border-radius: 5px;
+        border-radius: 0.5vw;
         transition: all ease 0.1s;
-        box-shadow: 0px 5px 0px 0px #6c3d91;
-        right: 1%;
-        top: 1%;
+        box-shadow: 0px 0.25vw 0 0 #6c3d91;
+        right: 0.5vw;
+        top: 0.5vw;
         z-index: 1001;
     }
 
     .closebt:active {
-        transform: translateY(5px);
+        transform: translateY(0.25vw);
         box-shadow: 0px 0px 0px 0px #6c3d91;
     }
     .news-image {
