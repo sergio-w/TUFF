@@ -867,12 +867,18 @@
         "name": "Sling Kong",
         "img": "assets/icons/150.png",
         "url": "studyguide/sk/index.html",
-        "desc": "Bounce, swing and more to go as far as you can in Sling Kong"
+        "desc": "Bounce, swing and more to go as far as you can in Sling Kong."
     },
     {
         "name": "Dadish 3D",
         "img": "assets/icons/151.png",
         "url": "studyguide/d3d/index.html",
         "desc": "Dadish 3D is a radish dad’s 3D quest to find his kids!"
+    },
+    {
+        "name": "Rodeo Stampede Mountains",
+        "img": "assets/icons/152.png",
+        "url": "studyguide/rsm/index.html",
+        "desc": "Rodeo Stampede lets you lasso animals, build a sky zoo, and ride through endless wild terrains."
     }
 ]
