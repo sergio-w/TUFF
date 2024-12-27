@@ -958,5 +958,17 @@
         "img": "assets/icons/164.png",
         "url": "studyguide/gsp/index.html",
         "desc": "Shoot your gun to get as far as possible!"
+    },
+    {
+        "name": "Ragdoll Hit",
+        "img": "assets/icons/165.png",
+        "url": "studyguide/rg-h/index.html",
+        "desc": "Fight onslaugh of enemys or 1v1 with your friends in this 2d ragdoll fighter!"
+    },
+    {
+        "name": "Sand Tetris",
+        "img": "assets/icons/166.png",
+        "url": "studyguide/str/index.html",
+        "desc": "A tetris game but with sand when the blocks land"
     }
 ]
