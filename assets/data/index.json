@@ -988,6 +988,18 @@
         "img": "assets/icons/169.png",
         "url": "studyguide/sl-mst/index.html",
         "desc": "Cut objects precisely and master every challenge!"
+    },
+    {
+        "name": "Under The Red Sky",
+        "img": "assets/icons/170.png",
+        "url": "studyguide/utrs/index.html",
+        "desc": "Climb, jump, bounce and wall run your way around the maps and see if you can beat your best time!"
+    },
+    {
+        "name": "Day Of Meat",
+        "img": "assets/icons/171.png",
+        "url": "studyguide/dom/index.html",
+        "desc": "Fight waves of monsters. die, upgrade kill repeat!"
     }
     
 ]
