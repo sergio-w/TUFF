@@ -1000,6 +1000,12 @@
         "img": "assets/icons/171.png",
         "url": "studyguide/dom/index.html",
         "desc": "Fight waves of monsters. die, upgrade kill repeat!"
+    },
+    {
+        "name": "Bloxorz",
+        "img": "assets/icons/172.png",
+        "url": "studyguide/bxrz/index.html",
+        "desc": "Flip and turn the cubes to reach the end in this fun iconic puzzle game"
     }
     
 ]
