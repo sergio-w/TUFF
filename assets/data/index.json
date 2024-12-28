@@ -970,5 +970,17 @@
         "img": "assets/icons/166.png",
         "url": "studyguide/str/index.html",
         "desc": "A tetris game but with sand when the blocks land"
+    },
+    {
+        "name": "Daddy long legs",
+        "img": "assets/icons/167.png",
+        "url": "studyguide/dll/index.html",
+        "desc": "Try not to fall as you try to balance your self in this cute walking game"
+    },
+    {
+        "name": "Johnny Upgrade",
+        "img": "assets/icons/168.png",
+        "url": "studyguide/j-u/index.html",
+        "desc": "you start weak and unlock abilities like jumping and running through upgrades. Collect coins, power up, and defeat the boss!"
     }
 ]
