@@ -1006,6 +1006,11 @@
         "img": "assets/icons/172.png",
         "url": "studyguide/bxrz/index.html",
         "desc": "Flip and turn the cubes to reach the end in this fun iconic puzzle game"
+    },
+    {
+        "name": "Push Your Luck",
+        "img": "assets/icons/173.png",
+        "url": "studyguide/pyl/index.html",
+        "desc": "Pick higher or lower, then spin the wheel and push your luck!"
     }
-    
 ]
