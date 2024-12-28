@@ -982,5 +982,12 @@
         "img": "assets/icons/168.png",
         "url": "studyguide/j-u/index.html",
         "desc": "you start weak and unlock abilities like jumping and running through upgrades. Collect coins, power up, and defeat the boss!"
+    },
+    {
+        "name": "Slice Master",
+        "img": "assets/icons/169.png",
+        "url": "studyguide/sl-mst/index.html",
+        "desc": "Cut objects precisely and master every challenge!"
     }
+    
 ]
