@@ -56,7 +56,7 @@ body {
         opacity: 0;
     }
     .zoom-effect {
-        transition: transform 0.3s;
+        transition: transform 0.1s;
     }
 
     .zoom-effect:hover {
@@ -80,11 +80,11 @@ body {
         color: #d0ced2;
     }
     .img-hover-shadow {
-        transition: box-shadow 0.35s; /* Add smooth transition for the shadow effect */
+        transition: box-shadow 0.1s; /* Add smooth transition for the shadow effect */
     }
 
     .img-hover-shadow:hover {
-        box-shadow: 0 0 20px #000000; /* Add shadow effect on hover */
+        box-shadow: 0 0 2vw #000000; /* Add shadow effect on hover */
     }
     .gradient {
         width: 100%;
@@ -98,7 +98,7 @@ body {
         animation: gradient-animation 6s ease infinite;
         filter: brightness(0.85);
     }
-    @keyframes gradient-animation {
+    @keyframes gradientold-animation {
       0% {
         background-position: 0% 50%;
       }
