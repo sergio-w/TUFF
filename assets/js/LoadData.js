@@ -12,4 +12,11 @@ function LoadData(){
     }
     
 };
+function loadanalytics(){
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KW15Q1QG97');
+}
 LoadData();
+loadanalytics();
