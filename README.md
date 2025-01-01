@@ -23,7 +23,8 @@
 * 🎮 140+ games (and more on the way)
 * ♾️ Open source under the MIT license
 * ↘️ Easy to deploy (though it does take a long time)
-* 🖥️💻📱 Cross-platform UI
+* 🖥 Flexible UI, adjusts to most screens
+* 🗂️ Powerful tab cloaker
 
 ## Principles
 * Simplicity, no unnecessary gimmicks. Only useful stuff.
