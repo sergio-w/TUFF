@@ -21,7 +21,7 @@
 
 ## Features
 * 🎮 140+ games (and more on the way)
-* ♾️ Open source under the MIT license
+* ♾️ Open source under the MIT license (except for the games)
 * ↘️ Easy to deploy (though it does take a long time)
 * 🖥 Flexible UI, adjusts to most screens
 * 🗂️ Powerful tab cloaker
