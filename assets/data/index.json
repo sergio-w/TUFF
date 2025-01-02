@@ -978,12 +978,6 @@
         "desc": "Climb, jump, bounce and wall run your way around the maps and see if you can beat your best time!"
     },
     {
-        "name": "Day Of Meat",
-        "img": "assets/icons/171.png",
-        "url": "studyguide/dom/index.html",
-        "desc": "Fight waves of monsters. die, upgrade kill repeat!"
-    },
-    {
         "name": "Bloxorz",
         "img": "assets/icons/172.png",
         "url": "studyguide/bxrz/index.html",
