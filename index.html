@@ -117,6 +117,10 @@
               <hr class="rounded">
               <h3 class="white-text"style="text-align: center;"> Extra </h3>
               <a class="btn btn-outline-warning" href="./txeditor.html" style="text-align: left;"><i class="fa fa-code" aria-hidden="true"></i>Text Editor</a>
+              <hr class="rounded">
+              <h3 class="white-text"style="text-align: center;"> Panic button keybind </h3>
+              <button id="panicbutton" type="button" class="btn btn-warning">Start Detecting Keys</button>
+              <input type="text" id="result" style="color: white; text-align: center;" readonly placeholder="Press a key or combination">
             </center>   
         </div>
   </div>
@@ -163,8 +167,41 @@
              };
              reader.readAsText(fileInput);
             }
-      </script>
-      <script>
+            // panic button thing
+            const startButton = document.getElementById('panicbutton');
+            const resultInput = document.getElementById('result');
+            let detecting = false;
+
+            startButton.addEventListener('click', () => {
+              detecting = true;
+              resultInput.value = "Listening for key presses...";
+              resultInput.focus();
+            });
+            document.addEventListener('keydown', function(event) {
+              if (detecting) {
+                event.preventDefault();
+                const keys = [];
+                if (event.key != "Enter" ){
+                  if (event.ctrlKey) keys.push('Ctrl');
+                  if (event.altKey) keys.push('Alt');
+                  if (event.shiftKey) keys.push('Shift');
+                  if (event.metaKey) keys.push('Meta');
+                  keys.push(event.key);
+                  resultInput.value =keys.join('+');
+                } else {
+                  setpanickey(resultInput.value);
+                }
+            }
+            });
+            function setpanickey(keys){
+              detecting = false;
+              if (localStorage.getItem("panickey") === null){
+                localStorage.add("panickey", keys);
+              } else {
+                localStorage.setItem("panickey", keys); 
+              }
+              console.log(localStorage.getItem("panickey"));
+            }
         document.getElementById('toggleButton').addEventListener('click', toggleMenu);
         function myFunction() {
 

@@ -18,4 +18,18 @@ function LoadData(){
     }
     
 };
+document.addEventListener('keydown', function(event) {
+    event.preventDefault();
+    let input = "";
+    const keys = [];
+    if (event.ctrlKey) keys.push('Ctrl');
+    if (event.altKey) keys.push('Alt');
+    if (event.shiftKey) keys.push('Shift');
+    if (event.metaKey) keys.push('Meta');
+    keys.push(event.key);
+    input = keys.join('+');
+    if (input == localStorage.getItem("panickey")) {
+        window.location.href = "https://www.remove.bg/";
+    }
+});
 LoadData();
