@@ -19,6 +19,7 @@ function LoadData(){
     
 };
 document.addEventListener('keydown', function(event) {
+    
     event.preventDefault();
     let input = "";
     const keys = [];
@@ -29,7 +30,15 @@ document.addEventListener('keydown', function(event) {
     keys.push(event.key);
     input = keys.join('+');
     if (input == localStorage.getItem("panickey")) {
-        window.location.href = "https://www.remove.bg/";
+        if (localStorage.getItem("Title") == "Seneca") {
+            window.location.href = "https://senecalearning.com/";   
+        } if (localStorage.getItem("Title") == "Sparx Maths"){
+            window.location.href = "https://www.sparxmaths.com/";
+        } if (localStorage.getItem("Title") == "Tassomai"){
+            window.location.href = "https://www.tassomai.com/";
+        } if (localStorage.getItem("Title") == "JustStudy CE"){
+            window.location.href = "";
+        }
     }
 });
 LoadData();

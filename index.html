@@ -6,15 +6,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="The best revision website ever!">
     <!-- Google tag (gtag.js) yay :D -->
+    <link rel="shortcut icon" id="favi" href="">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-KW15Q1QG97"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-KW15Q1QG97');
+
+      function LoadData(){
+          var TitleData = localStorage.getItem("Title");
+          var FaviData = localStorage.getItem("Favi");
+          console.log("Loaded title `" + TitleData  + "` with icon `" + "/" + FaviData + "`");
+          if (TitleData === null) {
+          document.title = "JustStudy";
+          document.querySelector("link[rel='shortcut icon']").href = '/assets/img/favicon.ico';
+          }
+          else {
+              document.title = TitleData;
+              document.querySelector("link[rel='shortcut icon']").href = "/" + FaviData;
+          }
+          
+      };
+      document.addEventListener('keydown', function(event) {
+        if (!detecting) {
+          event.preventDefault();
+          let input = "";
+          const keys = [];
+          if (event.ctrlKey) keys.push('Ctrl');
+          if (event.altKey) keys.push('Alt');
+          if (event.shiftKey) keys.push('Shift');
+          if (event.metaKey) keys.push('Meta');
+          keys.push(event.key);
+          input = keys.join('+');
+          if (input == localStorage.getItem("panickey")) {
+              if (localStorage.getItem("Title") == "Seneca") {
+                  window.location.href = "https://senecalearning.com/";   
+              } if (localStorage.getItem("Title") == "Sparx Maths"){
+                  window.location.href = "https://www.sparxmaths.com/";
+              } if (localStorage.getItem("Title") == "Tassomai"){
+                  window.location.href = "https://www.tassomai.com/";
+              } if (localStorage.getItem("Title") == "JustStudy CE"){
+                  window.location.href = "";
+              }
+          }
+      }
+    });
+      LoadData();
     </script>
-    <link rel="shortcut icon" id="favi" href="">
     <script src="assets/js/dontsavecookies.js"></script>
 
     <!-- Get the Comfortaa font -->
@@ -93,7 +132,7 @@
                   <li><hr class="dropdown-divider"></li>
                   <li><a class="dropdown-item"   onclick="TabCloak('Sparx Maths', 'assets/img/TabCloak/Sparx.ico', 'Sparx Maths')">Sparx</a></li>
                   <li><hr class="dropdown-divider""></li>
-                  <li><a class="dropdown-item"   onclick="TabCloak('Tassomai ', 'assets/img/TabCloak/Tassomai.ico' , 'Tassomai')">Tassomai</a></li>
+                  <li><a class="dropdown-item"   onclick="TabCloak('Tassomai', 'assets/img/TabCloak/Tassomai.ico' , 'Tassomai')">Tassomai</a></li>
                 </ul>
               </div>
               <hr class="rounded">
@@ -104,7 +143,7 @@
                 <div class="input-group">
                   <span class="input-group-text" id="basic-addon3">https://</span>
                   <input type="text" class="form-control" id="UrlBt" aria-describedby="basic-addon3 basic-addon4">
-                  <button class="btn btn-outline-warning" type="button" onclick="" id="UrlButton">Open File</button>
+                  <button class="btn btn-outline-warning" type="button" onclick="" id="UrlButton">Open Link</button>
                 </div>
                 <div class="form-text" id="basic-addon4"></div>
               </div>
@@ -115,12 +154,13 @@
           <button class="btn btn-outline-warning" type="button" id="inputGroupFileAddon04" onmousedown="applyBootstrapFile()">Open File</button>
               </div>
               <hr class="rounded">
-              <h3 class="white-text"style="text-align: center;"> Extra </h3>
-              <a class="btn btn-outline-warning" href="./txeditor.html" style="text-align: left;"><i class="fa fa-code" aria-hidden="true"></i>Text Editor</a>
+                <h3 class="white-text"style="text-align: center;"> Panic button keybind </h3>
+                <button id="panicbutton" type="button" class="btn btn-warning">Start Detecting Keys</button>
+                <input type="text" id="result" style="color: white; text-align: center;" readonly placeholder="Press a key or combination">
+                <h4 class="white-text"style="text-align: center; font-size: 1vw; margin-top: 0.5vw">press enter to stop input detection</h4>
               <hr class="rounded">
-              <h3 class="white-text"style="text-align: center;"> Panic button keybind </h3>
-              <button id="panicbutton" type="button" class="btn btn-warning">Start Detecting Keys</button>
-              <input type="text" id="result" style="color: white; text-align: center;" readonly placeholder="Press a key or combination">
+                <h3 class="white-text"style="text-align: center;"> Extra </h3>
+                <a class="btn btn-outline-warning" href="./txeditor.html" style="text-align: left;"><i class="fa fa-code" aria-hidden="true"></i>Text Editor</a>
             </center>   
         </div>
   </div>
@@ -222,20 +262,6 @@
             document.querySelector("link[rel='shortcut icon']").href = faviconUrl;
             localStorage.setItem("Title", selectedValue);
             localStorage.setItem("Favi", faviconUrl);
-        }
-        function LoadData(){
-            var TitleData = localStorage.getItem("Title");
-            var FaviData = localStorage.getItem("Favi");
-            if (TitleData === null) {
-            document.title = "JustStudy";
-            document.querySelector("link[rel='shortcut icon']").href = 'assets/img/favicon.ico';
-            document.getElementById("SettingDropdown").innerHTML = "TabCloaker - JustStudy CE";
-            }
-            else {
-                document.title = TitleData;
-                document.querySelector("link[rel='shortcut icon']").href = FaviData;
-            }
-            
         }
     </script>
     <!-- end of what i added-->
@@ -384,10 +410,10 @@
     <script src="assets/js/random_bg.js"></script>
     <!-- Load Bootstrap JS -->
     <div class="News" id="CardBox">
-      <center><h1 style="font-size: 3vw;"> Blog <span class="badge text-bg-warning"></span> </h1></center>
+      <center><h1 style="font-size: 3vw;"> news <span class="badge text-bg-warning"></span> </h1></center>
       <button class="closebt" onclick="toggleNews()">X</button> 
       </center>   
-      <iframe src="blog.html" width="100%" height="91%" style="border-radius: 1vh;" > </iframe>
+      <iframe src="news.html" width="100%" height="91%" style="border-radius: 1vh;" > </iframe>
     </div>
   <script>
       var NewsOpen = true;
