@@ -39,20 +39,28 @@
           if (event.metaKey) keys.push('Meta');
           keys.push(event.key);
           input = keys.join('+');
+          const urls = [
+              "https://senecalearning.com/",
+              "https://www.sparxmaths.com",
+              "https://www.tassomai.com"
+          ]
+          console.log(input);
+          console.log(input == localStorage.getItem("panickey"));
           if (input == localStorage.getItem("panickey")) {
-              if (localStorage.getItem("Title") == "Seneca") {
-                  window.location.href = "https://senecalearning.com/";   
-              } if (localStorage.getItem("Title") == "Sparx Maths"){
-                  window.location.href = "https://www.sparxmaths.com/";
+              if (localStorage.getItem("Title") == "Seneca - Learn 2x Faster") {
+                  window.location.href = urls[0];   
+              } if (localStorage.getItem("Title") == "Sparx Maths - Home"){
+                  window.location.href = urls[1];
               } if (localStorage.getItem("Title") == "Tassomai"){
-                  window.location.href = "https://www.tassomai.com/";
-              } if (localStorage.getItem("Title") == "JustStudy CE"){
-                  window.location.href = "";
+                  window.location.href = urls[2];
+              } if (localStorage.getItem("Title") == "JustStudy"){
+                  const randomIndex = Math.floor(Math.random() * 3);
+                  console.log(randomIndex);
+                  window.location.href = urls[randomIndex];
               }
           }
       }
     });
-      LoadData();
     </script>
     <script src="assets/js/dontsavecookies.js"></script>
 
@@ -101,6 +109,8 @@
       localStorage.setItem('visited', true);
       document.addEventListener("DOMContentLoaded", () => {
           const welcomeToast = bootstrap.Toast.getOrCreateInstance(document.getElementById("welcomeToast"));
+          TabCloak('JustStudy','assets/img/favicon.ico' , 'JustStudy CE' )
+          localStorage.setItem("panickey", "Alt+`");
           welcomeToast.show()
       });
     };
@@ -130,7 +140,7 @@
                   <li><hr class="dropdown-divider"></li>
                   <li><a class="dropdown-item"   onclick="TabCloak('Seneca - Learn 2x Faster','assets/img/TabCloak/Seneca.ico' , 'Seneca' )">Seneca</a></li>
                   <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item"   onclick="TabCloak('Sparx Maths', 'assets/img/TabCloak/Sparx.ico', 'Sparx Maths')">Sparx</a></li>
+                  <li><a class="dropdown-item"   onclick="TabCloak('Sparx Maths - Home', 'assets/img/TabCloak/Sparx.png', 'Sparx Maths ')">Sparx</a></li>
                   <li><hr class="dropdown-divider""></li>
                   <li><a class="dropdown-item"   onclick="TabCloak('Tassomai', 'assets/img/TabCloak/Tassomai.ico' , 'Tassomai')">Tassomai</a></li>
                 </ul>
@@ -157,7 +167,15 @@
                 <h3 class="white-text"style="text-align: center;"> Panic button keybind </h3>
                 <button id="panicbutton" type="button" class="btn btn-warning">Start Detecting Keys</button>
                 <input type="text" id="result" style="color: white; text-align: center;" readonly placeholder="Press a key or combination">
-                <h4 class="white-text"style="text-align: center; font-size: 1vw; margin-top: 0.5vw">press enter to stop input detection</h4>
+                <br>
+              <label class="switch-container">
+                <div class="switch">
+                  <input type="checkbox" id="redirectswitch">
+                  <span class="slider round"></span>
+                </div>
+                <h3 class="white-text switch-text">Redirect on Alt Tab</h3>
+              </label>                           
+              <h4 class="white-text"style="text-align: center; font-size: 1vw; margin-top: 0.5vw">press enter to stop input detection</h4>
               <hr class="rounded">
                 <h3 class="white-text"style="text-align: center;"> Extra </h3>
                 <a class="btn btn-outline-warning" href="./txeditor.html" style="text-align: left;"><i class="fa fa-code" aria-hidden="true"></i>Text Editor</a>
@@ -171,6 +189,15 @@
 </div>
   <div class="fade-under-settings" id="fade-under-settings"></div>
       <script>
+        // set the alt+tab thing to work or not
+        const switchElement = document.getElementById('redirectswitch');
+        switchElement.addEventListener('change', () => {
+          if (switchElement.checked) {
+            localStorage.setItem('redirect', true);
+          } else {
+            localStorage.setItem('redirect', false);
+          }
+        });
         // url bootstrap (thanks 3kh0 :D)
         function applyBootstrapUrl() {
             const url = document.getElementById("url-target");
@@ -235,11 +262,7 @@
             });
             function setpanickey(keys){
               detecting = false;
-              if (localStorage.getItem("panickey") === null){
-                localStorage.add("panickey", keys);
-              } else {
-                localStorage.setItem("panickey", keys); 
-              }
+              localStorage.setItem("panickey", keys);
               console.log(localStorage.getItem("panickey"));
             }
         document.getElementById('toggleButton').addEventListener('click', toggleMenu);
@@ -475,6 +498,8 @@
         iframe.src = url;
       }
       document.addEventListener('DOMContentLoaded', function () {
+        const switchElement = document.getElementById('redirectswitch');
+        switchElement.checked = localStorage.getItem('redirect') === 'true';
         var Card = document.getElementById('iframe-box');
         Card.classList.remove('FrameFadeInAnimation');
         Card.classList.add('FrameFadeOutAnimation');
