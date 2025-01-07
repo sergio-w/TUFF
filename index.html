@@ -30,7 +30,8 @@
       };
       document.addEventListener('keydown', function(event) {
         if (!detecting) {
-          event.preventDefault();
+          //Renable this if it can be used and not disable the search bar
+          //event.preventDefault();
           let input = "";
           const keys = [];
           if (event.ctrlKey) keys.push('Ctrl');
