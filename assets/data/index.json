@@ -824,7 +824,7 @@
     {
         "name": "Block Blast",
         "img": "assets/icons/144.png",
-        "url": "studyguide/blb.html",
+        "url": "studyguide/blb/index.html",
         "desc": "Viral block puzzle using Tetris logic."
     },
     {

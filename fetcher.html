@@ -1,0 +1,157 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
+        <title>File Downloader</title>
+        <style>
+            .body {
+                background-color: #1f1130;
+                font-family: 'Comfortaa', sans-serif;
+                overflow-x: hidden;
+            }
+            #console {
+                border: 1px solid #ccc;
+                padding: 10px;
+                margin-top: 20px;
+                height: 150px;
+                overflow-y: scroll;
+                backdrop-filter: blur(16px) saturate(180%);
+                -webkit-backdrop-filter: blur(16px) saturate(180%);
+                background-color: rgba(116, 116, 116, 0.2);
+                outline: 0.3vh solid white;
+                color: #ffffff;
+            }
+            #fileUrl {
+                width: 10vw;
+                height: 2.5vw;
+                font-size: 1vw;
+                backdrop-filter: blur(16px) saturate(180%);
+                -webkit-backdrop-filter: blur(16px) saturate(180%);
+                background-color: rgba(116, 116, 116, 0.2);
+                outline: 0.3vh solid white;
+                border-radius: 0.5vw;
+                color: white; 
+            }
+            #downloadBtn {
+                margin-left: 1vw;
+                height: 2.5vw;
+                width: 10vw;
+                font-size: 1vw;
+                backdrop-filter: blur(16px) saturate(180%);
+                -webkit-backdrop-filter: blur(16px) saturate(180%);
+                background-color: rgba(116, 116, 116, 0.2);
+                outline: 0.3vh solid white;
+                border-radius: 0.5vw;
+                color: white; 
+            }
+            .gradient {
+                width: 100%;
+                height: 100%;
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: -1;
+                background: linear-gradient(334deg, #ff0000, #bf4040, #000000); /* top, center, bottom */
+                background-size: 180% 180%;
+                animation: gradient-animation 6s ease infinite;
+                filter: brightness(0.85);
+            }
+            .page-title {
+            font-size: 4em;
+            color: #d0ced2;
+            text-align: center;
+            }
+
+            .glow {
+                font-size: 80px;
+                color: #0084ff;
+                text-align: center;
+                -webkit-animation: glow 1s ease-in-out infinite alternate;
+                -moz-animation: glow 1s ease-in-out infinite alternate;
+                animation: glow 1s ease-in-out infinite alternate;
+            }
+            @keyframes glow {
+                from {
+                text-shadow: 0 0 1vw #fff, 0 0 2vw #fff, 0 0 2.5vw #00ccff, 0 0 3vw #00ccff, 0 0 3.5vw #00ccff, 0 0 4vw#00ccff, 0 0 4.5vw #00ccff;
+                }
+                to {
+                text-shadow: 0 0 20px #fff, 0 0 2vw #29d4ff, 0 0 3vw #29d4ff, 0 0 3.5vw #29d4ff, 0 0 4vw #29d4ff, 0 0 4.5vw #29d4ff, 0 0 5vw #29d4ff;
+                }
+            }
+
+        </style>
+    </head>
+    <body> 
+        <center>
+            <h1 class="page-title glow" style="font-size: 3vw;  font-family: 'Comfortaa', sans-serif;">JustStudy</h1>
+        <h1 style="color: white; font-family: 'Comfortaa', sans-serif; font-size: 2vw;" >Download File(s)</h1>
+        <input type="text" id="fileUrl" placeholder="Enter the URL here" style="width: 30vw;  font-family: 'Comfortaa', sans-serif;">
+        <button id="downloadBtn" style=" font-family: 'Comfortaa', sans-serif;">Download</button>
+        </center>
+        <!-- Console log output -->
+        <h1 style="color: white; font-family: 'Comfortaa', sans-serif;" >Output</h1>
+        <div id="console" style=" font-family: 'Comfortaa', sans-serif; border-radius: 1vw; height: 50vh;"></div>
+
+        <script>
+            // Log function to output messages to the console area
+            function logToConsole(message) {
+                const consoleDiv = document.getElementById('console');
+                const newMessage = document.createElement('p');
+                newMessage.textContent = message;
+                consoleDiv.appendChild(newMessage);
+                consoleDiv.scrollTop = consoleDiv.scrollHeight; // Auto scroll to the bottom
+            }
+
+            document.getElementById('downloadBtn').addEventListener('click', function() {
+                const fileUrl = document.getElementById('fileUrl').value.trim();
+
+                if (fileUrl === '') {
+                    logToConsole('Error: Please enter a valid URL');
+                    return;
+                }
+
+                logToConsole(`Attempting to download file from: ${fileUrl}`);
+                fetch(fileUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('File download failed');
+                        }
+                        return response.blob();
+                    })
+                    .then(blob => {
+                        logToConsole('File fetched successfully. Starting download...');
+                        const link = document.createElement('a');
+                        link.href = URL.createObjectURL(blob);
+                        const fileName = fileUrl.split('/').pop();
+                        link.download = fileName;  
+                        link.click();
+
+                        logToConsole(`File downloaded as: ${fileName}`);
+                    })
+                    .catch(error => {
+                        console.error('Error downloading the file:', error);
+                        logToConsole(`Error: ${error.message}`);
+                    });
+            });
+        </script>
+        <div class="gradient" id="gradient"></div>
+        <script>
+            const themes = {
+                "red": "linear-gradient(334deg, #ff0000, #bf4040, #000000)",
+                "blue": "linear-gradient(334deg, #0000ff, #4040bf, #000000)",
+                "lime": "linear-gradient(334deg, #00ff00, #40bf40, #000000)",
+                "hell": "linear-gradient(334deg, #ff0000, #bf7340, #000000)",
+                "flames": "linear-gradient(360deg, #ff9933, #663300, #000000)"
+            };
+
+            const themesArray = Object.values(themes);
+
+            const randomTheme = themesArray[Math.floor(Math.random() * themesArray.length)];
+
+            document.getElementById("gradient").style = `width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: -1; background: ${randomTheme}; background-size: 180% 180%; animation: gradient-animation 6s ease infinite; filter: brightness(0.85);`
+
+        </script>
+    </body>
+</html>
