@@ -9,11 +9,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository with submodules
+      - name: Checkout repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0          # Fetch the entire history
-          submodules: recursive   # Clone submodules recursively
+          submodules: true        # Initialize submodules
+
+      - name: Initialize and update submodules explicitly
+        run: |
+          git submodule sync
+          git submodule update --init --recursive
 
       - name: Set up Git
         run: |
@@ -25,4 +30,4 @@ jobs:
           CODEBERG_TOKEN: ${{ secrets.THT_CODEBERG }}
         run: |
           git remote add codeberg https://$CODEBERG_TOKEN@codeberg.org/Thatoneham/JustStudy-CE.git
-          git push codeberg main --force  # Push the main branch
+          git push --recurse-submodules=on-demand codeberg main --force
