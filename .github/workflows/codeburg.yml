@@ -1,26 +1,25 @@
- name: Mirror to Codeberg
+name: Mirror to Codeberg
+on:
+  push:
+    branches:
+      - main
 
-   on:
-     push:
-       branches:
-         - main
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
 
-   jobs:
-     mirror:
-       runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-       steps:
-         - name: Checkout repository
-           uses: actions/checkout@v3
+      - name: Set up Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
 
-         - name: Set up Git
-           run: |
-             git config --global user.name "GitHub Actions"
-             git config --global user.email "actions@github.com"
-
-         - name: Mirror to Codeberg
-           env:
-             CODEBERG_TOKEN: ${{ secrets.THT_CODEBERG}}
-           run: |
-             git remote add codeberg https://$CODEBERG_TOKEN@codeberg.org/Thatoneham/JustStudy-CE.git
-             git push codeberg main --force  # Use `main` or your default branch
+      - name: Mirror to Codeberg
+        env:
+          CODEBERG_TOKEN: ${{ secrets.THT_CODEBERG}}
+        run: |
+          git remote add codeberg https://$CODEBERG_TOKEN@codeberg.org/Thatoneham/JustStudy-CE.git
+          git push codeberg main --force  # Use `main` or your default branch
