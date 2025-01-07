@@ -29,8 +29,12 @@ jobs:
         env:
           CODEBERG_TOKEN: ${{ secrets.THT_CODEBERG }}
         run: |
-          # Add the Codeberg remote
+          # Add Codeberg remote
           git remote add codeberg https://$CODEBERG_TOKEN@codeberg.org/Thatoneham/JustStudy-CE.git
           
-          # Push the repository and submodules
+          # Push submodules first
+          git submodule foreach --recursive 'git remote add codeberg https://$CODEBERG_TOKEN@codeberg.org/Thatoneham/SubmoduleName.git || true'
+          git submodule foreach --recursive 'git push --force'
+
+          # Push the main repository with submodules
           git push --recurse-submodules=on-demand codeberg main --force
