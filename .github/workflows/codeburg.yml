@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch the entire history
 
       - name: Set up Git
         run: |
@@ -19,7 +21,7 @@ jobs:
 
       - name: Mirror to Codeberg
         env:
-          CODEBERG_TOKEN: ${{ secrets.THT_CODEBERG}}
+          CODEBERG_TOKEN: ${{ secrets.THT_CODEBERG }}
         run: |
           git remote add codeberg https://$CODEBERG_TOKEN@codeberg.org/Thatoneham/JustStudy-CE.git
-          git push codeberg main --force  # Use `main` or your default branch
+          git push codeberg main --force  # Push the main branch
