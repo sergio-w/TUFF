@@ -9,16 +9,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repository with submodules
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0          # Fetch the entire history
-          submodules: true        # Initialize submodules
+          fetch-depth: 0          # Fetch full history
+          submodules: recursive   # Initialize submodules
 
       - name: Initialize and update submodules explicitly
         run: |
-          git submodule sync
+          git submodule deinit --all --force
           git submodule update --init --recursive
+          git submodule foreach --recursive git clean -xfd
+          git submodule foreach --recursive git reset --hard
 
       - name: Set up Git
         run: |
