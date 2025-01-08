@@ -1,7 +1,9 @@
 const style = document.createElement('style');
 style.innerHTML = `
-    .window {
-        position: fixed;
+    .pAdeblc {
+        position: absolute;
+        top: 0%;
+        left: 0%;
         width: 40vw;
         height: 25vw;
         border-radius: 1vw;
@@ -10,7 +12,7 @@ style.innerHTML = `
         background: #fff;
     }
 
-    .window-content {
+    .pAdeblc-content {
         background: #000;
         color: #31f10a;
         height: 100%;
@@ -20,10 +22,10 @@ style.innerHTML = `
         overflow-wrap: break-word;
     }
 
-    .window-input {
+    .pAdeblc-input {
         display: block;
         font-family: monospace;
-        width: 100%;
+        width: calc(100% - 1.2vw);
         background-color: #000;
         color: #fff;
         border: 0.4vw solid #fff;
@@ -37,10 +39,10 @@ style.innerHTML = `
         outline: 0;
     }
 
-    .window-top, .window-top-no-bind {
+    .pAdeblc-top, .pAdeblc-top-no-bind {
         cursor: move;
         text-align: right;
-        height: 3vw;
+        height: 2vw;
         border-bottom: 0.1vw solid rgba(0,0,0,0.5);
         border-top-right-radius: 0.5vw;
         border-top-left-radius: 0.5vw;
@@ -48,11 +50,11 @@ style.innerHTML = `
         background-color: #ddd;
     }
 
-    .window-top-no-bind {
+    .pAdeblc-top-no-bind {
         cursor: inherit;
     }
 
-    .round {
+    .pAdeblc-round {
         height: 1.3vw;
         width: 1.3vw;
         border-radius: 50vw;
@@ -61,43 +63,44 @@ style.innerHTML = `
         box-shadow: 1px 1px 2px #000;
     }
 
-    .red {
+    .pAdeblc-red {
         cursor: pointer;
         background-color: red;
     }
 
-    #window {
+    #pAdeblc {
         z-index: 999;
     }
 `;
-document.head.appendChild(style);
+document.body.appendChild(style);
 
 // Create the console window
 const consoleDiv = document.createElement('div');
-consoleDiv.id = "window";
-consoleDiv.classList.add("window");
+consoleDiv.id = "pAdeblc";
+consoleDiv.classList.add("pAdeblc");
 consoleDiv.innerHTML = `
-    <div class="window-top">
-        <button class="round red"></button>
+    <div class="pAdeblc-top">
+        <button class="pAdeblc-round pAdeblc-red"></button>
     </div>
-    <div class="window-content" id="window-content">
+    <div class="pAdeblc-content" id="pAdeblc-content">
     </div>
-    <input class="window-input" id="consoleinput" type="text" />
+    <input class="pAdeblc-input" id="pAdeblc-input" type="text" />
 `;
+consoleDiv.style.display = "none";
 document.body.appendChild(consoleDiv);
 
 let capturedLogs = [];
 const originalConsoleLog = console.log;
 const originalConsoleError = console.error;
 const originalConsoleWarn = console.warn;
-let window_open = true;
+let window_open = false;
 
 // Make the console window draggable
 function makeDraggable(element) {
     let currentPosX = 0, currentPosY = 0, previousPosX = 0, previousPosY = 0;
 
-    if (element.querySelector('.window-top')) {
-        element.querySelector('.window-top').onmousedown = dragMouseDown;
+    if (element.querySelector('.pAdeblc-top')) {
+        element.querySelector('.pAdeblc-top').onmousedown = dragMouseDown;
     } else {
         element.onmousedown = dragMouseDown;
     }
@@ -126,9 +129,9 @@ function makeDraggable(element) {
     }
 }
 
-makeDraggable(document.querySelector('#window'));
+makeDraggable(document.querySelector('#pAdeblc'));
 function logToConsole(message,text_colour) {
-    const consoleDiv = document.getElementById('window-content');
+    const consoleDiv = document.getElementById('pAdeblc-content');
     const newMessage = document.createElement('p');
     newMessage.textContent = "> " + message;
     newMessage.style.color = text_colour;
@@ -136,19 +139,20 @@ function logToConsole(message,text_colour) {
     consoleDiv.scrollTop = consoleDiv.scrollHeight;
 }
 document.addEventListener('click', e => {
-    if (e.target.closest('.round.red')) {
-        document.getElementById("window").style.display = "none";
+    if (e.target.closest('.pAdeblc-round.pAdeblc-red')) {
+        document.getElementById("pAdeblc").style.display = "none";
         window_open = false;
     }
 });
 
 document.addEventListener('keydown', e => {
     if (window_open && e.key === '`') {
-        document.getElementById("window").style.display = "none";
+        document.getElementById("pAdeblc").style.display = "none";
         window_open = false;
     } else if (e.key === '`') {
-        document.getElementById("window").style.display = "block";
+        document.getElementById("pAdeblc").style.display = "block";
         window_open = true;
+        document.getElementById("00g5iGe-input").focus();
     }
 });
 
@@ -162,7 +166,7 @@ function isJavaScript(code) {
     }
 }
 
-const input = document.getElementById("consoleinput");
+const input = document.getElementById("pAdeblc-input");
 input.addEventListener("keyup", (event) => {
     if (event.key === "Enter") {
         if (isJavaScript(input.value)) {
@@ -174,14 +178,16 @@ input.addEventListener("keyup", (event) => {
                 logToConsole("-- alert.js","blue");
             }
             if (input.value.split(` `)[0] == "run") {
-                file("assets/js/runnable/" + input.value.split(` `)[1]);
+                file("/assets/js/runnable/" + input.value.split(` `)[1]);
                 logToConsole("Ran script: " + input.value,"white");
             }
         }
         input.value = "";
     }
 });
-
+input.addEventListener("keydown", (event) => {
+    event.stopPropagation(); 
+});
 // Run the script entered in the console
 function run(string) {
     const script = document.createElement("script");

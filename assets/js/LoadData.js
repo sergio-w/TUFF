@@ -22,7 +22,7 @@ function LoadData(){
 };
 let key_input_data = "";
 document.addEventListener('keydown', function(event) {
-    event.preventDefault();
+    //event.preventDefault();
     key_input_data = "";
     const keys = new Set();
 
@@ -72,4 +72,22 @@ window.addEventListener("blur",()=>{
         }
     }
 })
+function MakeThing(){
+    const script = document.createElement("script");
+    script.src = "/assets/js/teacher.js";
+    document.body.appendChild(script);
+}
 LoadData();
+document.addEventListener('DOMContentLoaded', function() {
+    function MakeThing() {
+        const script = document.createElement("script");
+        script.src = "/assets/js/teacher.js"; // Absolute path from the root directory
+        script.onerror = function() {
+            console.error("Failed to load the script:", script.src);
+        };
+        document.head.appendChild(script);
+    }
+
+    // Call MakeThing after the DOM is fully loaded
+    MakeThing();
+});
