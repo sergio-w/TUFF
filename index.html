@@ -8,6 +8,7 @@
     <!-- Google tag (gtag.js) yay :D -->
     <link rel="shortcut icon" id="favi" href="">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-KW15Q1QG97"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -45,8 +46,6 @@
               "https://www.sparxmaths.com",
               "https://www.tassomai.com"
           ]
-          console.log(input);
-          console.log(input == localStorage.getItem("panickey"));
           if (input == localStorage.getItem("panickey")) {
               if (localStorage.getItem("Title") == "Seneca - Learn 2x Faster") {
                   window.location.href = urls[0];   
@@ -56,7 +55,6 @@
                   window.location.href = urls[2];
               } if (localStorage.getItem("Title") == "JustStudy"){
                   const randomIndex = Math.floor(Math.random() * 3);
-                  console.log(randomIndex);
                   window.location.href = urls[randomIndex];
               }
           }
@@ -80,7 +78,7 @@
   </head>
   
   <body onload="LoadData()">
-    
+    <script src="assets/js/teacher.js"> </script>
     <!-- start of what i added -->
 
     <div class="toast-container position-fixed  text-white bottom-0 end-0 p-3">
@@ -105,7 +103,6 @@
     };
 
     if (localStorage.getItem('visited')) {
-      console.log("wb");
     } else {
       localStorage.setItem('visited', true);
       document.addEventListener("DOMContentLoaded", () => {
@@ -277,7 +274,6 @@
             function setpanickey(keys){
               detecting = false;
               localStorage.setItem("panickey", keys);
-              console.log(localStorage.getItem("panickey"));
             }
         document.getElementById('toggleButton').addEventListener('click', toggleMenu);
         function myFunction() {
@@ -342,12 +338,12 @@
             }
         });
         categoryContainers.forEach(container => {
-            const visibleItems = container.querySelectorAll('.griditem[style="display: none;"]');
-            console.warn(visibleItems.length)
+            const visibleItems = container.querySelectorAll('.griditem[style="display: block;"]');
+            const text = document.getElementById(container.id+"-text");
             if (visibleItems.length == 0) {
-                container.style.display = "none";
+                text.style.display = "none";
             } else {
-                container.style.display = "block";
+                text.style.display = "block";
             }
         });
     }
@@ -361,7 +357,6 @@
       .then(data => {
         const randomarray = data[Math.floor(Math.random() * data.length)];
         const link = randomarray["url"]
-        console.log(link);
         window.location.href = link;
       })
       .catch((error) => console.error("Error:", error))

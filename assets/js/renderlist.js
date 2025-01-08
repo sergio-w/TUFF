@@ -44,7 +44,8 @@ function renderList(sort_type) {
             if (sort_type == 'category'){
                 for (const category of categorys) {
                     const categoryText = document.createElement("h3");
-                    categoryText.classList.add("white-text", "category-container");
+                    categoryText.classList.add("white-text", "category-text");
+                    categoryText.id = "itembox_" + category + "-text";
                     // categoryText.classList.add("glow"); // its quite laggy
                     categoryText.innerText = realcategorys[categorys.indexOf(category)];
                     categoryText.style.textAlign = 'left';
@@ -54,7 +55,7 @@ function renderList(sort_type) {
                     categoryContainer.id = "itembox_" + category;
                     console.log("itembox_" + category);
                     categoryContainer.style.marginBottom = '20px';
-                    categoryContainer.classList.add("row", "row-cols-3");
+                    categoryContainer.classList.add("row", "row-cols-3","category-container");
                     container.appendChild(categoryContainer);
             }
         }  
