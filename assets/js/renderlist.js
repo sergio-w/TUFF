@@ -1,13 +1,63 @@
-function renderList() {
+function renderList(sort_type) {
     document.getElementById("loader").style.display = "block";
-    const container = document.getElementById("itembox");
-
+    let container = null;
+    
+    console.log(sort_type)
+    document.getElementById("itembox").innerHTML = '';
+    document.getElementById("category-container").innerHTML = '';
+    if (sort_type == 'category'){
+        container = document.getElementById("category-container");
+        document.getElementById("SortList").innerHTML = "Sort by - Category";
+        localStorage.setItem("sort_type", 'true');
+    } else {
+        container = document.getElementById("itembox");
+        localStorage.setItem("sort_type", 'false');
+        document.getElementById("SortList").innerHTML = "Sort by - Alphabetical";
+    }
     fetch('assets/data/index.json')
         .then(response => response.json())
         .then(data => {
-            data.sort((a, b) => (a.name > b.name) ? 1 : -1);
-            container.innerHTML = ''; // Clear the container before appending items
+            if (sort_type == 'category'){
+                data.sort((a, b) => (a.category > b.category) ? 1 : -1);
+            } if (sort_type == 'name'){
+                data.sort((a, b) => (a.name > b.name) ? 1 : -1);
+            }
+            const categorys = [
+                "Gym Class",
+                "Pen & Paper",
+                "Recess",
+                "Science Lab",
+                "Sports Club",
+                "Music Room",
+                "Math Class"
+            ]
+            const realcategorys = [
+                "Platformers & Skill",
+                "Logic & Strategy",
+                "Calm & Relaxing",
+                "Experimentation & Planning",
+                "Racing & Sports",
+                "Rhythm & Music",
+                "App & Extra"
+            ]
+            container.innerHTML = '';
+            if (sort_type == 'category'){
+                for (const category of categorys) {
+                    const categoryText = document.createElement("h3");
+                    categoryText.classList.add("white-text");
+                    // categoryText.classList.add("glow"); // its quite laggy
+                    categoryText.innerText = realcategorys[categorys.indexOf(category)];
+                    categoryText.style.textAlign = 'left';
+                    container.appendChild(categoryText);
 
+                    const categoryContainer = document.createElement("div");
+                    categoryContainer.id = "itembox_" + category;
+                    console.log("itembox_" + category);
+                    categoryContainer.style.marginBottom = '20px';
+                    categoryContainer.classList.add("row", "row-cols-3");
+                    container.appendChild(categoryContainer);
+            }
+        }  
             data.forEach(item => {
                 const listItem = document.createElement("a");
                 listItem.classList.add("griditem");
@@ -21,8 +71,11 @@ function renderList() {
                 </div>
                 </div>`;
 
-
-                container.appendChild(listItem);
+                if (sort_type == 'category'){
+                    document.getElementById("itembox_"+item.category).appendChild(listItem);
+                } else {
+                    container.appendChild(listItem);
+                }
             });
         })
         .catch(error => console.error("Error:", error))
@@ -30,5 +83,11 @@ function renderList() {
             document.getElementById("loader").style.display = "none";
         });
 }
+document.addEventListener('DOMContentLoaded', function () {
+    if (localStorage.getItem("sort_type") == 'true') {
+        renderList('category');
+    } else {
+        renderList('name');
+    }
+});
 
-renderList();

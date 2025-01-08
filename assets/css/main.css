@@ -590,4 +590,10 @@ pointer-events: none;
     border-radius: 50%;
   }
   
-  
+  .category-header {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #333;
+}

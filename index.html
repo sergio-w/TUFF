@@ -125,6 +125,7 @@
           document.getElementById('fade-under-settings').style.display = 'none';
        })
     </script>
+    <script src="assets/js/renderlist.js" defer></script>
     <!-- for the sneaky will here is what i added this update. it was supprisingly easy-->
       <div class="settings-box setting scrollable" style="text-align: center;" id="settings-box">
         <h2 class="white-text" style="text-align: center;">Settings / apps</h2> 
@@ -144,6 +145,17 @@
                   <li><a class="dropdown-item"   onclick="TabCloak('Sparx Maths - Home', 'assets/img/TabCloak/Sparx.png', 'Sparx Maths ')">Sparx</a></li>
                   <li><hr class="dropdown-divider""></li>
                   <li><a class="dropdown-item"   onclick="TabCloak('Tassomai', 'assets/img/TabCloak/Tassomai.ico' , 'Tassomai')">Tassomai</a></li>
+                </ul>
+              </div>
+              <h4 class="white-text"> Sort by: </h4>
+              <div class="dropdown" style="width: 20vw;">
+                <button class="btn btn-warning dropdown-toggle" id="SortList" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="SettingDropdown">
+                  Sort list
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark">
+                  <li><a class="dropdown-item" onclick="renderList('name')">Name</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item"   onclick="renderList('category')">Category</a></li>
                 </ul>
               </div>
               <hr class="rounded">
@@ -482,10 +494,12 @@
             <div class="row row-cols-3" id="itembox">
             </div>
         </div>
+        <div id="category-container" class="container">
+        </div>
     </div>
     </center>
     
-    <script src="assets/js/renderlist.js" defer></script>
+
     <script>
 
       function openFrame(url) {
