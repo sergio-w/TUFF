@@ -44,7 +44,7 @@ function renderList(sort_type) {
             if (sort_type == 'category'){
                 for (const category of categorys) {
                     const categoryText = document.createElement("h3");
-                    categoryText.classList.add("white-text");
+                    categoryText.classList.add("white-text", "category-container");
                     // categoryText.classList.add("glow"); // its quite laggy
                     categoryText.innerText = realcategorys[categorys.indexOf(category)];
                     categoryText.style.textAlign = 'left';

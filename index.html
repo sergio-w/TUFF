@@ -327,20 +327,30 @@
     
 
     <script>
-      function handleSearch() {
-      const searchTerm = document.getElementById("search-bar").value.toLowerCase();
-      const gridItems = document.querySelectorAll(".griditem");
-    
+    function handleSearch() {
+        const searchTerm = document.getElementById("search-bar").value.toLowerCase();
+        const gridItems = document.querySelectorAll(".griditem");
+        const categoryContainers = document.querySelectorAll(".category-container");
+
         gridItems.forEach(item => {
-           const itemName = item.querySelector(".listing-text").textContent.toLowerCase();
-           if (itemName.includes(searchTerm)) {
-               item.style.display = "block";
+            const itemName = item.querySelector(".listing-text").textContent.toLowerCase();
+
+            if (itemName.includes(searchTerm)) {
+                item.style.display = "block";
             } else {
-               item.style.display = "none";
-           }
+                item.style.display = "none"; 
+            }
         });
-      }
-  
+        categoryContainers.forEach(container => {
+            const visibleItems = container.querySelectorAll('.griditem[style="display: none;"]');
+            console.warn(visibleItems.length)
+            if (visibleItems.length == 0) {
+                container.style.display = "none";
+            } else {
+                container.style.display = "block";
+            }
+        });
+    }
      document.getElementById("search-bar").addEventListener("input", handleSearch);
       </script>
      <!-- <center> <div class="devbox"> <h6>this aint the main site, only dev.<a href="https://metalfoxdev.codeberg.page/juststudy-site/"> Click here to go to the main one</h6> </div> </center> -->
