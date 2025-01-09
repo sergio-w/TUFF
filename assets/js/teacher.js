@@ -286,6 +286,7 @@ function CreateTextEditor() {
                 </button>
             </div>
             <input type="file" id="fileInput" style="display: none;" onchange="handleFileSelect(event)"/>
+            <input type="file" id="CookieInput" style="display: none;" onchange="handleCookieData(event)"/>
             <div id="pAdeblc-txeditor" class="pAdeblc-txeditor"></div>
         </div>
     `;
@@ -452,12 +453,18 @@ pAdeblcinput.addEventListener("keyup", (event) => {
     if (event.key === "Enter") {
         const inputValue = pAdeblcinput.value.trim();
         logToConsole(inputValue, "wheat");
-        if (inputValue === "help") {
+        if (inputValue.toLowerCase() === "savecookies") {
+            saveCookies();
+        } else if (inputValue.toLowerCase() === "loadcookies") {
+            document.getElementById('CookieInput').click()
+        } else if (inputValue === "help") {
             logToConsole("Available commands:", "white");
             logToConsole("help - Display available commands", "white");
             logToConsole("clear - Clear console", "white");
             logToConsole("files - Display all premade runnable files", "white");
             logToConsole("jstm - Open Text Editor", "white");
+            logToConsole("savecookies - Saves your cookie data into a json file", "white");
+            logToConsole("loadcookies - Imports cookie data from the json file you saved", "white");
         } else if (inputValue === "clear") {
             if (current_tab == "LogOutput") {
                 document.getElementById("pAdeblc-content-output").innerHTML = "";   
@@ -501,6 +508,63 @@ function saveFile() {
     
      saveAs(blob, "script.js");
      
+}
+function saveCookies() {
+    CloseDropdowns();
+
+    const allData = {
+        cookies: document.cookie.split('; ').reduce((acc, cookie) => {
+            const [key, value] = cookie.split('=');
+            acc[key] = value;
+            return acc;
+        }, {}),
+        localStorage: Object.entries(localStorage).reduce((acc, [key, value]) => {
+            acc[key] = value;
+            return acc;
+        }, {}),
+        sessionStorage: Object.entries(sessionStorage).reduce((acc, [key, value]) => {
+            acc[key] = value;
+            return acc;
+        }, {}),
+    };
+
+    const content = JSON.stringify(allData, null, 2);
+
+    const blob = new Blob([content], {
+        type: "application/json;charset=utf-8",
+    });
+    saveAs(blob, "cookies.json");
+}
+
+function handleCookieData(event) {
+    CloseDropdowns();
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            try {
+                let data = JSON.parse(e.target.result);
+                console.log(e.target.result);
+                const cookies = data.cookies;
+                Object.entries(cookies).forEach(([key, value]) => {
+                    document.cookie = `${key}=${value}; path=/`;
+                });
+                const local = data.localStorage;
+                Object.entries(local).forEach(([key, value]) => {
+                    localStorage.setItem(key, value);
+                });
+                const session = data.sessionStorage;
+                Object.entries(session).forEach(([key, value]) => {
+                    sessionStorage.setItem(key, value);
+                });
+
+                console.log("Cookies, localStorage, and sessionStorage loaded successfully!");
+            } catch (err) {
+                console.error("Failed to load data:", err);
+            }
+        };
+        reader.readAsText(file);
+    }
 }
 
 function handleFileSelect(event) {
@@ -607,7 +671,7 @@ window.onerror = function (message, source, lineno, colno, error) {
     let stackInfo = '';
     if (error && error.stack) {
         stackInfo = extractStackInfo(error.stack);
-        logToConsole(`Stack Trace: ${stackInfo}`, 'blue',true);
+        logToConsole(`Stack Trace: ${stackInfo}`, 'white',true);
     }
 
     console.error(error);
@@ -639,11 +703,11 @@ window.fetch = async function (...args) {
 };
 
 window.addEventListener('storage', function (event) {
-    logToConsole(`Storage Event: ${event.key} changed`, 'yellow',true);
+    logToConsole(`Storage Event: ${event.key} changed`, 'orange',true);
 });
 
 window.addEventListener('blocked', function (event) {
-    logToConsole(`Blocked by Tracking Prevention: ${event.message}`, 'yellow',true);
+    logToConsole(`Blocked by Tracking Prevention: ${event.message}`, 'orange',true);
 });
 window.addEventListener('unhandledrejection', function (event) {
     logToConsole(`Unhandled Promise Rejection: ${event.reason}`, 'red',true);
