@@ -1,14 +1,8 @@
 body, .content, .main {
-        background-color: #1f1130;
-        overflow-x: hidden;
+    background-color: #1f1130;
+    overflow-x: hidden;
 }
-.pAdeblc, 
-.pAdeblc-content, 
-.pAdeblc-input, 
-.pAdeblc-top, 
-.pAdeblc-bt {
-    font-family: 'MS Sans Serif', sans-serif; /* Explicitly set font for console */
-}
+
 
 #result {
     margin-top: 1vw;

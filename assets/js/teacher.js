@@ -1,33 +1,5 @@
 const style = document.createElement('style');
 style.innerHTML = `
-
-.pAdeblc {
-    font-family: 'MS Sans Serif', sans-serif;
-    position: fixed;
-    top: 25%;
-    left: 25%;
-    width: 50vw;
-    height: 34vw;
-    background: #c0c0c0;
-    border: 0.15vw solid #fff;
-    border-top-color:#fff;
-    border-left-color:#fff;
-    border-right-color: rgb(56, 56, 56);
-    border-bottom-color: rgb(56, 56, 56);
-    z-index: 9999999999999999999999999999;
-    box-sizing: border-box
-}
-
-.pAdeblc-content {
-    background: #000080;
-    color: #ffffff;
-    height: 26.8vw;
-    font-family: 'MS Sans Serif', sans-serif;
-    font-size: 1vw;
-    overflow-y: scroll;
-    overflow-wrap: break-word;
-    outline: 0;
-}
 .pAdeblc-content-new {
     background: silver;
     color: #ffffff;
@@ -64,7 +36,7 @@ style.innerHTML = `
   border-color: silver #000 #000 silver;
 }
 
-.pAdeblc-content::-webkit-scrollbar-thumb:hover,.pAdeblc-txeditor::-webkit-scrollbar-thumb:hover {
+'pAdeblc-content::-webkit-scrollbar-thumb:hover,.pAdeblc-txeditor::-webkit-scrollbar-thumb:hover {
     background: #606060;
 }
 
@@ -110,94 +82,6 @@ style.innerHTML = `
     position: absolute;
 }
 
-
-.pAdeblc-top {
-    cursor: move;
-    text-align: left; /* Align text to the left */
-    height: 1.8vw;
-    background: -webkit-linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); /* Chrome, Safari */
-    background: -moz-linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); /* Firefox */
-    background: linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226));
-    padding: 0.4vw;
-    font-family: 'MS Sans Serif', sans-serif;
-    font-size: 1.4vw;
-    color: #000080;
-    font-weight: bold;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: space-between
-}
-
-.pAdeblc-top .title {
-    margin-left: 0.5vw; /* Adjust the margin for text spacing */
-}
-
-.pAdeblc-top-no-bind {
-    cursor: inherit;
-}
-
-.pAdeblc-bt {
-    font-family: 'Tahoma', sans-serif;
-    font-size: 1vw;
-    color: #000;
-    background-color: #C0C0C0;
-    border: 0.1vw solid #fff;
-    border-top-color:#fff;
-    border-left-color:#fff;
-    border-right-color: rgb(56, 56, 56);
-    border-bottom-color: rgb(56, 56, 56);
-    padding: 0.15vw 0.5vw;
-    cursor: pointer;
-}
-.pAdeblc-bt:hover {
-    border: 0.1vw solid #fff;
-    border-right-color:#fff;
-    border-bottom-color:#fff;
-    border-top-color: rgb(56, 56, 56);
-    border-left-color: rgb(56, 56, 56);
-    cursor: pointer;
-} 
-
-#pAdeblc {
-    z-index: 999;
-}
-.tabs {
-  font-family: Arial, sans-serif;
-  overflow-y: hidden;
-  width: 100%;
-  height: 85%;
-}
-
-.tab-buttons button {
-  padding: 0.5vw 3vw;
-  cursor: pointer;
-  background:rgb(158, 158, 158);
-  box-shadow: inset 0.1vw 0.1vw  #dfdfdf, inset -0.1vw -0.1vw gray;
-  border: 0.1vw solid;
-  border-color: silver #000 #000 silver;
-  border-bottom: none;
-  font-size: 0.8vw;
-}
-
-.tab-buttons button.active {
-  background: #c0c0c0;
-  box-shadow: inset 0.1vw 0.1vw #dfdfdf, inset -0.1vw 0 gray;
-  border-bottom: none;
-}
-
-.tab-content {
-  display: none;
-  background: #c0c0c0;
-  border: 0.1vw solid #ccc;
-  overflow-y: hidden;
-  overflow-x: hidden;
-  box-sizing: border-box;
-}
-
-.tab-content.active {
-  display: block;
-}
 .pAdeblc-txeditor{
     left:0;
     width: 100% !important; 
@@ -270,7 +154,7 @@ style.innerHTML = `
 }
 
 .pAdeblc-dropdown-content a {
-  color: white;
+  color: black;
   background-color: #C0C0C0;
   border: 0.1vw solid #C0C0C0;
   padding: 0.4vw 1.6vw;
@@ -304,7 +188,7 @@ style.innerHTML = `
 }
 `;
 document.body.appendChild(style);
-let current_tab = "LogOutput";
+let current_tab = "MainOutput";
 function bringToFront(windowElement) {
     const allWindows = document.querySelectorAll('.pAdeblc');
     let highestZIndex = 1;
@@ -317,6 +201,40 @@ function bringToFront(windowElement) {
 
     windowElement.style.zIndex = highestZIndex + 1;
 }
+function hoverBtIn(element) {
+    element.style.borderRightColor = "#fff";
+    element.style.borderBottomColor = "#fff";
+    element.style.borderTopColor = "rgb(56, 56, 56)";
+    element.style.borderLeftColor = "rgb(56, 56, 56)";
+}
+
+function hoverBtOut(element) {
+    element.style.borderRightColor = "rgb(56, 56, 56)";
+    element.style.borderBottomColor = "rgb(56, 56, 56)";
+    element.style.borderTopColor = "#fff";
+    element.style.borderLeftColor = "#fff";
+}
+function hoverTabBtIn(element) {
+    if (element.tagName === 'BUTTON') {
+        element.style.padding = '0.5vw 3vw';
+        element.style.cursor = 'pointer';
+        element.style.background = 'rgb(158, 158, 158)';
+        element.style.boxShadow = 'inset 0.1vw 0.1vw #dfdfdf, inset -0.1vw -0.1vw gray';
+        element.style.border = '0.1vw solid';
+        element.style.borderColor = 'silver #000 #000 silver';
+        element.style.borderBottom = 'none';
+        element.style.fontSize = '0.8vw';
+    }
+}
+
+function hoverTabBtOut(element) {
+    if (element.tagName === 'BUTTON') {
+        element.style.background = '#c0c0c0';
+        element.style.boxShadow = 'inset 0.1vw 0.1vw #dfdfdf, inset -0.1vw 0 gray';
+        element.style.borderBottom = 'none';
+    }
+}
+
 let editor;
 
 function loadAceScript(callback) {
@@ -333,13 +251,14 @@ function CreateTextEditor() {
     const newWindow = document.createElement('div');
     newWindow.classList.add("pAdeblc");
     newWindow.id = "pAdeblc-txeditor-main";
+    newWindow.style = "font-family: 'MS Sans Serif', sans-serif; position: fixed; top: 25%; left: 25%; width: 50vw; height: 34vw; background: #c0c0c0; border: 0.15vw solid #fff; border-top-color:#fff; border-left-color:#fff; border-right-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); z-index: 9999; box-sizing: border-box;";
     newWindow.innerHTML = `
-        <div class="pAdeblc-top">
-            <span class="title">
+        <div id="pAdeblc-top-txeditor" style="cursor: move; text-align: left; height: 1.5vw; background: -webkit-linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); background: -moz-linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); background: linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); padding: 0.4vw; font-family: 'MS Sans Serif', sans-serif; font-size: 1.4vw; color: rgb(255, 255, 255); font-weight: bold; z-index: 10000; display: flex; align-items: center; justify-content: space-between;">
+            <span style="margin-left: 0.5vw;">
                 <img src="/assets/img/win_icons/window.png" class="pAdeblc-image" style="width: 2vw; height: 2vh;">
                 JustStudy CE Text Editor
             </span>
-            <button class="pAdeblc-bt" onclick="document.getElementById('pAdeblc-txeditor-main').style.display = 'none'; textwindow_open = false;">X</button>
+            <button style="font-family: 'Tahoma', sans-serif; font-size: 1vw; color: #000; background-color: #C0C0C0; border: 0.1vw solid #fff; border-top-color: #fff; border-left-color: #fff; border-right-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); padding: 0.15vw 0.5vw; cursor: pointer;" onmouseover="hoverBtIn(this)" onmouseout="hoverBtOut(this)" onclick="document.getElementById('pAdeblc-txeditor-main').style.display = 'none'; textwindow_open = false;">X</button>
         </div>
         <div class="pAdeblc-content-new" id="pAdeblc-content-new">
             <div class="pAdeblc-txeditor-topbar">
@@ -374,6 +293,7 @@ function CreateTextEditor() {
     newWindow.style.display = "none";
     makeDraggable(newWindow);
     newWindow.addEventListener("click", () => bringToFront(newWindow));
+    bringToFront(newWindow);
     editor = ace.edit("pAdeblc-txeditor");
     editor.setTheme("ace/theme/monokai"); 
     editor.session.setMode("ace/mode/javascript");
@@ -382,49 +302,54 @@ function CreateTextEditor() {
 
 const consoleDiv = document.createElement('div');
 consoleDiv.id = "pAdeblc";
-consoleDiv.classList.add("pAdeblc");
+consoleDiv.style = "font-family: 'MS Sans Serif', sans-serif; position: fixed; top: 25%; left: 25%; width: 50vw; height: 32vw; background: #c0c0c0; border: 0.15vw solid #fff; border-top-color:#fff; border-left-color:#fff; border-right-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); z-index: 9999; box-sizing: border-box;";
 consoleDiv.innerHTML = `
-    <div class="pAdeblc-top">
-        <span class="title"><img src="/assets/img/win_icons/window.png" class="pAdeblc-image" style="width: 2vw; height: 2vh;">JustStudy CE Dev Console</span>
-        <button class="pAdeblc-bt" onclick="document.getElementById('pAdeblc').style.display = 'none'; window_open = false;">X</button>
+    <div id="pAdeblc-top" style="cursor: move; text-align: left; height: 1.8vw; background: -webkit-linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); background: -moz-linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); background: linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); padding: 0.4vw; font-family: 'MS Sans Serif', sans-serif; font-size: 1.4vw; color: rgb(255, 255, 255); font-weight: bold; z-index: 10000; display: flex; align-items: center; justify-content: space-between;">
+        <span style="margin-left: 0.5vw;"><img src="/assets/img/win_icons/window.png" class="pAdeblc-image" style="width: 2vw; height: 2vh;">JustStudy CE Dev Console</span>
+        <button style="font-family: 'Tahoma', sans-serif; font-size: 1vw; color: #000; background-color: #C0C0C0; border: 0.1vw solid #fff; border-top-color: #fff; border-left-color: #fff; border-right-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); padding: 0.15vw 0.5vw; cursor: pointer;" onmouseover="hoverBtIn(this)" onmouseout="hoverBtOut(this)" onclick="document.getElementById('pAdeblc').style.display = 'none'; window_open = false;">X</button>
     </div>
-    <div class="tabs">
-        <div class="tab-buttons">
-            <button data-tab="LogOutput" class="active" onclick="switchTab('LogOutput')">Console Output</button>
-            <button data-tab="MainOutput" onclick="switchTab('MainOutput')">JustStudy Shell</button>
+    <div style="font-family: Arial, sans-serif; overflow-y: hidden; width: 100%; height: 85%;">
+        <div class="tab-list">
+            <button data-tab="LogOutputTab" id="TabBT" class="active" onclick="switchTab('LogOutput')" style="padding: 0.5vw 3vw; cursor: pointer; background: rgb(158, 158, 158); box-shadow: inset 0.1vw 0.1vw #dfdfdf, inset -0.1vw -0.1vw gray; border: 0.1vw solid; border-color: silver #000 #000 silver; border-bottom: none; font-size: 0.8vw;
+">Console Output</button>
+            <button data-tab="MainOutputTab" id="TabBT" onclick="switchTab('MainOutput')" style="padding: 0.5vw 3vw; cursor: pointer; background: rgb(158, 158, 158); box-shadow: inset 0.1vw 0.1vw #dfdfdf, inset -0.1vw -0.1vw gray; border: 0.1vw solid; border-color: silver #000 #000 silver; border-bottom: none; font-size: 0.8vw;
+">JustStudy Shell</button>
         </div>
         <div class="tab-contents">
-            <div id="LogOutput" class="tab-content active">
-                <div class="pAdeblc-content" id="pAdeblc-content-output"></div>
+            <div id="TabContent" class="pAdeblc-content no-style" data-tab="LogOutput" style="display: none; background: #c0c0c0; border: 0.1vw solid #ccc; overflow-y: hidden; overflow-x: hidden; box-sizing: border-box;">
+                <div style="background: rgb(32, 32, 70); color: #ffffff; height: 25.2vw; font-family: 'MS Sans Serif', sans-serif !important; font-size: 1vw !important; overflow-y: scroll; overflow-wrap: break-word; outline: 0;" id="pAdeblc-content-output"></div>
             </div>
-            <div id="MainOutput" class="tab-content">
-                <div class="pAdeblc-content" id="pAdeblc-content"></div>
+            <div id="TabContent" class="pAdeblc-content no-style" data-tab="MainOutput" style="display: none; background: #c0c0c0; border: 0.1vw solid #ccc; overflow-y: hidden; overflow-x: hidden; box-sizing: border-box;">
+                <div style="background: rgb(32, 32, 70); color: #ffffff; height: 25.2vw; font-family: 'MS Sans Serif', sans-serif; font-size: 1vw; overflow-y: scroll; overflow-wrap: break-word; outline: 0;
+" id="pAdeblc-content" ></div>
             </div>
         </div>
     </div>
 
-    <input class="pAdeblc-input" id="pAdeblc-input" type="text" />
+    <input style="display: block; font-family: 'MS Sans Serif', sans-serif; top: 94%; left: 0; font-size: 1vw; width: 100% !important; height: 5%; background-color: #white; border: 0.2vw solid #c0c0c0; border-right-color:c0c0c0#fff; border-bottom-color: #fff; border-top-color: rgb(56, 56, 56); border-left-color: rgb(56, 56, 56); outline: none; box-sizing: border-box; position: absolute;"
+id="pAdeblc-input" type="text" />
 `;
 consoleDiv.style.display = "none";
 document.body.appendChild(consoleDiv);
 consoleDiv.addEventListener("click", () => bringToFront(consoleDiv));
-logToConsole("JUSTSTUDY CONSOLE v1.0", "yellow");
+logToConsole("JUSTSTUDY CONSOLE v1.0", "yellow",true);
 let capturedLogs = [];
 const originalConsoleLog = console.log;
 const originalConsoleError = console.error;
 const originalConsoleWarn = console.warn;
 let window_open = false;
 let textwindow_open = false;
-
-// Make the console window draggable
+switchTab("LogOutput");
 function makeDraggable(element) {
     let currentPosX = 0, currentPosY = 0, previousPosX = 0, previousPosY = 0;
 
-    if (element.querySelector('.pAdeblc-top')) {
-        element.querySelector('.pAdeblc-top').onmousedown = dragMouseDown;
-    } else {
-        element.onmousedown = dragMouseDown;
-    }
+    if (element.querySelector('#pAdeblc-top') || element.querySelector('#pAdeblc-top-txeditor')) {
+       if (element.querySelector('#pAdeblc-top')) {
+        element.querySelector('#pAdeblc-top').onmousedown = dragMouseDown;
+       } else {
+        element.querySelector('#pAdeblc-top-txeditor').onmousedown = dragMouseDown;
+       }
+    } 
 
     function dragMouseDown(e) {
         e.preventDefault();
@@ -451,40 +376,39 @@ function makeDraggable(element) {
 }
 function toggleDropdown(object) {
     const dropdown = object;
-    // Toggle the visibility of the clicked dropdown
     dropdown.classList.toggle('show');
-
-    // Hide all other dropdowns
     const dropdowns = document.querySelectorAll('.pAdeblc-dropdown');
     dropdowns.forEach(item => {
-        // Ensure other dropdowns are hidden
         if (item !== dropdown) {
             item.classList.remove('show');
         }
     });
 }
 function switchTab(tabName) {
-    const allTabs = document.querySelectorAll('.tab-content');
-    const allButtons = document.querySelectorAll('.tab-buttons button');
-    allTabs.forEach(tab => {
-        tab.classList.remove('active');
-    });
-    allButtons.forEach(button => {
-        button.classList.remove('active');
-    });
-    document.getElementById(tabName).classList.add('active');
-    const activeButton = document.querySelector(`[data-tab="${tabName}"]`);
-    activeButton.classList.add('active');
-    current_tab = tabName;
+    if (tabName != current_tab) {
+        const allTabs = document.querySelectorAll(`#TabContent`);
+        const allButtons = document.querySelectorAll('#TabBT');
+        allTabs.forEach(tab => {
+            tab.style = "display: none;";
+        });
+        allButtons.forEach(button => {
+            hoverTabBtIn(button);
+        });
+        document.querySelector(`[data-tab="${tabName}"]`).style = "display: block;"
+        const activeButton = document.querySelector(`[data-tab="${tabName}Tab"]`);
+        hoverTabBtOut(activeButton);
+        current_tab = tabName;   
+    }
 }
   
 makeDraggable(document.querySelector('#pAdeblc'));
-function logToConsole(message,text_colour) {
+function logToConsole(message,text_colour,log) {
     let consoleDiv = null;
-    if (current_tab == "LogOutput") {
+    if (current_tab == "LogOutput" && log || current_tab == "MainOutput" && log) {
         consoleDiv = document.getElementById('pAdeblc-content-output');
     } else {
-        consoleDiv = document.getElementById('pAdeblc-content');
+        consoleDiv = document.getElementById(`pAdeblc-content-output`);
+        consoleDiv = document.getElementById(`pAdeblc-content`);
     }
     const newMessage = document.createElement('p');
     const newLine = document.createElement('br');
@@ -520,7 +444,20 @@ const pAdeblcinput = document.getElementById("pAdeblc-input");
 pAdeblcinput.addEventListener("keyup", (event) => {
     if (event.key === "Enter") {
         const inputValue = pAdeblcinput.value.trim();
-        if (inputValue === 'jstm') {
+        logToConsole(inputValue, "wheat");
+        if (inputValue === "help") {
+            logToConsole("Available commands:", "white");
+            logToConsole("help - Display available commands", "white");
+            logToConsole("clear - Clear console", "white");
+            logToConsole("files - Display all premade runnable files", "white");
+            logToConsole("jstm - Open Text Editor", "white");
+        } else if (inputValue === "clear") {
+            if (current_tab == "LogOutput") {
+                document.getElementById("pAdeblc-content-output").innerHTML = "";   
+            } else {
+                document.getElementById("pAdeblc-content").innerHTML = ""; 
+            }
+        } else if (inputValue === 'jstm') {
             if (!textwindow_open) {
                 document.getElementById("pAdeblc-txeditor-main").style.display = "block";
                 textwindow_open = true;
@@ -530,7 +467,6 @@ pAdeblcinput.addEventListener("keyup", (event) => {
             if (isJavaScript(inputValue)) {
                 run(inputValue);
             } else {
-                logToConsole(inputValue, "white");
                 if (inputValue === "files") {
                     logToConsole("All runnable files: ", "white");
                     logToConsole("-- alert.js", "blue");
@@ -635,49 +571,48 @@ function file(loc) {
 }
 
 console.log = function (message) {
-    logToConsole(message, "#31f10a");
+    logToConsole(message, "#31f10a",true);
     originalConsoleLog.apply(console, arguments);
 };
 
 console.warn = function (message) {
-    logToConsole(message, "yellow");
+    logToConsole(message, "yellow",true);
     originalConsoleWarn.apply(console, arguments);
 };
 
 console.error = function (message) {
-    logToConsole(message, "red");
+    logToConsole(message, "red",true);
     originalConsoleError.apply(console, arguments);
 };
 
 window.addEventListener('unhandledrejection', function (event) {
-    logToConsole(`Unhandled Promise Rejection: ${event.reason}`, 'red');
+    logToConsole(`Unhandled Promise Rejection: ${event.reason}`, 'red',true);
     console.error(event.reason);
 });
 
 window.onerror = function (message, source, lineno, colno, error) {
-    // Check if the error is a TypeError or any other uncaught error
     if (error instanceof TypeError) {
-        logToConsole(`TypeError: ${message} at ${source}:${lineno}:${colno}`, 'red');
+        logToConsole(`TypeError: ${message} at ${source}:${lineno}:${colno}`, 'red',true);
     } else {
-        logToConsole(`Uncaught Error: ${message} at ${source}:${lineno}:${colno}`, 'red');
+        logToConsole(`Uncaught Error: ${message} at ${source}:${lineno}:${colno}`, 'red',true);
     }
 
     let stackInfo = '';
     if (error && error.stack) {
         stackInfo = extractStackInfo(error.stack);
-        logToConsole(`Stack Trace: ${stackInfo}`, 'blue');
+        logToConsole(`Stack Trace: ${stackInfo}`, 'blue',true);
     }
 
     console.error(error);
-    return true; // Prevent the default browser error handling
+    return true;
 };
 
 
 window.addEventListener('error', function (event) {
     if (event.target && event.target.src) {
-        logToConsole(`Resource Load Error: ${event.target.src}`, 'orange');
+        logToConsole(`Resource Load Error: ${event.target.src}`, 'orange',true);
     } else {
-        logToConsole(`General Error: ${event.message}`, 'orange');
+        logToConsole(`General Error: ${event.message}`, 'orange',true);
     }
 }, true);
 
@@ -686,25 +621,25 @@ window.fetch = async function (...args) {
     try {
         const response = await originalFetch(...args);
         if (!response.ok) {
-            logToConsole(`Fetch Error: ${response.status} - ${response.statusText} (URL: ${args[0]})`, 'red');
+            logToConsole(`Fetch Error: ${response.status} - ${response.statusText} (URL: ${args[0]})`, 'red',true);
         }
         return response;
     } catch (error) {
-        logToConsole(`Fetch Failed: ${error.message} (URL: ${args[0]})`, 'red');
+        logToConsole(`Fetch Failed: ${error.message} (URL: ${args[0]})`, 'red',true);
         console.error(error);
         throw error;
     }
 };
 
 window.addEventListener('storage', function (event) {
-    logToConsole(`Storage Event: ${event.key} changed`, 'yellow');
+    logToConsole(`Storage Event: ${event.key} changed`, 'yellow',true);
 });
 
 window.addEventListener('blocked', function (event) {
-    logToConsole(`Blocked by Tracking Prevention: ${event.message}`, 'yellow');
+    logToConsole(`Blocked by Tracking Prevention: ${event.message}`, 'yellow',true);
 });
 window.addEventListener('unhandledrejection', function (event) {
-    logToConsole(`Unhandled Promise Rejection: ${event.reason}`, 'red');
+    logToConsole(`Unhandled Promise Rejection: ${event.reason}`, 'red',true);
     console.error(event.reason);
 }, true);
 function extractStackInfo(stack) {

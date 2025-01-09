@@ -37,6 +37,15 @@ body {
   position: relative;
   width: 100%; height: 100%;
 }
+#pAdeblc-content-output, 
+#pAdeblc-content {
+    font-family: inherit !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    color: inherit !important;
+    text-align: left;
+}
+
 a {
   border: none;
   outline: none;
@@ -98,11 +107,16 @@ h2#boardsize {
   -ms-transition: opacity .3s ease-out;
   transition: opacity .3s ease-out;
 }
-p {
+p:not(#TabContent) {
   font-family: 'Josefin Sans', sans-serif;
   color: #fff;
   text-align: center;
 }
+#TabContent p {
+  font-family: inherit !important;
+  text-align: inherit !important;
+}
+
 #titlegrid {
   width: 80%;
   margin: 0 auto;
