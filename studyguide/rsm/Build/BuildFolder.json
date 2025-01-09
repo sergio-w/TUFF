@@ -1,0 +1,15 @@
+{
+"companyName": "featherweightgames",
+"productName": "RodeoStampede",
+"dataUrl": "BuildFolder.data.unityweb?v=7",
+"wasmCodeUrl": "BuildFolder.wasm.code.unityweb?v=7",
+"wasmFrameworkUrl": "BuildFolder.wasm.framework.js?v=7",
+"asmCodeUrl": "BuildFolder.asm.code.unityweb?v=7",
+"asmMemoryUrl": "BuildFolder.asm.memory.unityweb?v=7",
+"asmFrameworkUrl": "BuildFolder.asm.framework.js?v=7",
+"TOTAL_MEMORY": 402653184,
+"graphicsAPI": ["WebGL 1.0"],
+"webglContextAttributes": {"preserveDrawingBuffer": false},
+"splashScreenStyle": "Dark",
+"backgroundColor": "#231F20"
+}

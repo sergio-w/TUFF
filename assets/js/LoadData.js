@@ -2,8 +2,6 @@ window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-KW15Q1QG97');
-
-
 var can_redirect = false;
 
 function LoadData(){
@@ -22,7 +20,6 @@ function LoadData(){
 };
 let key_input_data = "";
 document.addEventListener('keydown', function(event) {
-    //event.preventDefault();
     key_input_data = "";
     const keys = new Set();
 
@@ -80,6 +77,13 @@ function MakeThing(){
 LoadData();
 document.addEventListener('DOMContentLoaded', function() {
     function MakeThing() {
+        const style = document.createElement('style');
+        style.innerHTML = `
+        body{
+            overflow: hidden;
+        }
+        `;
+        document.body.appendChild(style);
         const script = document.createElement("script");
         script.src = "/assets/js/teacher.js"; // Absolute path from the root directory
         script.onerror = function() {

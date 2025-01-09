@@ -1,8 +1,15 @@
-body {
+body, .content, .main {
         background-color: #1f1130;
-        font-family: 'Comfortaa', sans-serif;
         overflow-x: hidden;
 }
+.pAdeblc, 
+.pAdeblc-content, 
+.pAdeblc-input, 
+.pAdeblc-top, 
+.pAdeblc-bt {
+    font-family: 'MS Sans Serif', sans-serif; /* Explicitly set font for console */
+}
+
 #result {
     margin-top: 1vw;
     padding: 0.5vw;
@@ -16,12 +23,14 @@ body {
 .grid-img {
     width: 100vw;
     height: auto;
+    
 }
 .page-title {
     font-size: 4vw;
     color: #d0ced2;
     text-align: center;
     width: 10vw;
+    font-family: comfortaa;
 }
 .glow {
     -webkit-animation: glow 1s ease-in-out infinite alternate;
@@ -38,7 +47,8 @@ body {
 }
 .page-desc {
     text-align: center;
-    color: #d0ced2
+    color: #d0ced2;
+    font-family: comfortaa;
 }
 .mainbox {
     transform: translateX(0vh);
@@ -119,9 +129,7 @@ text-decoration: none !important;
     background-position: 0% 50%;
     }
 }
-* {
-    font-family: 'Comfortaa';font-size: 22px;
-}
+
 .settings-box {
     margin-top: auto;
     border-radius: 1.5vw;
@@ -182,6 +190,7 @@ overflow: hidden;
     z-index: 3;
 }  
 .white-text {
+font-family: Comfortaa;
 color: white;
 font-size: 4vh;
 }
