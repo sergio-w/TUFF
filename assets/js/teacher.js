@@ -38,12 +38,12 @@ style.innerHTML = `
     outline: 0;
 }
 
-.pAdeblc-content::-webkit-scrollbar, .pAdeblc-content-new::-webkit-scrollbar {
+.pAdeblc-content::-webkit-scrollbar, .pAdeblc-txeditor::-webkit-scrollbar {
     width: 1.6vw;
     height: 1.6vw;
 }
 
-.pAdeblc-content::-webkit-scrollbar-track, .pAdeblc-content-new::-webkit-scrollbar-track{
+.pAdeblc-content::-webkit-scrollbar-track, .pAdeblc-txeditor::-webkit-scrollbar-track{
   image-rendering: optimizeSpeed;
   image-rendering: pixelated;
   image-rendering: optimize-contrast;
@@ -55,7 +55,7 @@ style.innerHTML = `
 
 
 
-.pAdeblc-content::-webkit-scrollbar-thumb, .pAdeblc-content::-webkit-scrollbar-button,.pAdeblc-content-new::-webkit-scrollbar-thumb, .pAdeblc-content-new::-webkit-scrollbar-button {
+.pAdeblc-content::-webkit-scrollbar-thumb, .pAdeblc-content::-webkit-scrollbar-button,.pAdeblc-txeditor::-webkit-scrollbar-thumb, .pAdeblc-txeditor::-webkit-scrollbar-button {
   width: 1.6vw;
   height: 1.6vw;
   background: silver;
@@ -64,30 +64,30 @@ style.innerHTML = `
   border-color: silver #000 #000 silver;
 }
 
-.pAdeblc-content::-webkit-scrollbar-thumb:hover,.pAdeblc-content-new::-webkit-scrollbar-thumb:hover {
+.pAdeblc-content::-webkit-scrollbar-thumb:hover,.pAdeblc-txeditor::-webkit-scrollbar-thumb:hover {
     background: #606060;
 }
 
-.pAdeblc-content::-webkit-scrollbar-corner, .pAdeblc-content-new::-webkit-scrollbar-corner {
+.pAdeblc-content::-webkit-scrollbar-corner, .pAdeblc-txeditor::-webkit-scrollbar-corner {
     background: #c0c0c0;
 }
-.pAdeblc-content::-webkit-scrollbar-button:single-button:vertical:decrement, .pAdeblc-content-new::-webkit-scrollbar-button:single-button:vertical:decrement {
+.pAdeblc-content::-webkit-scrollbar-button:single-button:vertical:decrement, .pAdeblc-txeditor::-webkit-scrollbar-button:single-button:vertical:decrement {
   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgLTAuNSAxNiAxNiIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj4KPG1ldGFkYXRhPk1hZGUgd2l0aCBQaXhlbHMgdG8gU3ZnIGh0dHBzOi8vY29kZXBlbi5pby9zaHNoYXcvcGVuL1hieHZOajwvbWV0YWRhdGE+CjxwYXRoIHN0cm9rZT0iIzAwMDAwMCIgZD0iTTcgNWgxTTYgNmgzTTUgN2g1TTQgOGg3IiAvPgo8L3N2Zz4=");
 }
 
-.pAdeblc-content::-webkit-scrollbar-button:single-button:vertical:increment, .pAdeblc-content-new::-webkit-scrollbar-button:single-button:vertical:increment {
+.pAdeblc-content::-webkit-scrollbar-button:single-button:vertical:increment, .pAdeblc-txeditor::-webkit-scrollbar-button:single-button:vertical:increment {
   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgLTAuNSAxNiAxNiIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj4KPG1ldGFkYXRhPk1hZGUgd2l0aCBQaXhlbHMgdG8gU3ZnIGh0dHBzOi8vY29kZXBlbi5pby9zaHNoYXcvcGVuL1hieHZOajwvbWV0YWRhdGE+CjxwYXRoIHN0cm9rZT0iIzAwMDAwMCIgZD0iTTQgNWg3TTUgNmg1TTYgN2gzTTcgOGgxIiAvPgo8L3N2Zz4=");
 }
 
-.pAdeblc-content::-webkit-scrollbar-button:single-button:horizontal:decrement, .pAdeblc-content-new::-webkit-scrollbar-button:single-button:horizontal:decrement {
+.pAdeblc-content::-webkit-scrollbar-button:single-button:horizontal:decrement, .pAdeblc-txeditor::-webkit-scrollbar-button:single-button:horizontal:decrement {
   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgLTAuNSAxNiAxNiIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj4KPG1ldGFkYXRhPk1hZGUgd2l0aCBQaXhlbHMgdG8gU3ZnIGh0dHBzOi8vY29kZXBlbi5pby9zaHNoYXcvcGVuL1hieHZOajwvbWV0YWRhdGE+CjxwYXRoIHN0cm9rZT0iIzAwMDAwMCIgZD0iTTggM2gxTTcgNGgyTTYgNWgzTTUgNmg0TTYgN2gzTTcgOGgyTTggOWgxIiAvPgo8L3N2Zz4=");
 }
 
-.pAdeblc-content::-webkit-scrollbar-button:single-button:horizontal:increment, .pAdeblc-content-new::-webkit-scrollbar-button:single-button:horizontal:increment {
+.pAdeblc-content::-webkit-scrollbar-button:single-button:horizontal:increment, .pAdeblc-txeditor::-webkit-scrollbar-button:single-button:horizontal:increment {
   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgLTAuNSAxNiAxNiIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj4KPG1ldGFkYXRhPk1hZGUgd2l0aCBQaXhlbHMgdG8gU3ZnIGh0dHBzOi8vY29kZXBlbi5pby9zaHNoYXcvcGVuL1hieHZOajwvbWV0YWRhdGE+CjxwYXRoIHN0cm9rZT0iIzAwMDAwMCIgZD0iTTYgM2gxTTYgNGgyTTYgNWgzTTYgNmg0TTYgN2gzTTYgOGgyTTYgOWgxIiAvPgo8L3N2Zz4=");
 }
 
-.pAdeblc-content::-webkit-scrollbar-corner, .pAdeblc-content-new::-webkit-scrollbar-corner {
+.pAdeblc-content::-webkit-scrollbar-corner, .pAdeblc-txeditor::-webkit-scrollbar-corner {
   background: silver;
 }
 
@@ -229,7 +229,7 @@ style.innerHTML = `
     border-left-color:#fff;
     border-right-color: rgb(56, 56, 56);
     border-bottom-color: rgb(56, 56, 56);
-    padding: 0.4vw;
+    padding: 0.35vw;
     font-family: 'MS Sans Serif', sans-serif;
     font-size: 1.4vw;
     color: #000080;
@@ -247,6 +247,51 @@ style.innerHTML = `
     padding: 0.4vw;
     cursor: pointer;
     border: 0.1vw solid #C0C0C0;
+    display: flex;
+    align-items: center; /* Centers the content vertically */
+    justify-content: center;
+}
+.pAdeblc-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.pAdeblc-dropdown-content {
+    display: none;
+    width: 7vw;
+    position: absolute;
+    background-color: #C0C0C0;
+    border: 0.1vw solid #fff;
+    border-top-color:#fff;
+    border-left-color:#fff;
+    border-right-color: rgb(56, 56, 56);
+    border-bottom-color: rgb(56, 56, 56);
+    z-index: 1;
+    padding: 0.4vw;
+    font-size: 1vw;
+}
+
+/* Links inside the dropdown */
+.pAdeblc-dropdown-content a {
+  color: white;
+  background-color: #C0C0C0;
+  border: 0.1vw solid #C0C0C0;
+  padding: 0.4vw 1.6vw;
+  text-decoration: none;
+  display: block;
+}
+
+.pAdeblc-dropdown-content a:hover {
+    border: 0.1vw solid #fff;
+    border-right-color:#fff;
+    border-bottom-color:#fff;
+    border-top-color: rgb(56, 56, 56);
+    border-left-color: rgb(56, 56, 56);
+}
+
+/* Show the dropdown when the button is clicked */
+.pAdeblc-dropdown.show .pAdeblc-dropdown-content {
+  display: block;
 }
 .pAdeblc-txeditor-bt:hover {
     border: 0.1vw solid #fff;
@@ -255,6 +300,12 @@ style.innerHTML = `
     border-top-color: rgb(56, 56, 56);
     border-left-color: rgb(56, 56, 56);
 } 
+.pAdeblc-image {
+  width: 1.5vw;
+  height: 1.5vh;   
+  image-rendering: pixelated;
+   object-fit: contain;
+}
 `;
 document.body.appendChild(style);
 let current_tab = "LogOutput";
@@ -277,13 +328,27 @@ function createNewWindow() {
 
     newWindow.innerHTML = `
         <div class="pAdeblc-top">
-            <span class="title">JustStudy CE Text Editor</span>
+            <span class="title"><img src="/assets/img/win_icons/window.png" class="pAdeblc-image" style="width: 2vw; height: 2vh;">JustStudy CE Text Editor</span>
             <button class="pAdeblc-bt" onclick="this.parentElement.parentElement.remove(); window_open = false;">X</button>
         </div>
         <div class="pAdeblc-content-new" id="pAdeblc-content-new">
             <div class="pAdeblc-txeditor-topbar">
-                <button class="pAdeblc-txeditor-bt" onclick="">save</button>
-                <button class="pAdeblc-txeditor-bt" onclick="">open</button>
+                <div class="pAdeblc-dropdown" id="fileselector">
+                    <button class="pAdeblc-txeditor-bt" onclick="toggleDropdown(this.parentElement)"><img src="/assets/img/win_icons/folder-edit.png" class="pAdeblc-image">File</button>
+                    <div class="pAdeblc-dropdown-content">
+                        <a href="#">Open</a>
+                        <a href="#">Load</a>
+                        <a href="#">Close</a>
+                    </div>
+                </div>
+                <div class="pAdeblc-dropdown" id="editselector">
+                    <button class="pAdeblc-txeditor-bt" onclick="toggleDropdown(this.parentElement)"><img src="/assets/img/win_icons/texticon.png" class="pAdeblc-image">Edit</button>
+                    <div class="pAdeblc-dropdown-content">
+                        <a href="#">Find</a>
+                        <a href="#">Find & replace</a>
+                        <a href="#">Copy</a>
+                    </div>
+                </div>
             </div>
             <textarea class="pAdeblc-txeditor">Hello World!</textarea>
         </div>
@@ -297,7 +362,7 @@ consoleDiv.id = "pAdeblc";
 consoleDiv.classList.add("pAdeblc");
 consoleDiv.innerHTML = `
     <div class="pAdeblc-top">
-        <span class="title">JustStudy CE Dev Console</span>
+        <span class="title"><img src="/assets/img/win_icons/window.png" class="pAdeblc-image" style="width: 2vw; height: 2vh;">JustStudy CE Dev Console</span>
         <button class="pAdeblc-bt" onclick="document.getElementById('pAdeblc').style.display = 'none'; window_open = false;">X</button>
     </div>
     <div class="tabs">
@@ -320,6 +385,7 @@ consoleDiv.innerHTML = `
 consoleDiv.style.display = "none";
 document.body.appendChild(consoleDiv);
 consoleDiv.addEventListener("click", () => bringToFront(consoleDiv));
+createNewWindow();
 logToConsole("JUSTSTUDY CONSOLE v1.0", "yellow");
 let capturedLogs = [];
 const originalConsoleLog = console.log;
@@ -359,6 +425,20 @@ function makeDraggable(element) {
         document.onmouseup = null;
         document.onmousemove = null;
     }
+}
+function toggleDropdown(object) {
+    const dropdown = object;
+    // Toggle the visibility of the clicked dropdown
+    dropdown.classList.toggle('show');
+
+    // Hide all other dropdowns
+    const dropdowns = document.querySelectorAll('.pAdeblc-dropdown');
+    dropdowns.forEach(item => {
+        // Ensure other dropdowns are hidden
+        if (item !== dropdown) {
+            item.classList.remove('show');
+        }
+    });
 }
 function switchTab(tabName) {
     const allTabs = document.querySelectorAll('.tab-content');
@@ -442,8 +522,9 @@ pAdeblcinput.addEventListener("keydown", (event) => {
 });
 const pAdeblcfield = document.getElementById("pAdeblc-txeditor");
 pAdeblcfield.addEventListener("keydown", (event) => {
+    event.preventDefault();
     event.stopPropagation();
-    pAdeblcfield.focus();
+
 });
 function run(string) {
     const script = document.createElement("script");
