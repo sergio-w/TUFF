@@ -255,7 +255,7 @@ function CreateTextEditor() {
     newWindow.innerHTML = `
         <div id="pAdeblc-top-txeditor" style="cursor: move; text-align: left; height: 1.5vw; background: -webkit-linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); background: -moz-linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); background: linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); padding: 0.4vw; font-family: 'MS Sans Serif', sans-serif; font-size: 1.4vw; color: rgb(255, 255, 255); font-weight: bold; z-index: 10000; display: flex; align-items: center; justify-content: space-between;">
             <span style="margin-left: 0.5vw;">
-                <img src="/assets/img/win_icons/window.png" class="pAdeblc-image" style="width: 2vw; height: 2vh;">
+                <img src="/assets/img/winicons/window.png" class="pAdeblc-image" style="width: 2vw; height: 2vh;">
                 JustStudy CE Text Editor
             </span>
             <button style="font-family: 'Tahoma', sans-serif; font-size: 1vw; color: #000; background-color: #C0C0C0; border: 0.1vw solid #fff; border-top-color: #fff; border-left-color: #fff; border-right-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); padding: 0.15vw 0.5vw; cursor: pointer;" onmouseover="hoverBtIn(this)" onmouseout="hoverBtOut(this)" onclick="document.getElementById('pAdeblc-txeditor-main').style.display = 'none'; textwindow_open = false;">X</button>
@@ -264,7 +264,7 @@ function CreateTextEditor() {
             <div class="pAdeblc-txeditor-topbar">
                 <div class="pAdeblc-dropdown" id="fileselector">
                     <button class="pAdeblc-txeditor-bt" onclick="toggleDropdown(this.parentElement)">
-                        <img src="/assets/img/win_icons/folder-edit.png" class="pAdeblc-image">File
+                        <img src="/assets/img/winicons/folder-edit.png" class="pAdeblc-image">File
                     </button>
                     <div class="pAdeblc-dropdown-content">
                         <a href="#" onclick="document.getElementById('fileInput').click()">Open</a>
@@ -273,7 +273,7 @@ function CreateTextEditor() {
                 </div>
                 <div class="pAdeblc-dropdown" id="editselector">
                     <button class="pAdeblc-txeditor-bt" onclick="toggleDropdown(this.parentElement)">
-                        <img src="/assets/img/win_icons/texticon.png" class="pAdeblc-image">Edit
+                        <img src="/assets/img/winicons/texticon.png" class="pAdeblc-image">Edit
                     </button>
                     <div class="pAdeblc-dropdown-content">
                         <a href="#" onclick="findText()">Find</a>
@@ -282,7 +282,7 @@ function CreateTextEditor() {
                     </div>
                 </div>
                 <button class="pAdeblc-txeditor-bt" onclick="run(editor.getValue())">
-                    <img src="/assets/img/win_icons/run.png" class="pAdeblc-image">Run
+                    <img src="/assets/img/winicons/run.png" class="pAdeblc-image">Run
                 </button>
             </div>
             <input type="file" id="fileInput" style="display: none;" onchange="handleFileSelect(event)"/>
@@ -306,7 +306,7 @@ consoleDiv.id = "pAdeblc";
 consoleDiv.style = "font-family: 'MS Sans Serif', sans-serif; position: fixed; top: 25%; left: 25%; width: 50vw; height: 32vw; background: #c0c0c0; border: 0.15vw solid #fff; border-top-color:#fff; border-left-color:#fff; border-right-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); z-index: 9999; box-sizing: border-box;";
 consoleDiv.innerHTML = `
     <div id="pAdeblc-top" style="cursor: move; text-align: left; height: 1.8vw; background: -webkit-linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); background: -moz-linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); background: linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); padding: 0.4vw; font-family: 'MS Sans Serif', sans-serif; font-size: 1.4vw; color: rgb(255, 255, 255); font-weight: bold; z-index: 10000; display: flex; align-items: center; justify-content: space-between;">
-        <span style="margin-left: 0.5vw;"><img src="/assets/img/win_icons/window.png" class="pAdeblc-image" style="width: 2vw; height: 2vh;">JustStudy CE Dev Console</span>
+        <span style="margin-left: 0.5vw;"><img src="/assets/img/winicons/window.png" class="pAdeblc-image" style="width: 2vw; height: 2vh;">JustStudy CE Dev Console</span>
         <button style="font-family: 'Tahoma', sans-serif; font-size: 1vw; color: #000; background-color: #C0C0C0; border: 0.1vw solid #fff; border-top-color: #fff; border-left-color: #fff; border-right-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); padding: 0.15vw 0.5vw; cursor: pointer;" onmouseover="hoverBtIn(this)" onmouseout="hoverBtOut(this)" onclick="document.getElementById('pAdeblc').style.display = 'none'; window_open = false;">X</button>
     </div>
     <div style="font-family: Arial, sans-serif; overflow-y: hidden; width: 100%; height: 85%;">
