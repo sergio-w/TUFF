@@ -17,4 +17,4 @@ jobs:
       - uses: pixta-dev/repository-mirroring-action@v1
         with:
           target_repo_url: "git@codeberg.org:Thatoneham/sceneca.git"
-          ssh_private_key: ${{ secrets.CODEBERG_SSH_2 }}
+          ssh_private_key: ${{ secrets.CODEBURG_SSH_2 }}
