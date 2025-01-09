@@ -1,5 +1,5 @@
 # Sync repo to the Codeberg mirror
-name: Mirror to Codeberg
+name: Mirror to Codeberg 2
 on:
   push:
     branches: ["main"]
