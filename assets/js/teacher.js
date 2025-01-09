@@ -404,10 +404,9 @@ function switchTab(tabName) {
 makeDraggable(document.querySelector('#pAdeblc'));
 function logToConsole(message,text_colour,log) {
     let consoleDiv = null;
-    if (current_tab == "LogOutput" && log || current_tab == "MainOutput" && log) {
+    if (log) {
         consoleDiv = document.getElementById('pAdeblc-content-output');
     } else {
-        consoleDiv = document.getElementById(`pAdeblc-content-output`);
         consoleDiv = document.getElementById(`pAdeblc-content`);
     }
     const newMessage = document.createElement('p');
@@ -415,6 +414,14 @@ function logToConsole(message,text_colour,log) {
     newMessage.textContent = "C:\\User> " + message;
     newMessage.style.color = text_colour;
     consoleDiv.appendChild(newMessage);
+    if (!log){
+        consoleDiv = document.getElementById('pAdeblc-content-output');
+        const newMessage = document.createElement('p');
+        const newLine = document.createElement('br');
+        newMessage.textContent = "C:\\User> " + message;
+        newMessage.style.color = text_colour;
+        consoleDiv.appendChild(newMessage);
+    }
 
     consoleDiv.scrollTop = consoleDiv.scrollHeight;
 }
