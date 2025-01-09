@@ -239,7 +239,7 @@ let editor;
 
 function loadAceScript(callback) {
     var script = document.createElement('script');
-    script.src = '/src-noconflict/ace.js';
+    script.src = '/assets/src-noconflict/ace.js';
     script.onload = callback;
     document.body.appendChild(script);
     const script2 = document.createElement("script");
