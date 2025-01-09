@@ -310,7 +310,7 @@ consoleDiv.innerHTML = `
     </div>
     <div style="font-family: Arial, sans-serif; overflow-y: hidden; width: 100%; height: 85%;">
         <div class="tab-list">
-            <button data-tab="LogOutputTab" id="TabBT" class="active" onclick="switchTab('LogOutput')" style="padding: 0.5vw 3vw; cursor: pointer; background: rgb(158, 158, 158); box-shadow: inset 0.1vw 0.1vw #dfdfdf, inset -0.1vw -0.1vw gray; border: 0.1vw solid; border-color: silver #000 #000 silver; border-bottom: none; font-size: 0.8vw;
+            <button data-tab="LogOutputTab" id="TabBT" onclick="switchTab('LogOutput')" style="padding: 0.5vw 3vw; cursor: pointer; background: rgb(158, 158, 158); box-shadow: inset 0.1vw 0.1vw #dfdfdf, inset -0.1vw -0.1vw gray; border: 0.1vw solid; border-color: silver #000 #000 silver; border-bottom: none; font-size: 0.8vw;
 ">Console Output</button>
             <button data-tab="MainOutputTab" id="TabBT" onclick="switchTab('MainOutput')" style="padding: 0.5vw 3vw; cursor: pointer; background: rgb(158, 158, 158); box-shadow: inset 0.1vw 0.1vw #dfdfdf, inset -0.1vw -0.1vw gray; border: 0.1vw solid; border-color: silver #000 #000 silver; border-bottom: none; font-size: 0.8vw;
 ">JustStudy Shell</button>
