@@ -905,9 +905,9 @@ function findText() {
     CloseDropdowns();
     const query = prompt("Enter text to find:");
     if (query) {
-        const range = editor.find(query);
+        const range = currenteditor.find(query);
         if (range) {
-            editor.scrollToLine(range.start.row, true, true, function () {});
+            currenteditor.scrollToLine(range.start.row, true, true, function () {});
         } else {
             alert('Text not found');
         }
@@ -919,9 +919,9 @@ function findAndReplace() {
     const query = prompt("Enter text to find:");
     const replacement = prompt("Enter replacement text:");
     if (query && replacement) {
-        const range = editor.find(query);
+        const range = currenteditor.find(query);
         if (range) {
-            editor.session.replace(range, replacement);
+            currenteditor.session.replace(range, replacement);
         } else {
             alert('Text not found');
         }
