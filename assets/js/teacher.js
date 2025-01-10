@@ -409,7 +409,6 @@ let total_tab = 0;
 function createNewTxEditorTab(name,code,tabbt,tabcontainer) {
     let tabnumber = 0;
     total_tab += 1;
-    console.log("test")
     if (txEditorTabCount <= 3) {
         const tabId = `txEditorTab${total_tab}`;
         
@@ -597,7 +596,6 @@ function reorderEditors() {
         }
     });
     editors = reorderedEditors;
-    console.log(Object.keys(reorderedEditors));
 }
 function switchTxEditorTab(event, tabId, closingtab) {
     let selectedTab;
