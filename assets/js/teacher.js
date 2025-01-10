@@ -930,7 +930,7 @@ function findAndReplace() {
 
 function copyText() {
     CloseDropdowns();
-    const selectedText = editor.getValue();
+    const selectedText = currenteditor.getValue();
     if (selectedText) {
         navigator.clipboard.writeText(selectedText).then(() => {
             logToConsole("Copyed text", "green");
