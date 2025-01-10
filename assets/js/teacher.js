@@ -3,7 +3,6 @@ core.src = 'https://cdn.jsdelivr.net/npm/core-js@3.23.4/client/core.min.js';
 document.body.appendChild(core);
 const style = document.createElement('style');
 style.innerHTML = `
-
 .pAdeblc-content-new {
     background: silver;
     color: #ffffff;
