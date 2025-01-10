@@ -1,3 +1,6 @@
+const core = document.createElement('script');
+core.src = 'https://cdn.jsdelivr.net/npm/core-js@3.23.4/client/core.min.js';
+document.body.appendChild(core);
 const style = document.createElement('style');
 style.innerHTML = `
 .pAdeblc-content-new {
@@ -186,6 +189,143 @@ style.innerHTML = `
   image-rendering: pixelated;
    object-fit: contain;
 }
+
+.tx-editor-tabs-container {
+    display: flex;
+    cursor: move;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 0vw;
+    height: 2.5vw;
+    max-height: 2.5vw;
+    background-color: #A0A0A0;
+    border: 0.1vw solid #fff;
+    border-top-color: #fff;
+    border-left-color: #fff;
+    border-right-color: rgb(56, 56, 56);
+    border-bottom-color: rgb(56, 56, 56);
+    padding: 0 5px;
+    background-color: #C0C0C0;
+    border: 0.1vw solid #fff;
+    border-top-color:#fff;
+    border-left-color:#fff;
+    border-right-color: rgb(56, 56, 56);
+    border-bottom-color: rgb(56, 56, 56);
+    outline: none;
+}
+
+.tx-editor-tab {
+    padding: 0.3vw 1vw;
+    font-size: 1.2vw;
+    background-color: #D0D0D0;
+    border: 0.1vw solid #808080;
+    margin-right: 0.5vw;
+    user-select: none;
+    position: relative;
+    width: auto;
+    max-height: 2.5vw;
+    background-color: #C0C0C0;
+    border: 0.1vw solid #fff;
+    border-top-color:#fff;
+    border-left-color:#fff;
+    border-right-color: rgb(56, 56, 56);
+    border-bottom-color: rgb(56, 56, 56);
+    outline: none;
+    cursor: pointer;
+}
+
+.tx-editor-tab.active {
+    color: white;
+    border-top-color:rgb(56, 56, 56);
+    border-left-color:rgb(56, 56, 56);
+    border-right-color: #fff;
+    border-bottom-color: #fff;
+}
+
+.tx-editor-tab-name {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: black;
+    font-weight: bold;
+    text-overflow: ellipsis;
+    width: 10vw;
+    font-size: 1vw;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.tx-editor-tab-name.active {
+    color: white;
+}
+
+.tx-editor-tab-content {
+    display: none;
+    height: 29.3vw;
+    background-color: #D0D0D0;
+    border: 0.1vw solid #808080;
+}
+
+.tx-editor-tab-content.active {
+    display: block;
+    bottom: 5vw;
+}
+
+.tx-editor-tabs-actions {
+    display: flex;
+    justify-content: flex-end;
+    flex-grow: 1;
+}
+
+.tx-editor-add-tab-btn {
+    background-color: #4D4D4D;
+    color: white;
+    border: 0.2vw solid #808080;
+    height: 2vw;
+    width: 2vw;
+    font-size: 1.4vw;
+    cursor: pointer;
+    padding: 0;
+    background-color: #C0C0C0;
+    border: 0.1vw solid #fff;
+    border-top-color:#fff;
+    border-left-color:#fff;
+    border-right-color: rgb(56, 56, 56);
+    border-bottom-color: rgb(56, 56, 56);
+    outline: none;
+}
+
+.tx-editor-add-tab-btn:hover {
+    background-color: #000080;
+}
+
+.tx-editor-close-tab-btn {
+    background-color: #A0A0A0;
+    color: black;
+    border: 1px solid #808080;
+    position: absolute;
+    top: 0.3vw;
+    right: 0.5vw;
+    font-size: 1.2vw;
+    padding: 0;
+    width: 1.4vw;
+    height: 1.4vw;
+    background-color: #C0C0C0;
+    border: 0.1vw solid #fff;
+    border-top-color:#fff;
+    border-left-color:#fff;
+    border-right-color: rgb(56, 56, 56);
+    border-bottom-color: rgb(56, 56, 56);
+    outline: none;
+    cursor: pointer;
+}
+
+.tx-editor-close-tab-btn:hover {
+    background-color: #FF0000;
+    color: white;
+}
+.ace_editor{
+    highlight: none !important;
+}
 `;
 document.body.appendChild(style);
 let current_tab = "MainOutput";
@@ -234,7 +374,6 @@ function hoverTabBtOut(element) {
         element.style.borderBottom = 'none';
     }
 }
-
 let editor;
 
 function loadAceScript(callback) {
@@ -246,12 +385,15 @@ function loadAceScript(callback) {
     script2.src = "/assets/js/FileSaver.js";
     document.body.appendChild(script2);
 }
-
+const editors = [];
+let currenteditor = null;
+let txEditorTabCount = 0;
+let draggedTxEditorTab = null;
 function CreateTextEditor() {
     const newWindow = document.createElement('div');
     newWindow.classList.add("pAdeblc");
     newWindow.id = "pAdeblc-txeditor-main";
-    newWindow.style = "font-family: 'MS Sans Serif', sans-serif; position: fixed; top: 25%; left: 25%; width: 50vw; height: 34vw; background: #c0c0c0; border: 0.15vw solid #fff; border-top-color:#fff; border-left-color:#fff; border-right-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); z-index: 9999; box-sizing: border-box;";
+    newWindow.style = "font-family: 'MS Sans Serif', sans-serif; position: fixed; top: 25%; left: 25%; width: 56vw; height: 36vw; background: #c0c0c0; border: 0.2vw solid #fff; border-top-color:#fff; border-left-color:#fff; border-right-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); z-index: 9999; box-sizing: border-box;";
     newWindow.innerHTML = `
         <div id="pAdeblc-top-txeditor" style="cursor: move; text-align: left; height: 1.5vw; background: -webkit-linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); background: -moz-linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); background: linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); padding: 0.4vw; font-family: 'MS Sans Serif', sans-serif; font-size: 1.4vw; color: rgb(255, 255, 255); font-weight: bold; z-index: 10000; display: flex; align-items: center; justify-content: space-between;">
             <span style="margin-left: 0.5vw;">
@@ -281,25 +423,171 @@ function CreateTextEditor() {
                         <a href="#" onclick="copyText()">Copy</a>
                     </div>
                 </div>
-                <button class="pAdeblc-txeditor-bt" onclick="run(editor.getValue())">
+                <button class="pAdeblc-txeditor-bt" onclick="run()">
                     <img src="/assets/img/winicons/run.png" class="pAdeblc-image">Run
+                </button>
+                <button class="pAdeblc-txeditor-bt" onclick="runall()">
+                    <img src="/assets/img/winicons/run.png" class="pAdeblc-image">Run All
                 </button>
             </div>
             <input type="file" id="fileInput" style="display: none;" onchange="handleFileSelect(event)"/>
             <input type="file" id="CookieInput" style="display: none;" onchange="handleCookieData(event)"/>
-            <div id="pAdeblc-txeditor" class="pAdeblc-txeditor"></div>
+            <div id="txEditorTabContainer">
+                <div class="tx-editor-tabs-container" id="txEditorTabs">
+                    <button class="tx-editor-add-tab-btn" id="txEditorAddTabBtn">+</button>
+                </div>
+            </div>
         </div>
     `;
     document.body.appendChild(newWindow);
+
+    const txEditorTabsContainer = document.getElementById('txEditorTabs');
+    const txEditorAddTabBtn = document.getElementById('txEditorAddTabBtn');
+    txEditorAddTabBtn.addEventListener('click', createNewTxEditorTab);
+
+
+
+    function createNewTxEditorTab() {
+        if (txEditorTabCount <= 4) {
+            txEditorTabCount++;
+            const tabId = `txEditorTab${txEditorTabCount}`;
+    
+            const newTab = document.createElement('div');
+            newTab.classList.add('tx-editor-tab');
+            newTab.setAttribute('data-target', tabId);
+            newTab.innerHTML = `
+                <input type="text" class="tx-editor-tab-name" value="Untitled tab ${txEditorTabCount}" readonly>
+                <button class="tx-editor-close-tab-btn" onclick="closeTxEditorTab(event)">X</button>
+            `;
+            newTab.setAttribute('draggable', 'true');
+    
+            const newContent = document.createElement('div');
+            newContent.classList.add('tx-editor-tab-content');
+            newContent.setAttribute('id', tabId);
+            newContent.innerHTML = `<div id="editor-${tabId}" class="pAdeblc-txeditor"></div>`; 
+            txEditorTabsContainer.insertBefore(newTab, txEditorAddTabBtn);
+            document.getElementById('txEditorTabContainer').appendChild(newContent);
+    
+            const editor = ace.edit(`editor-${tabId}`);
+            editor.setTheme("ace/theme/monokai");
+            editor.session.setMode("ace/mode/javascript");
+            editor.setValue("console.log('Hello World!');");
+    
+            editors[tabId] = editor;
+            let id = Object.keys(editors);
+            newTab.addEventListener('click', switchTxEditorTab);
+    
+            const closeButton = newTab.querySelector('.tx-editor-close-tab-btn');
+            closeButton.addEventListener('click', (event) => {
+                event.stopPropagation();
+                closeTxEditorTab(event);
+            });
+    
+            try {
+                switchTxEditorTab(null, id[id.length - 1], false);
+            } catch(e) {
+                console.error("No valid editor or ID array found.");
+            }
+        } else {
+            console.warn("Can't make more tabs!");
+        }
+    }
+    
+
     newWindow.style.display = "none";
     makeDraggable(newWindow);
     newWindow.addEventListener("click", () => bringToFront(newWindow));
     bringToFront(newWindow);
-    editor = ace.edit("pAdeblc-txeditor");
-    editor.setTheme("ace/theme/monokai"); 
-    editor.session.setMode("ace/mode/javascript");
-    editor.setValue("console.log('Hello World!'); // Press run to run the script and check the console!");
+    txEditorTabsContainer.addEventListener('dragstart', (event) => {
+        if (event.target.classList.contains('tx-editor-tab') || event.target.classList.contains('tx-editor-tab-name')) {
+            draggedTxEditorTab = event.target.closest('.tx-editor-tab');
+            setTimeout(() => draggedTxEditorTab.style.display = 'none', 0);
+        }
+    });
+    
+    txEditorTabsContainer.addEventListener('dragend', (event) => {
+        setTimeout(() => {
+            draggedTxEditorTab.style.display = 'block';
+            draggedTxEditorTab = null;
+        }, 0);
+    });
+    
+    txEditorTabsContainer.addEventListener('dragover', (event) => {
+        event.preventDefault();
+    });
+    
+    txEditorTabsContainer.addEventListener('dragenter', (event) => {
+        if (event.target.classList.contains('tx-editor-tab') || event.target.classList.contains('tx-editor-tab-name')) {
+            event.target.closest('.tx-editor-tab').style.borderBottom = '0.1vw solid rgb(255, 211, 17)';
+        }
+    });
+    
+    txEditorTabsContainer.addEventListener('dragleave', (event) => {
+        if (event.target.classList.contains('tx-editor-tab') || event.target.classList.contains('tx-editor-tab-name')) {
+            event.target.closest('.tx-editor-tab').style.borderBottom = '0.1vw solid rgb(51, 51, 51)';
+        }
+    });
+    
+    txEditorTabsContainer.addEventListener('drop', (event) => {
+        event.preventDefault();
+        if (event.target.classList.contains('tx-editor-tab') || event.target.classList.contains('tx-editor-tab-name')) {
+            event.target.closest('.tx-editor-tab').style.borderBottom = '0.1vw solid rgb(51, 51, 51)';
+            txEditorTabsContainer.insertBefore(draggedTxEditorTab, event.target.closest('.tx-editor-tab'));
+        }
+    });
 }
+
+function closeTxEditorTab(event) {
+    const selectedTab = event.target.closest('.tx-editor-tab');
+    if (selectedTab) {
+        const targetId = selectedTab.getAttribute('data-target');
+        delete editors[targetId];
+        if (txEditorTabCount > 1){
+            txEditorTabCount = txEditorTabCount - 1;
+        }
+        selectedTab.remove();
+    }
+    switchTxEditorTab(null,null,true);
+}
+function switchTxEditorTab(event, tabId, closingtab) {
+    let selectedTab;
+    if (closingtab) {
+        const id = Object.keys(editors);
+        if (id.length > 0) {
+            selectedTab = document.querySelector(`.tx-editor-tab[data-target="${id[id.length - 1]}"]`);
+        } else {
+            console.warn("No tabs to switch to");
+            return;
+        }
+    } 
+    else if (event) {
+        selectedTab = event.target.closest('.tx-editor-tab');
+    } 
+    else if (tabId) {
+        selectedTab = document.querySelector(`.tx-editor-tab[data-target="${tabId}"]`);
+    }
+    if (selectedTab) {
+        document.querySelectorAll('.tx-editor-tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tx-editor-tab-content').forEach(content => content.classList.remove('active'));
+        selectedTab.classList.add('active');
+        const targetId = selectedTab.getAttribute('data-target');
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+            targetElement.classList.add('active');
+        } else {
+            console.error(`Element with id ${targetId} not found.`);
+        }
+        const editor = editors[targetId];
+        currenteditor = editor;
+        if (editor) {
+            editor.resize();
+        }
+    } else {
+        console.error("Selected tab not found.");
+    }
+}
+
+
 
 const consoleDiv = document.createElement('div');
 consoleDiv.id = "pAdeblc";
@@ -401,7 +689,6 @@ function switchTab(tabName) {
         current_tab = tabName;   
     }
 }
-  
 makeDraggable(document.querySelector('#pAdeblc'));
 function logToConsole(message,text_colour,log) {
     let consoleDiv = null;
@@ -436,6 +723,7 @@ document.addEventListener('keydown', e => {
         document.getElementById("pAdeblc").style.display = "block";
         window_open = true;
     }
+
 });
 
 function isJavaScript(code) {
@@ -619,12 +907,21 @@ function copyText() {
 }
 loadAceScript(CreateTextEditor);
 
-function run(string) {
+function run() {
     const script = document.createElement("script");
-    script.textContent = string;
+    script.textContent = currenteditor.getValue();
     document.body.appendChild(script);
     document.body.removeChild(script);
 }
+function runall() {
+    Object.keys(editors).forEach(key => {
+        const script = document.createElement("script");
+        script.textContent = editors[key].getValue();
+        document.body.appendChild(script);
+        document.body.removeChild(script);
+    });
+}
+
 function CloseDropdowns() {
     const dropdowns = document.querySelectorAll('.pAdeblc-dropdown');
     dropdowns.forEach(element => {

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draggable Tabs Example - Windows 98</title>
+    <style>
+        /* General styling for the Windows 98 look */
+        body {
+            font-family: 'MS Sans Serif', Arial, sans-serif;
+            background-color: #C0C0C0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .tx-editor-tabs-container {
+            display: flex;
+            cursor: move;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 1vw;
+            height: 2.5vw;
+            max-height: 2.5vw;
+            background-color: #A0A0A0;
+            border: 0.1vw solid #fff;
+            border-top-color: #fff;
+            border-left-color: #fff;
+            border-right-color: rgb(56, 56, 56);
+            border-bottom-color: rgb(56, 56, 56);
+            padding: 0 5px;
+            background-color: #C0C0C0;
+            border: 0.1vw solid #fff;
+            border-top-color:#fff;
+            border-left-color:#fff;
+            border-right-color: rgb(56, 56, 56);
+            border-bottom-color: rgb(56, 56, 56);
+            outline: none;
+        }
+
+        .tx-editor-tab {
+            padding: 0.3vw 1vw;
+            font-size: 1.2vw;
+            background-color: #D0D0D0;
+            border: 0.1vw solid #808080;
+            margin-right: 0.5vw;
+            user-select: none;
+            position: relative;
+            width: auto;
+            max-height: 2.5vw;
+            background-color: #C0C0C0;
+            border: 0.1vw solid #fff;
+            border-top-color:#fff;
+            border-left-color:#fff;
+            border-right-color: rgb(56, 56, 56);
+            border-bottom-color: rgb(56, 56, 56);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .tx-editor-tab.active {
+            color: white;
+            border-top-color:rgb(56, 56, 56);
+            border-left-color:rgb(56, 56, 56);
+            border-right-color: #fff;
+            border-bottom-color: #fff;
+        }
+
+        .tx-editor-tab-name {
+            background-color: transparent;
+            border: none;
+            outline: none;
+            color: black;
+            font-weight: bold;
+            text-overflow: ellipsis;
+            width: 10vw;
+            font-size: 1vw;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .tx-editor-tab-name.active {
+            color: white;
+        }
+
+        .tx-editor-tab-content {
+            display: none;
+            padding: 1vw;
+            background-color: #D0D0D0;
+            border: 0.1vw solid #808080;
+            border-top: none;
+        }
+
+        .tx-editor-tab-content.active {
+            display: block;
+        }
+
+        .tx-editor-tabs-actions {
+            display: flex;
+            justify-content: flex-end;
+            flex-grow: 1;
+        }
+
+        .tx-editor-add-tab-btn {
+            background-color: #4D4D4D;
+            color: white;
+            border: 0.2vw solid #808080;
+            height: 2vw;
+            width: 2vw;
+            font-size: 1.4vw;
+            cursor: pointer;
+            padding: 0;
+            background-color: #C0C0C0;
+            border: 0.1vw solid #fff;
+            border-top-color:#fff;
+            border-left-color:#fff;
+            border-right-color: rgb(56, 56, 56);
+            border-bottom-color: rgb(56, 56, 56);
+            outline: none;
+        }
+
+        .tx-editor-add-tab-btn:hover {
+            background-color: #000080;
+        }
+
+        .tx-editor-close-tab-btn {
+            background-color: #A0A0A0;
+            color: black;
+            border: 1px solid #808080;
+            position: absolute;
+            top: 0.3vw;
+            right: 0.5vw;
+            font-size: 1.2vw;
+            padding: 0;
+            width: 1.4vw;
+            height: 1.4vw;
+            background-color: #C0C0C0;
+            border: 0.1vw solid #fff;
+            border-top-color:#fff;
+            border-left-color:#fff;
+            border-right-color: rgb(56, 56, 56);
+            border-bottom-color: rgb(56, 56, 56);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .tx-editor-close-tab-btn:hover {
+            background-color: #FF0000;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div id="txEditorTabContainer">
+    <div class="tx-editor-tabs-container" id="txEditorTabs">
+        <button class="tx-editor-add-tab-btn" id="txEditorAddTabBtn">+</button>
+    </div>
+</div>
+
+<script>
+    const txEditorTabsContainer = document.getElementById('txEditorTabs');
+    const txEditorAddTabBtn = document.getElementById('txEditorAddTabBtn');
+
+    let txEditorTabCount = 0;
+
+    function switchTxEditorTab(event) {
+        const selectedTab = event.target.closest('.tx-editor-tab');
+        if (selectedTab) {
+            document.querySelectorAll('.tx-editor-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tx-editor-tab-content').forEach(content => content.classList.remove('active'));
+
+            selectedTab.classList.add('active');
+            const targetId = selectedTab.getAttribute('data-target');
+            document.getElementById(targetId).classList.add('active');
+        }
+    }
+
+    txEditorTabsContainer.addEventListener('click', switchTxEditorTab);
+
+    function closeTxEditorTab(event) {
+        const selectedTab = event.target.closest('.tx-editor-tab');
+        if (selectedTab) {
+            selectedTab.remove();
+        }
+    }
+
+    function createNewTxEditorTab(name) {
+        if (txEditorTabCount <= 11) {
+            txEditorTabCount++;
+            const newTab = document.createElement('div');
+            newTab.classList.add('tx-editor-tab');
+            newTab.setAttribute('data-target', `txEditorTab${txEditorTabCount}`);
+            newTab.innerHTML = `
+                <input type="text" class="tx-editor-tab-name" value="Untitled tab ${txEditorTabCount}" readonly onclick="switchTxEditorTab(event)">
+                <button class="tx-editor-close-tab-btn" onclick="closeTxEditorTab(event)">X</button>
+            `;
+            newTab.setAttribute('draggable', 'true');
+
+            const newContent = document.createElement('div');
+            newContent.classList.add('tx-editor-tab-content');
+            newContent.setAttribute('id', `txEditorTab${txEditorTabCount}`);
+            newContent.innerHTML = `<h2>Content for Tab ${txEditorTabCount}</h2><p>This is the content of Tab ${txEditorTabCount}.</p>`;
+            txEditorTabsContainer.insertBefore(newTab, txEditorAddTabBtn);
+            document.getElementById('txEditorTabContainer').appendChild(newContent);
+            newTab.addEventListener('click', switchTxEditorTab);
+
+        } else {
+            console.warn("Can't make more tabs!");
+        }
+    }
+
+    txEditorAddTabBtn.addEventListener('click', createNewTxEditorTab);
+
+    let draggedTxEditorTab = null;
+
+    txEditorTabsContainer.addEventListener('dragstart', (event) => {
+        if (event.target.classList.contains('tx-editor-tab') || event.target.classList.contains('tx-editor-tab-name')) {
+            draggedTxEditorTab = event.target.closest('.tx-editor-tab');
+            setTimeout(() => draggedTxEditorTab.style.display = 'none', 0);
+        }
+    });
+
+    txEditorTabsContainer.addEventListener('dragend', (event) => {
+        setTimeout(() => {
+            draggedTxEditorTab.style.display = 'block';
+            draggedTxEditorTab = null;
+        }, 0);
+    });
+
+    txEditorTabsContainer.addEventListener('dragover', (event) => {
+        event.preventDefault();
+    });
+
+    txEditorTabsContainer.addEventListener('dragenter', (event) => {
+        if (event.target.classList.contains('tx-editor-tab') || event.target.classList.contains('tx-editor-tab-name')) {
+            event.target.closest('.tx-editor-tab').style.borderBottom = '0.1vw solid rgb(255, 211, 17)';
+        }
+    });
+
+    txEditorTabsContainer.addEventListener('dragleave', (event) => {
+        if (event.target.classList.contains('tx-editor-tab') || event.target.classList.contains('tx-editor-tab-name')) {
+            event.target.closest('.tx-editor-tab').style.borderBottom = '0.1vw solid rgb(51, 51, 51)';
+        }
+    });
+
+    txEditorTabsContainer.addEventListener('drop', (event) => {
+        event.preventDefault();
+        if (event.target.classList.contains('tx-editor-tab') || event.target.classList.contains('tx-editor-tab-name')) {
+            event.target.closest('.tx-editor-tab').style.borderBottom = '0.1vw solid rgb(51, 51, 51)';
+            txEditorTabsContainer.insertBefore(draggedTxEditorTab, event.target.closest('.tx-editor-tab'));
+        }
+    });
+</script>
+
+</body>
