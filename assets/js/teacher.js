@@ -3,6 +3,7 @@ core.src = 'https://cdn.jsdelivr.net/npm/core-js@3.23.4/client/core.min.js';
 document.body.appendChild(core);
 const style = document.createElement('style');
 style.innerHTML = `
+
 .pAdeblc-content-new {
     background: silver;
     color: #ffffff;
@@ -250,7 +251,7 @@ style.innerHTML = `
     font-weight: bold;
     text-overflow: ellipsis;
     width: 10vw;
-    font-size: 1vw;
+    font-size: 0.8vw;
     white-space: nowrap;
     cursor: pointer;
 }
@@ -399,24 +400,27 @@ function loadAceScript(callback) {
     script2.src = "/assets/js/FileSaver.js";
     document.body.appendChild(script2);
 }
-const editors = [];
+let editors = [];
 let currenteditor = null;
 let txEditorTabCount = 0;
 let draggedTxEditorTab = null;
 let global_tabcontainer = null;
 let global_tabbt = null;
+let total_tab = 0;
 function createNewTxEditorTab(name,code,tabbt,tabcontainer) {
-    console.log(txEditorTabCount)
+    let tabnumber = 0;
+    total_tab += 1;
+    console.log("test")
     if (txEditorTabCount <= 3) {
-        const tabId = `txEditorTab${txEditorTabCount}`;
-
+        const tabId = `txEditorTab${total_tab}`;
+        
         const newTab = document.createElement('div');
         newTab.classList.add('tx-editor-tab');
         newTab.setAttribute('data-target', tabId);
         current_txeditor_tab = tabId;
         if (name == null){
             newTab.innerHTML = `
-            <input type="text" class="tx-editor-tab-name" id="${tabId}_name" value="Untitled tab ${txEditorTabCount}">
+            <input type="text" class="tx-editor-tab-name" id="${tabId}_name" value="Untitled tab ${total_tab}">
             <button class="tx-editor-close-tab-btn" ">X</button>
         `;
         } else {
@@ -558,6 +562,7 @@ function CreateTextEditor() {
         if (event.target.classList.contains('tx-editor-tab') || event.target.classList.contains('tx-editor-tab-name')) {
             event.target.closest('.tx-editor-tab').style.borderBottom = '0.1vw solid rgb(51, 51, 51)';
             global_tabcontainer.insertBefore(draggedTxEditorTab, event.target.closest('.tx-editor-tab'));
+            reorderEditors();   
         }
     });
 }
@@ -579,6 +584,21 @@ function closeTxEditorTab(event) {
 
     }
     event.stopPropagation(); 
+}
+function reorderEditors() {
+    let tabOrder = [];
+    document.querySelectorAll('.tx-editor-tab').forEach(tab => {
+        let tabId = tab.getAttribute('data-target');
+        tabOrder.push(tabId);
+    });
+    const reorderedEditors = {};
+    tabOrder.forEach(tabId => {
+        if (editors[tabId]) {
+            reorderedEditors[tabId] = editors[tabId];
+        }
+    });
+    editors = reorderedEditors;
+    console.log(Object.keys(reorderedEditors));
 }
 function switchTxEditorTab(event, tabId, closingtab) {
     let selectedTab;
@@ -617,6 +637,8 @@ function switchTxEditorTab(event, tabId, closingtab) {
         console.error("Selected tab not found.");
     }
 }
+
+
 
 
 

@@ -4,6 +4,7 @@ body, .content, .main {
 }
 
 
+
 #result {
     margin-top: 1vw;
     padding: 0.5vw;
@@ -43,27 +44,6 @@ body, .content, .main {
     text-align: center;
     color: #d0ced2;
     font-family: comfortaa;
-}
-.mainbox {
-    transform: translateX(0vh);
-    transition-duration: 0.4s;
-    -webkit-transition-duration: 0.4s;
-    -ms-transition-duration: 0.4s;
-    -moz-transition-duration: 0.4s;
-    z-index: 1;
-    width: 75%;
-    height: 85vh;
-    backdrop-filter: blur(5px) saturate(180%);
-    -webkit-backdrop-filter: blur(5px) saturate(180%);
-    background-color: rgba(255, 255, 255, 0.2);
-    outline: 0.3vh solid white;
-    margin-top: 1vh;
-    margin-bottom: 1vh;
-    border-radius: 1vh;
-    box-shadow: 0px 1vw 1vw;
-    overflow-y: scroll;
-    scrollbar-width: none;
-    scroll-behavior: smooth;
 }
 .mainbox-top-margin{
     margin-top: 2vh;;
@@ -192,7 +172,7 @@ font-size: 4vh;
 background-color: white;
 }
     
-.active {
+.topbutton {
     background-color: #c375ff;
     margin-top: 0.5vh;
     color: white;
@@ -204,6 +184,34 @@ background-color: white;
     background-color: rgba(116, 116, 116, 0.2);
     outline: 0.3vh solid white;
     transition: transform 0.5s ease-out all;
+}
+*, ::after, ::before {
+    box-sizing: content-box;
+}
+html .mainbox {
+    transform: translateX(0vh);
+    transition-duration: 0.4s;
+    -webkit-transition-duration: 0.4s;
+    -ms-transition-duration: 0.4s;
+    -moz-transition-duration: 0.4s;
+    z-index: 1;
+    width: 75%;
+    height: 85vh;
+    backdrop-filter: blur(5px) saturate(180%);
+    -webkit-backdrop-filter: blur(5px) saturate(180%);
+    background-color: rgba(255, 255, 255, 0.2);
+    outline: 0.3vh solid white;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+    border-radius: 1vh;
+    box-shadow: 0px 1vw 1vw;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+    box-sizing: border-box;
+}
+.mainbox *{
+    box-sizing: border-box;
 }
 .curve1 {
     border-radius: 1vw;
