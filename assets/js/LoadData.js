@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         document.body.appendChild(style);
         const script = document.createElement("script");
-        script.src = "/assets/js/teacherfilesystem.js"; // Absolute path from the root directory
+        script.src = "/assets/js/teacher.js"; // Absolute path from the root directory
         script.onerror = function() {
             console.error("Failed to load the script:", script.src);
         };
