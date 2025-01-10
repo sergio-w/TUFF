@@ -192,7 +192,6 @@ style.innerHTML = `
 
 .tx-editor-tabs-container {
     display: flex;
-    cursor: move;
     justify-content: flex-start;
     align-items: center;
     margin-bottom: 0vw;
@@ -212,6 +211,7 @@ style.innerHTML = `
     border-right-color: rgb(56, 56, 56);
     border-bottom-color: rgb(56, 56, 56);
     outline: none;
+    cursor: default;
 }
 
 .tx-editor-tab {
@@ -253,6 +253,9 @@ style.innerHTML = `
     font-size: 1vw;
     white-space: nowrap;
     cursor: pointer;
+}
+.tx-editor-tab-name:hover {
+    cursor: text;
 }
 .tx-editor-tab-name.active {
     color: white;
@@ -329,6 +332,17 @@ style.innerHTML = `
 `;
 document.body.appendChild(style);
 let current_tab = "MainOutput";
+let current_txeditor_tab = null;
+function waitForElement(selector, callback, interval = 100) {
+    const checkExist = setInterval(() => {
+        const element = document.querySelector(selector);
+        if (element) {
+            clearInterval(checkExist);
+            callback(element);
+        }
+    }, interval);
+}
+
 function bringToFront(windowElement) {
     const allWindows = document.querySelectorAll('.pAdeblc');
     let highestZIndex = 1;
@@ -389,6 +403,63 @@ const editors = [];
 let currenteditor = null;
 let txEditorTabCount = 0;
 let draggedTxEditorTab = null;
+let global_tabcontainer = null;
+let global_tabbt = null;
+function createNewTxEditorTab(name,code,tabbt,tabcontainer) {
+    console.log(txEditorTabCount)
+    if (txEditorTabCount <= 3) {
+        const tabId = `txEditorTab${txEditorTabCount}`;
+
+        const newTab = document.createElement('div');
+        newTab.classList.add('tx-editor-tab');
+        newTab.setAttribute('data-target', tabId);
+        current_txeditor_tab = tabId;
+        if (name == null){
+            newTab.innerHTML = `
+            <input type="text" class="tx-editor-tab-name" id="${tabId}_name" value="Untitled tab ${txEditorTabCount}">
+            <button class="tx-editor-close-tab-btn" ">X</button>
+        `;
+        } else {
+            newTab.innerHTML = `
+            <input type="text" class="tx-editor-tab-name" id="${tabId}_name" value="${name}">
+            <button class="tx-editor-close-tab-btn" ">X</button>
+        `;
+        }
+        newTab.setAttribute('draggable', 'true');
+
+        const newContent = document.createElement('div');
+        newContent.classList.add('tx-editor-tab-content');
+        newContent.setAttribute('id', tabId);
+        newContent.innerHTML = `<div id="editor-${tabId}" class="pAdeblc-txeditor"></div>`; 
+        tabcontainer.insertBefore(newTab, tabbt);
+        document.getElementById('txEditorTabContainer').appendChild(newContent);
+
+        const editor = ace.edit(`editor-${tabId}`);
+        editor.setTheme("ace/theme/monokai");
+        editor.session.setMode("ace/mode/javascript");
+        if (code != null) {
+            editor.setValue(code);
+        } else {
+            editor.setValue("console.log('Hello World!');");
+        }
+        editors[tabId] = editor;
+        let id = Object.keys(editors);
+        newTab.addEventListener('click', switchTxEditorTab);
+
+        const closeButton = newTab.querySelector('.tx-editor-close-tab-btn');
+        closeButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+            closeTxEditorTab(event);
+        });
+        try {
+            switchTxEditorTab(null, id[id.length - 1], false);
+        } catch(e) {
+            console.error("No valid editor or ID array found.");
+        }
+    } else {
+        console.warn("Can't make more tabs!");
+    }
+}
 function CreateTextEditor() {
     const newWindow = document.createElement('div');
     newWindow.classList.add("pAdeblc");
@@ -441,113 +512,73 @@ function CreateTextEditor() {
     `;
     document.body.appendChild(newWindow);
 
-    const txEditorTabsContainer = document.getElementById('txEditorTabs');
-    const txEditorAddTabBtn = document.getElementById('txEditorAddTabBtn');
-    txEditorAddTabBtn.addEventListener('click', createNewTxEditorTab);
-
-
-
-    function createNewTxEditorTab() {
-        if (txEditorTabCount <= 4) {
-            txEditorTabCount++;
-            const tabId = `txEditorTab${txEditorTabCount}`;
-    
-            const newTab = document.createElement('div');
-            newTab.classList.add('tx-editor-tab');
-            newTab.setAttribute('data-target', tabId);
-            newTab.innerHTML = `
-                <input type="text" class="tx-editor-tab-name" value="Untitled tab ${txEditorTabCount}" readonly>
-                <button class="tx-editor-close-tab-btn" onclick="closeTxEditorTab(event)">X</button>
-            `;
-            newTab.setAttribute('draggable', 'true');
-    
-            const newContent = document.createElement('div');
-            newContent.classList.add('tx-editor-tab-content');
-            newContent.setAttribute('id', tabId);
-            newContent.innerHTML = `<div id="editor-${tabId}" class="pAdeblc-txeditor"></div>`; 
-            txEditorTabsContainer.insertBefore(newTab, txEditorAddTabBtn);
-            document.getElementById('txEditorTabContainer').appendChild(newContent);
-    
-            const editor = ace.edit(`editor-${tabId}`);
-            editor.setTheme("ace/theme/monokai");
-            editor.session.setMode("ace/mode/javascript");
-            editor.setValue("console.log('Hello World!');");
-    
-            editors[tabId] = editor;
-            let id = Object.keys(editors);
-            newTab.addEventListener('click', switchTxEditorTab);
-    
-            const closeButton = newTab.querySelector('.tx-editor-close-tab-btn');
-            closeButton.addEventListener('click', (event) => {
-                event.stopPropagation();
-                closeTxEditorTab(event);
-            });
-    
-            try {
-                switchTxEditorTab(null, id[id.length - 1], false);
-            } catch(e) {
-                console.error("No valid editor or ID array found.");
-            }
-        } else {
-            console.warn("Can't make more tabs!");
-        }
-    }
-    
-
+    global_tabcontainer = document.getElementById('txEditorTabs');
+    global_tabbt = document.getElementById('txEditorAddTabBtn');
+    document.getElementById('txEditorAddTabBtn').addEventListener('click', (event) => {
+        event.stopPropagation();
+        createNewTxEditorTab(null, null, global_tabbt, global_tabcontainer);
+        txEditorTabCount += 1;
+    });
     newWindow.style.display = "none";
     makeDraggable(newWindow);
     newWindow.addEventListener("click", () => bringToFront(newWindow));
     bringToFront(newWindow);
-    txEditorTabsContainer.addEventListener('dragstart', (event) => {
+    global_tabcontainer.addEventListener('dragstart', (event) => {
         if (event.target.classList.contains('tx-editor-tab') || event.target.classList.contains('tx-editor-tab-name')) {
             draggedTxEditorTab = event.target.closest('.tx-editor-tab');
             setTimeout(() => draggedTxEditorTab.style.display = 'none', 0);
         }
     });
     
-    txEditorTabsContainer.addEventListener('dragend', (event) => {
+    global_tabcontainer.addEventListener('dragend', (event) => {
         setTimeout(() => {
             draggedTxEditorTab.style.display = 'block';
             draggedTxEditorTab = null;
         }, 0);
     });
     
-    txEditorTabsContainer.addEventListener('dragover', (event) => {
+    global_tabcontainer.addEventListener('dragover', (event) => {
         event.preventDefault();
     });
     
-    txEditorTabsContainer.addEventListener('dragenter', (event) => {
+    global_tabcontainer.addEventListener('dragenter', (event) => {
         if (event.target.classList.contains('tx-editor-tab') || event.target.classList.contains('tx-editor-tab-name')) {
             event.target.closest('.tx-editor-tab').style.borderBottom = '0.1vw solid rgb(255, 211, 17)';
         }
     });
     
-    txEditorTabsContainer.addEventListener('dragleave', (event) => {
+    global_tabcontainer.addEventListener('dragleave', (event) => {
         if (event.target.classList.contains('tx-editor-tab') || event.target.classList.contains('tx-editor-tab-name')) {
             event.target.closest('.tx-editor-tab').style.borderBottom = '0.1vw solid rgb(51, 51, 51)';
         }
     });
     
-    txEditorTabsContainer.addEventListener('drop', (event) => {
+    global_tabcontainer.addEventListener('drop', (event) => {
         event.preventDefault();
         if (event.target.classList.contains('tx-editor-tab') || event.target.classList.contains('tx-editor-tab-name')) {
             event.target.closest('.tx-editor-tab').style.borderBottom = '0.1vw solid rgb(51, 51, 51)';
-            txEditorTabsContainer.insertBefore(draggedTxEditorTab, event.target.closest('.tx-editor-tab'));
+            global_tabcontainer.insertBefore(draggedTxEditorTab, event.target.closest('.tx-editor-tab'));
         }
     });
 }
 
+
 function closeTxEditorTab(event) {
+    if (txEditorTabCount <= 1){
+        console.warn("Cant close more tabs");
+        return;
+    }
     const selectedTab = event.target.closest('.tx-editor-tab');
     if (selectedTab) {
         const targetId = selectedTab.getAttribute('data-target');
         delete editors[targetId];
-        if (txEditorTabCount > 1){
-            txEditorTabCount = txEditorTabCount - 1;
-        }
+        txEditorTabCount -= 1;
+
         selectedTab.remove();
+        switchTxEditorTab(null,null,true); 
+
     }
-    switchTxEditorTab(null,null,true);
+    event.stopPropagation(); 
 }
 function switchTxEditorTab(event, tabId, closingtab) {
     let selectedTab;
@@ -789,12 +820,12 @@ pAdeblcinput.addEventListener("keydown", (event) => {
 
 function saveFile() {
     CloseDropdowns();
-    var content = editor.getValue();
+    var content = currenteditor.getValue();
     var blob = new Blob([content], {
         type: "text/plain;charset=utf-8",
      });
     
-     saveAs(blob, "script.js");
+     saveAs(blob, document.getElementById(current_txeditor_tab + "_name").value);
      
 }
 function saveCookies() {
@@ -861,7 +892,10 @@ function handleFileSelect(event) {
     if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            editor.setValue(e.target.result);
+            if (txEditorTabCount <= 3){
+                createNewTxEditorTab(file.name, e.target.result,global_tabbt,global_tabcontainer);
+                txEditorTabCount += 1;
+            }
         };
         reader.readAsText(file);
     }
