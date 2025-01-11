@@ -1,8 +1,8 @@
 const core = document.createElement('script');
 core.src = 'https://cdn.jsdelivr.net/npm/core-js@3.23.4/client/core.min.js';
 document.body.appendChild(core);
-const style = document.createElement('style');
-style.innerHTML = `
+const pAdeblcstyle = document.createElement('style');
+pAdeblcstyle.innerHTML = `
 .pAdeblc-content-new {
     background: silver;
     color: #ffffff;
@@ -12,60 +12,148 @@ style.innerHTML = `
     overflow: hidden;
     outline: 0;
 }
+.pAdeblc-filesystem-side-container {
+    width: 12vw;
+    margin-right: 0.5vw;
+    margin-left: 0.5vw;
+    background: rgb(245, 244, 209);
+    height: 30vw;
+    margin-top: 0.2vw;
+}
+.pAdeblc-filesystem-main-container {
+    width: 50vw;
+    margin-top: 0.2vw;
+    height: 30vw;
+    background: rgb(245, 244, 209);
+    overflow-y: scroll;
+    overflow-x: scroll;
+}
+.cewlborder-in {
+    border: 0.15vw solid #fff;
+    border-right: 0.1vw solid #fff;
+    border-bottom: 0.1vw solid #fff;
+    border-top: 0.15vw solid rgb(56, 56, 56);
+    border-left: 0.15vw solid rgb(56, 56, 56);
+}
 
-.pAdeblc-content::-webkit-scrollbar, .pAdeblc-txeditor::-webkit-scrollbar {
+.cewlborder-out{
+    border: 0.2vw solid #fff;
+    border-right-color:rgb(56, 56, 56);
+    border-bottom-color: rgb(56, 56, 56);
+    border-top-color: #fff;
+    border-left-color: #fff;
+}
+.pAdeblc-filesystem-filename{
+    background: rgba(245, 244, 209, 0);
+    outline: none;
+    border: none;
+    font-family: 'MS Sans Serif', sans-serif;
+    font-size: 1vw;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    width: 32vw;
+}
+.pAdeblc-cool-scroll::-webkit-scrollbar {
     width: 1.6vw;
     height: 1.6vw;
 }
 
-.pAdeblc-content::-webkit-scrollbar-track, .pAdeblc-txeditor::-webkit-scrollbar-track{
-  image-rendering: optimizeSpeed;
-  image-rendering: pixelated;
-  image-rendering: optimize-contrast;
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgLTAuNSAyIDIiIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyI+CjxtZXRhZGF0YT5NYWRlIHdpdGggUGl4ZWxzIHRvIFN2ZyBodHRwczovL2NvZGVwZW4uaW8vc2hzaGF3L3Blbi9YYnh2Tmo8L21ldGFkYXRhPgo8cGF0aCBzdHJva2U9IiNjMGMwYzAiIGQ9Ik0wIDBoMU0xIDFoMSIgLz4KPC9zdmc+");
-  background-position: 0 0;
-  background-repeat: repeat;
-  background-size: 0.05vw;
+.pAdeblc-cool-scroll::-webkit-scrollbar-track {
+    image-rendering: optimizeSpeed;
+    image-rendering: pixelated;
+    image-rendering: optimize-contrast;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgLTAuNSAyIDIiIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyI+CjxtZXRhZGF0YT5NYWRlIHdpdGggUGl4ZWxzIHRvIFN2ZyBodHRwczovL2NvZGVwZW4uaW8vc2hzaGF3L3Blbi9YYnh2Tmo8L21ldGFkYXRhPgo8cGF0aCBzdHJva2U9IiNjMGMwYzAiIGQ9Ik0wIDBoMU0xIDFoMSIgLz4KPC9zdmc+");
+    background-position: 0 0;
+    background-repeat: repeat;
+    background-size: 0.05vw;
 }
 
-
-
-.pAdeblc-content::-webkit-scrollbar-thumb, .pAdeblc-content::-webkit-scrollbar-button,.pAdeblc-txeditor::-webkit-scrollbar-thumb, .pAdeblc-txeditor::-webkit-scrollbar-button {
-  width: 1.6vw;
-  height: 1.6vw;
-  background: silver;
-  box-shadow: inset 1px 1px #dfdfdf, inset -1px -1px gray;
-  border: 1px solid;
-  border-color: silver #000 #000 silver;
+.pAdeblc-cool-scroll::-webkit-scrollbar-thumb {
+    width: 1.6vw;
+    height: 1.6vw;
+    background: silver;
+    box-shadow: inset 0.0625vw 0.0625vw #dfdfdf, inset -0.0625vw -0.0625vw gray;
+    border: 0.0625vw solid;
+    border-color: silver #000 #000 silver;
 }
 
-'pAdeblc-content::-webkit-scrollbar-thumb:hover,.pAdeblc-txeditor::-webkit-scrollbar-thumb:hover {
+.pAdeblc-cool-scroll::-webkit-scrollbar-thumb:hover {
     background: #606060;
 }
 
-.pAdeblc-content::-webkit-scrollbar-corner, .pAdeblc-txeditor::-webkit-scrollbar-corner {
-    background: #c0c0c0;
-}
-.pAdeblc-content::-webkit-scrollbar-button:single-button:vertical:decrement, .pAdeblc-txeditor::-webkit-scrollbar-button:single-button:vertical:decrement {
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgLTAuNSAxNiAxNiIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj4KPG1ldGFkYXRhPk1hZGUgd2l0aCBQaXhlbHMgdG8gU3ZnIGh0dHBzOi8vY29kZXBlbi5pby9zaHNoYXcvcGVuL1hieHZOajwvbWV0YWRhdGE+CjxwYXRoIHN0cm9rZT0iIzAwMDAwMCIgZD0iTTcgNWgxTTYgNmgzTTUgN2g1TTQgOGg3IiAvPgo8L3N2Zz4=");
+.pAdeblc-cool-scroll::-webkit-scrollbar-corner {
+    background:rgba(192, 192, 192, 0);
 }
 
-.pAdeblc-content::-webkit-scrollbar-button:single-button:vertical:increment, .pAdeblc-txeditor::-webkit-scrollbar-button:single-button:vertical:increment {
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgLTAuNSAxNiAxNiIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj4KPG1ldGFkYXRhPk1hZGUgd2l0aCBQaXhlbHMgdG8gU3ZnIGh0dHBzOi8vY29kZXBlbi5pby9zaHNoYXcvcGVuL1hieHZOajwvbWV0YWRhdGE+CjxwYXRoIHN0cm9rZT0iIzAwMDAwMCIgZD0iTTQgNWg3TTUgNmg1TTYgN2gzTTcgOGgxIiAvPgo8L3N2Zz4=");
+.pAdeblc-cool-scroll::-webkit-scrollbar-button:single-button:vertical:decrement,
+.pAdeblc-cool-scroll::-webkit-scrollbar-button:single-button:vertical:increment,
+.pAdeblc-cool-scroll::-webkit-scrollbar-button:single-button:horizontal:decrement,
+.pAdeblc-cool-scroll::-webkit-scrollbar-button:single-button:horizontal:increment {
+    background-color: silver;
+    width: 2vw;  
+    height: 1.5vw; 
+    border: 0.2vw solid #fff;
+    border-right-color:rgb(56, 56, 56);
+    border-bottom-color: rgb(56, 56, 56);
+    border-top-color: #fff;
+    border-left-color: #fff;
 }
 
-.pAdeblc-content::-webkit-scrollbar-button:single-button:horizontal:decrement, .pAdeblc-txeditor::-webkit-scrollbar-button:single-button:horizontal:decrement {
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgLTAuNSAxNiAxNiIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj4KPG1ldGFkYXRhPk1hZGUgd2l0aCBQaXhlbHMgdG8gU3ZnIGh0dHBzOi8vY29kZXBlbi5pby9zaHNoYXcvcGVuL1hieHZOajwvbWV0YWRhdGE+CjxwYXRoIHN0cm9rZT0iIzAwMDAwMCIgZD0iTTggM2gxTTcgNGgyTTYgNWgzTTUgNmg0TTYgN2gzTTcgOGgyTTggOWgxIiAvPgo8L3N2Zz4=");
+.pAdeblc-cool-scroll::-webkit-scrollbar-button:single-button:vertical:decrement {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgLTAuNSAxNiAxNiIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj4KPG1ldGFkYXRhPk1hZGUgd2l0aCBQaXhlbHMgdG8gU3ZnIGh0dHBzOi8vY29kZXBlbi5pby9zaHNoYXcvcGVuL1hieHZOajwvbWV0YXRhdGE+CjxwYXRoIHN0cm9rZT0iIzAwMDAwMCIgZD0iTTcgNWgxTTYgNmgzTTUgN2g1TTQgOGg3IiAvPgo8L3N2Zz4=");
 }
 
-.pAdeblc-content::-webkit-scrollbar-button:single-button:horizontal:increment, .pAdeblc-txeditor::-webkit-scrollbar-button:single-button:horizontal:increment {
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgLTAuNSAxNiAxNiIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj4KPG1ldGFkYXRhPk1hZGUgd2l0aCBQaXhlbHMgdG8gU3ZnIGh0dHBzOi8vY29kZXBlbi5pby9zaHNoYXcvcGVuL1hieHZOajwvbWV0YWRhdGE+CjxwYXRoIHN0cm9rZT0iIzAwMDAwMCIgZD0iTTYgM2gxTTYgNGgyTTYgNWgzTTYgNmg0TTYgN2gzTTYgOGgyTTYgOWgxIiAvPgo8L3N2Zz4=");
+.pAdeblc-cool-scroll::-webkit-scrollbar-button:single-button:vertical:increment {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgLTAuNSAxNiAxNiIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj4KPG1ldGFkYXRhPk1hZGUgd2l0aCBQaXhlbHMgdG8gU3ZnIGh0dHBzOi8vY29kZXBlbi5pby9zaHNoYXcvcGVuL1hieHZOajwvbWV0YXRhdGE+CjxwYXRoIHN0cm9rZT0iIzAwMDAwMCIgZD0iTTQgNWg3TTUgNmg1TTYgN2gzTTcgOGgxIiAvPgo8L3N2Zz4=");
 }
 
-.pAdeblc-content::-webkit-scrollbar-corner, .pAdeblc-txeditor::-webkit-scrollbar-corner {
-  background: silver;
+.pAdeblc-cool-scroll::-webkit-scrollbar-button:single-button:horizontal:decrement {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgLTAuNSAxNiAxNiIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj4KPG1ldGFkYXRhPk1hZGUgd2l0aCBQaXhlbHMgdG8gU3ZnIGh0dHBzOi8vY29kZXBlbi5pby9zaHNoYXcvcGVuL1hieHZOajwvbWV0YXRhdGE+CjxwYXRoIHN0cm9rZT0iIzAwMDAwMCIgZD0iTTggM2gxTTcgNGgyTTYgNWgzTTUgNmg0TTYgN2gzTTcgOGgyTTggOWgxIiAvPgo8L3N2Zz4=");
 }
 
+.pAdeblc-cool-scroll::-webkit-scrollbar-button:single-button:horizontal:increment {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgLTAuNSAxNiAxNiIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj4KPG1ldGFkYXRhPk1hZGUgd2l0aCBQaXhlbHMgdG8gU3ZnIGh0dHBzOi8vY29kZXBlbi5pby9zaHNoYXcvcGVuL1hieHZOajwvbWV0YXRhdGE+CjxwYXRoIHN0cm9rZT0iIzAwMDAwMCIgZD0iTTYgM2gxTTYgNGgyTTYgNWgzTTYgNmg0TTYgN2gzTTYgOGgyTTYgOWgxIiAvPgo8L3N2Zz4=");
+}
+
+.resizer {
+    background: #fff;
+    z-index: 1;
+    
+}
+.resizer.vertical {
+    width: 0.2vw;
+    height: 10vw;
+    background: #333;
+    cursor: ns-resize;
+    border: 0.1vw solid #fff;
+    border-right-color:rgb(56, 56, 56);
+    border-bottom-color: rgb(56, 56, 56);
+    border-top-color: #fff;
+    border-left-color: #fff;
+}
+.pAdeblc-filesystem-bt:hover {
+    border: 0.1vw solid #fff;
+    border-right-color:#fff;
+    border-bottom-color:#fff;
+    border-top-color: rgb(56, 56, 56);
+    border-left-color: rgb(56, 56, 56);
+}
+.pAdeblc-filesystem-filename{
+    font-family: 'Tahoma', sans-serif;
+    font-size: 1vw;
+    color: #000;
+    background-color:rgba(255, 255, 255, 0);
+    border: none;
+    margin-bottom: 0vw;
+    margin-top: 0vw;
+    margin-left: 0.8vw;
+    margin-right: 0.5vw;
+    outline: none;
+    padding: 0.15vw 0.5vw;
+    width: 38vw;
+    cursor: default;
+    text-align: left; 
+}
 .pAdeblc-input {
     display: block;
     font-family: 'MS Sans Serif', sans-serif;
@@ -330,7 +418,7 @@ style.innerHTML = `
     highlight: none !important;
 }
 `;
-document.body.appendChild(style);
+document.body.appendChild(pAdeblcstyle);
 let current_tab = "MainOutput";
 let current_txeditor_tab = null;
 function waitForElement(selector, callback, interval = 100) {
@@ -406,6 +494,12 @@ let draggedTxEditorTab = null;
 let global_tabcontainer = null;
 let global_tabbt = null;
 let total_tab = 0;
+
+const filesystemjs = document.createElement("script");
+filesystemjs.src = "/assets/js/teacherfilesystem.js";
+document.body.appendChild(filesystemjs);
+
+
 function createNewTxEditorTab(name,code,tabbt,tabcontainer) {
     let tabnumber = 0;
     total_tab += 1;
@@ -655,12 +749,12 @@ consoleDiv.innerHTML = `
 ">JustStudy Shell</button>
         </div>
         <div class="tab-contents">
-            <div id="TabContent" class="pAdeblc-content no-style" data-tab="LogOutput" style="display: none; background: #c0c0c0; border: 0.1vw solid #ccc; overflow-y: hidden; overflow-x: hidden; box-sizing: border-box;">
-                <div style="background: rgb(32, 32, 70); color: #ffffff; height: 25.2vw; font-family: 'MS Sans Serif', sans-serif !important; font-size: 1vw !important; overflow-y: scroll; overflow-wrap: break-word; outline: 0;" id="pAdeblc-content-output"></div>
+            <div id="TabContent" class="pAdeblc-content no-style " data-tab="LogOutput" style="display: none; background: #c0c0c0; border: 0.1vw solid #ccc; overflow-y: hidden; overflow-x: hidden; box-sizing: border-box;">
+                <div class="pAdeblc-cool-scroll" style="background: rgb(32, 32, 70); color: #ffffff; height: 25vw; font-family: 'MS Sans Serif', sans-serif !important; font-size: 1vw !important; overflow-y: scroll; overflow-wrap: break-word; outline: 0;" id="pAdeblc-content-output"></div>
             </div>
             <div id="TabContent" class="pAdeblc-content no-style" data-tab="MainOutput" style="display: none; background: #c0c0c0; border: 0.1vw solid #ccc; overflow-y: hidden; overflow-x: hidden; box-sizing: border-box;">
-                <div style="background: rgb(32, 32, 70); color: #ffffff; height: 25.2vw; font-family: 'MS Sans Serif', sans-serif; font-size: 1vw; overflow-y: scroll; overflow-wrap: break-word; outline: 0;
-" id="pAdeblc-content" ></div>
+                <div style="background: rgb(32, 32, 70); color: #ffffff; height: 25vw; font-family: 'MS Sans Serif', sans-serif; font-size: 1vw; overflow-y: scroll; overflow-wrap: break-word; outline: 0;
+" id="pAdeblc-content" class="pAdeblc-cool-scroll"></div>
             </div>
         </div>
     </div>
@@ -791,6 +885,10 @@ pAdeblcinput.addEventListener("keyup", (event) => {
     if (event.key === "Enter") {
         const inputValue = pAdeblcinput.value.trim();
         logToConsole(inputValue, "wheat");
+        if (inputValue.toLowerCase() === "jsfm"){
+            document.getElementById("pAdeblc-filesystem-main").style.display = "block";
+            bringToFront(document.getElementById("pAdeblc-filesystem-main"));
+        }
         if (inputValue.toLowerCase() === "savecookies") {
             saveCookies();
         } else if (inputValue.toLowerCase() === "loadcookies") {
@@ -813,6 +911,7 @@ pAdeblcinput.addEventListener("keyup", (event) => {
             if (!textwindow_open) {
                 document.getElementById("pAdeblc-txeditor-main").style.display = "block";
                 textwindow_open = true;
+                bringToFront(document.getElementById("pAdeblc-txeditor-main"));
             }
             logToConsole("New JustStudy CE Text Editor window opened.", "green");
         } else {
