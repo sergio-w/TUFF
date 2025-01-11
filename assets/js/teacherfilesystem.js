@@ -47,6 +47,7 @@ filestyle.innerHTML = `
     background: rgb(245, 244, 209);
     height: 30vw;
     margin-top: 0.2vw;
+    overflorw-y: none;
 }
 .pAdeblc-filesystem-main-container {
     width: 50vw;
@@ -640,11 +641,11 @@ function MakeFileSystem(){
             </div>
             <div class="pAdeblc-filesystem-main-container pAdeblc-cool-scroll cewlborder-in" id="pAdeblc-filesystem">
                 <div class="pAdeblc-filesystem-row" style="display: flex; align-items: stretch;">
-                    <div id="pAdeblc-filesystem-Names" style="flex-grow: 1; overflow-y: auto; overflow-x:hidden;">
+                    <div id="pAdeblc-filesystem-Names" style="flex-grow: 1; overflow-y: hidden; overflow-x:hidden;">
                         
                     </div>
                     <div class="resizer vertical" id="resizer" style="cursor: ew-resize; margin-left:0.8vw; width: 0.2vw; background: #333;"></div>
-                    <div id="pAdeblc-filesystem-Values" style="flex-grow: 2; overflow-y: auto; overflow-x:hidden; margin-left: 0vw;">
+                    <div id="pAdeblc-filesystem-Values" style="flex-grow: 2; overflow-y: hidden; overflow-x:hidden; margin-left: 0vw;">
                         
                     </div>
                 </div>
