@@ -557,6 +557,7 @@ function makeDraggable(element) {
         document.onmousemove = null;
     }
 }
+
 function MakeFileSystem(){
     const script = document.createElement("script");
     script.src = "/assets/js/FileSaver.js";
@@ -891,24 +892,7 @@ function initializeFileSystem() {
 
 }
 initializeFileSystem();
-function resize(e) {
-    if (!isResizing) return;
 
-    const dx = e.clientX - startX;
-    if (currentResizer.classList.contains('vertical')) {
-        const newPrevWidth = startPrevSize + dx;
-        const newNextWidth = startNextSize - dx;
-
-        previousBox.style.width = '${newPrevWidth}px';
-        nextBox.style.width = '${newNextWidth}px';
-    }
-}
-
-function stopResizing() {
-    isResizing = false;
-    document.removeEventListener('mousemove', resize);
-    document.removeEventListener('mouseup', stopResizing);
-}
 function createDivs(type) {
     if (type !== "personalfiles") {
         let darker = false;
@@ -916,13 +900,12 @@ function createDivs(type) {
             <div class="pAdeblc-filesystem-row pAdeblc-cool-scroll" style="display: flex; align-items: stretch;">
                 <div id="pAdeblc-filesystem-Names" class="pAdeblc-cool-scroll" style="flex-grow: 1; overflow-y: auto; overflow-x:hidden; width: 200px;">
                 </div>
-                <div class="pAdeblc-filemanager-resizer" id="resizer" style="cursor: ew-resize; margin-left:0.1vw; width: 0.2vw; background: #333;"></div>
+                <div class="resizer vertical" id="resizer" style="cursor: ew-resize; margin-left:0.1vw; width: 0.2vw; background: #333;"></div>
                 <div id="pAdeblc-filesystem-Values" class="pAdeblc-cool-scroll" style="flex-grow: 2; overflow-y: auto; overflow-x:hidden; margin-left: 0vw; width: 500px;">
                 </div>
             </div>
         `;
         let resizer = document.getElementById('resizer');
-
         resizer.addEventListener('mousedown', (e) => {
             isResizing = true;
             currentResizer = resizer;
@@ -1035,3 +1018,33 @@ document.addEventListener('click', function(e){
         bringToFront(windowElement);
     }
 });
+function makeResizable(resizer, panels){
+    let isResizing = false;
+    let startX;
+    let startLeftWidth;
+    let startRightWidth;
+
+    resizer.addEventListener('mousedown', function(e){
+        isResizing = true;
+        startX = e.clientX;
+        const leftRect = panels[0].getBoundingClientRect();
+        const rightRect = panels[1].getBoundingClientRect();
+        startLeftWidth = leftRect.width;
+        startRightWidth = rightRect.width;
+        document.addEventListener('mousemove', resize);
+        document.addEventListener('mouseup', stopResize);
+    });
+
+    function resize(e){
+        if(!isResizing) return;
+        const dx = e.clientX - startX;
+        panels[0].style.width = `${startLeftWidth + dx}px`;
+        panels[1].style.width = `${startRightWidth - dx}px`;
+    }
+
+    function stopResize(){
+        isResizing = false;
+        document.removeEventListener('mousemove', resize);
+        document.removeEventListener('mouseup', stopResize);
+    }
+}

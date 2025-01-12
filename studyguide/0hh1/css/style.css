@@ -40,9 +40,9 @@ body {
 #pAdeblc-content-output, 
 #pAdeblc-content {
     font-family: inherit !important;
-    font-size: inherit !important;
+    font-size: 1vw;
     font-weight: inherit !important;
-    color: inherit !important;
+    color: revert !important;
     text-align: left;
 }
 
@@ -115,6 +115,7 @@ p:not(#TabContent) {
 #TabContent p {
   font-family: inherit !important;
   text-align: inherit !important;
+  font-size: inherit !important;
 }
 
 #titlegrid {

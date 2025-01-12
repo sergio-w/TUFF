@@ -1,32 +1,13 @@
-const core = document.createElement('script');
-core.src = 'https://cdn.jsdelivr.net/npm/core-js@3.23.4/client/core.min.js';
-document.body.appendChild(core);
 const pAdeblcstyle = document.createElement('style');
 pAdeblcstyle.innerHTML = `
 .pAdeblc-content-new {
     background: silver;
     color: #ffffff;
-    height: 92.1%;
+    height: 33.5vw;
     font-family: 'MS Sans Serif', sans-serif;
     font-size: 1vw;
     overflow: hidden;
     outline: 0;
-}
-.pAdeblc-filesystem-side-container {
-    width: 12vw;
-    margin-right: 0.5vw;
-    margin-left: 0.5vw;
-    background: rgb(245, 244, 209);
-    height: 30vw;
-    margin-top: 0.2vw;
-}
-.pAdeblc-filesystem-main-container {
-    width: 50vw;
-    margin-top: 0.2vw;
-    height: 30vw;
-    background: rgb(245, 244, 209);
-    overflow-y: scroll;
-    overflow-x: scroll;
 }
 .cewlborder-in {
     border: 0.15vw solid #fff;
@@ -42,16 +23,6 @@ pAdeblcstyle.innerHTML = `
     border-bottom-color: rgb(56, 56, 56);
     border-top-color: #fff;
     border-left-color: #fff;
-}
-.pAdeblc-filesystem-filename{
-    background: rgba(245, 244, 209, 0);
-    outline: none;
-    border: none;
-    font-family: 'MS Sans Serif', sans-serif;
-    font-size: 1vw;
-    color: rgb(0, 0, 0);
-    font-weight: bold;
-    width: 32vw;
 }
 .pAdeblc-cool-scroll::-webkit-scrollbar {
     width: 1.6vw;
@@ -138,22 +109,7 @@ pAdeblcstyle.innerHTML = `
     border-top-color: rgb(56, 56, 56);
     border-left-color: rgb(56, 56, 56);
 }
-.pAdeblc-filesystem-filename{
-    font-family: 'Tahoma', sans-serif;
-    font-size: 1vw;
-    color: #000;
-    background-color:rgba(255, 255, 255, 0);
-    border: none;
-    margin-bottom: 0vw;
-    margin-top: 0vw;
-    margin-left: 0.8vw;
-    margin-right: 0.5vw;
-    outline: none;
-    padding: 0.15vw 0.5vw;
-    width: 38vw;
-    cursor: default;
-    text-align: left; 
-}
+ 
 .pAdeblc-input {
     display: block;
     font-family: 'MS Sans Serif', sans-serif;
@@ -283,15 +239,15 @@ pAdeblcstyle.innerHTML = `
     justify-content: flex-start;
     align-items: center;
     margin-bottom: 0vw;
-    height: 2.5vw;
-    max-height: 2.5vw;
+    height: 3vw;
+    max-height: 3vw;
     background-color: #A0A0A0;
     border: 0.1vw solid #fff;
     border-top-color: #fff;
     border-left-color: #fff;
     border-right-color: rgb(56, 56, 56);
     border-bottom-color: rgb(56, 56, 56);
-    padding: 0 5px;
+    padding: 0 0.5vw;
     background-color: #C0C0C0;
     border: 0.1vw solid #fff;
     border-top-color:#fff;
@@ -300,6 +256,9 @@ pAdeblcstyle.innerHTML = `
     border-bottom-color: rgb(56, 56, 56);
     outline: none;
     cursor: default;
+    overflow-x: scroll;
+    scrollbar-width: thin;
+    overflow-y : hidden;
 }
 
 .tx-editor-tab {
@@ -351,7 +310,7 @@ pAdeblcstyle.innerHTML = `
 
 .tx-editor-tab-content {
     display: none;
-    height: 29.3vw;
+    height: 30.3vw;
     background-color: #D0D0D0;
     border: 0.1vw solid #808080;
 }
@@ -372,6 +331,8 @@ pAdeblcstyle.innerHTML = `
     color: white;
     border: 0.2vw solid #808080;
     height: 2vw;
+    box-sizing: border-box;
+    flex-shrink: 0;
     width: 2vw;
     font-size: 1.4vw;
     cursor: pointer;
@@ -503,7 +464,7 @@ document.body.appendChild(filesystemjs);
 function createNewTxEditorTab(name,code,tabbt,tabcontainer) {
     let tabnumber = 0;
     total_tab += 1;
-    if (txEditorTabCount <= 3) {
+    if (txEditorTabCount <= 20) {
         const tabId = `txEditorTab${total_tab}`;
         
         const newTab = document.createElement('div');
@@ -540,7 +501,10 @@ function createNewTxEditorTab(name,code,tabbt,tabcontainer) {
         }
         editors[tabId] = editor;
         let id = Object.keys(editors);
-        newTab.addEventListener('click', switchTxEditorTab);
+        newTab.addEventListener('click', (e) => {
+            switchTxEditorTab(e, id, false);
+        });
+
 
         const closeButton = newTab.querySelector('.tx-editor-close-tab-btn');
         closeButton.addEventListener('click', (event) => {
@@ -560,9 +524,9 @@ function CreateTextEditor() {
     const newWindow = document.createElement('div');
     newWindow.classList.add("pAdeblc");
     newWindow.id = "pAdeblc-txeditor-main";
-    newWindow.style = "font-family: 'MS Sans Serif', sans-serif; position: fixed; top: 25%; left: 25%; width: 56vw; height: 36vw; background: #c0c0c0; border: 0.2vw solid #fff; border-top-color:#fff; border-left-color:#fff; border-right-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); z-index: 9999; box-sizing: border-box;";
+    newWindow.style = "font-family: 'MS Sans Serif', sans-serif; position: fixed; top: 25%; left: 25%; width: 56vw; height: 36vw; background: #c0c0c0; border: 0.2vw solid #fff; border-top-color:#fff; border-left-color:#fff; border-right-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); z-index: 9999; box-sizing: content-box;";
     newWindow.innerHTML = `
-        <div id="pAdeblc-top-txeditor" style="cursor: move; text-align: left; height: 1.5vw; background: -webkit-linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); background: -moz-linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); background: linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); padding: 0.4vw; font-family: 'MS Sans Serif', sans-serif; font-size: 1.4vw; color: rgb(255, 255, 255); font-weight: bold; z-index: 10000; display: flex; align-items: center; justify-content: space-between;">
+        <div id="pAdeblc-top" style="cursor: move; text-align: left; height: 1.5vw; background: -webkit-linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); background: -moz-linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); background: linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); padding: 0.4vw; font-family: 'MS Sans Serif', sans-serif; font-size: 1.4vw; color: rgb(255, 255, 255); font-weight: bold; z-index: 10000; display: flex; align-items: center; justify-content: space-between;">
             <span style="margin-left: 0.5vw;">
                 <img src="/assets/img/winicons/window.png" class="pAdeblc-image" style="width: 2vw; height: 2vh;">
                 JustStudy CE Text Editor
@@ -578,6 +542,8 @@ function CreateTextEditor() {
                     <div class="pAdeblc-dropdown-content">
                         <a href="#" onclick="document.getElementById('fileInput').click()">Open</a>
                         <a href="#" onclick="saveFile()">Save</a>
+                        <a href="#" onclick="saveLocalFile()">Save to Local</a>
+                        <a href="#" onclick="openLocalFile()">Open Local</a>
                     </div>
                 </div>
                 <div class="pAdeblc-dropdown" id="editselector">
@@ -614,6 +580,9 @@ function CreateTextEditor() {
         event.stopPropagation();
         createNewTxEditorTab(null, null, global_tabbt, global_tabcontainer);
         txEditorTabCount += 1;
+        const container = document.getElementById('txEditorTabs');
+        container.scrollLeft = container.scrollWidth;
+
     });
     newWindow.style.display = "none";
     makeDraggable(newWindow);
@@ -721,17 +690,11 @@ function switchTxEditorTab(event, tabId, closingtab) {
         }
         const editor = editors[targetId];
         currenteditor = editor;
-        if (editor) {
-            editor.resize();
-        }
+        
     } else {
         console.error("Selected tab not found.");
     }
 }
-
-
-
-
 
 const consoleDiv = document.createElement('div');
 consoleDiv.id = "pAdeblc";
@@ -858,14 +821,17 @@ function logToConsole(message,text_colour,log) {
     consoleDiv.scrollTop = consoleDiv.scrollHeight;
 }
 
-
+const pAdeblcinput = document.getElementById("pAdeblc-input");
 document.addEventListener('keydown', e => {
     if (window_open && e.key === '`') {
+        e.preventDefault();
         document.getElementById("pAdeblc").style.display = "none";
         window_open = false;
     } else if (e.key === '`') {
+        e.preventDefault();
         document.getElementById("pAdeblc").style.display = "block";
         window_open = true;
+        pAdeblcinput.focus();
     }
 
 });
@@ -880,11 +846,11 @@ function isJavaScript(code) {
     }
 }
 
-const pAdeblcinput = document.getElementById("pAdeblc-input");
 pAdeblcinput.addEventListener("keyup", (event) => {
     if (event.key === "Enter") {
         const inputValue = pAdeblcinput.value.trim();
         logToConsole(inputValue, "wheat");
+
         if (inputValue.toLowerCase() === "jsfm"){
             document.getElementById("pAdeblc-filesystem-main").style.display = "block";
             bringToFront(document.getElementById("pAdeblc-filesystem-main"));
@@ -898,7 +864,8 @@ pAdeblcinput.addEventListener("keyup", (event) => {
             logToConsole("help - Display available commands", "white");
             logToConsole("clear - Clear console", "white");
             logToConsole("files - Display all premade runnable files", "white");
-            logToConsole("jstm - Open Text Editor", "white");
+            logToConsole("jste - Open Text Editor", "white");
+            logToConsole("jsfm - Open File Manager", "white");
             logToConsole("savecookies - Saves your cookie data into a json file", "white");
             logToConsole("loadcookies - Imports cookie data from the json file you saved", "white");
         } else if (inputValue === "clear") {
@@ -907,7 +874,7 @@ pAdeblcinput.addEventListener("keyup", (event) => {
             } else {
                 document.getElementById("pAdeblc-content").innerHTML = ""; 
             }
-        } else if (inputValue === 'jstm') {
+        } else if (inputValue === 'jste') {
             if (!textwindow_open) {
                 document.getElementById("pAdeblc-txeditor-main").style.display = "block";
                 textwindow_open = true;
@@ -1059,16 +1026,30 @@ function copyText() {
 }
 loadAceScript(CreateTextEditor);
 
+function openLocalFile(){
+        
+}
+function saveLocalFile(){
+
+}
 function run() {
     const script = document.createElement("script");
-    script.textContent = currenteditor.getValue();
+    script.textContent = `
+    (function() {
+        ${currenteditor.getValue()}
+    })();
+    `;   
     document.body.appendChild(script);
     document.body.removeChild(script);
 }
 function runall() {
     Object.keys(editors).forEach(key => {
         const script = document.createElement("script");
-        script.textContent = editors[key].getValue();
+        script.textContent = `
+        (function() {
+            ${editors[key].getValue()}
+        })();
+        `;
         document.body.appendChild(script);
         document.body.removeChild(script);
     });

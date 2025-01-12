@@ -71,7 +71,7 @@ window.addEventListener("blur",()=>{
 })
 function MakeThing(){
     const script = document.createElement("script");
-    script.src = "/assets/js/teacher.js";
+    script.src = "/assets/js/teacherfilesystem.js";
     document.body.appendChild(script);
 }
 LoadData();
