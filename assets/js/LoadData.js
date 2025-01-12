@@ -85,13 +85,11 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         document.body.appendChild(style);
         const script = document.createElement("script");
-        script.src = "/assets/js/teacher.js"; // Absolute path from the root directory
+        script.src = "/assets/js/teacher.js";
         script.onerror = function() {
             console.error("Failed to load the script:", script.src);
         };
         document.head.appendChild(script);
     }
-
-    // Call MakeThing after the DOM is fully loaded
     MakeThing();
 });

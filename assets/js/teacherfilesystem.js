@@ -54,10 +54,9 @@ filestyle.innerHTML = `
 .pAdeblc-filesystem-main-container {
     width: 50vw;
     margin-top: 0.2vw;
-    height: 29.8vw;
-    background: rgb(255, 255, 255);
+    background: rgb(245, 244, 209);
     overflow-y: scroll;
-    overflow-x: scroll;
+    overflow-x: hidden;
     display: flex;
     flex-direction: side;
 }
@@ -235,8 +234,6 @@ h5  {
     height: 1.3vw;
 }
 .pAdeblc-filemanager-content {
-    flex-grow: 1;
-    display: flex;
     overflow: hidden;
 }
 
@@ -244,12 +241,10 @@ h5  {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    margin: 0 0.5vw;
     background: rgb(252, 252, 236);
     border: 0.1vw solid rgb(56, 56, 56);
-    border-radius: 0.2vw;
     box-sizing: border-box;
-    min-width: 3vw;
+    min-width: 2.8vw;
 }
 
 .pAdeblc-filemanager-panel .folder-input {
@@ -277,18 +272,16 @@ h5  {
     display: flex;
     align-items: center;
     padding: 0.2vw;
-    border: 0.1vw solid #fff;
-    border-top-color: rgb(56, 56, 56);
-    border-left-color: rgb(56, 56, 56);
-    border-right-color: #fff;
-    border-bottom-color: #fff;
-    background: #C0C0C0;
+    border: 0.1vw solid rgb(85, 85, 85);
+    border-radius: 0.1vw;
     margin-bottom: 0.2vw;
     cursor: pointer;
     user-select: none;
+    overflow: hidden;
+    color: #000;
 }
 .pAdeblc-filemanager-panel .file-item:hover {
-    background: rgb(180, 180, 180);
+    border: 0.1vw solid rgb(82, 183, 241);
 }
 
 .pAdeblc-filemanager-panel .file-item img {
@@ -298,10 +291,36 @@ h5  {
 }
 
 .pAdeblc-filemanager-resizer {
-    width: 0.3vw;
+    width: 0.15vw;
+    margin-left: 0vw;
+    margin-right: 0vw;
     background: #333;
     cursor: ew-resize;
 }
+.pAdeblc-filesystem-row {
+    display: flex;
+    width: 100%;
+}
+
+#pAdeblc-filesystem-Names,
+#pAdeblc-filesystem-Values {
+    overflow: hidden;
+}
+
+#pAdeblc-filesystem-Names {
+    flex-grow: 1;
+}
+
+#pAdeblc-filesystem-Values {
+    flex-grow: 2;
+}
+
+.resizer {
+    width: 5px;
+    background-color: #333;
+    cursor: ew-resize;
+}
+
 `;
 document.head.appendChild(filestyle);
 
@@ -315,48 +334,7 @@ const filesystemmain = [
     {
         type: 'folder',
         name: 'root',
-        contents: [
-            {
-                type: 'file',
-                name: 'Project2.txt',
-                data: 'Project 2 details',
-                time_made: Date.now(),
-                file_size: getStringSizeUsingBlob('Project 2 details')
-            },
-            {
-                type: 'file',
-                name: 'Resume.js',
-                data: 'My Resume',
-                time_made: Date.now(),
-                file_size: getStringSizeUsingBlob('My Resume')
-            },
-            {
-                type: 'folder',
-                name: 'Photos',
-                contents: [
-                    {
-                        type: 'file',
-                        name: 'Vacation.js',
-                        data: 'Vacation photo',
-                        time_made: Date.now(),
-                        file_size: getStringSizeUsingBlob('Vacation photo')
-                    },
-                    {
-                        type: 'folder',
-                        name: 'Work',
-                        contents: [
-                            {
-                                type: 'file',
-                                name: 'Family.html',
-                                data: 'Family photo',
-                                time_made: Date.now(),
-                                file_size: getStringSizeUsingBlob('Family photo')
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
+        contents: []
     }
 ];
 
@@ -457,21 +435,57 @@ function renderPanel(fileListElement, path) {
 }
 
 function makediv(text, isValue, arg3, arg4, darker) {
-    const div = document.createElement('div');
-    div.style.display = 'flex';
-    div.style.backgroundColor = darker ? '#e0e0e0' : '#ffffff';
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.value = text;
-    input.readOnly = !isValue;
-    input.className = 'pAdeblc-filesystem-filename';
-    input.style.width = '100%';
-    div.appendChild(input);
-    if(isValue){
-        document.getElementById("pAdeblc-filesystem-Values").appendChild(div);
+    let newDiv = document.createElement('div');
+    newDiv.style.margin = '0 0';
+    document.getElementById("resizer").style.height = 'auto';
+    // Create button
+    let button = document.createElement('button');
+    button.style.fontFamily = "'Tahoma', sans-serif";
+    button.style.fontSize = '1vw';
+    button.style.color = '#000';
+    if (darker == 1){
+     button.style.background = 'rgb(160, 160, 160)';
+    } else {
+     button.style.background = '#C0C0C0';
     }
-    else{
-        document.getElementById("pAdeblc-filesystem-Names").appendChild(div);
+    button.style.border = '0.1vw solid #fff';
+    button.style.marginBottom = '0vw';
+    button.style.marginTop = '0vw';
+    button.style.marginLeft = '0.8vw';
+    button.style.marginRight = '0.5vw';
+    button.style.borderTopColor = '#fff';
+    button.style.borderLeftColor = '#fff';
+    button.style.borderRightColor = 'rgb(56, 56, 56)';
+    button.style.borderBottomColor = 'rgb(56, 56, 56)';
+    button.style.width = '38vw';
+    button.style.height = '1.5vw';  
+    button.style.cursor = 'pointer';
+    button.style.textAlign = 'left';
+    button.style.display = "flex";
+    button.style.alignItems = "center";
+
+    button.setAttribute('onmouseover', 'hoverBtIn(this)');
+    button.setAttribute('onmouseout', 'hoverBtOut(this)');
+    
+    // Add icon to button
+    let img = document.createElement('img');
+    img.src = '/assets/img/winicons/folder.png';
+    img.className = 'pAdeblc-image';
+    img.style.width = '1.1vw';
+    img.style.height = '2vh';
+    
+    let input = document.createElement('input');
+    input.className = 'pAdeblc-filesystem-filename';
+    button.appendChild(img);
+    button.appendChild(input);
+    input.value = text;
+    
+    newDiv.appendChild(button);
+
+    if (!isValue) {
+        document.getElementById("pAdeblc-filesystem-Names").appendChild(newDiv);
+    } else {
+        document.getElementById("pAdeblc-filesystem-Values").appendChild(newDiv);
     }
 }
 
@@ -526,7 +540,7 @@ function bringToFront(windowElement) {
     windowElement.style.zIndex = highestZIndex + 1;
 }
 
-function makeDraggable(element) {
+function makeFileManagerDraggable(element) {
     let currentPosX = 0, currentPosY = 0, previousPosX = 0, previousPosY = 0;
 
     const handle = element.querySelector('#pAdeblc-top-filesystem');
@@ -563,6 +577,7 @@ function MakeFileSystem(){
     document.body.appendChild(script);
 
     const newWindow = document.createElement('div');
+    newWindow.classList.add(".pAdeblc");
     newWindow.classList.add("pAdeblc-filesystem-main");
     newWindow.id = "pAdeblc-filesystem-main";
     newWindow.style = "font-family: 'MS Sans Serif', sans-serif; position: fixed; top: 25%; left: 25%; width: 56vw; height: 36vw; background: #c0c0c0; border: 0.2vw solid #fff; border-top-color:#fff; border-left-color:#fff; border-right-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); z-index: 9999; box-sizing: border-box;";
@@ -652,10 +667,10 @@ function MakeFileSystem(){
         </div>
     `;
     document.body.appendChild(newWindow);
-    makeDraggable(newWindow);
+    makeFileManagerDraggable(newWindow);
     newWindow.style.display = 'none';
     newWindow.addEventListener("click", () => bringToFront(newWindow));
-
+    bringToFront(newWindow);
     const resizer = newWindow.querySelector('.pAdeblc-filemanager-resizer');
     if(resizer){
         const panels = newWindow.querySelectorAll('.pAdeblc-filemanager-panel');
@@ -888,20 +903,21 @@ document.addEventListener('contextmenu', function(e){
 });
 
 function initializeFileSystem() {
-
+    makefile('Project1.txt', 'Project 1 details', 'root');
+    makefolder('Test', 'root');
+    makefile('Test.txt', 'Test details', 'root/Test');
 }
 initializeFileSystem();
+
 function resize(e) {
     if (!isResizing) return;
 
     const dx = e.clientX - startX;
-    if (currentResizer.classList.contains('vertical')) {
-        const newPrevWidth = startPrevSize + dx;
-        const newNextWidth = startNextSize - dx;
-
-        previousBox.style.width = '${newPrevWidth}px';
-        nextBox.style.width = '${newNextWidth}px';
-    }
+    const newPrevWidth = startPrevSize + dx;
+    const newNextWidth = startNextSize - dx;
+    previousBox.style.width = `${newPrevWidth}px`;
+    nextBox.style.width = `${newNextWidth}px`;
+    e.preventDefault();
 }
 
 function stopResizing() {
@@ -909,20 +925,26 @@ function stopResizing() {
     document.removeEventListener('mousemove', resize);
     document.removeEventListener('mouseup', stopResizing);
 }
+
 function createDivs(type) {
     if (type !== "personalfiles") {
         let darker = false;
         document.getElementById("pAdeblc-filesystem-content").innerHTML = `
-            <div class="pAdeblc-filesystem-row pAdeblc-cool-scroll" style="display: flex; align-items: stretch;">
-                <div id="pAdeblc-filesystem-Names" class="pAdeblc-cool-scroll" style="flex-grow: 1; overflow-y: auto; overflow-x:hidden; width: 200px;">
-                </div>
-                <div class="pAdeblc-filemanager-resizer" id="resizer" style="cursor: ew-resize; margin-left:0.1vw; width: 0.2vw; background: #333;"></div>
-                <div id="pAdeblc-filesystem-Values" class="pAdeblc-cool-scroll" style="flex-grow: 2; overflow-y: auto; overflow-x:hidden; margin-left: 0vw; width: 500px;">
-                </div>
+            <div class="pAdeblc-filesystem-row" style="display: flex; align-items: stretch;">
+                    <div id="pAdeblc-filesystem-Names" style="flex-grow: 1; overflow-y: hidden; overflow-x:hidden;">
+                        
+                    </div>
+                    <div class="resizer vertical" id="resizer" style="cursor: ew-resize; margin-left:0.8vw; width: 0.2vw; background: #333;"></div>
+                    <div id="pAdeblc-filesystem-Values" style="flex-grow: 2; overflow-y: hidden; overflow-x:hidden;">
+                        
+                    </div>
             </div>
         `;
-        let resizer = document.getElementById('resizer');
-
+        document.getElementById("pAdeblc-filesystem-content").style.display = "block";
+        document.getElementById("pAdeblc-filesystem-content").style.flexDirection = "none";
+        document.getElementById("pAdeblc-filesystem-Names").innerHTML = `<button class="pAdeblc-filesystem-filename">Name</button>`;
+        document.getElementById("pAdeblc-filesystem-Values").innerHTML = `<button class="pAdeblc-filesystem-filename">Value</button>`;
+        const resizer = document.getElementById('resizer');
         resizer.addEventListener('mousedown', (e) => {
             isResizing = true;
             currentResizer = resizer;
@@ -935,8 +957,7 @@ function createDivs(type) {
             document.addEventListener('mousemove', resize);
             document.addEventListener('mouseup', stopResizing);
         });
-        document.getElementById("pAdeblc-filesystem-Names").innerHTML = `<button class="pAdeblc-filesystem-filename">Name</button>`;
-        document.getElementById("pAdeblc-filesystem-Values").innerHTML = `<button class="pAdeblc-filesystem-filename">Value</button>`;
+        
         if (type === "cookie") {
             let cookieArray = getCookies();
             cookieArray.forEach(cookie => {
@@ -968,12 +989,14 @@ function createDivs(type) {
                 <input class='folder-input' type="text" placeholder="Enter folder path..." value="/root"/>
                 <div class="file-list pAdeblc-filemanager-scrollbar" id="left-file-list"></div>
             </div>
-            <div class="pAdeblc-filemanager-resizer"></div>
+            <div class="pAdeblc-filemanager-resizer "></div>
             <div class="pAdeblc-filemanager-panel">
                 <input class='folder-input' type="text" placeholder="Enter folder path..." value="/root"/>
                 <div class="file-list pAdeblc-filemanager-scrollbar" id="right-file-list"></div>
             </div>
         `; 
+        document.getElementById("pAdeblc-filesystem-content").style.display = "flex";
+        document.getElementById("pAdeblc-filesystem-content").style.flexDirection = "row";
         const container = document.getElementById('pAdeblc-filesystem-content');
         const resizer = container.querySelector('.pAdeblc-filemanager-resizer');
         const panels = container.querySelectorAll('.pAdeblc-filemanager-panel');
@@ -1028,10 +1051,3 @@ function LoadFiles(type) {
 }
 
 MakeFileSystem();
-
-document.addEventListener('click', function(e){
-    const windowElement = e.target.closest('.pAdeblc-filesystem-main');
-    if(windowElement){
-        bringToFront(windowElement);
-    }
-});

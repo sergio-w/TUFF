@@ -109,7 +109,6 @@ pAdeblcstyle.innerHTML = `
     border-top-color: rgb(56, 56, 56);
     border-left-color: rgb(56, 56, 56);
 }
- 
 .pAdeblc-input {
     display: block;
     font-family: 'MS Sans Serif', sans-serif;
@@ -746,7 +745,6 @@ function makeDraggable(element) {
         element.querySelector('#pAdeblc-top-txeditor').onmousedown = dragMouseDown;
        }
     } 
-
     function dragMouseDown(e) {
         e.preventDefault();
         previousPosX = e.clientX;
