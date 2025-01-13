@@ -211,6 +211,24 @@ filestyle.innerHTML = `
     cursor: default;
     text-align: left; 
 }
+.pAdeblc-filesystem-value{
+    font-family: 'Tahoma', sans-serif;
+    font-size: 1vw;
+    background-color:rgba(255, 255, 255, 0);
+    border: none;
+    color: #000;
+    margin-bottom: 0vw;
+    margin-top: 0vw;
+    margin-left: 0.4vw;
+    margin-right: 0.5vw;
+    outline: none;
+    width: 38vw;
+    cursor: pointer;
+    text-align: left; 
+}
+.padeblc-filesystem-filename:hover{
+    color: #ffffff;
+}
 h3{
     font-size: 1vw;
 }
@@ -325,10 +343,11 @@ h5  {
 }
 .pAdeblc-filemanager-button {
     font-family: 'Tahoma', sans-serif;
+    color: rgb(0, 0, 0) !important;
 }
 .pAdeblc-filemanager-button:hover {
     background: rgb(65, 113, 218) !important;
-    color: #fff;
+    color: rgb(255, 255, 255) !important;
 }
 .pAdeblc-filemanager-go-up{
     font-family: 'Tahoma', sans-serif;
@@ -384,7 +403,7 @@ let currentResizer = null;
 let previousBox = null;
 let nextBox = null;
 let startX = 0, startPrevSize = 0, startNextSize = 0;
-
+let current_menu;
 const filesystemmain = [
     {
         type: 'folder',
@@ -615,7 +634,6 @@ function makediv(text, isValue, arg3, arg4, darker) {
     button.classList.add("pAdeblc-filemanager-button");
     button.style.fontFamily = "'Tahoma', sans-serif";
     button.style.fontSize = '1vw';
-    button.style.color = '#000';
     if (darker == 1){
         button.style.background = 'rgb(255, 255, 255)';
        } else {
@@ -641,11 +659,10 @@ function makediv(text, isValue, arg3, arg4, darker) {
     img.style.height = '2vh';
     
     let input = document.createElement('input');
-    input.className = 'pAdeblc-filesystem-filename';
+    input.className = 'pAdeblc-filesystem-value';
     button.appendChild(img);
     button.appendChild(input);
     input.value = text;
-    
     newDiv.appendChild(button);
 
     if (!isValue) {
@@ -763,7 +780,7 @@ function MakeFileSystem(){
                     <img src="/assets/img/winicons/folder-edit.png" class="pAdeblc-image">File
                 </button>
                 <div class="pAdeblc-dropdown-content">
-                    <a href="#" onclick="document.getElementById('FilesystemCookieInput').click();">Open File</a>
+                    <a href="#" onclick="document.getElementById('FilesystemCookieInput').click();">Open Data File</a>
                     <a href="#" onclick="updateStorage()">Save changes</a>
                     <a href="#" onclick="saveCookies()">Save as</a>
                 </div>
@@ -896,10 +913,9 @@ function handleCookieData(event) {
                 });
 
                 console.log("Cookies, localStorage, and sessionStorage loaded successfully!");
-                alert("Cookies, localStorage, and sessionStorage loaded successfully!");
+                createDivs(current_menu);
             } catch (err) {
                 console.error("Failed to load data:", err);
-                alert("Failed to load data.");
             }
         };
         reader.readAsText(file);
@@ -969,6 +985,7 @@ function updateStorage() {
         }
     });
     console.log("SessionStorage updated!");
+    makediv(current_menu);
 }
 
 function findAndReplace(){
@@ -996,12 +1013,12 @@ function findAndReplace(){
             }
         });
         if (found) {
-            alert('Find and replace completed.');
+            console.log('Find and replace completed.');
         } else {
-            alert('Text not found.');
+            console.warn('Text not found.');
         }
     } else {
-        alert('Operation cancelled or invalid input.');
+        console.error('Operation cancelled or invalid input.');
     }
 }
 
@@ -1028,10 +1045,10 @@ function findText(){
             }
         });
         if (!found) {
-            alert('Text not found.');
+            console.warn('Text not found.');
         }
     } else {
-        alert('Search cancelled.');
+        console.log('Search cancelled.');
     }
 }
 
@@ -1125,6 +1142,7 @@ function CreateFolderUsingContextMenu(path){
     UpdatePersonalFileSystem();
 }
 function createDivs(type) {
+    current_menu = type;
     if (type !== "personalfiles") {
         let darker = false;
         document.getElementById("pAdeblc-filesystem-content").innerHTML = `
