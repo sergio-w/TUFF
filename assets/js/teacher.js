@@ -1111,78 +1111,89 @@ function file(loc) {
     document.body.removeChild(script);
 }
 
+
+let isHandlingError = false;
+
+
+
 console.log = function (message) {
-    logToConsole(message, "#31f10a",true);
+    logToConsole(message, "#31f10a", true);
     originalConsoleLog.apply(console, arguments);
 };
 
+
 console.warn = function (message) {
-    logToConsole(message, "yellow",true);
+    logToConsole(message, "yellow", true);
     originalConsoleWarn.apply(console, arguments);
 };
 
+
 console.error = function (message) {
-    logToConsole(message, "red",true);
+    if (!isHandlingError) {
+        logToConsole(message, "red", true);
+    }
     originalConsoleError.apply(console, arguments);
 };
 
-window.addEventListener('unhandledrejection', function (event) {
-    logToConsole(`Unhandled Promise Rejection: ${event.reason}`, 'red',true);
-    console.error(event.reason);
-});
 
 window.onerror = function (message, source, lineno, colno, error) {
+    if (isHandlingError) return false;
+    isHandlingError = true;
+
     if (error instanceof TypeError) {
-        logToConsole(`TypeError: ${message} at ${source}:${lineno}:${colno}`, 'red',true);
+        logToConsole(`TypeError: ${message} at ${source}:${lineno}:${colno}`, 'red', true);
     } else {
-        logToConsole(`Uncaught Error: ${message} at ${source}:${lineno}:${colno}`, 'red',true);
+        logToConsole(`Uncaught Error: ${message} at ${source}:${lineno}:${colno}`, 'red', true);
     }
 
     let stackInfo = '';
     if (error && error.stack) {
         stackInfo = extractStackInfo(error.stack);
-        logToConsole(`Stack Trace: ${stackInfo}`, 'white',true);
+        logToConsole(`Stack Trace: ${stackInfo}`, 'white', true);
     }
 
-    console.error(error);
+    isHandlingError = false;
     return true;
 };
 
-
 window.addEventListener('error', function (event) {
-    if (event.target && event.target.src) {
-        logToConsole(`Resource Load Error: ${event.target.src}`, 'orange',true);
-    } else {
-        logToConsole(`General Error: ${event.message}`, 'orange',true);
+    if (event.target !== window) {
+        if (event.target && event.target.src) {
+            logToConsole(`Resource Load Error: ${event.target.src}`, 'orange', true);
+        } else {
+            logToConsole(`Resource Load Error`, 'orange', true);
+        }
     }
 }, true);
+
+window.addEventListener('unhandledrejection', function (event) {
+    logToConsole(`Unhandled Promise Rejection: ${event.reason}`, 'red', true);
+    console.error(event.reason);
+});
+
+window.addEventListener('storage', function (event) {
+    logToConsole(`Storage Event: ${event.key} changed`, 'orange', true);
+});
+
+window.addEventListener('blocked', function (event) {
+    logToConsole(`Blocked by Tracking Prevention: ${event.message}`, 'orange', true);
+});
 
 const originalFetch = window.fetch;
 window.fetch = async function (...args) {
     try {
         const response = await originalFetch(...args);
         if (!response.ok) {
-            logToConsole(`Fetch Error: ${response.status} - ${response.statusText} (URL: ${args[0]})`, 'red',true);
+            logToConsole(`Fetch Error: ${response.status} - ${response.statusText} (URL: ${args[0]})`, 'red', true);
         }
         return response;
     } catch (error) {
-        logToConsole(`Fetch Failed: ${error.message} (URL: ${args[0]})`, 'red',true);
+        logToConsole(`Fetch Failed: ${error.message} (URL: ${args[0]})`, 'red', true);
         console.error(error);
         throw error;
     }
 };
 
-window.addEventListener('storage', function (event) {
-    logToConsole(`Storage Event: ${event.key} changed`, 'orange',true);
-});
-
-window.addEventListener('blocked', function (event) {
-    logToConsole(`Blocked by Tracking Prevention: ${event.message}`, 'orange',true);
-});
-window.addEventListener('unhandledrejection', function (event) {
-    logToConsole(`Unhandled Promise Rejection: ${event.reason}`, 'red',true);
-    console.error(event.reason);
-}, true);
 function extractStackInfo(stack) {
     const stackLines = stack.split('\n');
     for (let i = 0; i < stackLines.length; i++) {

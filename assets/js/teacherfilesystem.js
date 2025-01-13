@@ -481,7 +481,6 @@ const handleFileNFolderContextMenu = (event, name, type) => {
     renameOption.href = "#";
     renameOption.textContent = `Rename ${type}`;
     renameOption.addEventListener("click", (e) => RenameItem(event));
-
     const deleteOption = document.createElement("a");
     deleteOption.href = "#";
     deleteOption.textContent = `Delete ${type}`;
@@ -497,7 +496,6 @@ const handleFileNFolderContextMenu = (event, name, type) => {
         }
     });
 };
-
 function DeleteItem(event) {
     const target = event.target.closest('.file-item');
     if (target) {
