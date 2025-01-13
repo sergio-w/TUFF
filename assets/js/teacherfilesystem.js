@@ -1437,7 +1437,6 @@ function createDivs(type) {
                         );
 
                         if (originalIndex !== -1) {
-                            console.log(originalFolder.name);
                             originalFolder.contents.splice(originalIndex, 1);
                         } else {
                             console.error(`Could not find ${draggedItem.name} in ${draggedItem.path} to remove.`);
