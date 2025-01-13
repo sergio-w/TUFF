@@ -1344,7 +1344,7 @@ function createDivs(type) {
             <div class="pAdeblc-filemanager-resizer "></div>
             <div class="pAdeblc-filemanager-panel">
                 <div style="display: flex; align-items: center;">
-                    <input class='folder-input' id="pAdeblc-filemanager-folder-input-right" type="text" placeholder="Enter folder path..." value="/root"/> 
+                    <input class='folder-input' id="pAdeblc-filemanager-folder-input-right"  style="flex: 1 1 auto" type="text" placeholder="Enter folder path..." value="/root"/> 
 
                     <button class="pAdeblc-filemanager-go-root" id="pAdeblc-filemanager-go-root-right">*</button>
                     
