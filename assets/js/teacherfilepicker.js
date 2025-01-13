@@ -19,20 +19,6 @@ filestyle.innerHTML = `
     display: flex;
     align-items: center;
 }
-.pAdeblc-filesystem-bt {
-    margin: 0.5vw;
-    font-family: 'Tahoma', sans-serif;
-    font-size: 1vw;
-    height: 1.8vw;
-    color: #000;
-    background-color: #C0C0C0;
-    padding: 0.4vw;
-    cursor: pointer;
-    border: 0.1vw solid #C0C0C0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 .pAdeblc-image {
   width: 1.5vw;
   height: 1.5vh;   
@@ -46,7 +32,7 @@ filestyle.innerHTML = `
 .pAdeblc-filesystem-extra-container {
     width: 44.7vw;
     background: rgb(255, 255, 255);
-    overflow-y: scroll;
+    overflow-y: hidden;
     overflow-x: hidden;
     display: flex;
     flex-direction: side;
@@ -111,7 +97,7 @@ filestyle.innerHTML = `
 .pAdeblc-dropdown.show .pAdeblc-dropdown-content {
   display: block;
 }
-.pAdeblc-filesystem-bt:hover {
+.pAdeblc-filepicker-bt:hover {
     border: 0.1vw solid #fff;
     border-right-color:#fff;
     border-bottom-color:#fff;
@@ -153,7 +139,7 @@ filestyle.innerHTML = `
 
 .pAdeblc-filemanager-panel .file-list {
     flex-grow: 1;
-    overflow-y: auto;
+    overflow-y: scroll;
     overflow-x: hidden;
     padding: 0.3vw;
     background: rgb(255, 255, 255);
@@ -198,11 +184,11 @@ filestyle.innerHTML = `
     border-left-color: #fff;
     border-bottom-color: rgb(56, 56, 56);
     cursor: pointer;
-    width: 1vw;
     text-align: center; 
     width: 1.5vw;
     flex: 0 1 auto;
     margin-right: 0.5vw;
+    padding: unset;
 }
 .pAdeblc-filemanager-go-root{
     font-family: 'Tahoma', sans-serif;
@@ -217,6 +203,7 @@ filestyle.innerHTML = `
     cursor: pointer;
     text-align: center; 
     flex: 0 1 auto;
+    padding: unset;
 }
 .custom-context-menu {
     font-family: 'MS Sans Serif', sans-serif;
@@ -235,6 +222,63 @@ filestyle.innerHTML = `
     color: #000;
     user-select: none;
 }
+.pAdeblc-filepicker-container {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5vw;
+    box-sizing: border-box;
+    background: #C0C0C0;
+    border: 0.1vw solid #fff;
+    border-right-color: rgb(56, 56, 56);
+    border-bottom-color: rgb(56, 56, 56);
+    border-top-color: #fff;
+    border-left-color: #fff;
+}
+
+.pAdeblc-filepicker-title {
+    font-size: 1vw;
+    font-family: 'Tahoma', sans-serif;
+    text-align: left;
+    color: #000;
+    margin-bottom: 0.5vw;
+}
+.pAdeblc-filepicker-bt {
+    font-family: 'Tahoma', sans-serif;
+    font-size: 1vw;
+    height: 1.8vw;
+    color: #000;
+    background-color: #C0C0C0;
+    width: 3.5vw;
+    cursor: pointer;
+    border: 0.1vw solid #fff;
+    border-top-color:#fff;
+    border-left-color:#fff;
+    border-right-color: rgb(56, 56, 56);
+    border-bottom-color: rgb(56, 56, 56);
+]
+}
+.pAdeblc-filepicker-input-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: left;
+    gap: 0.5vw;
+    width: 100%;
+}
+.pAdeblc-filepicker-input {
+    flex: 1 1 auto;
+    height: 1.8vw;
+    border: 0.1vw solid #fff;
+    border-left-color: rgb(56, 56, 56);
+    border-bottom-color: #fff;
+    border-top-color: rgb(56, 56, 56);
+    border-right-color: #fff;
+    outline: none;
+    font-size: 1vw;
+    background: rgb(255, 255, 255);
+    padding: 0.2vw;
+}
+
 `;
 document.head.appendChild(filestyle);
 
@@ -315,6 +359,13 @@ function getFolderByPath(path, fileSystem = filesystemmain) {
         if (!current) return null;
     }
     return current;
+}
+function getFileContent(path, filename) {
+    const folder = getFolderByPath(path);
+    if (!folder) return null;
+    const file = folder.contents.find(item => item.type === 'file' && item.name === filename);
+    if (!file) return null;
+    return file.content;
 }
 const handleFileNFolderContextMenu = (event, name, type) => {
     event.preventDefault();
@@ -527,12 +578,12 @@ function makeFileManagerDraggable(element) {
     }
 }
 
-function MakeFileSystem(){
+function MakeFilePicker(){
     const newWindow = document.createElement('div');
     newWindow.classList.add(".pAdeblc");
     newWindow.classList.add("pAdeblc-filesystem-main");
     newWindow.id = "pAdeblc-filesystem-main";
-    newWindow.style = "font-family: 'MS Sans Serif', sans-serif; position: fixed; top: 25%; left: 25%; width: 45vw; height: 30vw; background: #c0c0c0; border: 0.2vw solid #fff; border-top-color:#fff; border-left-color:#fff; border-right-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); z-index: 9999; box-sizing: border-box;";
+    newWindow.style = "font-family: 'MS Sans Serif', sans-serif; position: fixed; top: 25%; left: 25%; width: 45vw; background: #c0c0c0; border: 0.2vw solid #fff; border-top-color:#fff; border-left-color:#fff; border-right-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); z-index: 9999; box-sizing: border-box;";
 
     newWindow.innerHTML = `
         <div id="pAdeblc-top-filesystem" style="cursor: move; text-align: left; height: 1.5vw; background: -webkit-linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); background: -moz-linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); background: linear-gradient(to right, rgb(29, 47, 216), rgb(2, 107, 226)); padding: 0.4vw; font-family: 'MS Sans Serif', sans-serif; font-size: 1.4vw; color: rgb(255, 255, 255); font-weight: bold; z-index: 10000; display: flex; align-items: center; justify-content: space-between;">
@@ -551,7 +602,7 @@ function MakeFileSystem(){
     newWindow.addEventListener("click", () => bringToFront(newWindow));
     bringToFront(newWindow);
 }
-MakeFileSystem();
+MakeFilePicker();
 function UpdatePersonalFileSystem(){
     const container = document.getElementById('pAdeblc-filesystem-content');
     let inputdata = document.getElementById("pAdeblc-filemanager-folder-input").value;
@@ -568,27 +619,49 @@ function createDivs() {
             <div class="pAdeblc-filemanager-panel">
                 <div style="display: flex; align-items: center;">
                     <input class='folder-input' id="pAdeblc-filemanager-folder-input" type="text" style="flex: 1 1 auto;" placeholder="Enter folder path..." value="/root"/> 
-
                     <button class="pAdeblc-filemanager-go-root" id="pAdeblc-filemanager-go-root">*</button>
-
-                    <button class="pAdeblc-filemanager-go-up" id="pAdeblc-filemanager-go-up">▼</button>
+                    <button class="pAdeblc-filemanager-go-up" id="pAdeblc-filemanager-go-up">V</button>
                 </div>
-                <div class="file-list pAdeblc-filemanager-scrollbar" id="file-list" style="height: 24.4vw;"></div>
+                
+                <div class="file-list pAdeblc-cool-scroll" id="file-list" style="height: 18vw;"></div>
+                 <div class="pAdeblc-filepicker-container cewlborder-in">
+                    <div class="pAdeblc-filepicker-title">Select a file</div>
+                    <div class="pAdeblc-filepicker-input-group">
+                        <input class="pAdeblc-filepicker-input" placeholder="Enter file name..." id="pAdeblc-filepicker-input">
+                        <button class="pAdeblc-filepicker-bt" id="pAdeblc-filepicker-select" >Select</button>
+                        <button class="pAdeblc-filepicker-bt" id="pAdeblc-filepicker-cancel">Cancel</button>
+                    </div>
+                </div>
             </div>
         `; 
         document.getElementById("pAdeblc-filesystem-content").style.display = "flex";
         document.getElementById("pAdeblc-filesystem-content").style.flexDirection = "row";
         const container = document.getElementById('pAdeblc-filesystem-content');
         const Input = document.getElementById('pAdeblc-filemanager-folder-input');
+        const FileName = document.getElementById('pAdeblc-filepicker-input');
         const GoRoot = document.getElementById('pAdeblc-filemanager-go-root');
         const GoUp = document.getElementById('pAdeblc-filemanager-go-up');
+        const SelectBT = document.getElementById('pAdeblc-filepicker-select');
+        const CancelBT = document.getElementById('pAdeblc-filepicker-cancel');
+
+        SelectBT.addEventListener('click', () => {
+            const path = `${CurrentSelectedFolder}`;
+
+        })
         GoRoot.addEventListener('click', () => {
             const path = `/root`;
             renderPanel(container.querySelector('#file-list'), path);
             Input.value = path;
         });
-        
-        
+        container.querySelector('#file-list').addEventListener('mousedown', (e) => {
+            const target = e.target.closest('.file-item');
+            if (target && target.dataset.type === 'file') {
+                const file_extension = file_types[target.dataset.name.split('.').pop()];
+                CurrentSelectedFile = target.dataset.name;
+                CurrentSelectedFolder = Input.value.trim();
+                FileName.value = target.dataset.name;
+            }
+        })
         GoUp.addEventListener('click', () => {
             const path = Input.value.trim().split('/').slice(0, -1).join('/');
             if (path == ""){
@@ -627,12 +700,8 @@ function createDivs() {
                 const newPath = navigatePath(currentPath, folderName);
                 Input.value = newPath;
                 renderPanel(container.querySelector('#file-list'), newPath);
-            } else if (target && target.dataset.type === 'file') {
-                CurrentSelectedFile = Input.value.trim();
             }
         });
         const path = `/root`;
         renderPanel(container.querySelector('#file-list'), path);
-        
-
 }

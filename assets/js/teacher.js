@@ -456,7 +456,7 @@ let global_tabbt = null;
 let total_tab = 0;
 
 const filesystemjs = document.createElement("script");
-filesystemjs.src = "/assets/js/teacherfilesystem.js";
+filesystemjs.src = "/assets/js/teacherfilepicker.js";
 document.body.appendChild(filesystemjs);
 
 function createUniqueTabId(baseName, editors) {
