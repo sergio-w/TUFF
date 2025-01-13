@@ -424,7 +424,6 @@ function openDatabase(onSuccess) {
     request.onupgradeneeded = function(event) {
         const db = event.target.result;
 
-        // Create an object store if it doesn't already exist
         if (!db.objectStoreNames.contains("filesystem")) {
             const store = db.createObjectStore("filesystem", { keyPath: "id", autoIncrement: true });
         }
@@ -470,13 +469,13 @@ openDatabase(function(db) {
             filesystemmain = getRequest.result.data;
         } else {
             console.log("No data found in IndexedDB. Initializing default filesystem.");
-            filesystemmain = {
-                root: {
-                    name: "root",
-                    type: "folder",
+            filesystemmain = [
+                {
+                    type: 'folder',
+                    name: 'root',
                     contents: []
                 }
-            };
+            ];
             saveFilesystem();
         }
     };
@@ -491,7 +490,7 @@ function getFolderByPath(path, fileSystem = filesystemmain) {
     const parts = path.split('/').filter(part => part !== '');
     if (parts.length === 0) return null;
     
-    let current = fileSystem.find(entry => entry.type === 'folder' && entry.name === parts[0]);
+    let current = filesystemmain.find(entry => entry.type === 'folder' && entry.name === parts[0]);
     if (!current) return null;
     
     for (const part of parts.slice(1)) {
