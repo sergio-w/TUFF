@@ -578,7 +578,6 @@ const handleFileNFolderContextMenu = (event, name, type) => {
     contextMenu.style.position = "absolute";
     contextMenu.style.left = event.pageX + "px";
     contextMenu.style.top = event.pageY + "px";
-    contextMenu.style.height = "4vw";
     contextMenu.style.width = "10vw";
     contextMenu.style.display = "block";
     bringToFront(contextMenu);
@@ -1278,11 +1277,11 @@ function createDivs(type) {
         let darker = false;
         document.getElementById("pAdeblc-filesystem-content").innerHTML = `
             <div class="pAdeblc-filesystem-row" style="display: flex; align-items: stretch;">
-                    <div id="pAdeblc-filesystem-Names" style="flex-grow: 1; overflow-y: hidden; overflow-x:hidden;">
+                    <div id="pAdeblc-filesystem-Names" style="flex-grow: 1; overflow-y: hidden; overflow-x:hidden; width: 300.267px;">
                         
                     </div>
                     <div class="resizer vertical" id="resizer" style="cursor: ew-resize; margin-left:0.8vw; width: 0.2vw; background: #333;"></div>
-                    <div id="pAdeblc-filesystem-Values" style="flex-grow: 2; overflow-y: hidden; overflow-x:hidden;">
+                    <div id="pAdeblc-filesystem-Values" style="flex-grow: 2; overflow-y: hidden; overflow-x:hidden; width: 698.267px;">
                         
                     </div>
             </div>
@@ -1561,7 +1560,6 @@ function createDivs(type) {
                 contextMenu.style.position = "absolute";
                 contextMenu.style.left = event.pageX + "px";
                 contextMenu.style.top = event.pageY + "px";
-                contextMenu.style.height = "4vw";
                 contextMenu.style.width = "10vw";
                 contextMenu.style.display = "block";
                 bringToFront(contextMenu);
@@ -1570,7 +1568,7 @@ function createDivs(type) {
                     <a href="#" onclick="CreateFolderUsingContextMenu('${folderPath}')">Create Folder</a>
                 `;
                 document.body.appendChild(contextMenu);
-    
+                
                 contextMenu.addEventListener("click", (e) => {
                     if (e.target.tagName === "A") {
                         const action = e.target.textContent.trim();
@@ -1579,7 +1577,7 @@ function createDivs(type) {
                 });
             }
         };
-    
+        
         if (leftFileList && leftInput) {
             leftFileList.addEventListener("contextmenu", (e) => handleContextMenu(e, leftFileList, leftInput));
         }
@@ -1595,3 +1593,9 @@ function LoadFiles(type) {
     createDivs(type);
 }
 MakeFileSystem();
+document.addEventListener("click", (e) => {
+    try {
+        document.body.removeChild(document.getElementById("context-menu-rightclick"));
+    } catch (e) {
+    }
+})

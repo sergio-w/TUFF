@@ -509,7 +509,7 @@ function createNewTxEditorTab(name,code,tabbt,tabcontainer,syntaxtype) {
         if (syntaxtype){
             editor.session.setMode(`ace/mode/${syntaxtype}`);
         } else {
-            editor.session.setMode("ace/mode/text");
+            editor.session.setMode("ace/mode/javascript");
         }
         if (code != null) {
             editor.setValue(code);
@@ -534,7 +534,7 @@ function createNewTxEditorTab(name,code,tabbt,tabcontainer,syntaxtype) {
                 if (syntaxtype){
                     editors[`editor-${tabId}`].session.setMode(`ace/mode/${syntaxtype}`);
                 } else {
-                    editors[`editor-${tabId}`].session.setMode("ace/mode/text");
+                    editors[`editor-${tabId}`].session.setMode("ace/mode/javascript");
                 }
             }
         });
