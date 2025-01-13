@@ -88,7 +88,7 @@ filestyle.innerHTML = `
 }
 .resizer.vertical {
     width: 0.2vw;
-    height: 10vw;
+    height: 0vw;
     background: #333;
     cursor: ns-resize;
     border: 0.1vw solid #fff;
@@ -427,13 +427,10 @@ function openDatabase(onSuccess) {
         if (!db.objectStoreNames.contains("filesystem")) {
             const store = db.createObjectStore("filesystem", { keyPath: "id", autoIncrement: true });
         }
-
-        console.log("Database setup or upgraded!");
     };
 
     request.onsuccess = function(event) {
         const db = event.target.result;
-        console.log("Database opened successfully:", db);
 
         if (onSuccess) onSuccess(db);
     };
@@ -450,7 +447,6 @@ function saveFilesystem() {
         const saveRequest = store.put({ id: 1, data: filesystemmain });
 
         saveRequest.onsuccess = function() {
-            console.log("Filesystem saved successfully.");
         };
 
         saveRequest.onerror = function(event) {
@@ -468,7 +464,6 @@ openDatabase(function(db) {
         if (getRequest.result) {
             filesystemmain = getRequest.result.data;
         } else {
-            console.log("No data found in IndexedDB. Initializing default filesystem.");
             filesystemmain = [
                 {
                     type: 'folder',
@@ -755,8 +750,6 @@ function renderPanel(fileListElement, path) {
                     const input = target.querySelector('.pAdeblc-file-name');
                     const path = panel.querySelector('.folder-input').value.trim();
                     const folder = getFolderByPath(path);
-                    console.log(draggedItem.name);
-                    console.log(fileItem.dataset.name);
                     if (folder && draggedItem.name !== fileItem.dataset.name) {
                         const index = folder.contents.findIndex(
                             (existingItem) => existingItem.name === input.value.trim() && existingItem.type === 'folder'
@@ -780,13 +773,14 @@ function renderPanel(fileListElement, path) {
                             targetFolder.contents.push(draggedItem);
 
                             UpdatePersonalFileSystem();
-                            console.log(`File moved to ${draggedItem.path}`);
                         } else {
                             console.error('Target folder not found');
                         }
                     } else {
                         console.error('Target folder does not exist');
                     }
+                } else {
+                
                 }
             });
             
@@ -1082,7 +1076,7 @@ function handleCookieData(event) {
                     sessionStorage.setItem(key, value);
                 });
 
-                console.log("Cookies, localStorage, and sessionStorage loaded successfully!");
+                console.log("Cookies, localStorage, and sessionStorage loaded successfully");
                 createDivs(current_menu);
             } catch (err) {
                 console.error("Failed to load data:", err);
@@ -1134,7 +1128,7 @@ function updateStorage() {
         }
     });
 
-    console.log("LocalStorage updated!");
+    console.log("LocalStorage updated");
 
     keys.forEach((keyInput, index) => {
         const key = keyInput.value.trim();
@@ -1144,7 +1138,7 @@ function updateStorage() {
             document.cookie = `${key}=${value}; path=/`;
         }
     });
-    console.log("Cookies updated!");
+    console.log("Cookies updated");
 
     keys.forEach((keyInput, index) => {
         const key = keyInput.value.trim();
@@ -1154,7 +1148,7 @@ function updateStorage() {
             sessionStorage.setItem(key, value);
         }
     });
-    console.log("SessionStorage updated!");
+    console.log("SessionStorage updated");
     makediv(current_menu);
 }
 
@@ -1183,7 +1177,6 @@ function findAndReplace(){
             }
         });
         if (found) {
-            console.log('Find and replace completed.');
         } else {
             console.warn('Text not found.');
         }
@@ -1218,7 +1211,6 @@ function findText(){
             console.warn('Text not found.');
         }
     } else {
-        console.log('Search cancelled.');
     }
 }
 
@@ -1314,7 +1306,6 @@ function createDivs(type) {
         });
         
         if (type === "cookie") {
-            console.log(getCookies());
             let cookieArray = getCookies();
             cookieArray.forEach(cookie => {
                 darker = !darker;
@@ -1429,6 +1420,65 @@ function createDivs(type) {
                 txEditorTabCount += 1;
             }
         }
+        function MoveFileToPanel(e){
+            e.preventDefault();
+            const draggedItem = JSON.parse(e.dataTransfer.getData('application/json'));
+            const target = e.target.closest('.file-item');
+            const panel = e.target.closest('.pAdeblc-filemanager-panel');
+
+            if (panel) {
+                const path = panel.querySelector('.folder-input').value.trim();
+                const folder = getFolderByPath(path);
+                if (folder && draggedItem.path !== path) {
+                    const originalFolder = getFolderByPath(draggedItem.path);
+                    if (originalFolder) {
+                        const originalIndex = originalFolder.contents.findIndex(
+                            (item) => item.name === draggedItem.name && item.type === draggedItem.type
+                        );
+
+                        if (originalIndex !== -1) {
+                            console.log(originalFolder.name);
+                            originalFolder.contents.splice(originalIndex, 1);
+                        } else {
+                            console.error(`Could not find ${draggedItem.name} in ${draggedItem.path} to remove.`);
+                        }
+                    } else {
+                        console.error(`Original folder not found for path ${draggedItem.path}`);
+                    }
+                    let newName = draggedItem.name;
+                    if (folder.contents.some(item => item.name === draggedItem.name && item.type === draggedItem.type)) {
+                        const baseName = draggedItem.name.substring(0, draggedItem.name.lastIndexOf('.')) || draggedItem.name;
+                        const extension = draggedItem.name.includes('.') ? draggedItem.name.substring(draggedItem.name.lastIndexOf('.')) : '';
+                        let counter = 1;
+
+                        do {
+                            newName = `${baseName} (${counter++})${extension}`;
+                        } while (folder.contents.some(item => item.name === newName && item.type === draggedItem.type));
+                    }
+                    draggedItem.path = path;
+                    draggedItem.name = newName;
+                    
+                    folder.contents.push(draggedItem);
+                    UpdatePersonalFileSystem();
+                }
+            } else {
+                console.error('Target folder not found');
+            }
+        }
+        container.querySelector('#left-file-list').addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
+        });
+        container.querySelector('#right-file-list').addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
+        });
+        container.querySelector('#left-file-list').addEventListener('drop', (e) => {
+            MoveFileToPanel(e);
+        });
+        container.querySelector('#right-file-list').addEventListener('drop', (e) => {
+            MoveFileToPanel(e);
+        });
         const file_types = {
             "html": "text/html",
             "css": "text/css",
