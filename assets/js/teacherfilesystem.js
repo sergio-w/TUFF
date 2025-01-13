@@ -406,7 +406,7 @@ let previousBox = null;
 let nextBox = null;
 let startX = 0, startPrevSize = 0, startNextSize = 0;
 let current_menu;
-const filesystemmain = [
+let filesystemmain = [
     {
         type: 'folder',
         name: 'root',
@@ -418,6 +418,74 @@ function getStringSizeUsingBlob(str) {
     const blob = new Blob([str]); 
     return blob.size;
 }
+function openDatabase(onSuccess) {
+    const request = indexedDB.open("pAdbelc-personal-filesystem", 1);
+
+    request.onupgradeneeded = function(event) {
+        const db = event.target.result;
+
+        // Create an object store if it doesn't already exist
+        if (!db.objectStoreNames.contains("filesystem")) {
+            const store = db.createObjectStore("filesystem", { keyPath: "id", autoIncrement: true });
+        }
+
+        console.log("Database setup or upgraded!");
+    };
+
+    request.onsuccess = function(event) {
+        const db = event.target.result;
+        console.log("Database opened successfully:", db);
+
+        if (onSuccess) onSuccess(db);
+    };
+
+    request.onerror = function(event) {
+        console.error("Error opening database:", event.target.error);
+    };
+}
+function saveFilesystem() {
+    openDatabase(function(db) {
+        const transaction = db.transaction("filesystem", "readwrite");
+        const store = transaction.objectStore("filesystem");
+
+        const saveRequest = store.put({ id: 1, data: filesystemmain });
+
+        saveRequest.onsuccess = function() {
+            console.log("Filesystem saved successfully.");
+        };
+
+        saveRequest.onerror = function(event) {
+            console.error("Error saving filesystem:", event.target.error);
+        };
+    });
+}
+openDatabase(function(db) {
+    const transaction = db.transaction("filesystem", "readonly");
+    const store = transaction.objectStore("filesystem");
+
+    const getRequest = store.get(1);
+
+    getRequest.onsuccess = function(event) {
+        if (getRequest.result) {
+            filesystemmain = getRequest.result.data;
+        } else {
+            console.log("No data found in IndexedDB. Initializing default filesystem.");
+            filesystemmain = {
+                root: {
+                    name: "root",
+                    type: "folder",
+                    contents: []
+                }
+            };
+            saveFilesystem();
+        }
+    };
+
+    getRequest.onerror = function(event) {
+        console.error("Error loading data from IndexedDB:", event.target.error);
+    };
+});
+
 
 function getFolderByPath(path, fileSystem = filesystemmain) {
     const parts = path.split('/').filter(part => part !== '');
@@ -438,7 +506,17 @@ function makefolder(name, path = '') {
     const parent = path ? getFolderByPath(path) : filesystemmain;
     if (parent) {
         if (!parent.contents) parent.contents = [];
-        parent.contents.push({ name: name, type: 'folder', contents: [], path: path });
+        let newName = name;
+        let counter = 1;
+        while (parent.contents.some(item => item.name === newName && item.type === 'folder')) {
+            newName = `${name} (${counter++})`;
+        }
+
+        parent.contents.push({ name: newName, type: 'folder', contents: [], path: path });
+        openDatabase(function(db) {  
+            saveFilesystem(db);
+        });
+        return parent.contents[parent.contents.length - 1];
     } else {
         console.error(`Path "${path}" not found.`);
     }
@@ -448,15 +526,28 @@ function makefile(name, data, path = '') {
     const parent = path ? getFolderByPath(path) : filesystemmain;
     if (parent) {
         if (!parent.contents) parent.contents = [];
+
+        let newName = name;
+        let counter = 1;
+        while (parent.contents.some(item => item.name === newName && item.type === 'file')) {
+            const baseName = name.substring(0, name.lastIndexOf('.')) || name;
+            const extension = name.includes('.') ? name.substring(name.lastIndexOf('.')) : '';
+            newName = `${baseName} (${counter++})${extension}`;
+        }
+
         parent.contents.push({ 
-            name: name,
-            file_format: name.split('.').pop(),
+            name: newName,
+            file_format: newName.split('.').pop(),
             type: 'file', 
             data: data, 
             time_made: new Date().toLocaleString(), 
             file_size: getStringSizeUsingBlob(data),
             path: path
         });
+        openDatabase(function(db) {  
+            saveFilesystem(db);
+        });
+        return parent.contents[parent.contents.length - 1];
     } else {
         console.error(`Path "${path}" not found.`);
     }
@@ -558,9 +649,17 @@ function RenameItem(event) {
                 e.preventDefault();
                 const newName = input.value.trim();
                 if (newName && newName !== fileName) {
+                    let finalName = newName;
+                    let counter = 1;
+                    while (folder.contents.some(item => item.name === finalName && item.type === fileType)) {
+                        const baseName = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
+                        const extension = newName.includes('.') ? newName.substring(newName.lastIndexOf('.')) : '';
+                        finalName = `${baseName} (${counter++})${extension}`;
+                    }
+
                     const index = folder.contents.findIndex(item => item.name === fileName && item.type === fileType);
                     if (index !== -1) {
-                        folder.contents[index].name = newName;
+                        folder.contents[index].name = finalName;
                         UpdatePersonalFileSystem();
                     }
                 }
@@ -574,9 +673,15 @@ function RenameItem(event) {
         input.addEventListener('blur', function handleBlur() {
             const newName = input.value.trim();
             if (newName && newName !== fileName) {
+                let finalName = newName;
+                let counter = 1;
+                while (folder.contents.some(item => item.name === finalName && item.type === fileType)) {
+                    finalName = `${newName} (${counter++})`;
+                }
+
                 const index = folder.contents.findIndex(item => item.name === fileName && item.type === fileType);
                 if (index !== -1) {
-                    folder.contents[index].name = newName;
+                    folder.contents[index].name = finalName;
                     UpdatePersonalFileSystem();
                 }
             }
@@ -1144,6 +1249,7 @@ function showFileProperties(name,location,size,type,date,file_type) {
     document.getElementById("pAdeblc-filesystem-filedate").textContent = date;
 }
 function UpdatePersonalFileSystem(){
+    saveFilesystem();
     const container = document.getElementById('pAdeblc-filesystem-content');
     let leftinputdata = document.getElementById("pAdeblc-filemanager-folder-input-left").value;
     let rightinputdata = document.getElementById("pAdeblc-filemanager-folder-input-right").value;
@@ -1151,36 +1257,6 @@ function UpdatePersonalFileSystem(){
     renderPanel(container.querySelector('#right-file-list'), `${rightinputdata}`);
 
 }
-function initializeFileSystem() {
-makefile('ReadMe.txt', 'This is the root ReadMe file', 'root');
-makefile('License.md', 'MIT License Information', 'root');
-makefolder('Projects', 'root');
-makefolder('Archives', 'root');
-
-makefile('App.js', 'Main application file', 'root/Projects');
-makefile('Config.json', '{ "setting": "value" }', 'root/Projects');
-makefile('Data.csv', 'Name,Age,Location\nAlice,30,NY\nBob,25,LA', 'root/Projects');
-
-makefolder('Backend', 'root/Projects');
-makefile('Server.js', 'const express = require("express");', 'root/Projects/Backend');
-makefile('Database.sql', 'CREATE TABLE users (id INT, name TEXT);', 'root/Projects/Backend');
-
-makefile('OldApp.js', 'Deprecated app file', 'root/Archives');
-makefile('Backup.zip', 'Backup archive data', 'root/Archives');
-
-makefolder('Logs', 'root/Archives');
-makefile('2025.log', 'System log data', 'root/Archives/Logs');
-makefile('2024.log', 'System log data', 'root/Archives/Logs');
-
-makefolder("Test","root")
-makefile('TestFile.txt', 'Sample test data', 'root/Test');
-makefile('Script.py', 'print("Hello, world!")', 'root/Test');
-makefolder('SubTest', 'root/Test');
-makefile('Details.txt', 'SubTest folder details', 'root/Test/SubTest');
-
-}
-initializeFileSystem();
-
 function resize(e) {
     if (!isResizing) return;
 
@@ -1198,13 +1274,11 @@ function stopResizing() {
     document.removeEventListener('mouseup', stopResizing);
 }
 function CreateFileUsingContextMenu(path){
-    const name = prompt("Enter the name of the file:");
-    makefile(name,"",path)
+    makefile("blank.txt","",path);
     UpdatePersonalFileSystem();
 }
 function CreateFolderUsingContextMenu(path){
-    const name = prompt("Enter the name of the folder:");
-    makefolder(name,path)
+    makefolder("New folder",path)
     UpdatePersonalFileSystem();
 }
 function createDivs(type) {
