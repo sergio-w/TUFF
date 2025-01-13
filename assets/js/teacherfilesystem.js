@@ -54,7 +54,7 @@ filestyle.innerHTML = `
 .pAdeblc-filesystem-main-container {
     width: 50vw;
     margin-top: 0.2vw;
-    background: rgb(245, 244, 209);
+    background: rgb(255, 255, 255);
     overflow-y: scroll;
     overflow-x: hidden;
     display: flex;
@@ -241,10 +241,10 @@ h5  {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    background: rgb(252, 252, 236);
+    background: rgb(255, 255, 255);
     border: 0.1vw solid rgb(56, 56, 56);
     box-sizing: border-box;
-    min-width: 2.8vw;
+    min-width: 7vw;
 }
 
 .pAdeblc-filemanager-panel .folder-input {
@@ -258,6 +258,8 @@ h5  {
     outline: none;
     font-size: 1vw;
     background: rgb(156, 202, 255);
+    min-width: 1vw;
+
 }
 
 .pAdeblc-filemanager-panel .file-list {
@@ -265,7 +267,7 @@ h5  {
     overflow-y: auto;
     overflow-x: hidden;
     padding: 0.3vw;
-    background: rgb(245, 244, 209);
+    background: rgb(255, 255, 255);
 }
 
 .pAdeblc-filemanager-panel .file-item {
@@ -273,7 +275,8 @@ h5  {
     align-items: center;
     padding: 0.2vw;
     border: 0.1vw solid rgb(85, 85, 85);
-    border-radius: 0.1vw;
+    background: rgb(231, 231, 231) !important;
+    border-radius: 0.05vw;
     margin-bottom: 0.2vw;
     cursor: pointer;
     user-select: none;
@@ -320,7 +323,59 @@ h5  {
     background-color: #333;
     cursor: ew-resize;
 }
-
+.pAdeblc-filemanager-button {
+    font-family: 'Tahoma', sans-serif;
+}
+.pAdeblc-filemanager-button:hover {
+    background: rgb(65, 113, 218) !important;
+    color: #fff;
+}
+.pAdeblc-filemanager-go-up{
+    font-family: 'Tahoma', sans-serif;
+    font-size: 1vw;
+    border: 0.1vw solid #fff;
+    border-right-color:rgb(56, 56, 56);
+    border-bottom-color: rgb(56, 56, 56);
+    border-top-color: #fff;
+    border-left-color: #fff;
+    cursor: pointer;
+    width: 1vw;
+    text-align: center; 
+    width: 1.5vw;
+    flex: 0 1 auto;
+    margin-right: 0.5vw;
+}
+.pAdeblc-filemanager-go-root{
+    font-family: 'Tahoma', sans-serif;
+    font-size: 1vw;
+    margin-right: 0.5vw;
+    width: 1.5vw;
+    border: 0.1vw solid #fff;
+    border-right-color:rgb(56, 56, 56);
+    border-bottom-color: rgb(56, 56, 56);
+    border-top-color: #fff;
+    border-left-color: #fff;
+    cursor: pointer;
+    text-align: center; 
+    flex: 0 1 auto;
+}
+.custom-context-menu {
+    font-family: 'MS Sans Serif', sans-serif;
+    font-size: 1vw;
+    border-radius: 0.2vw;
+}
+.custom-context-menu div:hover {
+    background: rgb(82, 183, 241);
+    color: #fff;
+}
+.pAdeblc-file-name{
+    background-color:rgba(192, 192, 192, 0);
+    outline: none;
+    border: none;
+    font-size: 1vw;
+    color: #000;
+    user-select: none;
+}
 `;
 document.head.appendChild(filestyle);
 
@@ -373,11 +428,13 @@ function makefile(name, data, path = '') {
     if (parent) {
         if (!parent.contents) parent.contents = [];
         parent.contents.push({ 
-            name: name, 
+            name: name,
+            file_format: name.split('.').pop(),
             type: 'file', 
             data: data, 
-            time_made: Date.now(), 
-            file_size: getStringSizeUsingBlob(data)
+            time_made: new Date().toLocaleString(), 
+            file_size: getStringSizeUsingBlob(data),
+            path: path
         });
     } else {
         console.error(`Path "${path}" not found.`);
@@ -403,12 +460,120 @@ function CloseDropdowns() {
         }
     });
 }
+const handleFileNFolderContextMenu = (event, name, type) => {
+    event.preventDefault();
+    if (document.getElementById("context-menu-rightclick")) {
+        document.body.removeChild(document.getElementById("context-menu-rightclick"));
+    }
+
+    const contextMenu = document.createElement("div");
+    contextMenu.id = "context-menu-rightclick";
+    contextMenu.classList.add("pAdeblc-dropdown-content");
+    contextMenu.style.position = "absolute";
+    contextMenu.style.left = event.pageX + "px";
+    contextMenu.style.top = event.pageY + "px";
+    contextMenu.style.height = "4vw";
+    contextMenu.style.width = "10vw";
+    contextMenu.style.display = "block";
+    bringToFront(contextMenu);
+
+    const renameOption = document.createElement("a");
+    renameOption.href = "#";
+    renameOption.textContent = `Rename ${type}`;
+    renameOption.addEventListener("click", (e) => RenameItem(event));
+
+    const deleteOption = document.createElement("a");
+    deleteOption.href = "#";
+    deleteOption.textContent = `Delete ${type}`;
+    deleteOption.addEventListener("click", (e) => DeleteItem(event));
+
+    contextMenu.appendChild(renameOption);
+    contextMenu.appendChild(deleteOption);
+    document.body.appendChild(contextMenu);
+
+    contextMenu.addEventListener("click", (e) => {
+        if (e.target.tagName === "A") {
+            document.body.removeChild(contextMenu);
+        }
+    });
+};
+
+function DeleteItem(event) {
+    const target = event.target.closest('.file-item');
+    if (target) {
+        const fileName = target.dataset.name;
+        const fileType = target.dataset.type;
+        const panel = target.closest('.pAdeblc-filemanager-panel');
+        const input = panel.querySelector('.folder-input');
+        const path = input.value.trim();
+        const folder = getFolderByPath(path);
+        if (!folder) return;
+
+        if (confirm(`Delete ${fileType} "${fileName}"?`)) {
+            const index = folder.contents.findIndex(item => item.name === fileName && item.type === fileType);
+            if (index !== -1) {
+                folder.contents.splice(index, 1);
+                renderPanel(panel.querySelector('.file-list'), path);
+                UpdatePersonalFileSystem();
+            }
+        }
+    }
+}
+
+function RenameItem(event) {
+    const target = event.target.closest('.file-item');
+    if (target) {
+        const fileName = target.dataset.name;
+        const fileType = target.dataset.type;
+        const panel = target.closest('.pAdeblc-filemanager-panel');
+        const input = target.querySelector('.pAdeblc-file-name');
+        const path = panel.querySelector('.folder-input').value.trim();
+        const folder = getFolderByPath(path);
+        if (!folder) return;
+        input.disabled = false;
+        input.style.pointerEvents = 'all';
+        input.focus(); 
+
+        input.addEventListener('keydown', function handleKeydown(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const newName = input.value.trim();
+                if (newName && newName !== fileName) {
+                    const index = folder.contents.findIndex(item => item.name === fileName && item.type === fileType);
+                    if (index !== -1) {
+                        folder.contents[index].name = newName;
+                        UpdatePersonalFileSystem();
+                    }
+                }
+
+                input.disabled = true;
+                input.style.pointerEvents = 'none';
+                input.removeEventListener('keydown', handleKeydown);
+            }
+        });
+
+        input.addEventListener('blur', function handleBlur() {
+            const newName = input.value.trim();
+            if (newName && newName !== fileName) {
+                const index = folder.contents.findIndex(item => item.name === fileName && item.type === fileType);
+                if (index !== -1) {
+                    folder.contents[index].name = newName;
+                    UpdatePersonalFileSystem();
+                }
+            }
+
+            input.disabled = true;
+            input.style.pointerEvents = 'none';
+            input.removeEventListener('blur', handleBlur);
+        });
+    }
+}
 
 function renderPanel(fileListElement, path) {
     fileListElement.innerHTML = '';
     const folder = getFolderByPath(path);
     if (!folder) {
-        alert(`Path "${path}" not found.`);
+        console.warn(`Path "${path}" not found.`);
         return;
     }
     folder.contents.forEach(item => {
@@ -416,6 +581,10 @@ function renderPanel(fileListElement, path) {
         fileItem.classList.add('file-item');
         fileItem.dataset.type = item.type;
         fileItem.dataset.name = item.name;
+        fileItem.dataset.location = item.path;
+        fileItem.dataset.size = item.file_size;
+        fileItem.dataset.date = item.time_made;
+        fileItem.dataset.contents = item.data
 
         const img = document.createElement('img');
         if (item.type === 'folder') {
@@ -425,12 +594,17 @@ function renderPanel(fileListElement, path) {
             img.src = `/assets/img/winicons/${fileType}file.png`;
         }
 
-        const nameSpan = document.createElement('span');
-        nameSpan.textContent = item.name;
-
+        const nameSpan = document.createElement('input');
+        nameSpan.value = item.name;
+        nameSpan.classList.add('pAdeblc-file-name');
+        nameSpan.disabled = true;
+        nameSpan.style.pointerEvents = 'none';
         fileItem.appendChild(img);
         fileItem.appendChild(nameSpan);
         fileListElement.appendChild(fileItem);
+    
+        fileItem.addEventListener("contextmenu", (e) => handleFileNFolderContextMenu(e,item.name, item.type));
+    
     });
 }
 
@@ -438,36 +612,30 @@ function makediv(text, isValue, arg3, arg4, darker) {
     let newDiv = document.createElement('div');
     newDiv.style.margin = '0 0';
     document.getElementById("resizer").style.height = 'auto';
-    // Create button
+
     let button = document.createElement('button');
+    button.classList.add("pAdeblc-filemanager-button");
     button.style.fontFamily = "'Tahoma', sans-serif";
     button.style.fontSize = '1vw';
     button.style.color = '#000';
     if (darker == 1){
-     button.style.background = 'rgb(160, 160, 160)';
-    } else {
-     button.style.background = '#C0C0C0';
+        button.style.background = 'rgb(255, 255, 255)';
+       } else {
+        button.style.background = 'rgb(221, 221, 221)';
     }
-    button.style.border = '0.1vw solid #fff';
     button.style.marginBottom = '0vw';
     button.style.marginTop = '0vw';
     button.style.marginLeft = '0.8vw';
     button.style.marginRight = '0.5vw';
-    button.style.borderTopColor = '#fff';
-    button.style.borderLeftColor = '#fff';
-    button.style.borderRightColor = 'rgb(56, 56, 56)';
-    button.style.borderBottomColor = 'rgb(56, 56, 56)';
+    button.style.border = '0.1vw solid rgb(136, 136, 136)';
     button.style.width = '38vw';
     button.style.height = '1.5vw';  
     button.style.cursor = 'pointer';
     button.style.textAlign = 'left';
     button.style.display = "flex";
     button.style.alignItems = "center";
-
-    button.setAttribute('onmouseover', 'hoverBtIn(this)');
-    button.setAttribute('onmouseout', 'hoverBtOut(this)');
+    button.setAttribute('data-darker', darker ? '1' : '0');
     
-    // Add icon to button
     let img = document.createElement('img');
     img.src = '/assets/img/winicons/folder.png';
     img.className = 'pAdeblc-image';
@@ -571,6 +739,7 @@ function makeFileManagerDraggable(element) {
         document.onmousemove = null;
     }
 }
+
 function MakeFileSystem(){
     const script = document.createElement("script");
     script.src = "/assets/js/FileSaver.js";
@@ -657,11 +826,17 @@ function MakeFileSystem(){
                             <h5 id="pAdeblc-filesystem-filelocation">C:\\</h5>
                         </div>
                     </div>
+                    <div style="display: flex; width: 100%; align-items: center; margin-top: -1vw;">
+                        <h5 style="text-align: left; margin-left: 1vw">date of creation:</h5>
+                        <div style="flex-grow: 1; text-align: center;">
+                            <h5 id="pAdeblc-filesystem-filedate">12/01/2025</h5>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="pAdeblc-filesystem-main-container pAdeblc-cool-scroll cewlborder-in" id="pAdeblc-filesystem-content">
-
+            pAdeblc-filesystem-filedate
             </div>
             <input type="file" id="FilesystemCookieInput" style="display: none;" onchange="handleCookieData(event)"/>
         </div>
@@ -680,7 +855,6 @@ function MakeFileSystem(){
 }
 function getCookies() {
     const cookieString = document.cookie;
-    console.log("All Cookies:", cookieString);
     
     const cookies = cookieString.split(';');
     const cookieArray = [];
@@ -710,7 +884,6 @@ function handleCookieData(event) {
         reader.onload = function (e) {
             try {
                 let data = JSON.parse(e.target.result);
-                console.log(e.target.result);
                 const cookies = data.cookies;
                 Object.entries(cookies).forEach(([key, value]) => {
                     document.cookie = `${key}=${value}; path=/`;
@@ -879,33 +1052,51 @@ function copyText() {
     });
 }
 
-document.addEventListener('contextmenu', function(e){
-    e.preventDefault();
-    const target = e.target.closest('.file-item');
-    if(target){
-        const fileName = target.dataset.name;
-        const fileType = target.dataset.type;
-        const panel = target.closest('.pAdeblc-filemanager-panel');
-        const input = panel.querySelector('.folder-input');
-        const path = input.value.trim();
-        const folder = getFolderByPath(path);
-        if(!folder) return;
 
-        if(confirm(`Delete ${fileType} "${fileName}"?`)){
-            const index = folder.contents.findIndex(item => item.name === fileName && item.type === fileType);
-            if(index !== -1){
-                folder.contents.splice(index, 1);
-                renderPanel(panel.querySelector('.file-list'), path);
-                alert(`${fileType.charAt(0).toUpperCase() + fileType.slice(1)} "${fileName}" deleted.`);
-            }
-        }
-    }
-});
 
+function showFileProperties(name,location,size,type,date,file_type) {
+    document.getElementById("pAdeblc-filesystem-filename").textContent = name;
+    document.getElementById("pAdeblc-filesystem-filetype").textContent = file_type;
+    document.getElementById("pAdeblc-filesystem-filelocation").textContent = location;
+    document.getElementById("pAdeblc-filesystem-filesize").textContent = size + "kb";
+    document.getElementById("pAdeblc-filesystem-filetype").textContent = type;
+    document.getElementById("pAdeblc-filesystem-filedate").textContent = date;
+}
+function UpdatePersonalFileSystem(){
+    const container = document.getElementById('pAdeblc-filesystem-content');
+    let leftinputdata = document.getElementById("pAdeblc-filemanager-folder-input-left").value;
+    let rightinputdata = document.getElementById("pAdeblc-filemanager-folder-input-right").value;
+    renderPanel(container.querySelector('#left-file-list'), `${leftinputdata}`);
+    renderPanel(container.querySelector('#right-file-list'), `${rightinputdata}`);
+
+}
 function initializeFileSystem() {
-    makefile('Project1.txt', 'Project 1 details', 'root');
-    makefolder('Test', 'root');
-    makefile('Test.txt', 'Test details', 'root/Test');
+makefile('ReadMe.txt', 'This is the root ReadMe file', 'root');
+makefile('License.md', 'MIT License Information', 'root');
+makefolder('Projects', 'root');
+makefolder('Archives', 'root');
+
+makefile('App.js', 'Main application file', 'root/Projects');
+makefile('Config.json', '{ "setting": "value" }', 'root/Projects');
+makefile('Data.csv', 'Name,Age,Location\nAlice,30,NY\nBob,25,LA', 'root/Projects');
+
+makefolder('Backend', 'root/Projects');
+makefile('Server.js', 'const express = require("express");', 'root/Projects/Backend');
+makefile('Database.sql', 'CREATE TABLE users (id INT, name TEXT);', 'root/Projects/Backend');
+
+makefile('OldApp.js', 'Deprecated app file', 'root/Archives');
+makefile('Backup.zip', 'Backup archive data', 'root/Archives');
+
+makefolder('Logs', 'root/Archives');
+makefile('2025.log', 'System log data', 'root/Archives/Logs');
+makefile('2024.log', 'System log data', 'root/Archives/Logs');
+
+makefolder("Test","root")
+makefile('TestFile.txt', 'Sample test data', 'root/Test');
+makefile('Script.py', 'print("Hello, world!")', 'root/Test');
+makefolder('SubTest', 'root/Test');
+makefile('Details.txt', 'SubTest folder details', 'root/Test/SubTest');
+
 }
 initializeFileSystem();
 
@@ -925,7 +1116,16 @@ function stopResizing() {
     document.removeEventListener('mousemove', resize);
     document.removeEventListener('mouseup', stopResizing);
 }
-
+function CreateFileUsingContextMenu(path){
+    const name = prompt("Enter the name of the file:");
+    makefile(name,"",path)
+    UpdatePersonalFileSystem();
+}
+function CreateFolderUsingContextMenu(path){
+    const name = prompt("Enter the name of the folder:");
+    makefolder(name,path)
+    UpdatePersonalFileSystem();
+}
 function createDivs(type) {
     if (type !== "personalfiles") {
         let darker = false;
@@ -986,12 +1186,24 @@ function createDivs(type) {
 
         document.getElementById("pAdeblc-filesystem-content").innerHTML = `
             <div class="pAdeblc-filemanager-panel">
-                <input class='folder-input' type="text" placeholder="Enter folder path..." value="/root"/>
+                <div style="display: flex; align-items: center;">
+                    <input class='folder-input' id="pAdeblc-filemanager-folder-input-left" type="text" style="flex: 1 1 auto;" placeholder="Enter folder path..." value="/root"/> 
+
+                    <button class="pAdeblc-filemanager-go-root" id="pAdeblc-filemanager-go-root-left">*</button>
+
+                    <button class="pAdeblc-filemanager-go-up" id="pAdeblc-filemanager-go-up-left">▼</button>
+                </div>
                 <div class="file-list pAdeblc-filemanager-scrollbar" id="left-file-list"></div>
             </div>
             <div class="pAdeblc-filemanager-resizer "></div>
             <div class="pAdeblc-filemanager-panel">
-                <input class='folder-input' type="text" placeholder="Enter folder path..." value="/root"/>
+                <div style="display: flex; align-items: center;">
+                    <input class='folder-input' id="pAdeblc-filemanager-folder-input-right" type="text" placeholder="Enter folder path..." value="/root"/> 
+
+                    <button class="pAdeblc-filemanager-go-root" id="pAdeblc-filemanager-go-root-right">*</button>
+                    
+                    <button class="pAdeblc-filemanager-go-up" id="pAdeblc-filemanager-go-up-right">▼</button>
+                </div>
                 <div class="file-list pAdeblc-filemanager-scrollbar" id="right-file-list"></div>
             </div>
         `; 
@@ -1002,9 +1214,44 @@ function createDivs(type) {
         const panels = container.querySelectorAll('.pAdeblc-filemanager-panel');
         makeResizable(resizer, panels);
         
-        const leftInput = container.querySelector('#left-file-list').previousElementSibling;
-        const rightInput = container.querySelector('#right-file-list').previousElementSibling;
+        const leftInput = document.getElementById('pAdeblc-filemanager-folder-input-left');
+        const rightInput = document.getElementById('pAdeblc-filemanager-folder-input-right');
         
+        const leftGoRoot = document.getElementById('pAdeblc-filemanager-go-root-left');
+        const rightGoRoot = document.getElementById('pAdeblc-filemanager-go-root-right');
+        const leftGoUp = document.getElementById('pAdeblc-filemanager-go-up-left');
+        const rightGoUp = document.getElementById('pAdeblc-filemanager-go-up-right');
+
+        leftGoRoot.addEventListener('click', () => {
+            const path = `/root`;
+            renderPanel(container.querySelector('#left-file-list'), path);
+            leftInput.value = path;
+        });
+        
+        rightGoRoot.addEventListener('click', () => {
+            const path = "/root";
+            renderPanel(container.querySelector('#right-file-list'), path);
+            rightInput.value = path;
+        });
+        
+        leftGoUp.addEventListener('click', () => {
+            const path = leftInput.value.trim().split('/').slice(0, -1).join('/');
+            if (path == ""){
+                return
+            }
+            renderPanel(container.querySelector('#left-file-list'), path);
+            leftInput.value = path;
+            
+        });
+        
+        rightGoUp.addEventListener('click', () => {
+            const path = rightInput.value.trim().split('/').slice(0, -1).join('/');
+            if (path == ""){
+                return
+            }
+            renderPanel(container.querySelector('#right-file-list'), path);
+            rightInput.value = path;
+        });
         leftInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 const path = leftInput.value.trim();
@@ -1018,7 +1265,28 @@ function createDivs(type) {
                 renderPanel(container.querySelector('#right-file-list'), path);
             }
         });
-        
+        function openTxEditor(){
+            const txeditor = document.getElementById('pAdeblc-txeditor-main');
+            if (txEditorTabCount <= 20){
+                txeditor.style.display = "block";
+                bringToFront(txeditor);
+                txEditorTabCount += 1;
+            }
+        }
+        const file_types = {
+            "html": "text/html",
+            "css": "text/css",
+            "js": "text/javascript",
+            "json": "application/json",
+            "txt": "text/plain",
+        }
+        const file_types_clean = {
+            "html": "html",
+            "css": "css",
+            "js": "javascript",
+            "json": "json",
+            "txt": "plain",
+        }
         container.querySelector('#left-file-list').addEventListener('dblclick', (e) => {
             const target = e.target.closest('.file-item');
             if (target && target.dataset.type === 'folder') {
@@ -1027,9 +1295,30 @@ function createDivs(type) {
                 const newPath = navigatePath(currentPath, folderName);
                 leftInput.value = newPath;
                 renderPanel(container.querySelector('#left-file-list'), newPath);
+            } else if (target && target.dataset.type === 'file') {
+                openTxEditor();
+                const file_extension = file_types_clean[target.dataset.name.split('.').pop()];
+                try{
+                    createNewTxEditorTab(target.dataset.name, target.dataset.contents ,global_tabbt,global_tabcontainer,file_extension);
+                } catch(e) {
+                    
+                }
             }
         });
-        
+        container.querySelector('#left-file-list').addEventListener('mousedown', (e) => {
+            const target = e.target.closest('.file-item');
+            if (target && target.dataset.type === 'file') {
+                const file_extension = file_types[target.dataset.name.split('.').pop()];
+                showFileProperties(target.dataset.name,target.dataset.location,target.dataset.size,file_extension,target.dataset.date);
+            }
+        })
+        container.querySelector('#right-file-list').addEventListener('mousedown', (e) => {
+            const target = e.target.closest('.file-item');
+            if (target && target.dataset.type === 'file') {
+                const file_extension = file_types[target.dataset.name.split('.').pop()];
+                showFileProperties(target.dataset.name,target.dataset.location,target.dataset.size,file_extension,target.dataset.date);
+            }
+        })
         container.querySelector('#right-file-list').addEventListener('dblclick', (e) => {
             const target = e.target.closest('.file-item');
             if (target && target.dataset.type === 'folder') {
@@ -1038,16 +1327,66 @@ function createDivs(type) {
                 const newPath = navigatePath(currentPath, folderName);
                 rightInput.value = newPath;
                 renderPanel(container.querySelector('#right-file-list'), newPath);
+            } else if (target && target.dataset.type === 'file') {  
+                openTxEditor();
+                const file_extension = file_types_clean[target.dataset.name.split('.').pop()];
+                try{
+                    createNewTxEditorTab(target.dataset.name, target.dataset.contents ,global_tabbt,global_tabcontainer,file_extension);
+                } catch(e) {
+                    
+                }
             }
         });
         
         renderPanel(container.querySelector('#left-file-list'), '/root');
         renderPanel(container.querySelector('#right-file-list'), '/root');
+        const leftFileList = document.getElementById("left-file-list");
+        const rightFileList = document.getElementById("right-file-list");
+    
+        const handleContextMenu = (event,container,pathInput,type) => {
+            const folderPath = pathInput.value.trim();
+            if (event.target === container) {
+                event.preventDefault();
+                if (document.getElementById("context-menu-rightclick")) {
+                    document.body.removeChild(document.getElementById("context-menu-rightclick"));
+                }
+                const contextMenu = document.createElement("div");
+                contextMenu.id = "context-menu-rightclick";
+                contextMenu.classList.add("pAdeblc-dropdown-content");
+                contextMenu.style.position = "absolute";
+                contextMenu.style.left = event.pageX + "px";
+                contextMenu.style.top = event.pageY + "px";
+                contextMenu.style.height = "4vw";
+                contextMenu.style.width = "10vw";
+                contextMenu.style.display = "block";
+                bringToFront(contextMenu);
+                contextMenu.innerHTML = `
+                    <a href="#" onclick="CreateFileUsingContextMenu('${folderPath}')">Create File</a>
+                    <a href="#" onclick="CreateFolderUsingContextMenu('${folderPath}')">Create Folder</a>
+                `;
+                document.body.appendChild(contextMenu);
+    
+                contextMenu.addEventListener("click", (e) => {
+                    if (e.target.tagName === "A") {
+                        const action = e.target.textContent.trim();
+                        document.body.removeChild(contextMenu);
+                    }
+                });
+            }
+        };
+    
+        if (leftFileList && leftInput) {
+            leftFileList.addEventListener("contextmenu", (e) => handleContextMenu(e, leftFileList, leftInput));
+        }
+    
+        if (rightFileList && rightInput) {
+            rightFileList.addEventListener("contextmenu", (e) => handleContextMenu(e, rightFileList, rightInput));
+        }
     }
+    
 }
 
 function LoadFiles(type) {
     createDivs(type);
 }
-
 MakeFileSystem();

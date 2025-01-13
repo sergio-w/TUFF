@@ -459,12 +459,26 @@ const filesystemjs = document.createElement("script");
 filesystemjs.src = "/assets/js/teacherfilesystem.js";
 document.body.appendChild(filesystemjs);
 
+function createUniqueTabId(baseName, editors) {
+    let tabId = baseName;
+    let counter = 1;
 
-function createNewTxEditorTab(name,code,tabbt,tabcontainer) {
+    const existingIds = Object.keys(editors);
+
+    while (existingIds.includes(tabId)) {
+        tabId = `${baseName}_${counter}`;
+        counter++;
+    }
+
+    return tabId;
+}
+
+function createNewTxEditorTab(name,code,tabbt,tabcontainer,syntaxtype) {
     let tabnumber = 0;
     total_tab += 1;
     if (txEditorTabCount <= 20) {
-        const tabId = `txEditorTab${total_tab}`;
+        const baseName = `txEditorTab${total_tab}`;
+        const tabId = createUniqueTabId(baseName, editors);
         
         const newTab = document.createElement('div');
         newTab.classList.add('tx-editor-tab');
@@ -482,7 +496,7 @@ function createNewTxEditorTab(name,code,tabbt,tabcontainer) {
         `;
         }
         newTab.setAttribute('draggable', 'true');
-
+        
         const newContent = document.createElement('div');
         newContent.classList.add('tx-editor-tab-content');
         newContent.setAttribute('id', tabId);
@@ -492,7 +506,11 @@ function createNewTxEditorTab(name,code,tabbt,tabcontainer) {
 
         const editor = ace.edit(`editor-${tabId}`);
         editor.setTheme("ace/theme/monokai");
-        editor.session.setMode("ace/mode/javascript");
+        if (syntaxtype){
+            editor.session.setMode(`ace/mode/${syntaxtype}`);
+        } else {
+            editor.session.setMode("ace/mode/text");
+        }
         if (code != null) {
             editor.setValue(code);
         } else {
@@ -503,7 +521,23 @@ function createNewTxEditorTab(name,code,tabbt,tabcontainer) {
         newTab.addEventListener('click', (e) => {
             switchTxEditorTab(e, id, false);
         });
-
+        document.getElementById(tabId+"_name").addEventListener("keydown", (key) =>{
+            if (key.key == "enter"){
+                const file_types_clean = {
+                    "html": "html",
+                    "css": "css",
+                    "js": "javascript",
+                    "json": "json",
+                    "txt": "plain",
+                }
+                const file_extension = file_types_clean[target.dataset.name.split('.').pop()];
+                if (syntaxtype){
+                    editors[`editor-${tabId}`].session.setMode(`ace/mode/${syntaxtype}`);
+                } else {
+                    editors[`editor-${tabId}`].session.setMode("ace/mode/text");
+                }
+            }
+        });
 
         const closeButton = newTab.querySelector('.tx-editor-close-tab-btn');
         closeButton.addEventListener('click', (event) => {
@@ -881,7 +915,7 @@ pAdeblcinput.addEventListener("keyup", (event) => {
             logToConsole("New JustStudy CE Text Editor window opened.", "green");
         } else {
             if (isJavaScript(inputValue)) {
-                run(inputValue);
+                run(true);
             } else {
                 if (inputValue === "files") {
                     logToConsole("All runnable files: ", "white");
@@ -975,7 +1009,7 @@ function handleFileSelect(event) {
     if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            if (txEditorTabCount <= 3){
+            if (txEditorTabCount <= 20){
                 createNewTxEditorTab(file.name, e.target.result,global_tabbt,global_tabcontainer);
                 txEditorTabCount += 1;
             }
@@ -1030,13 +1064,21 @@ function openLocalFile(){
 function saveLocalFile(){
 
 }
-function run() {
+function run(isconsole) {
     const script = document.createElement("script");
-    script.textContent = `
-    (function() {
-        ${currenteditor.getValue()}
-    })();
-    `;   
+    if (isconsole){
+        script.textContent = `
+        (function() {
+            ${document.getElementById("pAdeblc-input").value}
+        })();
+        `;  
+    } else {
+        script.textContent = `
+        (function() {
+            ${currenteditor.getValue()}
+        })();
+        `;  
+    }
     document.body.appendChild(script);
     document.body.removeChild(script);
 }
