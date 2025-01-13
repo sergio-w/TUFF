@@ -755,8 +755,9 @@ function renderPanel(fileListElement, path) {
                     const input = target.querySelector('.pAdeblc-file-name');
                     const path = panel.querySelector('.folder-input').value.trim();
                     const folder = getFolderByPath(path);
-            
-                    if (folder) {
+                    console.log(draggedItem.name);
+                    console.log(fileItem.dataset.name);
+                    if (folder && draggedItem.name !== fileItem.dataset.name) {
                         const index = folder.contents.findIndex(
                             (existingItem) => existingItem.name === input.value.trim() && existingItem.type === 'folder'
                         );
@@ -1040,7 +1041,6 @@ function MakeFileSystem(){
 }
 function getCookies() {
     const cookieString = document.cookie;
-    
     const cookies = cookieString.split(';');
     const cookieArray = [];
     
@@ -1314,6 +1314,7 @@ function createDivs(type) {
         });
         
         if (type === "cookie") {
+            console.log(getCookies());
             let cookieArray = getCookies();
             cookieArray.forEach(cookie => {
                 darker = !darker;
