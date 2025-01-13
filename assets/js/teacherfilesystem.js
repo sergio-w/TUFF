@@ -1,3 +1,5 @@
+
+
 const filestyle = document.createElement('style');
 filestyle.innerHTML = `
 .pAdeblc-filesystem-topbar{
@@ -436,7 +438,7 @@ function makefolder(name, path = '') {
     const parent = path ? getFolderByPath(path) : filesystemmain;
     if (parent) {
         if (!parent.contents) parent.contents = [];
-        parent.contents.push({ name: name, type: 'folder', contents: [] });
+        parent.contents.push({ name: name, type: 'folder', contents: [], path: path });
     } else {
         console.error(`Path "${path}" not found.`);
     }
@@ -603,6 +605,8 @@ function renderPanel(fileListElement, path) {
         fileItem.dataset.date = item.time_made;
         fileItem.dataset.contents = item.data
 
+        fileItem.setAttribute('draggable', 'true');
+
         const img = document.createElement('img');
         if (item.type === 'folder') {
             img.src = '/assets/img/winicons/folder.png';
@@ -619,11 +623,73 @@ function renderPanel(fileListElement, path) {
         fileItem.appendChild(img);
         fileItem.appendChild(nameSpan);
         fileListElement.appendChild(fileItem);
-    
+
         fileItem.addEventListener("contextmenu", (e) => handleFileNFolderContextMenu(e,item.name, item.type));
-    
+
+        fileItem.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('application/json', JSON.stringify(item));
+        });
+        
+        fileItem.addEventListener('dragend', () => {
+            fileItem.classList.remove('dragging');
+        });
+        fileItem.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
+        });
+        if (item.type === 'folder') {
+            fileItem.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'copy';
+            });
+            fileItem.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const draggedItem = JSON.parse(e.dataTransfer.getData('application/json'));
+                const target = e.target.closest('.file-item');
+                if (target) {
+                    const panel = target.closest('.pAdeblc-filemanager-panel');
+                    const input = target.querySelector('.pAdeblc-file-name');
+                    const path = panel.querySelector('.folder-input').value.trim();
+                    const folder = getFolderByPath(path);
+            
+                    if (folder) {
+                        const index = folder.contents.findIndex(
+                            (existingItem) => existingItem.name === input.value.trim() && existingItem.type === 'folder'
+                        );
+            
+                        if (index !== -1) {
+                            const targetFolder = folder.contents[index];
+            
+                            const originalFolder = getFolderByPath(draggedItem.path);
+                            if (originalFolder) {
+                                const originalIndex = originalFolder.contents.findIndex(
+                                    (item) => item.name === draggedItem.name && item.type === draggedItem.type
+                                );
+            
+                                if (originalIndex !== -1) {
+                                    originalFolder.contents.splice(originalIndex, 1);
+                                }
+                            }
+            
+                            draggedItem.path = `${"/"+targetFolder.path+"/"+targetFolder.name}`;
+                            targetFolder.contents.push(draggedItem);
+
+                            UpdatePersonalFileSystem();
+                            console.log(`File moved to ${draggedItem.path}`);
+                        } else {
+                            console.error('Target folder not found');
+                        }
+                    } else {
+                        console.error('Target folder does not exist');
+                    }
+                }
+            });
+            
+        }
+        
     });
 }
+
 
 function makediv(text, isValue, arg3, arg4, darker) {
     let newDiv = document.createElement('div');
