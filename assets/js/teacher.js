@@ -309,7 +309,7 @@ pAdeblcstyle.innerHTML = `
 
 .tx-editor-tab-content {
     display: none;
-    height: 30.3vw;
+    height: 29.4vw;
     background-color: #D0D0D0;
     border: 0.1vw solid #808080;
 }
@@ -441,12 +441,20 @@ let editor;
 function loadAceScript(callback) {
     var script = document.createElement('script');
     script.src = '/assets/src-noconflict/ace.js';
-    script.onload = callback;
+    script.onload = () => {
+        const autocomplete = document.createElement("script");
+        autocomplete.src = "/assets/src-noconflict/ext-language_tools.js";
+        autocomplete.onload = () => {
+            const script2 = document.createElement("script");
+            script2.src = "/assets/js/FileSaver.js";
+            script2.onload = callback;
+            document.body.appendChild(script2);
+        };
+        document.body.appendChild(autocomplete);
+    };
     document.body.appendChild(script);
-    const script2 = document.createElement("script");
-    script2.src = "/assets/js/FileSaver.js";
-    document.body.appendChild(script2);
 }
+
 let editors = [];
 let currenteditor = null;
 let txEditorTabCount = 0;
@@ -476,6 +484,20 @@ function createUniqueTabId(baseName, editors) {
 
     return tabId;
 }
+function HandleEditorZoom(level, isadd) {
+    level = parseFloat(level);
+    if (currenteditor) {
+        if (isadd) {
+            currenteditor.setFontSize(currenteditor.getFontSize() + level);
+            document.getElementById('pAdeblc-txeditor-zoom').value = currenteditor.getFontSize();
+        } else {
+            if (!isNaN(level) && level > 0) {
+                currenteditor.setFontSize(level);
+            }
+        }
+    }
+}
+
 
 function createNewTxEditorTab(name,code,tabbt,tabcontainer,syntaxtype) {
     let tabnumber = 0;
@@ -496,7 +518,7 @@ function createNewTxEditorTab(name,code,tabbt,tabcontainer,syntaxtype) {
         } else {
             newTab.innerHTML = `
             <input type="text" class="tx-editor-tab-name" id="${tabId}_name" value="${name}">
-            <button class="tx-editor-close-tab-btn" ">X</button>
+            <button class="tx-editor-close-tab-btn"">X</button>
         `;
         }
         newTab.setAttribute('draggable', 'true');
@@ -507,9 +529,14 @@ function createNewTxEditorTab(name,code,tabbt,tabcontainer,syntaxtype) {
         newContent.innerHTML = `<div id="editor-${tabId}" class="pAdeblc-txeditor"></div>`; 
         tabcontainer.insertBefore(newTab, tabbt);
         document.getElementById('txEditorTabContainer').appendChild(newContent);
-
         const editor = ace.edit(`editor-${tabId}`);
         editor.setTheme("ace/theme/monokai");
+        editor.setOption("enableBasicAutocompletion", true);
+        editor.setOption("enableLiveAutocompletion", true);
+        editor.setOption("enableSnippets", true);
+        editor.textInput.getElement().addEventListener('keydown', (event) => {
+            event.stopPropagation();
+        });
         if (syntaxtype){
             editor.session.setMode(`ace/mode/${syntaxtype}`);
         } else {
@@ -518,6 +545,7 @@ function createNewTxEditorTab(name,code,tabbt,tabcontainer,syntaxtype) {
         if (code != null) {
             editor.setValue(code);
         }
+        editor.setFontSize(20);
         editors[tabId] = editor;
         let id = Object.keys(editors);
         newTab.addEventListener('click', (e) => {
@@ -598,6 +626,13 @@ function CreateTextEditor() {
                 <button class="pAdeblc-txeditor-bt" onclick="runall()">
                     <img src="/assets/img/winicons/run.png" class="pAdeblc-image">Run All
                 </button>
+                <button class="tx-editor-add-tab-btn" style="margin-left: 0.5vw; margin-right: 0.5vw;" onclick="HandleEditorZoom(-1,true)">
+                    -
+                </button>
+                <input id="pAdeblc-txeditor-zoom" class="cewlborder-in" style="margin-right: 0.5vw; width: 3vw; height: 3vh; font-size: 1vw; outline: none;" value="20"></input>
+                <button class="tx-editor-add-tab-btn" style="margin-right: 0.5vw;" onclick="HandleEditorZoom(1,true)">
+                    +
+                </button>
             </div>
             <input type="file" id="fileInput" style="display: none;" onchange="handleFileSelect(event)"/>
             <input type="file" id="CookieInput" style="display: none;" onchange="handleCookieData(event)"/>
@@ -609,7 +644,12 @@ function CreateTextEditor() {
         </div>
     `;
     document.body.appendChild(newWindow);
-
+    const zoominput = document.getElementById("pAdeblc-txeditor-zoom");
+    zoominput.addEventListener("keydown", (event)=>{
+        if (event.key === "Enter") {
+            HandleEditorZoom(zoominput.value,false);
+        }
+    });
     global_tabcontainer = document.getElementById('txEditorTabs');
     global_tabbt = document.getElementById('txEditorAddTabBtn');
     document.getElementById('txEditorAddTabBtn').addEventListener('click', (event) => {
@@ -662,6 +702,7 @@ function CreateTextEditor() {
             reorderEditors();   
         }
     });
+  
 }
 
 
@@ -714,6 +755,7 @@ function switchTxEditorTab(event, tabId, closingtab) {
         selectedTab = document.querySelector(`.tx-editor-tab[data-target="${tabId}"]`);
     }
     if (selectedTab) {
+        
         document.querySelectorAll('.tx-editor-tab').forEach(tab => tab.classList.remove('active'));
         document.querySelectorAll('.tx-editor-tab-content').forEach(content => content.classList.remove('active'));
         selectedTab.classList.add('active');
@@ -726,6 +768,7 @@ function switchTxEditorTab(event, tabId, closingtab) {
         }
         const editor = editors[targetId];
         currenteditor = editor;
+        document.getElementById('pAdeblc-txeditor-zoom').value = currenteditor.getFontSize();
         
     } else {
         console.error("Selected tab not found.");

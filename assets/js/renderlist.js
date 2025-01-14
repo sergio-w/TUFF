@@ -1,8 +1,6 @@
 function renderList(sort_type) {
     document.getElementById("loader").style.display = "block";
     let container = null;
-    
-    console.log(sort_type);
     document.getElementById("itembox").innerHTML = '';
     document.getElementById("category-container").innerHTML = '';
     
@@ -58,7 +56,6 @@ function renderList(sort_type) {
 
                     const categoryContainer = document.createElement("div");
                     categoryContainer.id = "itembox_" + category;
-                    console.log("itembox_" + category);
                     categoryContainer.style.marginBottom = '20px';
                     categoryContainer.classList.add("row", "row-cols-3", "category-container");
                     container.appendChild(categoryContainer);

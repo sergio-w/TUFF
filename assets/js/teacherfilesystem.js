@@ -328,6 +328,25 @@ h5  {
     color: #000;
     user-select: none;
 }
+.pAdeblc-side-button{
+    font-family: 'Tahoma', sans-serif;
+    font-size: 1vw;
+    color: #000;
+    background-color: rgb(160, 160, 160);
+    border: 0.1vw solid #fff;
+    height: 1.5vw;
+    margin-bottom: 0.5vw;
+    margin-top: 0.5vw;
+    margin-left: 0.5vw;
+    margin-right: 0.5vw;
+    border-top-color: #fff;
+    border-left-color: #fff;
+    border-right-color: rgb(56, 56, 56);
+    border-bottom-color: rgb(56, 56, 56);
+    width: 10vw;
+    cursor: pointer;
+    text-align: left;
+}
 `;
 document.head.appendChild(filestyle);
 
@@ -699,8 +718,6 @@ function renderPanel(fileListElement, path) {
                             targetFolder.contents.push(draggedItem);
 
                             UpdatePersonalFileSystem();
-                        } else {
-                            console.error('Target folder not found');
                         }
                     } else {
                         console.error('Target folder does not exist');
@@ -889,22 +906,22 @@ function MakeFileSystem(){
         </div>
         <div class="pAdeblc-filemanager-content-new" id="pAdeblc-filesystem-side-content" style="display: flex;">
             <div class="pAdeblc-filesystem-side-container pAdeblc-cool-scroll cewlborder-in" style="background:rgb(108, 181, 230);">
-                <button onclick="LoadFiles('cookie')" style="font-family: 'Tahoma', sans-serif; font-size: 1vw; color: #000; background-color: #C0C0C0; border: 0.1vw solid #fff; margin-bottom: 0.5vw; margin-top: 0.5vw; margin-left: 0.5vw; margin-right: 0.5vw; border-top-color: #fff; border-left-color: #fff; border-right-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); padding: 0.15vw 0.5vw; width: 10vw; cursor: pointer; text-align: left;" onmouseover="hoverBtIn(this)" onmouseout="hoverBtOut(this)">
-                    <img src="/assets/img/winicons/data.png" class="pAdeblc-image" style="width: 1.1vw; height: 2vh;">Cookies
+                <button onclick="LoadFiles('cookie')" class="pAdeblc-side-button" onmouseover="hoverBtIn(this)" onmouseout="hoverBtOut(this)">
+                    <img src="/assets/img/winicons/data.png" class="pAdeblc-image" style="width: 1.1vw; height: 1vw;">Cookies
                 </button>
-                <button onclick="LoadFiles('localstorage')" style="font-family: 'Tahoma', sans-serif; font-size: 1vw; color: #000; background-color: rgb(160, 160, 160); border: 0.1vw solid #fff; margin-bottom: 0.5vw; margin-top: 0.5vw; margin-left: 0.5vw; margin-right: 0.5vw; border-top-color: #fff; border-left-color: #fff; border-right-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); padding: 0.15vw 0.5vw; width: 10vw; cursor: pointer; text-align: left;" onmouseover="hoverBtIn(this)" onmouseout="hoverBtOut(this)">
-                    <img src="/assets/img/winicons/data.png" class="pAdeblc-image" style="width: 1.1vw; height: 2vh;">LocalStorage
+                <button onclick="LoadFiles('localstorage')"  class="pAdeblc-side-button" onmouseover="hoverBtIn(this)" onmouseout="hoverBtOut(this)">
+                    <img src="/assets/img/winicons/data.png" class="pAdeblc-image" style="width: 1.1vw; height: 1vw;">LocalStorage
                 </button>
-                <button onclick="LoadFiles('sessionstorage')" style="font-family: 'Tahoma', sans-serif; font-size: 1vw; color: #000; background-color: #C0C0C0; border: 0.1vw solid #fff; margin-bottom: 0.5vw; margin-top: 0.5vw; margin-left: 0.5vw; margin-right: 0.5vw; border-top-color: #fff; border-left-color: #fff; border-right-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); padding: 0.15vw 0.5vw; width: 10vw; cursor: pointer; text-align: left;" onmouseover="hoverBtIn(this)" onmouseout="hoverBtOut(this)">
-                    <img src="/assets/img/winicons/data.png" class="pAdeblc-image" style="width: 1.1vw; height: 2vh;">SessionStorage
+                <button onclick="LoadFiles('sessionstorage')"  class="pAdeblc-side-button" onmouseover="hoverBtIn(this)" onmouseout="hoverBtOut(this)">
+                    <img src="/assets/img/winicons/data.png" class="pAdeblc-image" style="width: 1.1vw; height: 1vw;">SessionStorage
                 </button>
-                <button onclick="LoadFiles('personalfiles')" style="font-family: 'Tahoma', sans-serif; font-size: 1vw; color: #000; background-color: rgb(160, 160, 160); border: 0.1vw solid #fff; margin-bottom: 0.5vw; margin-top: 0.5vw; margin-left: 0.5vw; margin-right: 0.5vw; border-top-color: #fff; border-left-color: #fff; border-right-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); padding: 0.15vw 0.5vw; width: 10vw; cursor: pointer; text-align: left;" onmouseover="hoverBtIn(this)" onmouseout="hoverBtOut(this)">
-                    <img src="/assets/img/winicons/folder.png" class="pAdeblc-image" style="width: 1.1vw; height: 2vh;">Personal Files
+                <button onclick="LoadFiles('personalfiles')"  class="pAdeblc-side-button" onmouseover="hoverBtIn(this)" onmouseout="hoverBtOut(this)">
+                    <img src="/assets/img/winicons/folder.png" class="pAdeblc-image" style="width: 1.1vw; height: 1vw;">Personal Files
                 </button>
-                <h3 style="display: flex; align-items: center; justify-content: center; margin-bottom: 0.5vw; margin-top: 0vw;">
-                    <img src="/assets/img/winicons/settingscog.png" class="pAdeblc-image" style="width: 1.1vw; height: 2vh;"> Properties 
+                <h3 style="display: flex; align-items: center; justify-content: center; margin-bottom: 0.5vw;  margin-top: revert;">
+                    <img src="/assets/img/winicons/settingscog.png" class="pAdeblc-image" style="width: 1.1vw; height: 1vw;"> Properties 
                 </h3>
-                <div class="cewlborder-in" style="height: 16vw; width: 10vw; margin-left: 0.41vw; flex-direction: column; display: flex; background:rgb(235, 235, 235); color: black;"> 
+                <div class="cewlborder-in" style="height: 16vw; width: 10vw; margin-left: 0.3vw; flex-direction: column; display: flex; background:rgb(235, 235, 235); color: black;"> 
                     <div style="display: flex; width: 100%; align-items: center; margin-bottom: -1vw;">
                         <h5 style="text-align: left; margin-left: 1vw;">file name:</h5>
                         <div style="flex-grow: 1; text-align: center;">
@@ -1526,3 +1543,24 @@ document.addEventListener("click", (e) => {
     } catch (e) {
     }
 })
+window.addEventListener('storage', (e) => {
+    if (current_menu != "personalfiles"){
+        createDivs(current_menu);
+    }
+});
+
+const localStorageSet = localStorage.setItem;
+localStorage.setItem = function (key, value) {
+    if (current_menu != "personalfiles"){
+        createDivs(current_menu);
+    }
+    localStorageSet.apply(this, arguments);
+};
+
+const sessionStorageSet = sessionStorage.setItem;
+sessionStorage.setItem = function (key, value) {
+    if (current_menu != "personalfiles"){
+        createDivs(current_menu);
+    }
+    sessionStorageSet.apply(this, arguments);
+};

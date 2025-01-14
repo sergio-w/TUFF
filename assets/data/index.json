@@ -1019,7 +1019,7 @@
         "img": "assets/icons/153.png",
         "url": "studyguide/dl-d/index.html",
         "desc": "If dadish had a new level every day!",
-        "category": "Gym Lab"
+        "category": "Gym Class"
     },
     {
         "name": "Ragdoll Archers",
@@ -1153,5 +1153,47 @@
         "url": "studyguide/pyl/index.html",
         "desc": "Pick higher or lower, then spin the wheel and push your luck!",
         "category": "Recess"
+    },
+    {
+        "name": "Riddle School",
+        "img": "assets/icons/174.png",
+        "url": "studyguide/rdsch/index.html",
+        "desc": "Escape from school in the hilarious and iconic first chapter.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Riddle School 2",
+        "img": "assets/icons/175.png",
+        "url": "studyguide/rdsch2/index.html",
+        "desc": "The adventure continues as you try to escape yet another school!",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Riddle School 3",
+        "img": "assets/icons/176.png",
+        "url": "studyguide/rdsch3/index.html",
+        "desc": "Solve puzzles and make your way out of an even trickier situation.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Riddle School 4",
+        "img": "assets/icons/177.png",
+        "url": "studyguide/rdsch4/index.html",
+        "desc": "Experience the unexpected twist in the fourth installment of the series.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Riddle Transfer",
+        "img": "assets/icons/178.png",
+        "url": "studyguide/rdscht/index.html",
+        "desc": "Escape the mysterious facility and uncover the secrets hidden within.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Riddle Transfer 2",
+        "img": "assets/icons/179.png",
+        "url": "studyguide/rdscht2/index.html",
+        "desc": "Continue your journey in the thrilling sequel to the escape adventure.",
+        "category": "Science Lab"
     }
 ]
