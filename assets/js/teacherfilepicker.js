@@ -1,7 +1,7 @@
 
 
-const filestyle = document.createElement('style');
-filestyle.innerHTML = `
+const pickerstyle = document.createElement('style');
+pickerstyle.innerHTML = `
 .pAdeblc-filesystem-topbar{
     height: 2vw;
     background-color: #C0C0C0;
@@ -280,77 +280,24 @@ filestyle.innerHTML = `
 }
 
 `;
-document.head.appendChild(filestyle);
+document.head.appendChild(pickerstyle);
 
 let CurrentSelectedFile = "";
 let CurrentSelectedFolder = "";
 let CurrentSelectedFileName = "";
+let FileData = "";
 
-let filesystemmain = [
-    {
-        type: 'folder',
-        name: 'root',
-        contents: []
-    }
-];
 
 function getStringSizeUsingBlob(str) {
     const blob = new Blob([str]); 
     return blob.size;
 }
-function openDatabase(onSuccess) {
-    const request = indexedDB.open("pAdbelc-personal-filesystem", 1);
-
-    request.onupgradeneeded = function(event) {
-        const db = event.target.result;
-
-        if (!db.objectStoreNames.contains("filesystem")) {
-            const store = db.createObjectStore("filesystem", { keyPath: "id", autoIncrement: true });
-        }
-    };
-
-    request.onsuccess = function(event) {
-        const db = event.target.result;
-
-        if (onSuccess) onSuccess(db);
-    };
-
-    request.onerror = function(event) {
-        console.error("Error opening database:", event.target.error);
-    };
-}
-openDatabase(function(db) {
-    const transaction = db.transaction("filesystem", "readonly");
-    const store = transaction.objectStore("filesystem");
-
-    const getRequest = store.get(1);
-
-    getRequest.onsuccess = function(event) {
-        if (getRequest.result) {
-            filesystemmain = getRequest.result.data;
-        } else {
-            filesystemmain = [
-                {
-                    type: 'folder',
-                    name: 'root',
-                    contents: []
-                }
-            ];
-        }
-        createDivs();
-    };
-
-    getRequest.onerror = function(event) {
-        console.error("Error loading data from IndexedDB:", event.target.error);
-    };
-});
-
 
 function getFolderByPath(path, fileSystem = filesystemmain) {
     const parts = path.split('/').filter(part => part !== '');
     if (parts.length === 0) return null;
     
-    let current = filesystemmain.find(entry => entry.type === 'folder' && entry.name === parts[0]);
+    let current = fileSystem.find(entry => entry.type === 'folder' && entry.name === parts[0]);
     if (!current) return null;
     
     for (const part of parts.slice(1)) {
@@ -362,227 +309,25 @@ function getFolderByPath(path, fileSystem = filesystemmain) {
 }
 function getFileContent(path, filename) {
     const folder = getFolderByPath(path);
-    if (!folder) return null;
     const file = folder.contents.find(item => item.type === 'file' && item.name === filename);
-    if (!file) return null;
-    return file.content;
+    return file.data;
 }
-const handleFileNFolderContextMenu = (event, name, type) => {
-    event.preventDefault();
-    if (document.getElementById("context-menu-rightclick")) {
-        document.body.removeChild(document.getElementById("context-menu-rightclick"));
-    }
-
-    const contextMenu = document.createElement("div");
-    contextMenu.id = "context-menu-rightclick";
-    contextMenu.classList.add("pAdeblc-dropdown-content");
-    contextMenu.style.position = "absolute";
-    contextMenu.style.left = event.pageX + "px";
-    contextMenu.style.top = event.pageY + "px";
-    contextMenu.style.width = "10vw";
-    contextMenu.style.display = "block";
-    bringToFront(contextMenu);
-
-    const renameOption = document.createElement("a");
-    renameOption.href = "#";
-    renameOption.textContent = `Rename ${type}`;
-    renameOption.addEventListener("click", (e) => RenameItem(event));
-    const deleteOption = document.createElement("a");
-    deleteOption.href = "#";
-    deleteOption.textContent = `Delete ${type}`;
-    deleteOption.addEventListener("click", (e) => DeleteItem(event));
-
-    contextMenu.appendChild(renameOption);
-    contextMenu.appendChild(deleteOption);
-    document.body.appendChild(contextMenu);
-
-    contextMenu.addEventListener("click", (e) => {
-        if (e.target.tagName === "A") {
-            document.body.removeChild(contextMenu);
-        }
-    });
-};
-function DeleteItem(event) {
-    const target = event.target.closest('.file-item');
-    if (target) {
-        const fileName = target.dataset.name;
-        const fileType = target.dataset.type;
-        const panel = target.closest('.pAdeblc-filemanager-panel');
-        const input = panel.querySelector('.folder-input');
-        const path = input.value.trim();
-        const folder = getFolderByPath(path);
-        if (!folder) return;
-
-        if (confirm(`Delete ${fileType} "${fileName}"?`)) {
-            const index = folder.contents.findIndex(item => item.name === fileName && item.type === fileType);
-            if (index !== -1) {
-                folder.contents.splice(index, 1);
-                renderPanel(panel.querySelector('.file-list'), path);
-                UpdatePersonalFileSystem();
-            }
-        }
-    }
-}
-
-function RenameItem(event) {
-    const target = event.target.closest('.file-item');
-    if (target) {
-        const fileName = target.dataset.name;
-        const fileType = target.dataset.type;
-        const panel = target.closest('.pAdeblc-filemanager-panel');
-        const input = target.querySelector('.pAdeblc-file-name');
-        const path = panel.querySelector('.folder-input').value.trim();
-        const folder = getFolderByPath(path);
-        if (!folder) return;
-        input.disabled = false;
-        input.style.pointerEvents = 'all';
-        input.focus(); 
-
-        input.addEventListener('keydown', function handleKeydown(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                const newName = input.value.trim();
-                if (newName && newName !== fileName) {
-                    let finalName = newName;
-                    let counter = 1;
-                    while (folder.contents.some(item => item.name === finalName && item.type === fileType)) {
-                        const baseName = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
-                        const extension = newName.includes('.') ? newName.substring(newName.lastIndexOf('.')) : '';
-                        finalName = `${baseName} (${counter++})${extension}`;
-                    }
-
-                    const index = folder.contents.findIndex(item => item.name === fileName && item.type === fileType);
-                    if (index !== -1) {
-                        folder.contents[index].name = finalName;
-                        UpdatePersonalFileSystem();
-                    }
-                }
-
-                input.disabled = true;
-                input.style.pointerEvents = 'none';
-                input.removeEventListener('keydown', handleKeydown);
-            }
-        });
-
-        input.addEventListener('blur', function handleBlur() {
-            const newName = input.value.trim();
-            if (newName && newName !== fileName) {
-                let finalName = newName;
-                let counter = 1;
-                while (folder.contents.some(item => item.name === finalName && item.type === fileType)) {
-                    finalName = `${newName} (${counter++})`;
-                }
-
-                const index = folder.contents.findIndex(item => item.name === fileName && item.type === fileType);
-                if (index !== -1) {
-                    folder.contents[index].name = finalName;
-                    UpdatePersonalFileSystem();
-                }
-            }
-
-            input.disabled = true;
-            input.style.pointerEvents = 'none';
-            input.removeEventListener('blur', handleBlur);
-        });
-    }
-}
-
-function renderPanel(fileListElement, path) {
-    fileListElement.innerHTML = '';
+function setFileContent(path,filename,data) {
     const folder = getFolderByPath(path);
-    if (!folder) {
-        console.warn(`Path "${path}" not found.`);
-        return;
-    }
-    folder.contents.forEach(item => {
-        const fileItem = document.createElement('div');
-        fileItem.classList.add('file-item');
-        fileItem.dataset.type = item.type;
-        fileItem.dataset.name = item.name;
-        fileItem.dataset.location = item.path;
-        fileItem.dataset.size = item.file_size;
-        fileItem.dataset.date = item.time_made;
-        fileItem.dataset.contents = item.data
-
-        fileItem.setAttribute('draggable', 'true');
-
-        const img = document.createElement('img');
-        if (item.type === 'folder') {
-            img.src = '/assets/img/winicons/folder.png';
-        } else {
-            const fileType = item.name.split('.').pop().toLowerCase();
-            img.src = `/assets/img/winicons/${fileType}file.png`;
-        }
-
-        const nameSpan = document.createElement('input');
-        nameSpan.value = item.name;
-        nameSpan.classList.add('pAdeblc-file-name');
-        nameSpan.disabled = true;
-        nameSpan.style.pointerEvents = 'none';
-        fileItem.appendChild(img);
-        fileItem.appendChild(nameSpan);
-        fileListElement.appendChild(fileItem);
-    });
-}
-
-
-function navigatePath(currentPath, folderName){
-    if(currentPath === '/' || currentPath === ''){
-        return `/${folderName}`;
-    } else {
-        return `${currentPath}/${folderName}`;
+    const file = folder.contents.find(item => item.type === 'file' && item.name === filename);
+    file.data = data;
+    file.file_size = getStringSizeUsingBlob(data);
+    saveFilesystem();
+    if (current_menu == "personalfiles") {
+        UpdatePersonalFileSystem();
     }
 }
-
-function bringToFront(windowElement) {
-    const allWindows = document.querySelectorAll('.pAdeblc-filesystem-main');
-    let highestZIndex = 10000;
-    allWindows.forEach(window => {
-        const zIndex = parseInt(window.style.zIndex, 10) || 10000;
-        if(zIndex > highestZIndex){
-            highestZIndex = zIndex;
-        }
-    });
-    windowElement.style.zIndex = highestZIndex + 1;
-}
-
-function makeFileManagerDraggable(element) {
-    let currentPosX = 0, currentPosY = 0, previousPosX = 0, previousPosY = 0;
-
-    const handle = element.querySelector('#pAdeblc-top-filesystem');
-    if (handle) {
-        handle.onmousedown = dragMouseDown;
-    }
-
-    function dragMouseDown(e) {
-        e.preventDefault();
-        previousPosX = e.clientX;
-        previousPosY = e.clientY;
-        document.onmouseup = closeDragElement;
-        document.onmousemove = elementDrag;
-    }
-
-    function elementDrag(e) {
-        e.preventDefault();
-        currentPosX = previousPosX - e.clientX;
-        currentPosY = previousPosY - e.clientY;
-        previousPosX = e.clientX;
-        previousPosY = e.clientY;
-        element.style.top = (element.offsetTop - currentPosY) + 'px';
-        element.style.left = (element.offsetLeft - currentPosX) + 'px';
-    }
-
-    function closeDragElement() {
-        document.onmouseup = null;
-        document.onmousemove = null;
-    }
-}
-
-function MakeFilePicker(){
+function MakeFilePicker(data){
     const newWindow = document.createElement('div');
     newWindow.classList.add(".pAdeblc");
-    newWindow.classList.add("pAdeblc-filesystem-main");
-    newWindow.id = "pAdeblc-filesystem-main";
+    newWindow.classList.add("pAdeblc-filepicker-main");
+    newWindow.classList.add(".pAdeblc-main")
+    newWindow.id = "pAdeblc-filepicker-main";
     newWindow.style = "font-family: 'MS Sans Serif', sans-serif; position: fixed; top: 25%; left: 25%; width: 45vw; background: #c0c0c0; border: 0.2vw solid #fff; border-top-color:#fff; border-left-color:#fff; border-right-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); z-index: 9999; box-sizing: border-box;";
 
     newWindow.innerHTML = `
@@ -591,31 +336,31 @@ function MakeFilePicker(){
                 <img src="/assets/img/winicons/window.png" class="pAdeblc-image" style="width: 2.5vw; height: 2.5vh;">
                 Juststudy CE File Selector
             </span>
-            <button style="font-family: 'Tahoma', sans-serif; font-size: 1vw; color: #000; background-color: #C0C0C0; border: 0.1vw solid #fff; border-top-color: #fff; border-left-color: #fff; border-right-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); padding: 0.15vw 0.5vw; cursor: pointer;" onmouseover="hoverBtIn(this)" onmouseout="hoverBtOut(this)" onclick="document.getElementById('pAdeblc-filesystem-main').style.display = 'none';">X</button>
+            <button style="font-family: 'Tahoma', sans-serif; font-size: 1vw; color: #000; background-color: #C0C0C0; border: 0.1vw solid #fff; border-top-color: #fff; border-left-color: #fff; border-right-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); padding: 0.15vw 0.5vw; cursor: pointer;" onmouseover="hoverBtIn(this)" onmouseout="hoverBtOut(this)" onclick="document.getElementById('pAdeblc-filepicker-main').style.display = 'none';">X</button>
         </div>
-        <div class="pAdeblc-filesystem-extra-container pAdeblc-cool-scroll" id="pAdeblc-filesystem-content">
+        <div class="pAdeblc-filesystem-extra-container pAdeblc-cool-scroll" id="pAdeblc-filepicker-content">
         </div>
     `;
+    FileData = data;
     document.body.appendChild(newWindow);
     makeFileManagerDraggable(newWindow);
-    newWindow.style.display = 'none';
     newWindow.addEventListener("click", () => bringToFront(newWindow));
     bringToFront(newWindow);
-}
-MakeFilePicker();
-function UpdatePersonalFileSystem(){
-    const container = document.getElementById('pAdeblc-filesystem-content');
-    let inputdata = document.getElementById("pAdeblc-filemanager-folder-input").value;
-    renderPanel(container.querySelector('#file-list'), `${inputdata}`);
-
 }
 function stopResizing() {
     document.removeEventListener('mousemove', resize);
     document.removeEventListener('mouseup', stopResizing);
 }
-
-function createDivs() {
-        document.getElementById("pAdeblc-filesystem-content").innerHTML = `
+function CloseFilePicker(){
+    try{
+        document.getElementById("pAdeblc-filepicker-main").remove()
+        CurrentSelectedFile = null;
+        CurrentSelectedFileName = null;
+        CurrentSelectedFolder = null;
+    } catch(e){}
+}
+function createPickerDivs(isgetdata) {
+        document.getElementById("pAdeblc-filepicker-content").innerHTML = `
             <div class="pAdeblc-filemanager-panel">
                 <div style="display: flex; align-items: center;">
                     <input class='folder-input' id="pAdeblc-filemanager-folder-input" type="text" style="flex: 1 1 auto;" placeholder="Enter folder path..." value="/root"/> 
@@ -634,9 +379,9 @@ function createDivs() {
                 </div>
             </div>
         `; 
-        document.getElementById("pAdeblc-filesystem-content").style.display = "flex";
-        document.getElementById("pAdeblc-filesystem-content").style.flexDirection = "row";
-        const container = document.getElementById('pAdeblc-filesystem-content');
+        document.getElementById("pAdeblc-filepicker-content").style.display = "flex";
+        document.getElementById("pAdeblc-filepicker-content").style.flexDirection = "row";
+        const container = document.getElementById('pAdeblc-filepicker-content');
         const Input = document.getElementById('pAdeblc-filemanager-folder-input');
         const FileName = document.getElementById('pAdeblc-filepicker-input');
         const GoRoot = document.getElementById('pAdeblc-filemanager-go-root');
@@ -646,8 +391,26 @@ function createDivs() {
 
         SelectBT.addEventListener('click', () => {
             const path = `${CurrentSelectedFolder}`;
-
+            let filedata;
+            if (isgetdata){
+                filedata = getFileContent(path, CurrentSelectedFile);
+                const file_extension = file_types_clean[CurrentSelectedFile.split('.').pop()];
+                try{
+                    if (txEditorTabCount <= 20){
+                        createNewTxEditorTab(CurrentSelectedFile,filedata,global_tabbt,global_tabcontainer,file_extension);
+                        txEditorTabCount += 1;
+                    }
+                } catch(e) {
+                    
+                }
+            } else {
+                setFileContent(path, CurrentSelectedFile,FileData);
+            }
+            CloseFilePicker();
         })
+        CancelBT.addEventListener('click', () => {
+            CloseFilePicker();
+        });
         GoRoot.addEventListener('click', () => {
             const path = `/root`;
             renderPanel(container.querySelector('#file-list'), path);

@@ -456,8 +456,12 @@ let global_tabbt = null;
 let total_tab = 0;
 
 const filesystemjs = document.createElement("script");
-filesystemjs.src = "/assets/js/teacherfilepicker.js";
+filesystemjs.src = "/assets/js/teacherfilesystem.js";
 document.body.appendChild(filesystemjs);
+
+const filepickerjs = document.createElement("script");
+filepickerjs.src = "/assets/js/teacherfilepicker.js";
+document.body.appendChild(filepickerjs);
 
 function createUniqueTabId(baseName, editors) {
     let tabId = baseName;
@@ -513,8 +517,6 @@ function createNewTxEditorTab(name,code,tabbt,tabcontainer,syntaxtype) {
         }
         if (code != null) {
             editor.setValue(code);
-        } else {
-            editor.setValue("console.log('Hello World!');");
         }
         editors[tabId] = editor;
         let id = Object.keys(editors);
@@ -556,6 +558,7 @@ function createNewTxEditorTab(name,code,tabbt,tabcontainer,syntaxtype) {
 function CreateTextEditor() {
     const newWindow = document.createElement('div');
     newWindow.classList.add("pAdeblc");
+    newWindow.classList.add(".pAdeblc-main")
     newWindow.id = "pAdeblc-txeditor-main";
     newWindow.style = "font-family: 'MS Sans Serif', sans-serif; position: fixed; top: 25%; left: 25%; width: 56vw; height: 36vw; background: #c0c0c0; border: 0.2vw solid #fff; border-top-color:#fff; border-left-color:#fff; border-right-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); z-index: 9999; box-sizing: content-box;";
     newWindow.innerHTML = `
@@ -1059,10 +1062,22 @@ function copyText() {
 loadAceScript(CreateTextEditor);
 
 function openLocalFile(){
-        
+    CloseDropdowns();
+    const picker = document.getElementById("pAdeblc-filepicker-main");
+    if (picker){
+        picker.remove()
+    }
+    MakeFilePicker(null);
+    createPickerDivs(true);
 }
 function saveLocalFile(){
-
+    CloseDropdowns();
+    const picker = document.getElementById("pAdeblc-filepicker-main");
+    if (picker){
+        picker.remove()
+    }
+    MakeFilePicker(currenteditor.getValue());
+    createPickerDivs(false);
 }
 function run(isconsole) {
     const script = document.createElement("script");

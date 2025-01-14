@@ -379,7 +379,6 @@ function saveFilesystem() {
 
         saveRequest.onsuccess = function() {
         };
-
         saveRequest.onerror = function(event) {
             console.error("Error saving filesystem:", event.target.error);
         };
@@ -438,9 +437,6 @@ function makefolder(name, path = '') {
         }
 
         parent.contents.push({ name: newName, type: 'folder', contents: [], path: path });
-        openDatabase(function(db) {  
-            saveFilesystem(db);
-        });
         return parent.contents[parent.contents.length - 1];
     } else {
         console.error(`Path "${path}" not found.`);
@@ -576,7 +572,7 @@ function RenameItem(event) {
                     let finalName = newName;
                     let counter = 1;
                     while (folder.contents.some(item => item.name === finalName && item.type === fileType)) {
-                        const baseName = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
+                        const baseName = newName.substring(0, newName.lastIndexOf('.')) || newName;
                         const extension = newName.includes('.') ? newName.substring(newName.lastIndexOf('.')) : '';
                         finalName = `${baseName} (${counter++})${extension}`;
                     }
