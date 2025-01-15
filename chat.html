@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
+    <title>JustStudy CE</title>
+    <style>
+        body {
+            overflow-y: hidden;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        .bg {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        .textinput {
+            flex: 1 1 auto;
+            height: 2.5vw;
+            font-size: 2vw;
+        }
+
+        .coolbg {
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            background-color: rgba(116, 116, 116, 0.2);
+            outline: 0.3vh solid white;
+            color: white;
+        }
+
+        .bottombar {
+            width: 100%;
+            height: auto;
+            border-radius: 0;
+            color: rgb(0, 0, 0);
+            font-family: Comfortaa;
+            z-index: 1000;
+            display: flex;
+        }
+
+        .windows98style {
+            background-color: #C0C0C0;
+            border: 0.1vw solid #fff;
+            border-top-color: #fff;
+            border-left-color: #fff;
+            border-right-color: rgb(56, 56, 56);
+            border-bottom-color: rgb(56, 56, 56);
+            outline: none;
+        }
+
+        .windows98style-bt {
+            margin-left: 0.5vw;
+            font-family: 'Tahoma', sans-serif;
+            font-size: 1vw;
+            height: 1.8vw;
+            color: #000;
+            background-color: #C0C0C0;
+            padding: 0.4vw;
+            cursor: pointer;
+            border: 0.1vw solid #C0C0C0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .windows98style-bt:hover {
+            border: 0.1vw solid #fff;
+            border-right-color: #fff;
+            border-bottom-color: #fff;
+            border-top-color: rgb(56, 56, 56);
+            border-left-color: rgb(56, 56, 56);
+        }
+
+        .maincontent {
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+        }
+
+        .sidecontent {
+            width: 15vw;
+            background-color: #C0C0C0;
+            border: 0.1vw solid #fff;
+            border-top-color: #fff;
+            border-left-color: #fff;
+            border-right-color: rgb(56, 56, 56);
+            border-bottom-color: rgb(56, 56, 56);
+        }
+
+        .chatcontent {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .content {
+            overflow-y: scroll;
+            overflow-x: none;
+            height: 94.5vh;
+        }
+
+        .bottombar {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+        .textbox{
+            background-color: #919191;
+            border: 0.1vw solid #fff;
+            border-top-color: #fff;
+            border-left-color: #fff;
+            border-right-color: rgb(56, 56, 56);
+            border-bottom-color: rgb(56, 56, 56);
+            padding: 0.4vw;
+            border-radius: 0.4vw;
+            margin: 0.4vw;
+            max-width: 83vw;
+            width: auto;
+            font-family: Comfortaa;
+            font-size: 1.2vw;
+            color: rgb(255, 255, 255);
+            text-wrap: wrap;
+            white-space: normal;
+            word-break: break-all;
+        }
+        .textbox-name{
+            font-family: Comfortaa;
+            font-size: 1.2vw;
+            color: rgb(255, 255, 255);
+            margin-left: 0.4vw;
+            padding: 0.4vw;
+        }
+    </style>
+</head>
+<body>
+    <div class="maincontent">
+        <div class="sidecontent">
+            <input class="windows98style" style="margin: 0.4vw;" id="usernameinput" placeholder="Enter username here"></input>
+        </div>
+        <div class="chatcontent">
+            <div id="content" class="content">
+
+            </div>
+            <div class="bottombar windows98style">
+                <input class="textinput windows98style" placeholder="Enter URL here"></input>
+            </div>
+        </div>
+    </div>
+
+    <div class="windows98style bg" style="background-color: #979797;"></div>
+
+    <script src="../assets/js/teacher.js"></script>
+    <script>
+       function makebox(text, name, isself) {
+            const container = document.createElement("div");
+            container.style.display = "flex";
+            container.style.flexDirection = "column";
+           container.style.alignItems = isself ? "flex-end" : "flex-start"; 
+
+            const textdiv = document.createElement("span");
+            textdiv.classList.add("textbox-name");
+            textdiv.innerText = name;
+
+            const box = document.createElement("div");
+            box.classList.add("textbox");
+            box.innerText = text;
+            box.style.width = "auto";
+            box.style.textAlign = "left";
+
+            container.appendChild(textdiv);
+            container.appendChild(box);
+            document.getElementById("content").appendChild(container);
+            document.getElementById("content").scrollTop = document.getElementById("content").scrollHeight;
+        }
+        const socket = new WebSocket("ws://localhost:9001");
+        let uuid;
+        function uuidv4() {
+            const a = crypto.getRandomValues(new Uint16Array(8));
+            let i = 0;
+            return '00-0-4-1-000'.replace(/[^-]/g, 
+                    s => (a[i++] + s * 0x10000 >> s).toString(16).padStart(4, '0')
+            );
+        }
+        socket.addEventListener("open", () => {
+            console.log("Connected to WebSocket server");
+            const textinput = document.querySelector(".textinput");
+            const nameinput = document.getElementById("usernameinput");
+            textinput.addEventListener("keydown", (e) => {
+                if (e.key === "Enter"  && textinput.value !== "") {
+                    const date = new Date();
+                    makebox(textinput.value,"You" + " " + date.getHours() + ":" + date.getMinutes(),true);
+                    document.getElementById("content").scrollTop = document.getElementById("content").scrollHeight;
+                    const message = textinput.value;
+                    textinput.value = "";
+                    const payload = { message };
+                    uuid = uuidv4();
+                    const jsonpayload = {"uuid": uuid,"message": payload.message,name:nameinput.value, "time": date.getHours() + ":" + date.getMinutes()}
+                    socket.send(JSON.stringify(jsonpayload));
+                    console.log("sent?")
+                }
+            }); 
+            socket.addEventListener("message", (event) => {
+                try {
+                const data = JSON.parse(event.data);
+                console.log(JSON.parse(data.message).uuid);
+                if (data && data.message && JSON.parse(data.message).uuid !== uuid) {
+                    console.log(data.message);
+                    let text = data.message;
+                    makebox(JSON.parse(text).message,JSON.parse(text).name + " " + JSON.parse(text).time ,false);
+                }
+                } catch (e) {
+                }
+            });
+            socket.addEventListener("error", (error) => {
+                console.error("WebSocket error:", error);
+            });
+
+            socket.addEventListener("close", () => {
+                console.log("WebSocket connection closed");
+            });
+        });
+    </script>
+</body>
+</html>
