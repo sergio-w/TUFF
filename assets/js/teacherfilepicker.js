@@ -278,7 +278,6 @@ pickerstyle.innerHTML = `
     background: rgb(255, 255, 255);
     padding: 0.2vw;
 }
-
 `;
 document.head.appendChild(pickerstyle);
 

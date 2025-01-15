@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JustStudy CE - Discord-like Theme</title>
+    <link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico">
     <style>
         :root {
             --background: #36393f;
@@ -30,16 +31,30 @@
             height: 100vh;
         }
 
-        .sidecontent {
-            width: 15vw;
+        .leftsidecontent {
+            width: 4vw;
             background-color: var(--sidebar);
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
+            align-items: center; 
             padding-top: 1vw;
             box-sizing: border-box;
+            overflow-y: scroll;
+            scrollbar-width: none;
+            overflow-x:hidden;
         }
-
+        .rightsidecontent{
+            width: 10vw;
+            background-color: var(--sidebar);
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            padding-top: 1vw;
+            box-sizing: border-box;
+            overflow-y: scroll;
+            scrollbar-width: none;
+            overflow-x:hidden;
+        }
         .chatcontent {
             flex: 1;
             display: flex;
@@ -74,7 +89,7 @@
             border-radius: 0.2vw;
         }
 
-        .sidecontent-inputfield {
+        .leftsidecontent-inputfield {
             background-color: var(--input-bg);
             border: none;
             padding: 0.4vw;
@@ -85,7 +100,7 @@
             border-radius: 0.2vw;
         }
 
-        .sidecontent-bt {
+        .leftsidecontent-bt {
             background-color: var(--accent-color);
             border: none;
             padding: 0.6vw;
@@ -97,7 +112,7 @@
             font-size: 1vw;
         }
 
-        .sidecontent-bt:hover {
+        .leftsidecontent-bt:hover {
             opacity: 0.9;
         }
 
@@ -125,7 +140,6 @@
             padding: 0.4vw;
             color: var(--accent-color);
         }
-
         .bg {
             position: fixed;
             width: 100%;
@@ -135,17 +149,61 @@
             z-index: -1;
             background-color: var(--background);
         }
+        .leftsidecontent-icon-container {
+            width: 3vw;
+            height: 3vw;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1vw;
+        }
+        .server-icon-container {
+            width: 3vw;
+            height: 3vw;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1vw;
+            backdrop-filter: blur(1.6vw);
+            -webkit-backdrop-filter: blur(1vw);
+            background-color: rgba(116, 116, 116, 0.2);
+            border-radius: 2vw;
+            transition: all 0.4s ease;
+        }
+        .server-icon-container:hover {
+            border-radius: 0.5vw;
+            background-color: rgba(125, 255, 166, 0.581);
+        }
+        .leftsidecontent-icon {
+            transition: all 0.4s ease; 
+            border-radius: 2vw;
+            border: #7289da00 0.15vw solid;
+        }
+        .leftsidecontent-icon:hover {
+            border: #ffc400 0.15vw solid;
+            border-radius: 0.5vw;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            background: rgb(27, 27, 27);
+            border: 0.01vw solid rgb(107, 107, 107);
+            border-radius: 0.5vw;
+            padding: 0.5vw;
+            color: white;
+            font-size: 0.7vw;
+            transform: translateY(20%);
+            transition: all 0.2s ease;
+            pointer-events: none;
+            box-shadow: 0.1vw 0.1vw 0.2vw rgba(0, 0, 0, 0.5);
+        }
     </style>
 </head>
 <body>
     <div class="maincontent">
-        <div class="sidecontent" id="sidecontent">
-            <span class="white-text">Enter Room name</span>
-            <input class="sidecontent-inputfield" id="serverinput" placeholder="Enter Server name"></input>
-            <button class="sidecontent-bt">Host</button>
-            <button class="sidecontent-bt">Join</button>
-            <span class="white-text">Name</span>
-            <input class="sidecontent-inputfield" id="usernameinput" placeholder="Enter username"></input>
+        <div class="leftsidecontent" id="leftsidecontent">
+            <div class="server-icon-container" id="AddServer">
+                <img src="/assets/img/roundAddIcon.png" class="leftsidecontent-icon" style="width: 90%; height: 90%;">
+
+            </div>
         </div>
         <div class="chatcontent">
             <div id="content" class="content"></div>
@@ -153,12 +211,33 @@
                 <input class="textinput" placeholder="Enter URL here"></input>
             </div>
         </div>
+        <div class="rightsidecontent" id="rightsidecontent">
+        </div>
     </div>
 
     <div class="bg"></div>
-
     <script src="../assets/js/teacher.js"></script>
     <script>
+        function initServerContent(){
+            const popup = document.createElement("div");
+            popup.classList.add("popup");
+            popup.textContent = "Add Server";
+            document.body.appendChild(popup);
+            container = document.getElementById("AddServer");
+            container.addEventListener("mouseover", () => {
+                const rect = container.getBoundingClientRect();
+                popup.style.display = "block";
+                const viewportWidth = window.innerWidth;
+                const leftInVW = (rect.left + window.scrollX) / viewportWidth * 100;
+                popup.style.left = `${leftInVW + 4}vw`; 
+                popup.style.top = `${rect.top + window.scrollY}px`;
+            });
+
+            container.addEventListener("mouseout", () => {
+                popup.style.display = "none";
+            });
+        }
+        initServerContent();
        function makebox(text, name, isself) {
             const container = document.createElement("div");
             container.style.display = "flex";
@@ -180,6 +259,40 @@
             document.getElementById("content").appendChild(container);
             document.getElementById("content").scrollTop = document.getElementById("content").scrollHeight;
         }
+        function makeServer(name, iconurl, id) {
+            const container = document.createElement("div");
+            container.classList.add("leftsidecontent-icon-container");
+
+            const icon = document.createElement("img");
+            icon.src = iconurl;
+            icon.style.width = "90%";
+            icon.style.height = "90%";
+            icon.classList.add("leftsidecontent-icon");
+            container.appendChild(icon);
+            document.getElementById("leftsidecontent").insertBefore(container, document.getElementById("AddServer"));
+            const popup = document.createElement("div");
+            const servername = name;
+            popup.classList.add("popup");
+            popup.textContent = servername;
+            document.body.appendChild(popup);
+
+            container.addEventListener("mouseover", () => {
+                const rect = container.getBoundingClientRect();
+                popup.style.display = "block";
+                const viewportWidth = window.innerWidth;
+                const leftInVW = (rect.left + window.scrollX) / viewportWidth * 100;
+                popup.style.left = `${leftInVW + 4}vw`; 
+                popup.style.top = `${rect.top + window.scrollY}px`;
+            });
+
+            container.addEventListener("mouseout", () => {
+                popup.style.display = "none";
+            });
+        }
+
+        makeServer("JustStudy CE", "/assets/img/favicon.ico");
+        makeServer("Sarah Day", "https://media.discordapp.net/attachments/1217413923893022741/1329070703034503248/ALV-UjWgKNWx2uwqndYbO-nnfgacSXHMsanDU-emLQwI4A9LrUf-vOQs272-p-k-rw-no.png?ex=6789010c&is=6787af8c&hm=84206b10920e5b84f033cd87bce911389f88d5ebbff59626fef16226b187feb9&=&quality=lossless");
+        makeServer("JustStudy Test Server", "/assets/img/favicon.ico");
         const socket = new WebSocket("ws://localhost:9001");
         let uuid;
         function uuidv4() {
