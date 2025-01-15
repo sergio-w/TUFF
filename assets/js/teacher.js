@@ -203,7 +203,7 @@ pAdeblcstyle.innerHTML = `
   color: black;
   background-color: #C0C0C0;
   border: 0.1vw solid #C0C0C0;
-  padding: 0.4vw 1.6vw;
+  padding: 0.5vw 0.6vw;
   text-decoration: none;
   display: block;
 }
@@ -247,12 +247,6 @@ pAdeblcstyle.innerHTML = `
     border-right-color: rgb(56, 56, 56);
     border-bottom-color: rgb(56, 56, 56);
     padding: 0 0.5vw;
-    background-color: #C0C0C0;
-    border: 0.1vw solid #fff;
-    border-top-color:#fff;
-    border-left-color:#fff;
-    border-right-color: rgb(56, 56, 56);
-    border-bottom-color: rgb(56, 56, 56);
     outline: none;
     cursor: default;
     overflow-x: scroll;
@@ -449,6 +443,19 @@ function loadAceScript(callback) {
             script2.src = "/assets/js/FileSaver.js";
             script2.onload = callback;
             document.body.appendChild(script2);
+            script2.onload = () => {
+                const script3 = document.createElement("script");
+                script3.src = "/assets/src-noconflict/ext-searchbox.js";
+                script3.onload = callback;
+                document.body.appendChild(script3);
+                script3.onload = () => {
+                    const script4 = document.createElement("script");
+                    script4.src = "/assets/src-noconflict/ext-settings_menu.js";
+                    console.log("worked? 4")
+                    script4.onload = callback;
+                    document.body.appendChild(script4);
+                }
+            }
         };
         document.body.appendChild(autocomplete);
     };
@@ -497,7 +504,26 @@ function HandleEditorZoom(level, isadd) {
         }
     }
 }
+function setTheme(theme) {
+    if (currenteditor) {
+        currenteditor.setTheme(`ace/theme/${theme}`);
+    }
+}
 
+function setSyntax(type) {
+    const syntax = type;
+    if (syntax && currenteditor) {
+        currenteditor.getSession().setMode(`ace/mode/${syntax}`);
+    }
+}
+
+function toggleWordWrap() {
+    if (currenteditor) {
+        const wrap = currenteditor.getSession().getUseWrapMode();
+        currenteditor.getSession().setUseWrapMode(!wrap);
+        document.getElementById('wordwrap').textContent = "Word Wrap" + (currenteditor.getSession().getUseWrapMode() ? " ✔" : " ✖");
+    }
+}
 
 function createNewTxEditorTab(name,code,tabbt,tabcontainer,syntaxtype) {
     let tabnumber = 0;
@@ -530,10 +556,14 @@ function createNewTxEditorTab(name,code,tabbt,tabcontainer,syntaxtype) {
         tabcontainer.insertBefore(newTab, tabbt);
         document.getElementById('txEditorTabContainer').appendChild(newContent);
         const editor = ace.edit(`editor-${tabId}`);
-        editor.setTheme("ace/theme/monokai");
+        editor.setTheme("ace/theme/idle_fingers");
         editor.setOption("enableBasicAutocompletion", true);
         editor.setOption("enableLiveAutocompletion", true);
         editor.setOption("enableSnippets", true);
+        editor.setOption("cursorStyle", "smooth");
+        editor.setKeyboardHandler("ace/keyboard/vscode");
+        editor.execCommand("trimTrailingSpace");
+        editor.setShowPrintMargin(false);
         editor.textInput.getElement().addEventListener('keydown', (event) => {
             event.stopPropagation();
         });
@@ -583,6 +613,16 @@ function createNewTxEditorTab(name,code,tabbt,tabcontainer,syntaxtype) {
         console.warn("Can't make more tabs!");
     }
 }
+function openBackgroundDropdown(id) {
+    const alldropdowns = document.querySelectorAll(".pAdeblc-dropdown-content-extra");
+    alldropdowns.forEach((dropdown) => {
+        if (dropdown !== document.getElementById(id)){
+            dropdown.style.display = 'none';
+        };
+    });
+    const dropdown = document.getElementById(id);
+    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+}
 function CreateTextEditor() {
     const newWindow = document.createElement('div');
     newWindow.classList.add("pAdeblc");
@@ -610,16 +650,29 @@ function CreateTextEditor() {
                         <a href="#" onclick="openLocalFile()">Open Local</a>
                     </div>
                 </div>
-                <div class="pAdeblc-dropdown" id="editselector">
-                    <button class="pAdeblc-txeditor-bt" onclick="toggleDropdown(this.parentElement)">
-                        <img src="/assets/img/winicons/texticon.png" class="pAdeblc-image">Edit
-                    </button>
-                    <div class="pAdeblc-dropdown-content">
-                        <a href="#" onclick="findText()">Find</a>
-                        <a href="#" onclick="findAndReplace()">Find & Replace</a>
-                        <a href="#" onclick="copyText()">Copy</a>
+                <div class="pAdeblc-dropdown" id="customizeselector">
+                <button class="pAdeblc-txeditor-bt" onclick="toggleDropdown(this.parentElement)">
+                    <img src="/assets/img/winicons/texticon.png" class="pAdeblc-image">Customize
+                </button>
+                <div class="pAdeblc-dropdown-content" style="width: 9vw;">
+                    <a href="#" onclick="openBackgroundDropdown('txbackgroundDropdown')">Background</a>
+                    <div id="txbackgroundDropdown" class="pAdeblc-dropdown-content pAdeblc-dropdown-content-extra" style="display: none; position: absolute; left: 100%; top: 0;">
+                        <a href="#" onclick="setTheme('monokai')">Monokai</a>
+                        <a href="#" onclick="setTheme('github')">GitHub</a>
+                        <a href="#" onclick="setTheme('dracula')">Dracula</a>
+                        <a href="#" onclick="setTheme('eclipse')">Eclipse</a>
+                        <a href="#" onclick="setTheme('idle_fingers')">Idle Fingers</a>
                     </div>
+                    <a href="#" onclick="openBackgroundDropdown('txsyntaxDropdown')">Syntax Type</a>
+                    <div id="txsyntaxDropdown" class="pAdeblc-dropdown-content pAdeblc-dropdown-content-extra" style="display: none; position: absolute; left: 100%; top: 0;">
+                        <a href="#" onclick="setSyntax('html')">HTML</a>
+                        <a href="#" onclick="setSyntax('javascript')">JavaScript</a>
+                        <a href="#" onclick="setSyntax('json')">JSON</a>
+                        <a href="#" onclick="setSyntax('text')">Plain</a>
+                    </div>
+                    <a href="#" onclick="toggleWordWrap()" id="wordwrap">Word Wrap ✖</a>
                 </div>
+            </div>
                 <button class="pAdeblc-txeditor-bt" onclick="run()">
                     <img src="/assets/img/winicons/run.png" class="pAdeblc-image">Run
                 </button>
@@ -629,7 +682,7 @@ function CreateTextEditor() {
                 <button class="tx-editor-add-tab-btn" style="margin-left: 0.5vw; margin-right: 0.5vw;" onclick="HandleEditorZoom(-1,true)">
                     -
                 </button>
-                <input id="pAdeblc-txeditor-zoom" class="cewlborder-in" style="margin-right: 0.5vw; width: 3vw; height: 3vh; font-size: 1vw; outline: none;" value="20"></input>
+                <input id="pAdeblc-txeditor-zoom" class="cewlborder-in" style="margin-right: 0.5vw; width: 3vw; height: 1.5vw; font-size: 1vw; outline: none;" value="20"></input>
                 <button class="tx-editor-add-tab-btn" style="margin-right: 0.5vw;" onclick="HandleEditorZoom(1,true)">
                     +
                 </button>
@@ -1061,45 +1114,6 @@ function handleFileSelect(event) {
             }
         };
         reader.readAsText(file);
-    }
-}
-
-function findText() {
-    CloseDropdowns();
-    const query = prompt("Enter text to find:");
-    if (query) {
-        const range = currenteditor.find(query);
-        if (range) {
-            currenteditor.scrollToLine(range.start.row, true, true, function () {});
-        } else {
-            alert('Text not found');
-        }
-    }
-}
-
-function findAndReplace() {
-    CloseDropdowns();
-    const query = prompt("Enter text to find:");
-    const replacement = prompt("Enter replacement text:");
-    if (query && replacement) {
-        const range = currenteditor.find(query);
-        if (range) {
-            currenteditor.session.replace(range, replacement);
-        } else {
-            alert('Text not found');
-        }
-    }
-}
-
-function copyText() {
-    CloseDropdowns();
-    const selectedText = currenteditor.getValue();
-    if (selectedText) {
-        navigator.clipboard.writeText(selectedText).then(() => {
-            logToConsole("Copyed text", "green");
-        });
-    } else {
-        logToConsole("No text to select", "green");
     }
 }
 loadAceScript(CreateTextEditor);

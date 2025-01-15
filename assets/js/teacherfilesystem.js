@@ -695,6 +695,7 @@ function renderPanel(fileListElement, path) {
                     const input = target.querySelector('.pAdeblc-file-name');
                     const path = panel.querySelector('.folder-input').value.trim();
                     const folder = getFolderByPath(path);
+                    console.log(draggedItem.name !== fileItem.dataset.name)
                     if (folder && draggedItem.name !== fileItem.dataset.name) {
                         const index = folder.contents.findIndex(
                             (existingItem) => existingItem.name === input.value.trim() && existingItem.type === 'folder'
@@ -817,18 +818,6 @@ function navigatePath(currentPath, folderName){
     } else {
         return `${currentPath}/${folderName}`;
     }
-}
-
-function bringToFront(windowElement) {
-    const allWindows = document.querySelectorAll('.pAdeblc-filesystem-main');
-    let highestZIndex = 10000;
-    allWindows.forEach(window => {
-        const zIndex = parseInt(window.style.zIndex, 10) || 10000;
-        if(zIndex > highestZIndex){
-            highestZIndex = zIndex;
-        }
-    });
-    windowElement.style.zIndex = highestZIndex + 1;
 }
 
 function makeFileManagerDraggable(element) {
@@ -1403,8 +1392,6 @@ function createDivs(type) {
                     folder.contents.push(draggedItem);
                     UpdatePersonalFileSystem();
                 }
-            } else {
-                console.error('Target folder not found');
             }
         }
         container.querySelector('#left-file-list').addEventListener('dragover', (e) => {
