@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JustStudy CE - Discord-like Theme</title>
+    <title>JustStudy CE</title>
     <link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <link href="assets/css/Comfortaa-Bold.ttf" rel="stylesheet">
     <style>
         :root {
             --background: #36393f;
@@ -61,12 +62,14 @@
             flex-direction: column;
             background-color: var(--chat-bg);
             position: relative;
+            scrollbar-width: none;
         }
 
         .content {
             overflow-y: auto;
             overflow-x: hidden;
             flex: 1;
+            scrollbar-width: none;
             padding: 1vw;
             box-sizing: border-box;
         }
@@ -100,7 +103,7 @@
             border-radius: 0.2vw;
         }
 
-        .leftsidecontent-bt {
+        .content-bt {
             background-color: var(--accent-color);
             border: none;
             padding: 0.6vw;
@@ -112,7 +115,7 @@
             font-size: 1vw;
         }
 
-        .leftsidecontent-bt:hover {
+        .content-bt:hover {
             opacity: 0.9;
         }
 
@@ -195,14 +198,90 @@
             pointer-events: none;
             box-shadow: 0.1vw 0.1vw 0.2vw rgba(0, 0, 0, 0.5);
         }
+        .userinfo-container{
+            height: 3vw;
+            width: 10vw;
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+        }
+        .usericon-container{
+            width: 3vw;
+            height: 3vw;
+            margin-bottom: 2vw;
+            margin-top: 2vw;
+            border-radius: 2vw;
+            overflow: hidden;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+            border: var(--accent-color) 0.15vw solid;
+        }
+        .usericon{
+            border-radius: 2vw;
+        }
+        .AddServerPopup{
+            width: 20vw;
+            height: 15vw;
+            background-color: var(--sidebar);
+            border-radius: 1vw;
+            position:fixed;
+            left: 50%;
+            top: 50%;
+            display: none;
+            flex-direction: column;
+            align-items: center; 
+            transform: translate(-50%,-50%);
+            transition: all 0.1s ease;
+            opacity: 0;
+            font-family: comfortaa , sans-serif;
+        }
+        .smoothshow{
+            animation: AddServerPopupShow ease-in 0.2s forwards;
+        }
+        .smoothhide{
+            animation: AddServerPopupHide ease-out 0.2s forwards;
+        }
+        @keyframes AddServerPopupShow {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        @keyframes AddServerPopupHide {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        } 
+        .popuptext{
+            font-size: 2vw;
+            color: var(--accent-color);
+        }
+        .popupinput{
+            flex: 0 1 auto;
+            height: 2vw;
+            font-size: 1vw;
+            background-color: var(--input-bg);
+            border: none;
+            color: var(--text-color);
+            padding: 0.3vw 0.5vw;
+            outline: none;
+            border-radius: 0.2vw;
+            margin-top: 0.4vw;
+            margin-bottom: 0.4vw;
+        }
     </style>
 </head>
 <body>
     <div class="maincontent">
         <div class="leftsidecontent" id="leftsidecontent">
-            <div class="server-icon-container" id="AddServer">
+            <div class="server-icon-container" id="AddGroup">
                 <img src="/assets/img/roundAddIcon.png" class="leftsidecontent-icon" style="width: 95%; height: 95%;">
-
             </div>
         </div>
         <div class="chatcontent">
@@ -211,19 +290,42 @@
                 <input class="textinput" placeholder="Enter URL here"></input>
             </div>
         </div>
-        <div class="rightsidecontent" id="rightsidecontent">
-        </div>
+        <div class="rightsidecontent" id="rightsidecontent"></div>
     </div>
-
+    <div class="AddServerPopup" id="AddServerPopup"> 
+        <span class="popuptext" style="margin-bottom: 0.4vw; margin-top: 0.8vw;">Join Group</span>
+        <span class="popuptext" style="margin-bottom: 1vw; margin-left: 0.5vw; margin-right: 0.5vw; font-size: 1vw; text-align: center;">
+            Input a server id and then you can chat with your buddys
+        </span>
+        <input class="popupinput" placeholder="Enter URL here"></input>
+        <button class="content-bt" onclick="joinServer('gk1ksG153kA1')">Join</button>
+    </div>
     <div class="bg"></div>
-    <script src="../assets/js/teacher.js"></script>
     <script>
+        function addServerPopup(){
+            const popup = document.getElementById("AddServerPopup");
+            popup.style.display = "flex";
+            popup.classList.remove("smoothhide");
+            popup.classList.add("smoothshow");
+            popup.querySelectorAll("input").forEach((key) =>{
+                key.disabled = false;
+            })
+        }
+        function joinServer(id){
+            const popup = document.getElementById("AddServerPopup");
+            popup.classList.remove("smoothshow");
+            popup.classList.add("smoothhide");
+            popup.querySelectorAll("input").forEach((key) =>{
+                key.disabled = true;
+            })
+        }
         function initServerContent(){
             const popup = document.createElement("div");
             popup.classList.add("popup");
-            popup.textContent = "Add Server";
+            popup.textContent = "Add Group";
             document.body.appendChild(popup);
-            container = document.getElementById("AddServer");
+
+            const container = document.getElementById("AddGroup");
             container.addEventListener("mouseover", () => {
                 const rect = container.getBoundingClientRect();
                 popup.style.display = "block";
@@ -232,17 +334,20 @@
                 popup.style.left = `${leftInVW + 4}vw`; 
                 popup.style.top = `${rect.top + window.scrollY}px`;
             });
-
+            container.addEventListener("click",() => {
+                addServerPopup();
+            });
             container.addEventListener("mouseout", () => {
                 popup.style.display = "none";
             });
         }
         initServerContent();
-       function makebox(text, name, isself) {
+
+        function makebox(text, name, isself, iconurl) {
             const container = document.createElement("div");
             container.style.display = "flex";
             container.style.flexDirection = "column";
-           container.style.alignItems = isself ? "flex-end" : "flex-start"; 
+            container.style.alignItems = isself ? "flex-end" : "flex-start"; 
 
             const textdiv = document.createElement("span");
             textdiv.classList.add("textbox-name");
@@ -254,11 +359,33 @@
             box.style.width = "auto";
             box.style.textAlign = "left";
 
-            container.appendChild(textdiv);
+            const userinfocontainer = document.createElement("div");
+            userinfocontainer.classList.add("userinfo-container");
+
+            const iconcontainer = document.createElement("div");
+            iconcontainer.classList.add("usericon-container");
+
+            const icon = document.createElement("img");
+            icon.src = iconurl;
+            icon.style.width = "90%";
+            icon.style.height = "90%";
+            icon.classList.add("usericon-icon");
+            iconcontainer.appendChild(icon);
+
+            if (isself){
+                userinfocontainer.appendChild(iconcontainer);
+                userinfocontainer.appendChild(textdiv);
+            } else {
+                userinfocontainer.appendChild(textdiv);
+                userinfocontainer.appendChild(iconcontainer);
+            }
+
+            container.appendChild(userinfocontainer);
             container.appendChild(box);
             document.getElementById("content").appendChild(container);
             document.getElementById("content").scrollTop = document.getElementById("content").scrollHeight;
         }
+
         function makeServer(name, iconurl, id) {
             const container = document.createElement("div");
             container.classList.add("leftsidecontent-icon-container");
@@ -269,11 +396,11 @@
             icon.style.height = "90%";
             icon.classList.add("leftsidecontent-icon");
             container.appendChild(icon);
-            document.getElementById("leftsidecontent").insertBefore(container, document.getElementById("AddServer"));
+            document.getElementById("leftsidecontent").insertBefore(container, document.getElementById("AddGroup"));
+
             const popup = document.createElement("div");
-            const servername = name;
             popup.classList.add("popup");
-            popup.textContent = servername;
+            popup.textContent = name;
             document.body.appendChild(popup);
 
             container.addEventListener("mouseover", () => {
@@ -290,55 +417,114 @@
             });
         }
 
+        function makeRightSideUser(name, iconurl) {
+            const container = document.createElement("div");
+            container.style.display = "flex";
+            container.style.flexDirection = "row";
+            container.style.alignItems = "center";
+            container.style.marginTop = "0.5vw";
+            container.style.marginLeft = "0.5vw";
+            container.style.marginBottom = "0.5vw";
+            container.style.height = "3.5vw";
+            container.style.width = "95%";
+
+            const iconcontainer = document.createElement("div");
+            iconcontainer.classList.add("usericon-container");
+            iconcontainer.style.display = "flex";
+            iconcontainer.style.alignItems = "center";
+            iconcontainer.style.justifyContent = "center";
+            iconcontainer.style.width = "2.5vw";
+            iconcontainer.style.height = "2.5vw";
+            iconcontainer.style.marginRight = "1vw";
+
+            const icon = document.createElement("img");
+            icon.src = iconurl;
+            icon.style.width = "90%";
+            icon.style.height = "90%";
+            icon.style.objectFit = "cover";
+
+            iconcontainer.appendChild(icon);
+            container.appendChild(iconcontainer);
+
+            const nameDiv = document.createElement("div");
+            nameDiv.style.fontSize = "1vw";
+            nameDiv.innerText = name;
+
+            container.appendChild(nameDiv);
+
+            document.getElementById("rightsidecontent").appendChild(container);
+        }
+
+
         makeServer("JustStudy CE", "/assets/img/favicon.ico");
         makeServer("Sarah Day", "https://media.discordapp.net/attachments/1217413923893022741/1329070703034503248/ALV-UjWgKNWx2uwqndYbO-nnfgacSXHMsanDU-emLQwI4A9LrUf-vOQs272-p-k-rw-no.png?ex=6789010c&is=6787af8c&hm=84206b10920e5b84f033cd87bce911389f88d5ebbff59626fef16226b187feb9&=&quality=lossless");
         makeServer("JustStudy Test Server", "/assets/img/favicon.ico");
+
+        makeRightSideUser("John Doe", "/assets/img/user.svg");
+        makeRightSideUser("Jane Smith", "/assets/img/user.svg");
+
         const socket = new WebSocket("ws://localhost:9001");
         let uuid;
+
         function uuidv4() {
             const a = crypto.getRandomValues(new Uint16Array(8));
             let i = 0;
             return '00-0-4-1-000'.replace(/[^-]/g, 
-                    s => (a[i++] + s * 0x10000 >> s).toString(16).padStart(4, '0')
+                s => (a[i++] + s * 0x10000 >> s).toString(16).padStart(4, '0')
             );
         }
+
         socket.addEventListener("open", () => {
             console.log("Connected to WebSocket server");
             const textinput = document.querySelector(".textinput");
-            const nameinput = document.getElementById("usernameinput");
+
             textinput.addEventListener("keydown", (e) => {
-                if (e.key === "Enter"  && textinput.value !== "") {
+                if (e.key === "Enter" && textinput.value !== "") {
                     const date = new Date();
-                    makebox(textinput.value,"You" + " " + date.getHours() + ":" + date.getMinutes(),true);
+                    makebox(
+                        textinput.value,
+                        "You " + date.getHours() + ":" + String(date.getMinutes()).padStart(2, "0"),
+                        true,
+                        "/assets/img/user.svg"
+                    );
                     document.getElementById("content").scrollTop = document.getElementById("content").scrollHeight;
+                    
                     const message = textinput.value;
                     textinput.value = "";
-                    const payload = { message };
                     uuid = uuidv4();
-                    const jsonpayload = {"uuid": uuid,"message": payload.message,name:nameinput.value, "time": date.getHours() + ":" + date.getMinutes()}
+                    const jsonpayload = {
+                        uuid: uuid,
+                        message: message,
+                        name: "test",
+                        time: date.getHours() + ":" + String(date.getMinutes()).padStart(2, "0")
+                    };
                     socket.send(JSON.stringify(jsonpayload));
-                    console.log("sent?")
                 }
             }); 
-            socket.addEventListener("message", (event) => {
-                try {
-                const data = JSON.parse(event.data);
-                console.log(JSON.parse(data.message).uuid);
-                if (data && data.message && JSON.parse(data.message).uuid !== uuid) {
-                    console.log(data.message);
-                    let text = data.message;
-                    makebox(JSON.parse(text).message,JSON.parse(text).name + " " + JSON.parse(text).time ,false);
-                }
-                } catch (e) {
-                }
-            });
-            socket.addEventListener("error", (error) => {
-                console.error("WebSocket error:", error);
-            });
+        });
 
-            socket.addEventListener("close", () => {
-                console.log("WebSocket connection closed");
-            });
+        socket.addEventListener("message", (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                if (data && data.uuid !== uuid) {
+                    makebox(
+                        data.message,
+                        data.name + " " + data.time,
+                        false,
+                        "/assets/img/user.svg"
+                    );
+                }
+            } catch (e) {
+                console.log("message too long? error: " + e);
+            }
+        });
+
+        socket.addEventListener("error", (error) => {
+            console.error("WebSocket error:", error);
+        });
+
+        socket.addEventListener("close", () => {
+            console.log("WebSocket connection closed");
         });
     </script>
 </body>

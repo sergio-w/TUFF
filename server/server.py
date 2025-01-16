@@ -13,9 +13,7 @@ def client_left(client, server):
 
 
 def message_received(client, server, message):
-    if len(message) > 200:
-        message = message[:200] + '..'
-    print("Client(%d) said: %s" % (client['id'], message))
+    print("got message")
     jsondata = {"id": client['id'], "message": message, "time": str(time.time())}
     server.send_message_to_all(json.dumps(jsondata))
 

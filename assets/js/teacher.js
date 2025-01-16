@@ -842,6 +842,8 @@ consoleDiv.innerHTML = `
 ">Console Output</button>
             <button data-tab="MainOutputTab" id="TabBT" onclick="switchTab('MainOutput')" style="padding: 0.5vw 3vw; cursor: pointer; background: rgb(158, 158, 158); box-shadow: inset 0.1vw 0.1vw #dfdfdf, inset -0.1vw -0.1vw gray; border: 0.1vw solid; border-color: silver #000 #000 silver; border-bottom: none; font-size: 0.8vw;
 ">JustStudy Shell</button>
+            <button data-tab="NetworkOutputTab" id="TabBT" onclick="switchTab('NetworkOutput')" style="padding: 0.5vw 3vw; cursor: pointer; background: rgb(158, 158, 158); box-shadow: inset 0.1vw 0.1vw #dfdfdf, inset -0.1vw -0.1vw gray; border: 0.1vw solid; border-color: silver #000 #000 silver; border-bottom: none; font-size: 0.8vw;
+            ">Network Tab</button>
         </div>
         <div class="tab-contents">
             <div id="TabContent" class="pAdeblc-content no-style " data-tab="LogOutput" style="display: none; background: #c0c0c0; border: 0.1vw solid #ccc; overflow-y: hidden; overflow-x: hidden; box-sizing: border-box;">
@@ -850,6 +852,10 @@ consoleDiv.innerHTML = `
             <div id="TabContent" class="pAdeblc-content no-style" data-tab="MainOutput" style="display: none; background: #c0c0c0; border: 0.1vw solid #ccc; overflow-y: hidden; overflow-x: hidden; box-sizing: border-box;">
                 <div style="background: rgb(32, 32, 70); color: #ffffff; height: 25vw; font-family: 'MS Sans Serif', sans-serif; font-size: 1vw; overflow-y: scroll; overflow-wrap: break-word; outline: 0;
 " id="pAdeblc-content" class="pAdeblc-cool-scroll"></div>
+            </div>
+            <div id="TabContent" class="pAdeblc-content no-style" data-tab="NetworkOutput" style="display: none; background: #c0c0c0; border: 0.1vw solid #ccc; overflow-y: hidden; overflow-x: hidden; box-sizing: border-box;">
+                <div style="background: rgb(32, 32, 70); color: #ffffff; height: 25vw; font-family: 'MS Sans Serif', sans-serif; font-size: 1vw; overflow-y: scroll; overflow-wrap: break-word; outline: 0;
+" id="pAdeblc-content-network" class="pAdeblc-cool-scroll"></div>
             </div>
         </div>
     </div>
@@ -928,12 +934,16 @@ function switchTab(tabName) {
     }
 }
 makeDraggable(document.querySelector('#pAdeblc'));
-function logToConsole(message,text_colour,log) {
+function logToConsole(message,text_colour,log,isnetwork) {
     let consoleDiv = null;
-    if (log) {
-        consoleDiv = document.getElementById('pAdeblc-content-output');
+    if (isnetwork) {
+        consoleDiv = document.getElementById('pAdeblc-content-network');
     } else {
-        consoleDiv = document.getElementById(`pAdeblc-content`);
+        if (log) {
+            consoleDiv = document.getElementById('pAdeblc-content-output');
+        } else {
+            consoleDiv = document.getElementById(`pAdeblc-content`);
+        }
     }
     const newMessage = document.createElement('p');
     const newLine = document.createElement('br');
@@ -1228,15 +1238,7 @@ window.onerror = function (message, source, lineno, colno, error) {
     return true;
 };
 
-window.addEventListener('error', function (event) {
-    if (event.target !== window) {
-        if (event.target && event.target.src) {
-            logToConsole(`Resource Load Error: ${event.target.src}`, 'orange', true);
-        } else {
-            logToConsole(`Resource Load Error`, 'orange', true);
-        }
-    }
-}, true);
+
 
 window.addEventListener('unhandledrejection', function (event) {
     logToConsole(`Unhandled Promise Rejection: ${event.reason}`, 'red', true);
@@ -1276,3 +1278,32 @@ function extractStackInfo(stack) {
     }
     return 'No stack trace available';
 }
+window.addEventListener("load", () => {
+    const entries = performance.getEntriesByType("resource");
+    entries.forEach((entry) => {
+        logToConsole(`Resource Load: ${entry.name}`, "green", true, true);
+    });
+});
+
+
+window.addEventListener(
+    "error",
+    function (event) {
+        if (event.target !== window) {
+            if (event.target && event.target.src) {
+                logToConsole(`Resource Load Error: ${event.target.src}`, "orange", true, true);
+            } else {
+                logToConsole(`Resource Load Error`, "orange", true, true);
+            }
+        }
+    },
+    true
+);
+`
+{
+    name: entry.name,
+    type: entry.initiatorType,
+    duration: entry.duration,
+    size: entry.encodedBodySize
+});
+`
