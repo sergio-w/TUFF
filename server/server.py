@@ -15,7 +15,7 @@ def client_left(client, server):
 def message_received(client, server, message):
     print("got message")
     jsondata = {"id": client['id'], "message": message, "time": str(time.time())}
-    server.send_message_to_all(json.dumps(jsondata))
+    server.send_message_to_all(json.dumps(message))
 
 PORT=9001
 server = WebsocketServer(port = PORT)

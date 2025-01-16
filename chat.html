@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JustStudy CE</title>
     <link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico">
-    <link href="assets/css/Comfortaa-Bold.ttf" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <style>
         :root {
             --background: #36393f;
@@ -20,7 +22,7 @@
 
         body {
             margin: 0;
-            font-family: "Helvetica", sans-serif;
+            font-family: "Poppins", sans-serif;
             color: var(--text-color);
             background-color: var(--background);
             overflow: hidden;
@@ -150,7 +152,7 @@
             left: 0;
             top: 0;
             z-index: -1;
-            background-color: var(--background);
+            background:linear-gradient(120deg, rgb(48, 0, 223), rgb(22, 0, 104));
         }
         .leftsidecontent-icon-container {
             width: 3vw;
@@ -273,10 +275,10 @@
             }
         } 
         .smoothshow{
-            animation: AddServerPopupShow ease-in 0.2s forwards;
+            animation: AddServerPopupShow ease-in 0.15s forwards;
         }
         .smoothhide{
-            animation: AddServerPopupHide ease-out 0.2s forwards;
+            animation: AddServerPopupHide ease-out 0.15s forwards;
         }
         @keyframes AddServerPopupShow {
             0% {
@@ -298,7 +300,7 @@
             font-size: 2vw;
             color:white;
         }
-        .popupinput{
+        .custominput{
             flex: 0 1 auto;
             height: 2vw;
             font-size: 1vw;
@@ -311,44 +313,151 @@
             margin-top: 0.4vw;
             margin-bottom: 0.4vw;
         }
+        .LoginBox{
+            width: 30vw;
+            height: 20vw;
+            background-color: var(--sidebar);
+            border-radius: 1vw;
+            position:fixed;
+            left: 50%;
+            top: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            transform: translate(-50%,-50%);
+            transition: all 0.1s ease;
+            font-family: comfortaa , sans-serif;
+        }
+        .logininput{
+            flex: 0 1 auto;
+            height: 2vw;
+            font-size: 1vw;
+            width: 20vw;
+            background-color: var(--input-bg);
+            border: none;
+            color: var(--text-color);
+            padding: 0.3vw 0.5vw;
+            outline: none;
+            border-radius: 0.2vw;
+            margin-top: 0.4vw;
+            margin-bottom: 0.4vw;
+        }
+        .login-bt {
+            background-color: var(--accent-color);
+            border: none;
+            padding: 0.6vw;
+            margin: 0.4vw;
+            width: 21vw;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 0.2vw;
+            font-size: 1vw;
+        }
+
+        .login-bt:hover {
+            opacity: 0.9;
+        }
     </style>
 </head>
 <body>
     <div class="maincontent" id="maincontent">
         
     </div>
+    <div class="bg"></div>
     <div class="overlay"></div>
     <div class="AddServerPopup" id="AddServerPopup"> 
         <span class="popuptext" style="margin-bottom: 0.4vw; margin-top: 0.8vw; font-weight: bold;">Join a group</span>
         <span class="popuptext" style="margin-bottom: 1vw; margin-left: 0.5vw; margin-right: 0.5vw;font-weight:100; font-size: 1vw; text-align: center;">
             Input a server id and then you can chat with your buddys
         </span>
-        <input class="popupinput" placeholder="Enter URL here"></input>
+        <input class="custominput" placeholder="Enter URL here"></input>
         <button class="content-bt" onclick="joinServer('gk1ksG153kA1')">Join</button>
     </div>
-    <div class="bg"></div>
     <script>
+        let socket = null;
+
+
+
         function InitLogin(){
-            
+            const maincontainer = document.getElementById("maincontent");
+            maincontainer.classList.add("smoothhide");
+            maincontainer.addEventListener("animationend", function handleAnimationEnd() {
+                maincontainer.classList.remove("smoothhide");
+                maincontainer.classList.add("smoothshow");
+                maincontainer.removeEventListener("animationend", handleAnimationEnd);
+                maincontainer.innerHTML = `
+           <div class="LoginBox"> 
+                <span style="font-size:2vw; text-align: center; width: 20vw; margin-top: 1vw;">Login</span>
+                <span style="font-size:1vw; text-align: center; width: 20vw; margin-top: 0.5vw; margin-bottom:0.5vw">login is so people cant spam accounts :(</span>
+                <span style="font-size:0.8vw; text-align: left; width: 20vw;">Username<code style="color:red">*</code></span>
+                <input class="logininput" placeholder="Enter Username here"></input>
+                <span style="font-size:0.8vw; text-align: left; width: 20vw;">Password<code style="color:red">*</code></span>
+                <input class="logininput" placeholder="Enter Password here"></input>
+                <button class="login-bt" onclick="InitConnection()">Login</button>
+                <span style="font-size:0.8vw; text-align: left; width: 20vw;">Wanna make a account? <a style="color:lightblue;" href="#" onclick="InitRegister()">Register</a></span>
+            </div>
+
+            `;
+            });
+        }
+        function InitRegister(){
+            const maincontainer = document.getElementById("maincontent");
+            maincontainer.classList.add("smoothhide");
+            maincontainer.addEventListener("animationend", function handleAnimationEnd() {
+                maincontainer.classList.remove("smoothhide");
+                maincontainer.classList.add("smoothshow");
+                maincontainer.removeEventListener("animationend", handleAnimationEnd);
+                maincontainer.innerHTML = `
+                <div class="LoginBox"> 
+                        <span style="font-size:2vw; text-align: center; width: 20vw; margin-top: 1vw;">Register</span>
+                        <span style="font-size:1vw; text-align: center; width: 20vw; margin-top: 0.5vw; margin-bottom:0.5vw">register to start chatting with your buddys</span>
+                        <span style="font-size:0.8vw; text-align: left; width: 20vw;">Username<code style="color:red">*</code></span>
+                        <input class="logininput" placeholder="Enter Username here"></input>
+                        <span style="font-size:0.8vw; text-align: left; width: 20vw;">Password<code style="color:red">*</code></span>
+                        <input class="logininput" placeholder="Enter Password here"></input>
+                        <button class="login-bt" onclick="">Register</button>
+                        <span style="font-size:0.8vw; text-align: left; width: 20vw;">Wanna login? <a style="color:lightblue;" href="#" onclick="InitLogin()">Login</a></span>
+                    </div>
+                    `;
+                    });
+        }
+        function loadData(){
+            makeServer("JustStudy CE", "/assets/img/favicon.ico");
+            makeServer("Sarah Day", "https://media.discordapp.net/attachments/1217413923893022741/1329070703034503248/ALV-UjWgKNWx2uwqndYbO-nnfgacSXHMsanDU-emLQwI4A9LrUf-vOQs272-p-k-rw-no.png?ex=6789010c&is=6787af8c&hm=84206b10920e5b84f033cd87bce911389f88d5ebbff59626fef16226b187feb9&=&quality=lossless");
+            makeServer("JustStudy Test Server", "/assets/img/favicon.ico");
+            makeUser("Thatoneham", "/assets/img/user.svg");
+            makeUser("YourSeriousDev", "/assets/img/user.svg");
+        }
+        function InitConnection(){
+            InitChat();
         }
         function InitChat(){
             const maincontainer = document.getElementById("maincontent");
-            maincontainer.innerHTML = `
-            <div class="leftsidecontent" id="leftsidecontent">
-                <div class="server-icon-container" id="AddGroup">
-                    <img src="/assets/img/roundAddIcon.png" class="leftsidecontent-icon" style="width: 95%; height: 95%;">
+            maincontainer.classList.add("smoothhide");
+            maincontainer.addEventListener("animationend", function handleAnimationEnd() {
+                maincontainer.classList.remove("smoothhide");
+                maincontainer.classList.add("smoothshow");
+                maincontainer.removeEventListener("animationend", handleAnimationEnd);
+                maincontainer.innerHTML = `
+                <div class="leftsidecontent" id="leftsidecontent">
+                    <div class="server-icon-container" id="AddGroup">
+                        <img src="/assets/img/roundAddIcon.png" class="leftsidecontent-icon" style="width: 95%; height: 95%;">
+                    </div>
                 </div>
-            </div>
-            <div class="chatcontent">
-                <div id="content" class="content"></div>
-                <div class="bottombar">
-                    <input class="textinput" placeholder="Enter URL here"></input>
+                <div class="chatcontent">
+                    <div id="content" class="content"></div>
+                    <div class="bottombar">
+                        <input class="textinput" id="textinput" placeholder="Enter URL here"></input>
+                    </div>
                 </div>
-            </div>
-            <div class="rightsidecontent" id="rightsidecontent"></div>
-            `;
+                <div class="rightsidecontent" id="rightsidecontent"></div>
+                `;
+                loadData();
+                initServerContent();
+                ConnectToServer();
+            });
         }
-        InitChat();
+        InitLogin();
         function handleOverlayAnimationEnd() {
             const overlay = document.querySelector(".overlay");
             overlay.style.display = "none";
@@ -402,7 +511,6 @@
                 popup.style.display = "none";
             });
         }
-        initServerContent();
 
         function makebox(text, name, isself, iconurl) {
             const container = document.createElement("div");
@@ -516,16 +624,7 @@
             document.getElementById("rightsidecontent").appendChild(container);
         }
 
-
-        makeServer("JustStudy CE", "/assets/img/favicon.ico");
-        makeServer("Sarah Day", "https://media.discordapp.net/attachments/1217413923893022741/1329070703034503248/ALV-UjWgKNWx2uwqndYbO-nnfgacSXHMsanDU-emLQwI4A9LrUf-vOQs272-p-k-rw-no.png?ex=6789010c&is=6787af8c&hm=84206b10920e5b84f033cd87bce911389f88d5ebbff59626fef16226b187feb9&=&quality=lossless");
-        makeServer("JustStudy Test Server", "/assets/img/favicon.ico");
-
-        makeUser("Thatoneham", "/assets/img/user.svg");
-        makeUser("YourSeriousDev", "/assets/img/user.svg");
-
-        const socket = new WebSocket("ws://localhost:9001");
-        let uuid;
+        let myuuid;
 
         function uuidv4() {
             const a = crypto.getRandomValues(new Uint16Array(8));
@@ -534,11 +633,9 @@
                 s => (a[i++] + s * 0x10000 >> s).toString(16).padStart(4, '0')
             );
         }
-
-        socket.addEventListener("open", () => {
-            console.log("Connected to WebSocket server");
-            const textinput = document.querySelector(".textinput");
-
+        function ConnectToServer(){
+            socket = new WebSocket("ws://localhost:9001");
+            textinput = document.getElementById("textinput");
             textinput.addEventListener("keydown", (e) => {
                 if (e.key === "Enter" && textinput.value !== "") {
                     const date = new Date();
@@ -549,44 +646,47 @@
                         "/assets/img/user.svg"
                     );
                     document.getElementById("content").scrollTop = document.getElementById("content").scrollHeight;
-                    
+
                     const message = textinput.value;
+                    const payload = { message };
                     textinput.value = "";
-                    uuid = uuidv4();
+                    myuuid = uuidv4();
                     const jsonpayload = {
-                        uuid: uuid,
+                        uuid: myuuid,
                         message: message,
                         name: "test",
                         time: date.getHours() + ":" + String(date.getMinutes()).padStart(2, "0")
                     };
                     socket.send(JSON.stringify(jsonpayload));
                 }
-            }); 
-        });
+            });
 
-        socket.addEventListener("message", (event) => {
-            try {
-                const data = JSON.parse(event.data);
-                if (data && data.uuid !== uuid) {
-                    makebox(
-                        data.message,
-                        data.name + " " + data.time,
-                        false,
-                        "/assets/img/user.svg"
-                    );
+            socket.addEventListener("message", (event) => {
+                try {
+                    const data = JSON.parse(JSON.parse(event.data)); 
+                    console.log(data)
+                    if (data && data.uuid !== myuuid) {
+                        makebox(
+                            data.message,
+                            data.name + " " + data.time,
+                            false,
+                            "/assets/img/user.svg"
+                        );
+                    }
+                } catch (e) {
+                    console.log("Failed to process message. Error: " + e);
                 }
-            } catch (e) {
-                console.log("message too long? error: " + e);
-            }
-        });
+            });
 
-        socket.addEventListener("error", (error) => {
-            console.error("WebSocket error:", error);
-        });
 
-        socket.addEventListener("close", () => {
-            console.log("WebSocket connection closed");
-        });
+            socket.addEventListener("error", (error) => {
+                console.error("WebSocket error:", error);
+            });
+
+            socket.addEventListener("close", () => {
+                console.log("WebSocket connection closed");
+            });
+        }
     </script>
 </body>
 </html>
