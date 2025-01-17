@@ -790,77 +790,91 @@
             }
             const checkInterval = setInterval(waitForElement, 100);
         }
-        function sendGroupPacket(username,uuid){
-            console.log(uuid)
+        function sendGroupPacket(username) {
+            myuuid = customUuid();
+            console.log("Sending group packet with UUID:", myuuid);
+
             const packet = {
                 type: "GetUserGroupList",
                 username: username,
-                userID: uuid,
-            }
+                userID: myuuid,
+            };
             socket.send(JSON.stringify(packet));
         }
 
-        function ConnectToServer(){
+        function ConnectToServer() {
             socket = new WebSocket("ws://localhost:9001");
 
             socket.addEventListener("message", (event) => {
                 try {
-                    const data = JSON.parse(event.data)
-                    if (data.status != "error"){
-                        if (data && data.userID == myuuid) {
-                            if (data.type == "Login"){
-                                InitChat();
-                                username = data.username;
-                                sendGroupPacket(username,myuuid);
-                                MakeErrorMessage(data.message,true);
-                            } else if (data.type == "CreateAccount"){
-                                MakeErrorMessage(data.message,true);
-                            } else if (data.type == "MakeGroup"){
-                                MakeErrorMessage(data.message,true);
+                    const data = JSON.parse(event.data);
+                    console.log("Received data:", data.message);
 
-                            } else if (data.type == "JoinGroup"){
-                                MakeErrorMessage(data.message,true);
-                                sendGroupPacket(username);
-                            } else if (data.type == "SendMessage"){
-                                makebox(
-                                    data.message,
-                                    data.name + " " + data.time,
-                                    false,
-                                    "/assets/img/user.svg"
-                                )
-                                document.getElementById("content").scrollTop = document.getElementById("content").scrollHeight;
-                            } else if (data.type == "groupMessages") {
-                                document.getElementById("content").innerHTML = "";
-                                data.messages.forEach((msg) => {
+                    if (data.status !== "error") {
+                        if (data && data.userID === myuuid) {
+                            switch (data.type) {
+                                case "Login":
+                                    InitChat();
+                                    username = data.username;
+                                    sendGroupPacket(username);
+                                    MakeErrorMessage(data.message, true);
+                                    break;
+
+                                case "CreateAccount":
+                                    MakeErrorMessage(data.message, true);
+                                    break;
+
+                                case "MakeGroup":
+                                    MakeErrorMessage(data.message, true);
+                                    sendGroupPacket(username);
+                                    break;
+
+                                case "JoinGroup":
+                                    MakeErrorMessage(data.message, true);
+                                    sendGroupPacket(username);
+                                    break;
+
+                                case "SendMessage":
                                     makebox(
-                                        msg.message,
-                                        msg.name + " " + msg.time,
+                                        data.message,
+                                        data.name + " " + data.time,
                                         false,
                                         "/assets/img/user.svg"
                                     );
-                                });
-                                } else if (data.type == "getGroupList") {
-                                    UpdateServerList(data.groups);
-                                } else {
-                                    if (data.type == "SendMessage"){
+                                    document.getElementById("content").scrollTop = document.getElementById("content").scrollHeight;
+                                    break;
+
+                                case "groupMessages":
+                                    document.getElementById("content").innerHTML = "";
+                                    data.messages.forEach((msg) => {
                                         makebox(
-                                            data.message,
-                                            data.name + " " + data.time,
+                                            msg.message,
+                                            msg.name + " " + msg.time,
                                             false,
                                             "/assets/img/user.svg"
                                         );
-                                    }
-                                }
+                                    });
+                                    break;
+
+                                case "getGroupList":
+                                    UpdateServerList(data.groups);
+                                    break;
+
+                                default:
+                                    console.log("Unhandled message type:", data.type);
+                                    break;
+                            }
                         }
-                        if (data.type !== "Login" && data.type != "JoinGroup" && data.type != "MakeGroup") {  
+
+                        if (data.type !== "Login" && data.type !== "JoinGroup" && data.type !== "MakeGroup") {
                             myuuid = customUuid();
-                            console.log("new uuid: " +myuuid);
+                            console.log("New UUID generated:", myuuid);
                         }
                     } else {
-                        MakeErrorMessage(data.message,false);
+                        MakeErrorMessage(data.message, false);
                     }
                 } catch (e) {
-                    console.log("Failed to process message. Error: " + e);
+                    console.error("Failed to process message. Error:", e);
                 }
             });
 
@@ -871,6 +885,7 @@
             socket.addEventListener("close", () => {
                 console.log("WebSocket connection closed");
             });
+
         }
         let forlater = `
         if (data && data.userID !== myuuid) {
