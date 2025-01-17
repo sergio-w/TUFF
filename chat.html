@@ -224,7 +224,7 @@
         }
         .AddServerPopup{
             width: 20vw;
-            height: 15vw;
+            height: 27vw;
             background-color: var(--sidebar);
             border-radius: 1vw;
             position:fixed;
@@ -400,13 +400,23 @@
     <div class="AddServerPopup" id="AddServerPopup"> 
         <span class="popuptext" style="margin-bottom: 0.4vw; margin-top: 0.8vw; font-weight: bold;">Join a group</span>
         <span class="popuptext" style="margin-bottom: 1vw; margin-left: 0.5vw; margin-right: 0.5vw;font-weight:100; font-size: 1vw; text-align: center;">
-            Input a server id and then you can chat with your buddys
+            Input a group id and then you can chat with your buddys
         </span>
-        <input class="custominput" placeholder="Enter URL here"></input>
-        <button class="content-bt" onclick="joinServer('gk1ksG153kA1')">Join</button>
+        <input class="custominput" placeholder="Enter URL here" id="joingroupid"></input>
+        <button class="content-bt" onclick='joinGroup(document.getElementById("joingroupid").value)'>Join</button>
+        <span class="popuptext"  style="margin-bottom: 2vw; margin-left: 0.5vw; margin-right: 0.5vw;margin-top: 1vw; font-weight:100; font-size: 1vw; text-align: center;">Or</span>
+        <span class="popuptext" style="margin-bottom: 1vw; margin-left: 0.5vw; margin-right: 0.5vw;font-weight:100; font-size: 1vw; text-align: center;">
+            Make a group
+        </span>
+        <input class="custominput" placeholder="Enter Group name here" id="creategroupname"></input>
+        <button class="content-bt" onclick='createGroup(document.getElementById("creategroupname").value)'>Create</button>
     </div>
     <script>
         let socket = null;
+        let username = null;
+        let myuuid = customUuid();
+        let currentGroup = null;
+
         ConnectToServer();
         function InitLogin(){
                 const maincontainer = document.getElementById("maincontent");
@@ -453,41 +463,6 @@
                 });
             }
 
-        function loadData(){
-            makeServer("JustStudy CE", "/assets/img/favicon.ico");
-            makeServer("Sarah Day", "https://media.discordapp.net/attachments/1217413923893022741/1329070703034503248/ALV-UjWgKNWx2uwqndYbO-nnfgacSXHMsanDU-emLQwI4A9LrUf-vOQs272-p-k-rw-no.png?ex=6789010c&is=6787af8c&hm=84206b10920e5b84f033cd87bce911389f88d5ebbff59626fef16226b187feb9&=&quality=lossless");
-            makeServer("JustStudy Test Server", "/assets/img/favicon.ico");
-            makeUser("Thatoneham", "/assets/img/user.svg");
-            makeUser("YourSeriousDev", "/assets/img/user.svg");
-        }
-        function InitConnection(){
-            InitChat();
-            textinput = document.getElementById("textinput");
-            textinput.addEventListener("keydown", (e) => {
-                if (e.key === "Enter" && textinput.value !== "" && socket) {
-                    const date = new Date();
-                    makebox(
-                        textinput.value,
-                        "You " + date.getHours() + ":" + String(date.getMinutes()).padStart(2, "0"),
-                        true,
-                        "/assets/img/user.svg"
-                    );
-                    document.getElementById("content").scrollTop = document.getElementById("content").scrollHeight;
-
-                    const message = textinput.value;
-                    const payload = { message };
-                    textinput.value = "";
-                    myuuid = uuidv4();
-                    const jsonpayload = {
-                        uuid: myuuid,
-                        message: message,
-                        name: "test",
-                        time: date.getHours() + ":" + String(date.getMinutes()).padStart(2, "0")
-                    };
-                    socket.send(JSON.stringify(jsonpayload));
-                }
-            });
-        }
         function InitChat(){
             const maincontainer = document.getElementById("maincontent");
             maincontainer.classList.add("smoothhide");
@@ -504,21 +479,20 @@
                 <div class="chatcontent">
                     <div id="content" class="content"></div>
                     <div class="bottombar">
-                        <input class="textinput" id="textinput" placeholder="Enter URL here"></input>
+                        <input class="textinput" id="textinput" placeholder="Enter something to text"></input>
                     </div>
                 </div>
                 <div class="rightsidecontent" id="rightsidecontent"></div>
                 `;
                 loadData();
-                initServerContent();
                 ConnectToServer();
+                InitInput()
             });
         }
         InitLogin();
         function handleOverlayAnimationEnd() {
             const overlay = document.querySelector(".overlay");
             overlay.style.display = "none";
-            console.log("true")
             overlay.removeEventListener("animationend", handleOverlayAnimationEnd);
         }
         function addServerPopup(){
@@ -534,7 +508,7 @@
                 key.disabled = false;
             })
         }
-        function joinServer(id){
+        function closeServerPopup(){
             const popup = document.getElementById("AddServerPopup");
             const overlay = document.querySelector(".overlay");
             popup.classList.remove("smoothshow");
@@ -545,6 +519,28 @@
             popup.querySelectorAll("input").forEach((key) =>{
                 key.disabled = true;
             })
+        }
+        function joinGroup(id){
+            closeServerPopup();
+            const packet = {
+                type: "joingroup",
+                id: id,
+                userID: myuuid,
+                username: username
+            };
+            socket.send(JSON.stringify(packet));
+            sendGroupPacket(username,myuuid);
+        }
+        function createGroup(name){
+            closeServerPopup();
+            const packet = {
+                type: "makegroup",
+                servername: name,
+                username: username,
+                userID: myuuid
+            };
+            socket.send(JSON.stringify(packet));
+            sendGroupPacket(username,myuuid);
         }
         function initServerContent(){
             const popup = document.createElement("div");
@@ -637,9 +633,18 @@
                 popup.style.left = `${leftInVW + 4}vw`; 
                 popup.style.top = `${rect.top + window.scrollY}px`;
             });
-
             container.addEventListener("mouseout", () => {
                 popup.style.display = "none";
+            });
+
+            container.addEventListener("click", () => {
+                currentGroup = id;
+                const packet = {
+                    type: "requestGroupMessages",
+                    groupID: id,
+                    userID: myuuid
+                };
+                socket.send(JSON.stringify(packet));
             });
         }
 
@@ -697,16 +702,14 @@
                     }, 2000);
                 } else if (loginerror.classList.contains("ErrorPopupHide")) {
                     loginerror.remove();
-
                     loginerror.removeEventListener("animationend", handleAnimationEnd);
                 }
             });
         }
-        let myuuid;
+
         function Login() {
             const username = document.getElementById("login-username").value.trim();
             const password = document.getElementById("login-password").value.trim();
-            myuuid = customUuid();
             if (username && password) {
                 const payload = {
                     type: "login",
@@ -714,7 +717,7 @@
                 };
                 socket.send(JSON.stringify(payload));
             } else {
-                alert("Please fill in all fields.");
+                MakeErrorMessage("Please fill out all fields")
             }
         }
     
@@ -729,8 +732,27 @@
                 };
                 socket.send(JSON.stringify(payload));
             } else {
-                alert("Please fill in all fields.");
+                MakeErrorMessage("Please fill out all fields")
             }
+        }
+        function InitInput(){
+            textinput = document.getElementById("textinput");
+            textinput.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" && textinput.value !== "" && socket) {
+                    const date = new Date();
+                    const messagevalue = textinput.value;
+                    textinput.value = "";
+                    const jsonpayload = {
+                        type: "sendmessage",
+                        group: currentGroup,
+                        userID: myuuid,
+                        message: messagevalue,
+                        name: username,
+                        time: date.getHours() + ":" + String(date.getMinutes()).padStart(2, "0")
+                    };
+                    socket.send(JSON.stringify(jsonpayload));
+                }
+            });
         }
         function customUuid(length = 200) {
             const randomValues = crypto.getRandomValues(new Uint8Array(length));
@@ -740,34 +762,107 @@
         function genClientKey() {
             const randomBytes = new Uint8Array(128);
             window.crypto.getRandomValues(randomBytes);
-
             const base64String = btoa(String.fromCharCode.apply(null, randomBytes));
             return base64String
         }
-        console.log(customUuid(100))
+        function loadData(){
+            makeUser("Thatoneham", "/assets/img/user.svg");
+            makeUser("YourSeriousDev", "/assets/img/user.svg");
+        }
+        function UpdateServerList(groups) {
+        function waitForElement() {
+                const leftSideContent = document.getElementById("leftsidecontent");
+                if (leftSideContent) {
+                    clearInterval(checkInterval); 
+
+                    leftSideContent.innerHTML = `
+                        <div class="server-icon-container" id="AddGroup">
+                            <img src="/assets/img/roundAddIcon.png" class="leftsidecontent-icon" style="width: 95%; height: 95%;">
+                        </div>
+                    `;
+
+                    initServerContent();
+
+                    groups.forEach((group) => {
+                        makeServer(group.name, group.icon, group.id);
+                    });
+                }
+            }
+            const checkInterval = setInterval(waitForElement, 100);
+        }
+        function sendGroupPacket(username,uuid){
+            console.log(uuid)
+            const packet = {
+                type: "GetUserGroupList",
+                username: username,
+                userID: uuid,
+            }
+            socket.send(JSON.stringify(packet));
+        }
+
         function ConnectToServer(){
             socket = new WebSocket("ws://localhost:9001");
 
             socket.addEventListener("message", (event) => {
                 try {
                     const data = JSON.parse(event.data)
-                    console.log(data.status)
                     if (data.status != "error"){
                         if (data && data.userID == myuuid) {
                             if (data.type == "Login"){
                                 InitChat();
-                            }
-                            MakeErrorMessage(data.message,true);
+                                username = data.username;
+                                sendGroupPacket(username,myuuid);
+                                MakeErrorMessage(data.message,true);
+                            } else if (data.type == "CreateAccount"){
+                                MakeErrorMessage(data.message,true);
+                            } else if (data.type == "MakeGroup"){
+                                MakeErrorMessage(data.message,true);
+
+                            } else if (data.type == "JoinGroup"){
+                                MakeErrorMessage(data.message,true);
+                                sendGroupPacket(username);
+                            } else if (data.type == "SendMessage"){
+                                makebox(
+                                    data.message,
+                                    data.name + " " + data.time,
+                                    false,
+                                    "/assets/img/user.svg"
+                                )
+                                document.getElementById("content").scrollTop = document.getElementById("content").scrollHeight;
+                            } else if (data.type == "groupMessages") {
+                                document.getElementById("content").innerHTML = "";
+                                data.messages.forEach((msg) => {
+                                    makebox(
+                                        msg.message,
+                                        msg.name + " " + msg.time,
+                                        false,
+                                        "/assets/img/user.svg"
+                                    );
+                                });
+                                } else if (data.type == "getGroupList") {
+                                    UpdateServerList(data.groups);
+                                } else {
+                                    if (data.type == "SendMessage"){
+                                        makebox(
+                                            data.message,
+                                            data.name + " " + data.time,
+                                            false,
+                                            "/assets/img/user.svg"
+                                        );
+                                    }
+                                }
+                        }
+                        if (data.type !== "Login" && data.type != "JoinGroup" && data.type != "MakeGroup") {  
+                            myuuid = customUuid();
+                            console.log("new uuid: " +myuuid);
                         }
                     } else {
                         MakeErrorMessage(data.message,false);
-                        
                     }
                 } catch (e) {
                     console.log("Failed to process message. Error: " + e);
                 }
             });
-
 
             socket.addEventListener("error", (error) => {
                 console.error("WebSocket error:", error);
@@ -779,13 +874,13 @@
         }
         let forlater = `
         if (data && data.userID !== myuuid) {
-                        makebox(
-                            data.message,
-                            data.name + " " + data.time,
-                            false,
-                            "/assets/img/user.svg"
-                        );
-                    }
+            makebox(
+                data.message,
+                data.name + " " + data.time,
+                false,
+                "/assets/img/user.svg"
+            );
+        }
         `;
     </script>
 </body>
