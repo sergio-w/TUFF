@@ -72,7 +72,6 @@ async def CreateAccount(username, password, userid,websocket):
         query = "SELECT username FROM Accounts WHERE username = ?"
         cursor.execute(query, (username,))
         dupe = cursor.fetchone()
-        print(userid)
         if dupe:
             response = {
                 "type": "CreateAccount",
@@ -106,19 +105,34 @@ async def CreateAccount(username, password, userid,websocket):
         print(f"An error occurred: {str(e)}")
         await send_message(websocket, response)
 
-async def SendMessage(group, userid, messagecontent, websocket):
+async def SendMessage(group, userid, messagecontent,username, websocket):
     try:
-        print(messagecontent)
-        query = "INSERT INTO Messages (serverid, username, message) VALUES (?, ?, ?)"
-        cursor.execute(query, (group, userid, messagecontent))
+        if not group:
+            raise ValueError("Invalid group ID")
+
+        cursor.execute("SELECT groupid FROM Groups WHERE groupid = ?", (group,))
+        group_exists = cursor.fetchone()
+        if not group_exists:
+            raise ValueError("Group does not exist")
+        query = "INSERT INTO Messages (groupid, username, message) VALUES (?, ?, ?)"
+        cursor.execute(query, (group, username, messagecontent))
         conn.commit()
+
         response = {
             "type": "SendMessage",
             "status": "success",
-            "message": "Message sent successfully."
+            "groupID": group,
+            "message": messagecontent
         }
         await send_message(websocket, response)
-
+        messages = await get_group_messages(group)
+        response = {
+            "type": "groupMessages",
+            "status": "success",
+            "messages": messages,
+            "userID": userid
+        }
+        await send_message(websocket, response)
     except Exception as e:
         print(f"Error in SendMessage: {e}")
         response = {
@@ -127,12 +141,12 @@ async def SendMessage(group, userid, messagecontent, websocket):
             "message": f"Error processing message: {str(e)}"
         }
         await send_message(websocket, response)
+
 async def JoinGroup(id, userid, username, websocket):
     try:
         query = "SELECT groupid FROM Groups WHERE groupid = ?"
         cursor.execute(query, (id,))
         dupe = cursor.fetchone()
-        print("is dupe? ",dupe)
         if dupe is None:
             response = {
                 "type": "JoinGroup",
@@ -173,7 +187,6 @@ async def JoinGroup(id, userid, username, websocket):
                         query = "SELECT * FROM Groups WHERE groupid = ?"
                         cursor.execute(query, (id,))
                         groupinfo = cursor.fetchone()
-                        print(groupinfo.name)
                         response = {
                             "type": "JoinGroup",
                             "status": "success",
@@ -221,8 +234,8 @@ async def MakeGroup(name, icon, userid,username,websocket):
             groupid = uuid.uuid4().hex
             if icon is None:
                 icon = "/assets/img/defaultgroupicon.png"
-                query = "INSERT INTO Groups (groupid, name, icon) VALUES (?, ?, ?)"
-                cursor.execute(query, (groupid, name, icon))
+                query = "INSERT INTO Groups (groupid, name,owner, icon) VALUES (?, ?, ?, ?)"
+                cursor.execute(query, (groupid, name, username,icon))
                 conn.commit()
                 await JoinGroup(groupid,userid,username,websocket)
                 query = "SELECT groups FROM Accounts WHERE username = ?"
@@ -236,7 +249,6 @@ async def MakeGroup(name, icon, userid,username,websocket):
                     "groupid":groupid,
                     "message": "Group created successfully."
                 }
-                print("made group with id:" + groupid)
                 await send_message(websocket, response)
     except Exception as e:
         response = {
@@ -256,8 +268,6 @@ async def Login(account, password, userid, websocket):
             got_password, token,groups = result
             if hashed_password == got_password:
                 token = setup_token(account)
-                print("Logged in successfully.")
-                print(groups)
                 response = {
                     "type": "Login",
                     "status": "success",
@@ -291,7 +301,6 @@ async def GetUserGroupList(username):
     try:
         cursor.execute("SELECT groups FROM Accounts WHERE username = ?", (username,))
         result = cursor.fetchone()
-        print(result)
         if result:
             groups = json.loads(result[0]) 
             server_list = []
@@ -312,7 +321,7 @@ async def GetUserGroupList(username):
         return  f"An error occurred: {str(e)}"
 
 async def get_group_messages(groupID):
-    cursor.execute("SELECT username, message FROM Messages WHERE serverid = ?", (groupID,))
+    cursor.execute("SELECT username, message FROM Messages WHERE groupid = ?", (groupID,))
     rows = cursor.fetchall()
     messages = []
     for row in rows:
@@ -351,15 +360,14 @@ async def handle_client(websocket, path):
                     await JoinGroup(formated_message["id"], formated_message["userID"],formated_message["username"], websocket)
                     
                 elif message_type == "sendmessage":
-                    groupID = formated_message["group"]
+                    groupID = formated_message["groupID"]
                     userID = formated_message["userID"]
                     messagecontent = formated_message["message"]
-                    print(messagecontent)
-                    await SendMessage(groupID, userID, messagecontent, websocket)
+                    await SendMessage(groupID, userID, messagecontent,formated_message["name"], websocket)
 
                 elif message_type == "requestGroupMessages":
-                    groupID = formated_message.get("groupID")
-                    userID = formated_message.get("userID")
+                    groupID = formated_message["groupID"]
+                    userID = formated_message["userID"]
                     messages = await get_group_messages(groupID)
                     response = {
                         "type": "groupMessages",

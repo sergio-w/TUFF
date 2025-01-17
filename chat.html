@@ -723,7 +723,7 @@
                     const messagevalue = textinput.value;
                     const jsonpayload = {
                         type: "sendmessage",
-                        group: currentGroup,
+                        groupID: currentGroup,
                         userID: myuuid,
                         message: messagevalue,
                         name: username,
@@ -770,7 +770,7 @@
             console.log(myuuid);
             socket.send(JSON.stringify(packet));
         }
-        function UpdateServerList(groups) {
+    function UpdateServerList(groups) {
         function waitForElement() {
                 const leftSideContent = document.getElementById("leftsidecontent");
                 if (leftSideContent) {
@@ -800,7 +800,14 @@
             };
             socket.send(JSON.stringify(packet));
         }
-
+        function getServerMessages(){
+            const packet = {
+                type: "requestGroupMessages",
+                groupID: currentGroup,
+                userID: myuuid
+            };
+            socket.send(JSON.stringify(packet));
+        }
         function ConnectToServer() {
             socket = new WebSocket("ws://localhost:9001");
 
@@ -808,20 +815,20 @@
                 try {
                     
                     const data = JSON.parse(event.data);
-                    console.log(data.type)
-                    console.log(data.status)
-                    console.log(data.message)
-                    console.log("server uuid is: "+ data.userID)
-                    console.log("my uuid is: "+ myuuid)
-                    console.log(data.userID == myuuid)
+                    console.log(data);
                     if (data.status !== "error") {
                         if (data && data.userID === myuuid) {
+                            console.log(data.type)
+                            console.log(data.status)
+                            console.log(data.message)
+                            console.log("data user id is same as user id? " + data.userID == myuuid)
                             myuuid = customUuid();
                             switch (data.type) {
                                 case "Login":
                                     InitChat();
                                     username = data.username;
                                     sendGroupPacket(username);
+                                    getServerMessages();
                                     MakeErrorMessage(data.message, true);
                                     break;
 
@@ -841,26 +848,18 @@
                                     sendGroupPacket(username);
                                     break;
 
-                                case "SendMessage":
-                                    makebox(
-                                        data.message,
-                                        data.name + " " + data.time,
-                                        false,
-                                        "/assets/img/user.svg"
-                                    );
-                                    document.getElementById("content").scrollTop = document.getElementById("content").scrollHeight;
-                                    break;
-
                                 case "groupMessages":
                                     document.getElementById("content").innerHTML = "";
                                     data.messages.forEach((msg) => {
+                                        console.log(msg)
                                         makebox(
                                             msg.message,
-                                            msg.name + " " + msg.time,
+                                            msg.username + " " + msg.time,
                                             false,
                                             "/assets/img/user.svg"
                                         );
                                     });
+                                    document.getElementById("content").scrollTop = document.getElementById("content").scrollHeight;
                                     break;
 
                                 case "getGroupList":
