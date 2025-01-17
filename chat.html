@@ -520,28 +520,6 @@
                 key.disabled = true;
             })
         }
-        function joinGroup(id){
-            closeServerPopup();
-            const packet = {
-                type: "joingroup",
-                id: id,
-                userID: myuuid,
-                username: username
-            };
-            socket.send(JSON.stringify(packet));
-            sendGroupPacket(username,myuuid);
-        }
-        function createGroup(name){
-            closeServerPopup();
-            const packet = {
-                type: "makegroup",
-                servername: name,
-                username: username,
-                userID: myuuid
-            };
-            socket.send(JSON.stringify(packet));
-            sendGroupPacket(username,myuuid);
-        }
         function initServerContent(){
             const popup = document.createElement("div");
             popup.classList.add("popup");
@@ -743,7 +721,6 @@
                 if (e.key === "Enter" && textinput.value !== "" && socket) {
                     const date = new Date();
                     const messagevalue = textinput.value;
-                    textinput.value = "";
                     const jsonpayload = {
                         type: "sendmessage",
                         group: currentGroup,
@@ -753,6 +730,7 @@
                         time: date.getHours() + ":" + String(date.getMinutes()).padStart(2, "0")
                     };
                     socket.send(JSON.stringify(jsonpayload));
+                    textinput.value = "";
                 }
             });
         }
@@ -770,6 +748,27 @@
         function loadData(){
             makeUser("Thatoneham", "/assets/img/user.svg");
             makeUser("YourSeriousDev", "/assets/img/user.svg");
+        }
+        function joinGroup(id){
+            closeServerPopup();
+            const packet = {
+                type: "joingroup",
+                id: id,
+                userID: myuuid,
+                username: username
+            };
+            socket.send(JSON.stringify(packet));
+        }
+        function createGroup(name){
+            closeServerPopup();
+            const packet = {
+                type: "makegroup",
+                servername: name,
+                userID: myuuid,
+                username: username
+            };
+            console.log(myuuid);
+            socket.send(JSON.stringify(packet));
         }
         function UpdateServerList(groups) {
         function waitForElement() {
@@ -794,8 +793,6 @@
         }
         function sendGroupPacket(username) {
             myuuid = customUuid();
-            console.log("Sending group packet with UUID:", myuuid);
-
             const packet = {
                 type: "GetUserGroupList",
                 username: username,
@@ -811,6 +808,12 @@
                 try {
                     
                     const data = JSON.parse(event.data);
+                    console.log(data.type)
+                    console.log(data.status)
+                    console.log(data.message)
+                    console.log("server uuid is: "+ data.userID)
+                    console.log("my uuid is: "+ myuuid)
+                    console.log(data.userID == myuuid)
                     if (data.status !== "error") {
                         if (data && data.userID === myuuid) {
                             myuuid = customUuid();
@@ -829,6 +832,8 @@
                                 case "MakeGroup":
                                     MakeErrorMessage(data.message, true);
                                     sendGroupPacket(username);
+                                    console.log("group id is " + data.groupid);
+                                    navigator.clipboard.writeText(data.groupid);
                                     break;
 
                                 case "JoinGroup":

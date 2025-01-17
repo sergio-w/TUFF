@@ -9,7 +9,6 @@ import os
 import base64
 import sqlite3
 
-# Database connection
 """
 conn = mysql.connector.connect(
     host="38.22.104.155",
@@ -34,17 +33,17 @@ CREATE TABLE IF NOT EXISTS Accounts (
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS Groups (
     groupid TEXT PRIMARY KEY,
+    owner TEXT NOT NULL,
     name TEXT NOT NULL,
     icon TEXT NOT NULL
 )
 """)
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS Messages (
-    message_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    serverid TEXT NOT NULL,
+    groupid TEXT NOT NULL,
     username TEXT NOT NULL,
     message TEXT NOT NULL,
-    FOREIGN KEY (serverid) REFERENCES Groups(serverid)
+    FOREIGN KEY (groupid) REFERENCES Groups(groupid)
 )
 """)
 
@@ -109,28 +108,14 @@ async def CreateAccount(username, password, userid,websocket):
 
 async def SendMessage(group, userid, messagecontent, websocket):
     try:
-        parsed_message = {
-            "message": "",
-            "username": "",
-            "time": ""
-        }
-
-        parsed_message = json.loads(messagecontent)
-
-        cursor.execute(
-            "INSERT INTO Messages (serverid, username, message) VALUES (?, ?, ?)",
-            (group, parsed_message["username"], parsed_message["message"])
-        )
+        print(messagecontent)
+        query = "INSERT INTO Messages (serverid, username, message) VALUES (?, ?, ?)"
+        cursor.execute(query, (group, userid, messagecontent))
         conn.commit()
-
         response = {
             "type": "SendMessage",
             "status": "success",
-            "message": parsed_message["message"],
-            "group": group,
-            "name": parsed_message["username"],
-            "time": parsed_message["time"],
-            "userID": userid
+            "message": "Message sent successfully."
         }
         await send_message(websocket, response)
 
@@ -139,7 +124,7 @@ async def SendMessage(group, userid, messagecontent, websocket):
         response = {
             "type": "SendMessage",
             "status": "error",
-            "message": f"Error sending message: {str(e)}"
+            "message": f"Error processing message: {str(e)}"
         }
         await send_message(websocket, response)
 async def JoinGroup(id, userid, username, websocket):
@@ -247,6 +232,8 @@ async def MakeGroup(name, icon, userid,username,websocket):
                     "type": "MakeGroup",
                     "status": "success",
                     "groupids": groupsresult,
+                    "userID": userid,
+                    "groupid":groupid,
                     "message": "Group created successfully."
                 }
                 print("made group with id:" + groupid)
@@ -319,7 +306,7 @@ async def GetUserGroupList(username):
                     })
             return server_list
         else:
-            print("3")
+
             return "No servers found for this user."
     except Exception as e:
         return  f"An error occurred: {str(e)}"
@@ -364,9 +351,10 @@ async def handle_client(websocket, path):
                     await JoinGroup(formated_message["id"], formated_message["userID"],formated_message["username"], websocket)
                     
                 elif message_type == "sendmessage":
-                    groupID = formated_message.get("group")
-                    userID = formated_message.get("userID")
-                    messagecontent = formated_message.get("message")
+                    groupID = formated_message["group"]
+                    userID = formated_message["userID"]
+                    messagecontent = formated_message["message"]
+                    print(messagecontent)
                     await SendMessage(groupID, userID, messagecontent, websocket)
 
                 elif message_type == "requestGroupMessages":
@@ -384,10 +372,8 @@ async def handle_client(websocket, path):
                 elif message_type == "GetUserGroupList":
                     username = formated_message.get("username")
                     userID = formated_message.get("userID")
-                    print(userID)
                     try:
                         response = await GetUserGroupList(username)
-                        print(response)
                         packet = {
                             "type": "getGroupList",
                             "status": "success",
