@@ -726,8 +726,10 @@
             const password = document.getElementById("register-password").value.trim();
 
             if (username && password) {
+                console.log(myuuid)
                 const payload = {
                     type: "create_account",
+                    uuid: myuuid,
                     data: { username, password }
                 };
                 socket.send(JSON.stringify(payload));
@@ -807,11 +809,11 @@
 
             socket.addEventListener("message", (event) => {
                 try {
+                    
                     const data = JSON.parse(event.data);
-                    console.log("Received data:", data.message);
-
                     if (data.status !== "error") {
                         if (data && data.userID === myuuid) {
+                            myuuid = customUuid();
                             switch (data.type) {
                                 case "Login":
                                     InitChat();
@@ -864,11 +866,6 @@
                                     console.log("Unhandled message type:", data.type);
                                     break;
                             }
-                        }
-
-                        if (data.type !== "Login" && data.type !== "JoinGroup" && data.type !== "MakeGroup") {
-                            myuuid = customUuid();
-                            console.log("New UUID generated:", myuuid);
                         }
                     } else {
                         MakeErrorMessage(data.message, false);

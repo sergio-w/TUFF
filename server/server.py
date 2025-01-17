@@ -68,16 +68,17 @@ async def send_message(websocket, message):
     except Exception as e:
         print(f"Error sending message: {e}")
 
-async def CreateAccount(username, password, websocket):
+async def CreateAccount(username, password, userid,websocket):
     try:
         query = "SELECT username FROM Accounts WHERE username = ?"
         cursor.execute(query, (username,))
         dupe = cursor.fetchone()
-
+        print(userid)
         if dupe:
             response = {
                 "type": "CreateAccount",
                 "status": "error",
+                "userID": userid,
                 "message": "Account already exists."
             }
         else:
@@ -91,6 +92,7 @@ async def CreateAccount(username, password, websocket):
             response = {
                 "type": "CreateAccount",
                 "status": "success",
+                "userID": userid,
                 "message": "Account created successfully."
             }
 
@@ -99,6 +101,7 @@ async def CreateAccount(username, password, websocket):
         response = {
             "type": "CreateAccount",
             "status": "error",
+            "userID": userid,
             "message": f"An error occurred: {str(e)}"
         }
         print(f"An error occurred: {str(e)}")
@@ -307,7 +310,7 @@ async def handle_client(websocket, path):
                 data = formated_message.get("data", {})
 
                 if message_type == "create_account":
-                    await CreateAccount(data["username"], data["password"], websocket)
+                    await CreateAccount(data["username"], data["password"],formated_message["uuid"], websocket)
 
                 elif message_type == "login":
                     await Login(
