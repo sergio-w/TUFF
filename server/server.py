@@ -144,49 +144,74 @@ async def SendMessage(group, userid, messagecontent, websocket):
         await send_message(websocket, response)
 async def JoinGroup(id, userid, username, websocket):
     try:
-        cursor.execute("SELECT groups FROM Accounts WHERE username = ?", (username,))
-        result = cursor.fetchone()
-        if result:
-            groups = json.loads(result[0])
-            print(groups)
-            if id not in groups:
-                query = "SELECT groups FROM Accounts WHERE username = ?"
-                cursor.execute(query, (username,))
-                groupsresult = cursor.fetchone()
-                if groupsresult:
-                    groups.append(id)
-                    updated_groups_json = json.dumps(groups)
-                    query = "UPDATE Accounts SET groups = ? WHERE username = ?"
-                    cursor.execute(query, (updated_groups_json, username))
-                    conn.commit()
-                    
-                    query = "SELECT * FROM Groups WHERE groupid = ?"
-                    cursor.execute(query, (id,))
-                    groupinfo = cursor.fetchone()
-                    print(groupinfo.name)
+        query = "SELECT groupid FROM Groups WHERE groupid = ?"
+        cursor.execute(query, (id,))
+        dupe = cursor.fetchone()
+        print("is dupe? ",dupe)
+        if dupe is None:
+            response = {
+                "type": "JoinGroup",
+                "status": "error",
+                "message": "Group not found!"
+            }
+            await send_message(websocket, response)
+        else:
+            cursor.execute("SELECT groups FROM Accounts WHERE username = ?", (username,))
+            result = cursor.fetchone()
+
+            if result:
+                groups = json.loads(result[0]) 
+
+                if id in groups:
                     response = {
                         "type": "JoinGroup",
-                        "status": "success",
-                        "message": "Joined group successfully.",
-                        "serverid": id,
-                        "servers": updated_groups_json,
-                        "userID": userid,
-                        "username": username
+                        "status": "error",
+                        "message": "Already in group."
+                    }
+                    await send_message(websocket, response)
+                    return
+            cursor.execute("SELECT groups FROM Accounts WHERE username = ?", (username,))
+            result = cursor.fetchone()
+            if result:
+                groups = json.loads(result[0])
+                if id not in groups:
+                    query = "SELECT groups FROM Accounts WHERE username = ?"
+                    cursor.execute(query, (username,))
+                    groupsresult = cursor.fetchone()
+                    if groupsresult:
+                        groups.append(id)
+                        updated_groups_json = json.dumps(groups)
+                        query = "UPDATE Accounts SET groups = ? WHERE username = ?"
+                        cursor.execute(query, (updated_groups_json, username))
+                        conn.commit()
+                        
+                        query = "SELECT * FROM Groups WHERE groupid = ?"
+                        cursor.execute(query, (id,))
+                        groupinfo = cursor.fetchone()
+                        print(groupinfo.name)
+                        response = {
+                            "type": "JoinGroup",
+                            "status": "success",
+                            "message": "Joined group successfully.",
+                            "serverid": id,
+                            "servers": updated_groups_json,
+                            "userID": userid,
+                            "username": username
+                        }
+                        await send_message(websocket, response)
+                else:
+                    response = {
+                        "type": "JoinGroup",
+                        "status": "error",
+                        "message": "Already in group."
                     }
                     await send_message(websocket, response)
             else:
                 response = {
                     "type": "JoinGroup",
-                    "status": "error",
-                    "message": "Already in group."
+                    "status": "error",    
+                    "message": "Account not found."
                 }
-                await send_message(websocket, response)
-        else:
-            response = {
-                "type": "JoinGroup",
-                "status": "error",    
-                "message": "Account not found."
-            }
             await send_message(websocket, response)
     except Exception as e:
         response = {
@@ -196,24 +221,36 @@ async def JoinGroup(id, userid, username, websocket):
         }
 async def MakeGroup(name, icon, userid,username,websocket):
     try:
-        groupid = uuid.uuid4().hex
-        if icon is None:
-            icon = "/assets/img/defaultgroupicon.png"
-        query = "INSERT INTO Groups (groupid, name, icon) VALUES (?, ?, ?)"
-        cursor.execute(query, (groupid, name, icon))
-        conn.commit()
-        await JoinGroup(groupid,userid,username,websocket)
-        query = "SELECT groups FROM Accounts WHERE username = ?"
-        cursor.execute(query, (username,))
-        groupsresult = cursor.fetchone()
-        response = {
-            "type": "MakeGroup",
-            "status": "success",
-            "groupids": groupsresult,
-            "message": "Group created successfully."
-        }
-        print("made group with id:" + groupid)
-        await send_message(websocket, response)
+        query = "SELECT name FROM Groups WHERE name = ?"
+        cursor.execute(query, (name,))
+        dupe = cursor.fetchone()
+        if dupe:
+            response = {
+                "type": "MakeGroup",
+                "status": "error",
+                "message": "Group already exists."
+            }
+            await send_message(websocket, response)
+            return
+        else:
+            groupid = uuid.uuid4().hex
+            if icon is None:
+                icon = "/assets/img/defaultgroupicon.png"
+                query = "INSERT INTO Groups (groupid, name, icon) VALUES (?, ?, ?)"
+                cursor.execute(query, (groupid, name, icon))
+                conn.commit()
+                await JoinGroup(groupid,userid,username,websocket)
+                query = "SELECT groups FROM Accounts WHERE username = ?"
+                cursor.execute(query, (username,))
+                groupsresult = cursor.fetchone()
+                response = {
+                    "type": "MakeGroup",
+                    "status": "success",
+                    "groupids": groupsresult,
+                    "message": "Group created successfully."
+                }
+                print("made group with id:" + groupid)
+                await send_message(websocket, response)
     except Exception as e:
         response = {
             "type": "MakeGroup",
