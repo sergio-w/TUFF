@@ -413,6 +413,8 @@
     </div>
     <script>
         let socket = null;
+        let serverlocation = "ws://localhost:9001"
+        let alternativeserver = "ws://k27dg8s9-9001.uks1.devtunnels.ms/"
         let username = null;
         let myuuid = customUuid();
         let currentGroup = null;
@@ -809,8 +811,7 @@
             socket.send(JSON.stringify(packet));
         }
         function ConnectToServer() {
-            socket = new WebSocket("ws://localhost:9001");
-
+            socket = new WebSocket(serverlocation);
             socket.addEventListener("message", (event) => {
                 try {
                     
@@ -884,7 +885,9 @@
             });
 
             socket.addEventListener("close", () => {
-                console.log("WebSocket connection closed");
+                MakeErrorMessage("Disconnected from server. attempting to reconnect...", false);
+                setTimeout(ConnectToServer, 1000);
+                
             });
 
         }
