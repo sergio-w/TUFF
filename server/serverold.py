@@ -8,7 +8,6 @@ import uuid
 import os
 import base64
 import sqlite3
-from datetime import datetime, timezone, timedelta
 
 """
 conn = mysql.connector.connect(
@@ -47,29 +46,6 @@ CREATE TABLE IF NOT EXISTS Messages (
     FOREIGN KEY (groupid) REFERENCES Groups(groupid)
 )
 """)
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS OnlineUsers (
-    username TEXT PRIMARY KEY,
-    status TEXT NOT NULL, 
-    last_seen TEXT NOT NULL
-)
-""")
-async def mark_user_online(username):
-    """
-    Marks a user as online by inserting or updating their status in the OnlineUsers table.
-    """
-    try:
-        now = datetime.now().isoformat()
-        cursor.execute("""
-            INSERT INTO OnlineUsers (username, status, last_seen)
-            VALUES (?, 'online', ?)
-            ON CONFLICT(username) DO UPDATE SET
-                status = 'online',
-                last_seen = excluded.last_seen
-        """, (username, now))
-        conn.commit()
-    except Exception as e:
-        print(f"Error marking user online: {e}")
 
 def generate_token():
     token = os.urandom(128)
@@ -90,23 +66,6 @@ async def send_message(websocket, message):
         await websocket.send(message)
     except Exception as e:
         print(f"Error sending message: {e}")
-
-async def mark_user_online(username):
-    """
-    Marks a user as online by inserting or updating their status in the OnlineUsers table.
-    """
-    try:
-        now = datetime.now().isoformat()
-        cursor.execute("""
-            INSERT INTO OnlineUsers (username, status, last_seen)
-            VALUES (?, 'online', ?)
-            ON CONFLICT(username) DO UPDATE SET
-                status = 'online',
-                last_seen = excluded.last_seen
-        """, (username, now))
-        conn.commit()
-    except Exception as e:
-        print(f"Error marking user online: {e}")
 
 async def CreateAccount(username, password, userid,websocket):
     try:
@@ -319,7 +278,6 @@ async def Login(account, password, userid, websocket):
                     "groups": groups,
                     "token": token
                 }
-                await mark_user_online(account)
             else:
                 response = {
                     "type": "Login",
@@ -384,15 +342,14 @@ async def handle_client(websocket, path):
                 formated_message = json.loads(message)
                 message_type = formated_message.get("type")
                 data = formated_message.get("data", {})
-
                 if message_type == "create_account":
-                    await CreateAccount(data["username"], data["password"],formated_message["userID"], websocket)
+                    await CreateAccount(data["username"], data["password"],formated_message["uuid"], websocket)
 
                 elif message_type == "login":
                     await Login(
                         data["username"],
                         data["password"],
-                        data["userID"],
+                        data.get("myuuid"),
                         websocket
                     )
                     
@@ -445,7 +402,7 @@ async def handle_client(websocket, path):
                         "message": "Unknown message type"
                     }
                     await send_message(websocket, response)
-                    
+              
             except Exception as e:
                 error_message = {
                     "status": "error",

@@ -208,8 +208,8 @@
             justify-content: space-between;
         }
         .usericon-container{
-            width: 3vw;
-            height: 3vw;
+            width: 2vw;
+            height: 2vw;
             margin-bottom: 2vw;
             margin-top: 2vw;
             border-radius: 2vw;
@@ -691,9 +691,10 @@
             const username = document.getElementById("login-username").value.trim();
             const password = document.getElementById("login-password").value.trim();
             if (username && password) {
+                let userID = myuuid
                 const payload = {
                     type: "login",
-                    data: { username, password,myuuid}
+                    data: {username, password,userID}
                 };
                 socket.send(JSON.stringify(payload));
             } else {
@@ -812,17 +813,15 @@
         }
         function ConnectToServer() {
             socket = new WebSocket(serverlocation);
+            socket.onopen = () => {
+                console.log("WebSocket connection established");
+            };
             socket.addEventListener("message", (event) => {
                 try {
-                    
                     const data = JSON.parse(event.data);
                     console.log(data);
                     if (data.status !== "error") {
                         if (data && data.userID === myuuid) {
-                            console.log(data.type)
-                            console.log(data.status)
-                            console.log(data.message)
-                            console.log("data user id is same as user id? " + data.userID == myuuid)
                             myuuid = customUuid();
                             switch (data.type) {
                                 case "Login":
@@ -852,7 +851,6 @@
                                 case "groupMessages":
                                     document.getElementById("content").innerHTML = "";
                                     data.messages.forEach((msg) => {
-                                        console.log(msg)
                                         makebox(
                                             msg.message,
                                             msg.username + " " + msg.time,
@@ -871,6 +869,13 @@
                                     console.log("Unhandled message type:", data.type);
                                     break;
                             }
+                        } else {
+                            console.log(data.type)
+                            switch (data.type) {
+                                case "SendMessage":
+                                    getServerMessages();
+                                    break;
+                            }
                         }
                     } else {
                         MakeErrorMessage(data.message, false);
@@ -878,16 +883,13 @@
                 } catch (e) {
                     console.error("Failed to process message. Error:", e);
                 }
-            });
-
-            socket.addEventListener("error", (error) => {
-                console.error("WebSocket error:", error);
-            });
-
-            socket.addEventListener("close", () => {
-                MakeErrorMessage("Disconnected from server. attempting to reconnect...", false);
-                setTimeout(ConnectToServer, 1000);
-                
+                socket.onerror = (error) => {
+                    console.error("WebSocket error:", error);
+                };
+                socket.onclose = () => {
+                    console.log("WebSocket connection closed");
+                    setTimeout(ConnectToServer, 1000); // Reconnect after a delay
+                };
             });
 
         }
