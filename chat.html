@@ -940,7 +940,8 @@
         const textWithoutImages = text.replace(imageRegex, "").trim();
         if (textWithoutImages) {
             box.innerText = textWithoutImages;
-                box.style.display = "none";
+        } else {
+            box.style.display = "none";
         }
 
         const userinfocontainer = document.createElement("div");
