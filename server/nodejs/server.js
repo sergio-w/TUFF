@@ -633,6 +633,14 @@ wss.on("connection", (ws) => {
     } else if (messageType === "sendmessage") {
       const { groupID, userID, message, name } = msg;
       sendMessage(groupID, userID, message, name, ws);
+      const packet = {
+        type: "sendmessage",
+        groupID,
+        userID,
+        message,
+        name
+      }
+      broadcastAll(packet);
     } else if (messageType === "requestGroupData") {
       try {
         const data = await getGroupData(msg.groupID);
