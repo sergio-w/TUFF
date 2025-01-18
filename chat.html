@@ -920,47 +920,70 @@
     }
 
     function makebox(text, name, isself, iconurl) {
-      const container = document.createElement("div");
-      container.style.display = "flex";
-      container.style.flexDirection = "column";
-      container.style.alignItems = isself ? "flex-end" : "flex-start";
+        const container = document.createElement("div");
+        container.style.display = "flex";
+        container.style.flexDirection = "column";
+        container.style.alignItems = isself ? "flex-end" : "flex-start";
 
-      const textdiv = document.createElement("span");
-      textdiv.classList.add("textbox-name");
-      textdiv.innerText = name;
+        const textdiv = document.createElement("span");
+        textdiv.classList.add("textbox-name");
+        textdiv.innerText = name;
 
-      const box = document.createElement("div");
-      box.classList.add("textbox");
-      box.innerText = text;
-      box.style.width = "auto";
-      box.style.textAlign = "left";
+        const box = document.createElement("div");
+        box.classList.add("textbox");
+        box.style.width = "auto";
+        box.style.textAlign = "left";
 
-      const userinfocontainer = document.createElement("div");
-      userinfocontainer.classList.add("userinfo-container");
+        const imageRegex = /(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg))/gi;
+        const images = [...text.matchAll(imageRegex)].map(match => match[0]);
 
-      const iconcontainer = document.createElement("div");
-      iconcontainer.classList.add("usericon-container");
+        const textWithoutImages = text.replace(imageRegex, "").trim();
+        if (textWithoutImages) {
+            box.innerText = textWithoutImages;
+                box.style.display = "none";
+        }
 
-      const icon = document.createElement("img");
-      icon.src = iconurl;
-      icon.style.width = "90%";
-      icon.style.height = "90%";
-      icon.classList.add("usericon-icon");
-      iconcontainer.appendChild(icon);
+        const userinfocontainer = document.createElement("div");
+        userinfocontainer.classList.add("userinfo-container");
 
-      if (isself) {
-        userinfocontainer.appendChild(iconcontainer);
-        userinfocontainer.appendChild(textdiv);
-      } else {
-        userinfocontainer.appendChild(textdiv);
-        userinfocontainer.appendChild(iconcontainer);
-      }
+        const iconcontainer = document.createElement("div");
+        iconcontainer.classList.add("usericon-container");
 
-      container.appendChild(userinfocontainer);
-      container.appendChild(box);
-      document.getElementById("content").appendChild(container);
-      document.getElementById("content").scrollTop = document.getElementById("content").scrollHeight;
-    }
+        const icon = document.createElement("img");
+        icon.src = iconurl;
+        icon.style.width = "90%";
+        icon.style.height = "90%";
+        icon.classList.add("usericon-icon");
+        iconcontainer.appendChild(icon);
+
+        if (isself) {
+            userinfocontainer.appendChild(iconcontainer);
+            userinfocontainer.appendChild(textdiv);
+        } else {
+            userinfocontainer.appendChild(textdiv);
+            userinfocontainer.appendChild(iconcontainer);
+        }
+
+        container.appendChild(userinfocontainer);
+        container.appendChild(box);
+        images.forEach(imgUrl => {
+            const imgDiv = document.createElement("div");
+            imgDiv.style.marginTop = "0.5vw"; 
+
+            const imgElement = document.createElement("img");
+            imgElement.src = imgUrl;
+            imgElement.style.maxWidth = "50%";
+            imgElement.style.height = "auto";
+            imgElement.style.borderRadius = "0.5vw"; 
+
+            imgDiv.appendChild(imgElement);
+            container.appendChild(imgDiv);
+        });
+
+        document.getElementById("content").appendChild(container);
+        document.getElementById("content").scrollTop = document.getElementById("content").scrollHeight;
+        }
+
 
     function makeGroup(name, iconurl, id) {
       const container = document.createElement("div");
