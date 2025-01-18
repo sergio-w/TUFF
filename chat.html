@@ -213,7 +213,6 @@
             font-size: 0.7vw;
             transform: translateY(20%);
             transition: all 0.2s ease;
-            pointer-events: none;
             box-shadow: 0.1vw 0.1vw 0.2vw rgba(0, 0, 0, 0.5);
         }
         .userinfo-container{
@@ -312,7 +311,7 @@
             100% {
                 opacity: 0;
             }
-        } 
+        }
         .popuptext{
             font-size: 2vw;
             color:white;
@@ -461,6 +460,94 @@
             width: 100%;
             box-sizing: border-box;
         }
+        .popup-leaveGroupButton{
+            background-color: #20222500;
+            border: none;
+            margin: 0.4vw;
+            width: 99%;
+            height: 2vw;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 0.2vw;
+            font-size: 1vw;
+            transition: all 0.1s ease-in-out;
+            text-align: center;
+        }
+        .popup-leaveGroupButton:hover {
+            background-color: #ff5a70;
+        }
+        .popup-CopyID{
+            background-color: #20222500;
+            border: none;
+            margin: 0.4vw;
+            width: 95%;
+            height: 2vw;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 0.2vw;
+            font-size: 1vw;
+            transition: all 0.1s ease;
+        }
+        .popup-CopyID:hover {
+            background-color: var(--accent-color);
+        }
+        .CustomPopup{
+            width: 20vw;
+            background-color: var(--sidebar);
+            border-radius: 1vw;
+            position:fixed;
+            padding-bottom: 0.5vw;
+            padding-top: 0.5vw;
+            left: 50%;
+            top: 50%;
+            display: none;
+            flex-direction: column;
+            align-items: center; 
+            transform: translate(-50%,-50%);
+            transition: all 0.1s ease;
+            opacity: 0;
+            font-family: comfortaa , sans-serif;
+        } 
+        .smoothshow{
+            animation: CustomPopupShow ease-in 0.15s forwards;
+        }
+        .smoothhide{
+            animation: CustomPopupHide ease-out 0.15s forwards;
+        }
+        @keyframes CustomPopupShow {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        @keyframes CustomPopupHide {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+        .copyidcontainer{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 95%;
+            border-radius: 0.5vw;
+            background-color: var(--input-bg);
+        }
+        .copyidinput{
+            width: 13vw;
+            height: 2vw;
+            margin-left: 0.2vw;
+            font-size: 1vw;
+            background-color: #20222500;
+            outline: none;
+            color: white;
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -586,6 +673,48 @@
                 userNameSpan.textContent = newUsername;
             }
         }
+        function CopyText(text){
+            navigator.clipboard.writeText(text);
+        }
+        function createGroupIdPopup(id) {
+
+            const existingPopups = document.querySelectorAll(".CustomPopup");
+            existingPopups.forEach((popup) => popup.remove());
+
+            const overlay = document.createElement("div");
+            overlay.classList.add("overlay");
+            overlay.style.display = "block";
+            overlay.classList.remove("HideOverlayAnim");
+            overlay.classList.add("ShowOverlayAnim");
+
+            console.log("making custom popup")
+            const popup = document.createElement("div");
+            popup.classList.add("CustomPopup");
+            popup.classList.add("smoothshow");
+            popup.style.display = "flex";
+            popup.innerHTML = `
+                <span class="popuptext" style="margin-bottom: 0.4vw; margin-top: 0.8vw; font-weight: bold;">Invite People</span>
+                <span class="popuptext" style="margin-bottom: 1vw; margin-left: 0.5vw; margin-right: 0.5vw; font-weight: 100; font-size: 1vw; text-align: center;">
+                    Click the copy button to copy the group ID.
+                </span>
+                <div class="copyidcontainer" ">
+                    <input class="copyidinput" id="idinput" value="${id}" readOnly />
+                    <button class="content-bt" style="width: 4vw;" onclick="CopyText('${id}'); MakeErrorMessage('Copied to clipboard!',true);">Copy</button>
+                </div>
+            `;
+
+
+            document.body.appendChild(overlay);
+            document.body.appendChild(popup);
+            overlay.addEventListener("click", () => {
+                popup.classList.remove("smoothshow");
+                popup.classList.add("smoothhide");
+                popup.addEventListener("animationend", () => popup.remove());
+                overlay.classList.remove("ShowOverlayAnim");
+                overlay.classList.add("HideOverlayAnim");
+                overlay.addEventListener("animationend", () => overlay.remove());
+            });
+        }
 
         InitLogin();
         function handleOverlayAnimationEnd() {
@@ -605,6 +734,9 @@
             popup.querySelectorAll("input").forEach((key) =>{
                 key.disabled = false;
             })
+            overlay.addEventListener("click", () => {
+                closeGroupPopup();
+            });
         }
         function closeGroupPopup(){
             const popup = document.getElementById("AddGroupPopup");
@@ -723,6 +855,62 @@
                 socket.send(JSON.stringify(packet));
                 setGroupName(name);
             });
+            container.addEventListener("contextmenu", (event) => {
+                event.preventDefault();
+
+                const existingPopups = document.querySelectorAll(".popup");
+                existingPopups.forEach((popup) => {
+                    document.body.removeChild(popup);
+                });
+                const menupopup = document.createElement("div");
+                menupopup.classList.add("popup");
+                document.body.appendChild(menupopup);
+                const rect = container.getBoundingClientRect();
+                const viewportWidth = window.innerWidth;
+                const leftInVW = (rect.left + window.scrollX) / viewportWidth * 100;
+                menupopup.style.left = `${leftInVW + 1}vw`;
+                menupopup.style.top = `${rect.top + window.scrollY}px`;
+
+
+                const leaveGroupButton = document.createElement("button");
+                leaveGroupButton.classList.add("popup-leaveGroupButton");
+                leaveGroupButton.textContent = "Leave Group";
+                leaveGroupButton.addEventListener("click", () => {
+                    const packet = {
+                        type: "leaveGroup",
+                        groupID: id,
+                        userID: myuuid
+                    };
+                    socket.send(JSON.stringify(packet));
+                    document.body.removeChild(menupopup);
+                });
+                const CopyIdButton = document.createElement("button");
+                CopyIdButton.classList.add("popup-CopyID");
+                CopyIdButton.textContent = "Group ID";
+                CopyIdButton.addEventListener("click", () => {
+                    createGroupIdPopup(id);
+                    console.log("clicked to open popup")
+                    document.body.removeChild(menupopup);
+                });
+                //document.body.addEventListener("mousedown", () => {
+                //    document.body.removeChild(menupopup);
+                //})
+
+                menupopup.appendChild(leaveGroupButton);
+                menupopup.appendChild(CopyIdButton);
+
+                
+                menupopup.style.position = "absolute";
+                menupopup.style.border = "1px solid black";
+                menupopup.style.display = "flex";
+                menupopup.style.flexDirection = "column";
+                menupopup.style.alignItems = "center";
+                menupopup.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
+                menupopup.style.zIndex = "1000";
+            
+                document.body.appendChild(menupopup);
+            });
+
         }
 
         function makeUser(name, iconurl) {
@@ -766,7 +954,8 @@
             nameDiv.innerText = name;
             function updateFontSize() {
                 const viewportWidth = window.innerWidth; 
-                const properFontSize = Math.min(30, Math.max(120,(viewportWidth / name.length) * 0.1)); 
+                const properFontSize = Math.max(5, Math.min(17,(viewportWidth / name.length) * 0.1));
+                console.log((viewportWidth / name.length) * 0.1); 
                 nameDiv.style.fontSize = `${properFontSize}px`;
                 nameDiv.textContent = name; 
             }
@@ -831,7 +1020,7 @@
         function InitInput(){
             textinput = document.getElementById("textinput");
             textinput.addEventListener("keydown", (e) => {
-                if (e.key === "Enter" && textinput.value !== "" && socket) {
+                if (e.key === "Enter" && textinput.value !== "" && socket && currentGroup) {
                     const date = new Date();
                     const messagevalue = textinput.value;
                     const jsonpayload = {
@@ -947,7 +1136,6 @@
                                 case "Login":
                                     InitChat();
                                     username = data.username;
-                                    getGroupData();
                                     MakeErrorMessage(data.message, true);
                                     sendGroupPacket(username);
                                     updateUserInfo(username);
@@ -959,9 +1147,6 @@
 
                                 case "MakeGroup":
                                     MakeErrorMessage(data.message, true);
-                                    sendGroupPacket(username);
-                                    console.log("group id is " + data.groupid);
-                                    navigator.clipboard.writeText(data.groupid);
                                     break;
 
                                 case "JoinGroup":

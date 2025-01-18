@@ -526,7 +526,6 @@ function makeGroup(name, icon, userID, username, ws) {
           sendToClient(ws, {
             type: "MakeGroup",
             status: "success",
-            groupid,
             message: "Group created successfully.",
           });
         }
