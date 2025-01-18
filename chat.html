@@ -934,7 +934,7 @@
         box.style.width = "auto";
         box.style.textAlign = "left";
 
-        const imageRegex = /(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg))/gi;
+        const imageRegex = /(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg)(\?.*)?)/gi;
         const images = [...text.matchAll(imageRegex)].map(match => match[0]);
 
         const textWithoutImages = text.replace(imageRegex, "").trim();
