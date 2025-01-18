@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         :root {
             --background: #36393f;
@@ -202,10 +203,11 @@
         }
         .userinfo-container{
             height: 3vw;
-            width: 10vw;
-            display: flex; 
+            width: 100%;
+            display: grid; 
             align-items: center; 
-            justify-content: space-between;
+            margin-bottom: 1.5vw;
+            grid-template-columns: auto 1fr;
         }
         .usericon-container{
             width: 2vw;
@@ -388,7 +390,62 @@
             100% {
                 top: 100vh;
             }
-        } 
+        }
+        .server-header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 0.2vw;
+            border-bottom: 0.05vw solid var(--border-color);
+        }
+
+        .server-name {
+            font-size: 1vw;
+            margin-left: 0.5vw;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .settings-icon {
+            font-size: 1.2vw;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: color 0.3s;
+            margin-right: 0.5vw;
+        }
+
+        .settings-icon:hover {
+            color: var(--accent-color);
+        }
+
+        .user-info {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0.5vw 1vw;
+            border-top: 0.05vw solid var(--border-color);
+        }
+
+        .user-info img {
+            width: 2vw;
+            height: 2vw;
+            border-radius: 50%;
+            margin-right: 0.5vw;
+        }
+
+        .user-name {
+            font-size: 0.9vw;
+            color: var(--text-color);
+        }
+        .userlist-content{
+            overflow-y: auto;
+            overflow-x: hidden;
+            flex: 1;
+            scrollbar-width: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
     </style>
 </head>
 <body>
@@ -484,13 +541,37 @@
                         <input class="textinput" id="textinput" placeholder="Enter something to text"></input>
                     </div>
                 </div>
-                <div class="rightsidecontent" id="rightsidecontent"></div>
+                <div class="rightsidecontent" id="rightsidecontent">
+                    <div class="server-header">
+                        <span class="server-name">Server Name</span>
+                        <i class="fa fa-cog settings-icon"></i>
+                    </div>
+                    <div class="userlist-content" id="userlist-content">
+                        
+                    </div>
+                    <div class="user-info">
+                        <img src="/assets/img/user.svg" alt="User Icon">
+                        <span class="user-name">${username || 'Username'}</span>
+                    </div>
+                </div>
                 `;
                 loadData();
                 ConnectToServer();
-                InitInput()
+                InitInput();
+                initServerContent();
+                document.querySelector(".settings-icon").addEventListener("click", () => {
+                    alert("Settings clicked!");
+                });
+
             });
         }
+        function updateUserInfo(newUsername) {
+            const userNameSpan = document.querySelector(".user-name");
+            if (userNameSpan) {
+                userNameSpan.textContent = newUsername;
+            }
+        }
+
         InitLogin();
         function handleOverlayAnimationEnd() {
             const overlay = document.querySelector(".overlay");
@@ -625,6 +706,7 @@
                     userID: myuuid
                 };
                 socket.send(JSON.stringify(packet));
+                setServerName(name);
             });
         }
 
@@ -633,37 +715,52 @@
             container.style.display = "flex";
             container.style.flexDirection = "row";
             container.style.alignItems = "center";
-
             container.style.marginBottom = "0.5vw";
             container.style.height = "3vw";
             container.style.width = "95%";
+            container.style.marginLeft = "0.5vw";
 
             const iconcontainer = document.createElement("div");
             iconcontainer.classList.add("usericon-container");
             iconcontainer.style.display = "flex";
             iconcontainer.style.alignItems = "center";
             iconcontainer.style.justifyContent = "center";
-            iconcontainer.style.width = "2.5vw";
-            iconcontainer.style.height = "2.5vw";
-            iconcontainer.style.marginRight = "1vw";
+            iconcontainer.style.width = "2vw";
+            iconcontainer.style.height = "2vw";
+            iconcontainer.style.marginRight = "0.5vw";
+            iconcontainer.style.flexShrink = "0";
+            iconcontainer.style.flexGrow = "0"; 
 
             const icon = document.createElement("img");
             icon.src = iconurl;
             icon.style.width = "90%";
             icon.style.height = "90%";
             icon.style.objectFit = "cover";
+            icon.style.borderRadius = "50%";
 
             iconcontainer.appendChild(icon);
             container.appendChild(iconcontainer);
 
             const nameDiv = document.createElement("div");
-            nameDiv.style.fontSize = "0.8vw";
-            nameDiv.style.fontWeight = "bold";
-            nameDiv.innerText = name;
 
+            nameDiv.style.fontWeight = "bold";
+            nameDiv.style.flex = "1"; 
+            nameDiv.style.overflow = "hidden";
+            nameDiv.style.textOverflow = "ellipsis";
+            nameDiv.style.whiteSpace = "nowrap";
+            nameDiv.innerText = name;
+            function updateFontSize() {
+                const viewportWidth = window.innerWidth; 
+                const properFontSize = (viewportWidth / name.length) * 0.1; 
+                nameDiv.style.fontSize = `${properFontSize}px`;
+                nameDiv.textContent = name; 
+            }
+            updateFontSize();
+            window.addEventListener('resize', updateFontSize);
             container.appendChild(nameDiv);
 
-            document.getElementById("rightsidecontent").appendChild(container);
+            document.getElementById("userlist-content").appendChild(container);
+
         }
         function MakeErrorMessage(loginerr,success) {
             const loginerror = document.createElement("div");
@@ -686,7 +783,6 @@
                 }
             });
         }
-
         function Login() {
             const username = document.getElementById("login-username").value.trim();
             const password = document.getElementById("login-password").value.trim();
@@ -707,10 +803,9 @@
             const password = document.getElementById("register-password").value.trim();
 
             if (username && password) {
-                console.log(myuuid)
                 const payload = {
                     type: "create_account",
-                    uuid: myuuid,
+                    userID: myuuid,
                     data: { username, password }
                 };
                 socket.send(JSON.stringify(payload));
@@ -770,7 +865,6 @@
                 userID: myuuid,
                 username: username
             };
-            console.log(myuuid);
             socket.send(JSON.stringify(packet));
         }
     function UpdateServerList(groups) {
@@ -811,15 +905,26 @@
             };
             socket.send(JSON.stringify(packet));
         }
+        function setServerName(name) {
+            const serverNameSpan = document.querySelector(".server-name");
+            if (serverNameSpan) {
+                serverNameSpan.textContent = name;
+            }
+        }
         function ConnectToServer() {
             socket = new WebSocket(serverlocation);
             socket.onopen = () => {
-                console.log("WebSocket connection established");
+                setTimeout(() => {
+                    const packet = {
+                        type: "ping",
+                        username: username,
+                    };
+                    socket.send(JSON.stringify(packet));
+                }, 500);
             };
             socket.addEventListener("message", (event) => {
                 try {
                     const data = JSON.parse(event.data);
-                    console.log(data);
                     if (data.status !== "error") {
                         if (data && data.userID === myuuid) {
                             myuuid = customUuid();
@@ -827,9 +932,10 @@
                                 case "Login":
                                     InitChat();
                                     username = data.username;
-                                    sendGroupPacket(username);
                                     getServerMessages();
                                     MakeErrorMessage(data.message, true);
+                                    sendGroupPacket(username);
+                                    updateUserInfo(username);
                                     break;
 
                                 case "CreateAccount":
@@ -849,8 +955,10 @@
                                     break;
 
                                 case "groupMessages":
-                                    document.getElementById("content").innerHTML = "";
-                                    data.messages.forEach((msg) => {
+                                    const content = document.getElementById("content");
+                                    if (content){
+                                        content.innerHTML = "";
+                                        data.messages.forEach((msg) => {
                                         makebox(
                                             msg.message,
                                             msg.username + " " + msg.time,
@@ -859,21 +967,23 @@
                                         );
                                     });
                                     document.getElementById("content").scrollTop = document.getElementById("content").scrollHeight;
+                                    }
                                     break;
 
                                 case "getGroupList":
                                     UpdateServerList(data.groups);
                                     break;
-
+                                case "sendmessage":
+                                    getServerMessages();   
+                                    break;
                                 default:
                                     console.log("Unhandled message type:", data.type);
                                     break;
                             }
                         } else {
-                            console.log(data.type)
                             switch (data.type) {
-                                case "SendMessage":
-                                    getServerMessages();
+                                case "sendmessage":
+                                    getServerMessages();   
                                     break;
                             }
                         }
@@ -888,7 +998,7 @@
                 };
                 socket.onclose = () => {
                     console.log("WebSocket connection closed");
-                    setTimeout(ConnectToServer, 1000); // Reconnect after a delay
+                    setTimeout(ConnectToServer, 1000);
                 };
             });
 
