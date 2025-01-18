@@ -162,7 +162,7 @@
             align-items: center;
             margin-bottom: 1vw;
         }
-        .server-icon-container {
+        .group-icon-container {
             width: 3vw;
             height: 3vw;
             justify-content: center;
@@ -174,7 +174,7 @@
             border-radius: 2vw;
             transition: all 0.3s ease;
         }
-        .server-icon-container:hover {
+        .group-icon-container:hover {
             border-radius: 0.5vw;
             background-color: rgba(125, 255, 166, 0.581);
         }
@@ -224,7 +224,7 @@
         .usericon{
             border-radius: 2vw;
         }
-        .AddServerPopup{
+        .AddGroupPopup{
             width: 20vw;
             height: 27vw;
             background-color: var(--sidebar);
@@ -277,12 +277,12 @@
             }
         } 
         .smoothshow{
-            animation: AddServerPopupShow ease-in 0.15s forwards;
+            animation: AddGroupPopupShow ease-in 0.15s forwards;
         }
         .smoothhide{
-            animation: AddServerPopupHide ease-out 0.15s forwards;
+            animation: AddGroupPopupHide ease-out 0.15s forwards;
         }
-        @keyframes AddServerPopupShow {
+        @keyframes AddGroupPopupShow {
             0% {
                 opacity: 0;
             }
@@ -290,7 +290,7 @@
                 opacity: 1;
             }
         }
-        @keyframes AddServerPopupHide {
+        @keyframes AddGroupPopupHide {
             0% {
                 opacity: 1;
             }
@@ -391,7 +391,7 @@
                 top: 100vh;
             }
         }
-        .server-header {
+        .group-header {
             width: 100%;
             display: flex;
             align-items: center;
@@ -400,7 +400,7 @@
             border-bottom: 0.05vw solid var(--border-color);
         }
 
-        .server-name {
+        .group-name {
             font-size: 1vw;
             margin-left: 0.5vw;
             font-weight: bold;
@@ -454,7 +454,7 @@
     </div>
     <div class="bg"></div>
     <div class="overlay"></div>
-    <div class="AddServerPopup" id="AddServerPopup"> 
+    <div class="AddGroupPopup" id="AddGroupPopup"> 
         <span class="popuptext" style="margin-bottom: 0.4vw; margin-top: 0.8vw; font-weight: bold;">Join a group</span>
         <span class="popuptext" style="margin-bottom: 1vw; margin-left: 0.5vw; margin-right: 0.5vw;font-weight:100; font-size: 1vw; text-align: center;">
             Input a group id and then you can chat with your buddys
@@ -531,7 +531,7 @@
                 maincontainer.removeEventListener("animationend", handleAnimationEnd);
                 maincontainer.innerHTML = `
                 <div class="leftsidecontent" id="leftsidecontent">
-                    <div class="server-icon-container" id="AddGroup">
+                    <div class="group-icon-container" id="AddGroup">
                         <img src="/assets/img/roundAddIcon.png" class="leftsidecontent-icon" style="width: 95%; height: 95%;">
                     </div>
                 </div>
@@ -542,8 +542,8 @@
                     </div>
                 </div>
                 <div class="rightsidecontent" id="rightsidecontent">
-                    <div class="server-header">
-                        <span class="server-name">Server Name</span>
+                    <div class="group-header">
+                        <span class="group-name">Group Name</span>
                         <i class="fa fa-cog settings-icon"></i>
                     </div>
                     <div class="userlist-content" id="userlist-content">
@@ -558,7 +558,7 @@
                 loadData();
                 ConnectToServer();
                 InitInput();
-                initServerContent();
+                initGroupContent();
                 document.querySelector(".settings-icon").addEventListener("click", () => {
                     alert("Settings clicked!");
                 });
@@ -578,8 +578,8 @@
             overlay.style.display = "none";
             overlay.removeEventListener("animationend", handleOverlayAnimationEnd);
         }
-        function addServerPopup(){
-            const popup = document.getElementById("AddServerPopup");
+        function addGroupPopup(){
+            const popup = document.getElementById("AddGroupPopup");
             const overlay = document.querySelector(".overlay");
             popup.style.display = "flex";
             popup.classList.remove("smoothhide");
@@ -591,8 +591,8 @@
                 key.disabled = false;
             })
         }
-        function closeServerPopup(){
-            const popup = document.getElementById("AddServerPopup");
+        function closeGroupPopup(){
+            const popup = document.getElementById("AddGroupPopup");
             const overlay = document.querySelector(".overlay");
             popup.classList.remove("smoothshow");
             popup.classList.add("smoothhide");
@@ -603,7 +603,7 @@
                 key.disabled = true;
             })
         }
-        function initServerContent(){
+        function initGroupContent(){
             const popup = document.createElement("div");
             popup.classList.add("popup");
             popup.textContent = "Add Group";
@@ -619,7 +619,7 @@
                 popup.style.top = `${rect.top + window.scrollY}px`;
             });
             container.addEventListener("click",() => {
-                addServerPopup();
+                addGroupPopup();
             });
             container.addEventListener("mouseout", () => {
                 popup.style.display = "none";
@@ -669,7 +669,7 @@
             document.getElementById("content").scrollTop = document.getElementById("content").scrollHeight;
         }
 
-        function makeServer(name, iconurl, id) {
+        function makeGroup(name, iconurl, id) {
             const container = document.createElement("div");
             container.classList.add("leftsidecontent-icon-container");
 
@@ -706,7 +706,7 @@
                     userID: myuuid
                 };
                 socket.send(JSON.stringify(packet));
-                setServerName(name);
+                setGroupName(name);
             });
         }
 
@@ -848,7 +848,7 @@
             makeUser("YourSeriousDev", "/assets/img/user.svg");
         }
         function joinGroup(id){
-            closeServerPopup();
+            closeGroupPopup();
             const packet = {
                 type: "joingroup",
                 id: id,
@@ -858,31 +858,31 @@
             socket.send(JSON.stringify(packet));
         }
         function createGroup(name){
-            closeServerPopup();
+            closeGroupPopup();
             const packet = {
                 type: "makegroup",
-                servername: name,
+                groupname: name,
                 userID: myuuid,
                 username: username
             };
             socket.send(JSON.stringify(packet));
         }
-    function UpdateServerList(groups) {
+    function UpdateGroupList(groups) {
         function waitForElement() {
                 const leftSideContent = document.getElementById("leftsidecontent");
                 if (leftSideContent) {
                     clearInterval(checkInterval); 
 
                     leftSideContent.innerHTML = `
-                        <div class="server-icon-container" id="AddGroup">
+                        <div class="group-icon-container" id="AddGroup">
                             <img src="/assets/img/roundAddIcon.png" class="leftsidecontent-icon" style="width: 95%; height: 95%;">
                         </div>
                     `;
 
-                    initServerContent();
+                    initGroupContent();
 
                     groups.forEach((group) => {
-                        makeServer(group.name, group.icon, group.id);
+                        makeGroup(group.name, group.icon, group.id);
                     });
                 }
             }
@@ -897,7 +897,7 @@
             };
             socket.send(JSON.stringify(packet));
         }
-        function getServerMessages(){
+        function getGroupMessages(){
             const packet = {
                 type: "requestGroupMessages",
                 groupID: currentGroup,
@@ -905,10 +905,10 @@
             };
             socket.send(JSON.stringify(packet));
         }
-        function setServerName(name) {
-            const serverNameSpan = document.querySelector(".server-name");
-            if (serverNameSpan) {
-                serverNameSpan.textContent = name;
+        function setGroupName(name) {
+            const groupNameSpan = document.querySelector(".group-name");
+            if (groupNameSpan) {
+                groupNameSpan.textContent = name;
             }
         }
         function ConnectToServer() {
@@ -932,7 +932,7 @@
                                 case "Login":
                                     InitChat();
                                     username = data.username;
-                                    getServerMessages();
+                                    getGroupMessages();
                                     MakeErrorMessage(data.message, true);
                                     sendGroupPacket(username);
                                     updateUserInfo(username);
@@ -971,10 +971,10 @@
                                     break;
 
                                 case "getGroupList":
-                                    UpdateServerList(data.groups);
+                                    UpdateGroupList(data.groups);
                                     break;
                                 case "sendmessage":
-                                    getServerMessages();   
+                                    getGroupMessages();   
                                     break;
                                 default:
                                     console.log("Unhandled message type:", data.type);
@@ -983,7 +983,7 @@
                         } else {
                             switch (data.type) {
                                 case "sendmessage":
-                                    getServerMessages();   
+                                    getGroupMessages();   
                                     break;
                             }
                         }
