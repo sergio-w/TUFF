@@ -272,6 +272,7 @@ function getGroupData(groupID) {
 }
 
 async function sendMessage(groupID, userID, messagecontent, username, ws) {
+  console.log("--fx--sendMessage--");
   db.get(`SELECT groupid FROM Groups WHERE groupid=?`, [groupID], (err, groupRow) => {
     if (err) {
       return sendToClient(ws, {
@@ -592,7 +593,9 @@ setInterval(() => {
 }, 10000);
 
 wss.on("connection", (ws) => {
+  console.log("New client connected");
   ws.on("close", () => {
+    console.log("Client disconnected");
     for (const [uname, conn] of activeConnections.entries()) {
       if (conn === ws) {
         markUserOffline(uname);
@@ -611,6 +614,7 @@ wss.on("connection", (ws) => {
     }
     const messageType = msg.type;
     if (messageType === "ping") {
+      console.log("Received ping from", msg.username);
       const uname = msg.username;
       await markUserOnline(uname);
       if (!activeConnections.has(uname)) {
