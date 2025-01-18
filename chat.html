@@ -69,14 +69,29 @@
         }
 
         .content {
-            overflow-y: auto;
             overflow-x: hidden;
+            overflow-y: scroll;
+            scrollbar-color: var(--secondary-bg) var(--border-color); 
+            scrollbar-width: thin;
             flex: 1;
-            scrollbar-width: none;
             padding: 1vw;
             box-sizing: border-box;
         }
 
+        .content::-webkit-scrollbar {
+                width: 8px; 
+                background-color: var(--secondary-bg);
+                border-radius: 50%;
+            }
+
+            .content::-webkit-scrollbar-thumb {
+                background-color: var(--border-color);
+                border-radius: 50%; 
+            }
+
+            .content::-webkit-scrollbar-button {
+                display: none; 
+            }
         .bottombar {
             display: flex;
             background-color: var(--secondary-bg);
@@ -543,7 +558,7 @@
                 </div>
                 <div class="rightsidecontent" id="rightsidecontent">
                     <div class="group-header">
-                        <span class="group-name">Group Name</span>
+                        <span class="group-name">No Group :(</span>
                         <i class="fa fa-cog settings-icon"></i>
                     </div>
                     <div class="userlist-content" id="userlist-content">
@@ -701,7 +716,7 @@
             container.addEventListener("click", () => {
                 currentGroup = id;
                 const packet = {
-                    type: "requestGroupMessages",
+                    type: "requestGroupData",
                     groupID: id,
                     userID: myuuid
                 };
@@ -751,7 +766,7 @@
             nameDiv.innerText = name;
             function updateFontSize() {
                 const viewportWidth = window.innerWidth; 
-                const properFontSize = (viewportWidth / name.length) * 0.1; 
+                const properFontSize = Math.min(30, Math.max(120,(viewportWidth / name.length) * 0.1)); 
                 nameDiv.style.fontSize = `${properFontSize}px`;
                 nameDiv.textContent = name; 
             }
@@ -897,9 +912,9 @@
             };
             socket.send(JSON.stringify(packet));
         }
-        function getGroupMessages(){
+        function getGroupData(){
             const packet = {
-                type: "requestGroupMessages",
+                type: "requestGroupData",
                 groupID: currentGroup,
                 userID: myuuid
             };
@@ -932,7 +947,7 @@
                                 case "Login":
                                     InitChat();
                                     username = data.username;
-                                    getGroupMessages();
+                                    getGroupData();
                                     MakeErrorMessage(data.message, true);
                                     sendGroupPacket(username);
                                     updateUserInfo(username);
@@ -956,16 +971,26 @@
 
                                 case "groupMessages":
                                     const content = document.getElementById("content");
-                                    if (content){
+                                    const memberslist = document.getElementById("userlist-content");
+                                    if (content && memberslist) {
                                         content.innerHTML = "";
-                                        data.messages.forEach((msg) => {
-                                        makebox(
-                                            msg.message,
-                                            msg.username + " " + msg.time,
-                                            false,
-                                            "/assets/img/user.svg"
-                                        );
-                                    });
+                                        memberslist.innerHTML = "";
+                                        const fixeddata = data.data
+                                        const messages = fixeddata.data;
+                                        const members = fixeddata.allmembers;
+                                        console.log(fixeddata)
+                                        try {
+                                            messages.forEach((msg) => {
+                                                makebox(msg.message, msg.username + " " + msg.time, false, "/assets/img/user.svg");
+                                            });
+                                            console.log(members.length);
+                                            members.forEach((member) => {
+                                                console.log(member)
+                                                makeUser(member.username, member.icon);
+                                            })   
+                                        } catch (e) {
+                                            console.error("Failed to process message. Error:", e);
+                                        }
                                     document.getElementById("content").scrollTop = document.getElementById("content").scrollHeight;
                                     }
                                     break;
@@ -974,7 +999,7 @@
                                     UpdateGroupList(data.groups);
                                     break;
                                 case "sendmessage":
-                                    getGroupMessages();   
+                                    getGroupData();   
                                     break;
                                 default:
                                     console.log("Unhandled message type:", data.type);
@@ -983,7 +1008,7 @@
                         } else {
                             switch (data.type) {
                                 case "sendmessage":
-                                    getGroupMessages();   
+                                    getGroupData();   
                                     break;
                             }
                         }

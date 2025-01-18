@@ -3,6 +3,7 @@ const sqlite3 = require("sqlite3").verbose();
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
+const { json } = require("stream/consumers");
 
 const PORT = 9001;
 
@@ -33,6 +34,7 @@ db.serialize(() => {
       groupid TEXT PRIMARY KEY,
       owner TEXT NOT NULL,
       name TEXT NOT NULL,
+      members TEXT NOT NULL,
       icon TEXT NOT NULL
     )
   `);
@@ -270,21 +272,67 @@ function login(account, password, userID, ws) {
 }
 
 /**
- * Example function: Get group messages
+ * Example function: Get group data
  */
-function getGroupMessages(groupID) {
+// node server.js
+function getGroupData(groupID) {
   return new Promise((resolve, reject) => {
     db.all(`SELECT username, message FROM Messages WHERE groupid=?`, [groupID], (err, rows) => {
       if (err) return reject(err);
-      const messages = rows.map((r) => ({
-        username: r.username,
-        message: r.message,
-        time: "", // your logic if you want to store timestamps
-      }));
-      resolve(messages);
+
+      db.get(`SELECT members FROM Groups WHERE groupid=?`, [groupID], (err, row) => {
+        if (err) {
+          console.error("DB error:", err.message);
+          return reject(err);
+        }
+        if (!row || !row.members) {
+          console.error("Group not found or no members available.");
+          return reject(new Error("Group not found or no members available."));
+        }
+
+        let groupMembers = [];
+        try {
+          groupMembers = JSON.parse(row.members);
+          console.log("Group members: ", groupMembers);
+        } catch (parseErr) {
+          console.error("Failed to parse group members:", parseErr.message);
+          return reject(parseErr);
+        }
+
+        if (groupMembers.length === 0) {
+          console.log("No members in the group.");
+          return resolve({ data: rows.map((r) => ({ username: r.username, message: r.message, time: "" })), allmembers: [] });
+        }
+
+        const memberPromises = groupMembers.map((username) => {
+          return new Promise((resolve, reject) => {
+            db.get(`SELECT username, icon FROM Accounts WHERE username=?`, [username], (err, accountRow) => {
+              if (err) return reject(err);
+              resolve(accountRow || { username, icon: "/assets/img/user.svg" });
+            });
+          });
+        });
+
+        Promise.all(memberPromises)
+          .then((allmemberdata) => {
+            const data = rows.map((r) => ({
+              username: r.username,
+              message: r.message,
+              time: "",
+            }));
+
+            resolve({ data, allmembers: allmemberdata });
+          })
+          .catch((err) => {
+            console.error("Error fetching member data:", err);
+            reject(err);
+          });
+      });
     });
   });
 }
+
+
 
 /**
  * Handle inbound messages of type "sendmessage"
@@ -325,11 +373,11 @@ async function sendMessage(groupID, userID, messagecontent, username, ws) {
           message: messagecontent,
         });
         // Return updated messages if you want
-        const messages = await getGroupMessages(groupID);
+        const data = await getGroupData(groupID);
         sendToClient(ws, {
           type: "groupMessages",
           status: "success",
-          messages,
+          data,
           userID,
         });
       }
@@ -341,7 +389,7 @@ async function sendMessage(groupID, userID, messagecontent, username, ws) {
  * Join a group
  */
 function joinGroup(id, userID, username, ws) {
-  db.get(`SELECT groupid FROM Groups WHERE groupid=?`, [id], (err, groupRow) => {
+  db.get(`SELECT groupid, members FROM Groups WHERE groupid=?`, [id], (err, groupRow) => {
     if (err) {
       return sendToClient(ws, {
         type: "JoinGroup",
@@ -356,6 +404,19 @@ function joinGroup(id, userID, username, ws) {
         message: "Group not found!",
       });
     }
+
+    // Parse existing group members
+    let groupMembers = [];
+    try {
+      groupMembers = JSON.parse(groupRow.members || "[]");
+    } catch (parseErr) {
+      return sendToClient(ws, {
+        type: "JoinGroup",
+        status: "error",
+        message: "Failed to parse group members.",
+      });
+    }
+
     // Pull the user's existing groups
     db.get(`SELECT groups FROM Accounts WHERE username=?`, [username], (err2, row) => {
       if (err2) {
@@ -372,45 +433,60 @@ function joinGroup(id, userID, username, ws) {
           message: "Account not found.",
         });
       }
-      let groups = [];
+
+      let userGroups = [];
       try {
-        groups = JSON.parse(row.groups);
+        userGroups = JSON.parse(row.groups || "[]");
       } catch (parseErr) {
-        groups = [];
+        userGroups = [];
       }
-      if (groups.includes(id)) {
-        // Already in group
-        sendToClient(ws, {
-          type: "JoinGroup",
-          status: "error",
-          message: "Already in group.",
-        });
-      } else {
-        // Insert group
-        groups.push(id);
-        const updatedGroups = JSON.stringify(groups);
-        db.run(`UPDATE Accounts SET groups=? WHERE username=?`, [updatedGroups, username], (err3) => {
-          if (err3) {
+
+      if (!userGroups.includes(id)) {
+        userGroups.push(id);
+      }
+
+      if (!groupMembers.includes(username)) {
+        groupMembers.push(username);
+      }
+
+      const updatedUserGroups = JSON.stringify(userGroups);
+      const updatedGroupMembers = JSON.stringify(groupMembers);
+
+      db.run(`UPDATE Groups SET members=? WHERE groupid=?`, [updatedGroupMembers, id], (err3) => {
+        if (err3) {
+          return sendToClient(ws, {
+            type: "JoinGroup",
+            status: "error",
+            message: "DB update error (Groups): " + err3.message,
+          });
+        }
+
+        db.run(`UPDATE Accounts SET groups=? WHERE username=?`, [updatedUserGroups, username], (err4) => {
+          if (err4) {
             return sendToClient(ws, {
               type: "JoinGroup",
               status: "error",
-              message: "DB update error: " + err3.message,
+              message: "DB update error (Accounts): " + err4.message,
             });
           }
+
           sendToClient(ws, {
             type: "JoinGroup",
             status: "success",
             message: "Joined group successfully.",
-            serverid: id,
-            servers: updatedGroups,
+            groupid: id,
+            groups: updatedUserGroups,
             userID,
             username,
           });
         });
-      }
+      });
     });
   });
 }
+
+
+
 
 /**
  * Create a new group
@@ -425,7 +501,6 @@ function makeGroup(name, icon, userID, username, ws) {
       });
     }
     if (row) {
-      // group name taken
       sendToClient(ws, {
         type: "MakeGroup",
         status: "error",
@@ -434,10 +509,9 @@ function makeGroup(name, icon, userID, username, ws) {
     } else {
       const groupid = crypto.randomUUID().replace(/-/g, "");
       const chosenIcon = icon || "/assets/img/defaultgroupicon.png";
-
       db.run(
-        `INSERT INTO Groups (groupid, name, owner, icon) VALUES (?, ?, ?, ?)`,
-        [groupid, name, username, chosenIcon],
+        `INSERT INTO Groups (groupid, name, owner, icon,members) VALUES (?, ?, ?, ?, ?)`,
+        [groupid, name, username, chosenIcon, JSON.stringify([username])],
         (err2) => {
           if (err2) {
             return sendToClient(ws, {
@@ -446,12 +520,9 @@ function makeGroup(name, icon, userID, username, ws) {
               message: "DB insert error: " + err2.message,
             });
           }
-          // Auto-join the creator
           console.log("id is", groupid)
           joinGroup(groupid, userID, username, ws);
 
-          // If you want to respond after the user is joined,
-          // you can do it in the joinGroup callback or here.
           sendToClient(ws, {
             type: "MakeGroup",
             status: "success",
@@ -487,12 +558,12 @@ function getUserGroupList(username) {
         groups,
         (err2, groupRows) => {
           if (err2) return reject(err2);
-          const serverList = groupRows.map((g) => ({
+          const grouplist = groupRows.map((g) => ({
             id: g.groupid,
             name: g.name,
             icon: g.icon,
           }));
-          resolve(serverList);
+          resolve(grouplist);
         }
       );
     });
@@ -566,7 +637,7 @@ wss.on("connection", (ws) => {
     } else if (messageType === "login") {
       login(msg.data.username, msg.data.password, msg.data.userID, ws);
     } else if (messageType === "makegroup") {
-      makeGroup(msg.servername, null, msg.userID, msg.username, ws);
+      makeGroup(msg.groupname, null, msg.userID, msg.username, ws);
     } else if (messageType === "joingroup") {
       joinGroup(msg.id, msg.userID, msg.username, ws);
     } else if (messageType === "sendmessage") {
@@ -574,13 +645,13 @@ wss.on("connection", (ws) => {
       sendMessage(groupID, userID, message, name, ws);
 
       broadcastAll(rawData.toString());
-    } else if (messageType === "requestGroupMessages") {
+    } else if (messageType === "requestGroupData") {
       try {
-        const messages = await getGroupMessages(msg.groupID);
+        const data = await getGroupData(msg.groupID);
         sendToClient(ws, {
           type: "groupMessages",
           status: "success",
-          messages,
+          data,
           userID: msg.userID,
         });
       } catch (e) {
@@ -592,7 +663,6 @@ wss.on("connection", (ws) => {
       }
     } else if (messageType === "GetUserGroupList") {
       const username = msg.username;
-      console.log("GetUserGroupList msg:", msg);
       try {
         const list = await getUserGroupList(username);
         sendToClient(ws, {
