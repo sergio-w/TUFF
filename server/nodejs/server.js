@@ -1,5 +1,3 @@
-// server.js
-// (No changes to how the custom popup logic works on the client. We simply added "updategroup" type logic for group settings.)
 const WebSocket = require("ws");
 const sqlite3 = require("sqlite3").verbose();
 const crypto = require("crypto");
@@ -479,6 +477,7 @@ function getUserGroupList(username) {
 
 function broadcastAll(payload) {
   const data = typeof payload === "object" ? JSON.stringify(payload) : payload;
+  console.log("the log isnt working", data)
   for (const [username, ws] of activeConnections.entries()) {
     if (ws.readyState === WebSocket.OPEN) {
       console.log(`Broadcasting to ${username}`);
