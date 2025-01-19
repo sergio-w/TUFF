@@ -7,14 +7,8 @@
   <link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap"
-    rel="stylesheet"
-  />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
   <style>
     :root {
       --background: #36393f;
@@ -590,7 +584,6 @@
     .kick-button:hover {
       opacity: 0.9;
     }
-
     .UserSettingsOverlay {
       position: absolute;
       top: 0;
@@ -671,6 +664,7 @@
     let currentGroupOwner = null;
     let currentGroupMembers = [];
     let isRequestingSettings = false;
+    let mytoken = null;
     ConnectToServer();
     function InitLogin() {
       const maincontainer = document.getElementById("maincontent");
@@ -946,6 +940,8 @@
           type: "requestGroupData",
           groupID: id,
           userID: myuuid,
+          username,
+          token: mytoken,
         };
         socket.send(JSON.stringify(packet));
         setGroupName(name);
@@ -972,6 +968,8 @@
             type: "leaveGroup",
             groupID: id,
             userID: myuuid,
+            username,
+            token: mytoken
           };
           socket.send(JSON.stringify(packet));
           document.body.removeChild(menupopup);
@@ -1105,9 +1103,10 @@
             groupID: currentGroup,
             userID: myuuid,
             message: messagevalue,
-            name: username,
+            username: username,
             time:
-              date.getHours() + ":" + String(date.getMinutes()).padStart(2, "0")
+              date.getHours() + ":" + String(date.getMinutes()).padStart(2, "0"),
+            token: mytoken
           };
           socket.send(JSON.stringify(jsonpayload));
           textinput.value = "";
@@ -1134,7 +1133,8 @@
         type: "joingroup",
         id,
         userID: myuuid,
-        username
+        username,
+        token: mytoken
       };
       socket.send(JSON.stringify(packet));
     }
@@ -1144,7 +1144,8 @@
         type: "makegroup",
         groupname: name,
         userID: myuuid,
-        username
+        username,
+        token: mytoken
       };
       socket.send(JSON.stringify(packet));
     }
@@ -1171,7 +1172,8 @@
       const packet = {
         type: "GetUserGroupList",
         username: uName,
-        userID: myuuid
+        userID: myuuid,
+        token: mytoken
       };
       socket.send(JSON.stringify(packet));
     }
@@ -1180,7 +1182,9 @@
       const packet = {
         type: "requestGroupData",
         groupID: currentGroup,
-        userID: myuuid
+        userID: myuuid,
+        username,
+        token: mytoken
       };
       socket.send(JSON.stringify(packet));
     }
@@ -1248,31 +1252,61 @@
     }
     function kickUserFromGroup(user) {
       MakeErrorMessage("Requested to kick "+user, true);
-      const packet = { type: "updategroup", groupID: currentGroup, userID: myuuid, requester: username, kickUser: user };
+      const packet = { type: "updategroup", groupID: currentGroup, userID: myuuid, requester: username,username, kickUser: user,token: mytoken };
       socket.send(JSON.stringify(packet));
     }
     function saveGroupSettings() {
       const newName = document.getElementById("groupSettingsName").value.trim();
       const newIcon = document.getElementById("groupSettingsIcon").value.trim();
       MakeErrorMessage("Requested to save new settings", true);
-      const packet = { type: "updategroup", groupID: currentGroup, requester: username, newName, newIcon };
+      const packet = { type: "updategroup", groupID: currentGroup, requester: username, newName, username, newIcon,token: mytoken };
       socket.send(JSON.stringify(packet));
       closeGroupSettingsPopup();
     }
+    function refreshUserList(members) {
+      const userlistContent = document.getElementById("userlist-content");
+      if (userlistContent) {
+        userlistContent.innerHTML = ""; 
+        members.forEach((m) => {
+          makeUser(m.username, m.icon);
+        });
+      }
+    }
+
+    function handleUserUpdate(action, user) {
+      const userlistContent = document.getElementById("userlist-content");
+      if (!userlistContent) return;
+
+      if (action === "add") {
+        makeUser(user.username, user.icon);
+      } else if (action === "remove") {
+
+        const users = Array.from(userlistContent.children);
+        users.forEach((userElement) => {
+          if (userElement.textContent.trim() === user.username) {
+            userlistContent.removeChild(userElement);
+          }
+        });
+      }
+    }
     function ConnectToServer() {
       socket = new WebSocket(serverlocation);
+
       socket.onopen = () => {
         setTimeout(() => {
           const packet = {
             type: "ping",
-            username
+            username,
+            token: mytoken,
           };
           socket.send(JSON.stringify(packet));
         }, 500);
       };
+
       socket.addEventListener("message", (event) => {
         try {
           const data = JSON.parse(event.data);
+
           if (data.status !== "error") {
             if (data && data.userID === myuuid) {
               myuuid = customUuid();
@@ -1280,20 +1314,33 @@
                 case "Login":
                   InitChat();
                   username = data.username;
+                  mytoken = data.token;
                   MakeErrorMessage(data.message, true);
                   sendGroupPacket(username);
                   updateUserInfo(username);
                   break;
+
                 case "CreateAccount":
                   MakeErrorMessage(data.message, true);
                   break;
+
                 case "MakeGroup":
                   MakeErrorMessage(data.message, true);
                   break;
+
                 case "JoinGroup":
                   MakeErrorMessage(data.message, true);
                   sendGroupPacket(username);
+                  const joinGroupPacket = {
+                    type: "requestGroupData",
+                    groupID: data.groupID,
+                    userID: myuuid,
+                    username,
+                    token: mytoken,
+                  };
+                  socket.send(JSON.stringify(joinGroupPacket));
                   break;
+
                 case "groupMessages":
                   const content = document.getElementById("content");
                   const memberslist = document.getElementById("userlist-content");
@@ -1304,29 +1351,70 @@
                     const messages = fixeddata.data;
                     const members = fixeddata.allmembers;
                     messages.forEach((msg) => {
-                      makebox(msg.message, msg.username + " " + (msg.time||""), false, "/assets/img/user.svg");
+                      makebox(msg.message, msg.username + " " + (msg.time || ""), false, "/assets/img/user.svg");
                     });
-                    members.forEach((m) => {
-                      makeUser(m.username, m.icon);
-                    });
-                    if(isRequestingSettings){
+                    refreshUserList(members);
+                    if (isRequestingSettings) {
                       openGroupSettingsPopup(fixeddata);
                     }
                   }
                   break;
+
                 case "getGroupList":
                   UpdateGroupList(data.groups);
                   break;
+
                 case "updateGroup":
-                  const packet = {
-                    type: "requestGroupData",
-                    groupID: currentGroup,
-                    userID: myuuid,
-                  };
-                  socket.send(JSON.stringify(packet));
+                  const { groupID, newName, kickUser, joinUser, allmembers } = data;
+
+                  if (groupID === currentGroup) {
+                    setGroupName(newName || "No Group :(");
+                  }
+
+                  if (kickUser) {
+                    const kickedUsers = Array.isArray(kickUser) ? kickUser : [kickUser];
+                    kickedUsers.forEach((user) => {
+                      if (user === username && groupID === currentGroup) {
+                        InitChat();
+                        setGroupName("No Group :(");
+                      } else {
+                        handleUserUpdate("remove", { username: user });
+                      }
+                    });
+                  }
+
+                  if (joinUser) {
+                    const joinedUsers = Array.isArray(joinUser) ? joinUser : [joinUser];
+                    joinedUsers.forEach((user) => {
+                      handleUserUpdate("add", user);
+                    });
+                  }
+
+                  if (Array.isArray(allmembers)) {
+                    refreshUserList(allmembers);
+                  }
                   break;
+
                 case "sendmessage":
                   getGroupData();
+                  break;
+
+                case "refreshGroupData":
+                  if (data.data && data.data.groupid === currentGroup) {
+                    const cont = document.getElementById("content");
+                    const lst = document.getElementById("userlist-content");
+                    if (cont && lst) {
+                      cont.innerHTML = "";
+                      lst.innerHTML = "";
+                      const fix = data.data;
+                      const msgList = fix.data || [];
+                      const memList = fix.allmembers || [];
+                      msgList.forEach((msg) => {
+                        makebox(msg.message, msg.username, false, "/assets/img/user.svg");
+                      });
+                      refreshUserList(memList);
+                    }
+                  }
                   break;
               }
             } else {
@@ -1334,13 +1422,38 @@
                 case "sendmessage":
                   getGroupData();
                   break;
+
                 case "updateGroup":
-                  loadData();
-                  initGroupContent();
-                  getGroupData();
-                  sendGroupPacket(username);
-                  if (data.groupID === currentGroup) {
-                    setGroupName(data.newName);
+                  const { groupID, newName, kickUser, joinUser, allmembers } = data;
+
+                  if (groupID === currentGroup) {
+                    setGroupName(newName || "No Group :(");
+                  }
+
+                  // Handle users kicked
+                  if (kickUser) {
+                    const kickedUsers = Array.isArray(kickUser) ? kickUser : [kickUser];
+                    kickedUsers.forEach((user) => {
+                      if (user === username && groupID === currentGroup) {
+                        InitChat();
+                        setGroupName("No Group :(");
+                      } else {
+                        handleUserUpdate("remove", { username: user });
+                      }
+                    });
+                  }
+
+                  // Handle users joined
+                  if (joinUser) {
+                    const joinedUsers = Array.isArray(joinUser) ? joinUser : [joinUser];
+                    joinedUsers.forEach((user) => {
+                      handleUserUpdate("add", user);
+                    });
+                  }
+
+                  // Refresh the full member list
+                  if (Array.isArray(allmembers)) {
+                    refreshUserList(allmembers);
                   }
                   break;
               }
@@ -1348,13 +1461,20 @@
           } else {
             MakeErrorMessage(data.message, false);
           }
-        } catch (e) {}
-        socket.onerror = (error) => {};
+        } catch (e) {
+          console.error("Error parsing message:", e);
+        }
+
+        socket.onerror = (error) => {
+          console.error("WebSocket error:", error);
+        };
+
         socket.onclose = () => {
           setTimeout(ConnectToServer, 1000);
         };
       });
     }
+
     function openUserSettingsPopup(){
       const overlay = document.getElementById("UserSettingsOverlay");
       const popup = document.getElementById("UserSettingsPopup");
@@ -1362,7 +1482,6 @@
       popup.style.display = "flex";
       popup.innerHTML = `
       testing
-      
       `;
       overlay.classList.remove("HideOverlayAnim");
       popup.classList.remove("UserSettingsPopupHide");

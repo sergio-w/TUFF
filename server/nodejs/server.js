@@ -101,6 +101,19 @@ function cleanupStaleUsers(timeoutSeconds = 60) {
     });
   });
 }
+async function CheckTokenAuth(username) {
+  return new Promise((resolve, reject) => {
+    db.get(`SELECT token FROM Accounts WHERE username=?`, [username], (err, row) => {
+      if (err) {
+        return resolve(false);
+      }
+      if (!row) {
+        return resolve(false);
+      }
+      resolve(row.token);
+    });
+  });
+}
 
 function setupToken(username) {
   return new Promise((resolve, reject) => {
@@ -216,6 +229,7 @@ function login(account, password, userID, ws) {
         status: "success",
         message: "Logging in!",
         userID,
+        token: newToken,
         username: account,
         groups: row.groups,
         token: newToken
@@ -272,7 +286,6 @@ function getGroupData(groupID) {
 }
 
 async function sendMessage(groupID, userID, messagecontent, username, ws) {
-  console.log("--fx--sendMessage--");
   db.get(`SELECT groupid FROM Groups WHERE groupid=?`, [groupID], (err, groupRow) => {
     if (err) {
       return sendToClient(ws, {
@@ -325,14 +338,14 @@ function joinGroup(id, userID, username, ws) {
       return sendToClient(ws, {
         type: "JoinGroup",
         status: "error",
-        message: "DB error: " + err.message
+        message: "DB error: " + err.message,
       });
     }
     if (!groupRow) {
       return sendToClient(ws, {
         type: "JoinGroup",
         status: "error",
-        message: "Group not found!"
+        message: "Group not found!",
       });
     }
     let groupMembers = [];
@@ -342,7 +355,7 @@ function joinGroup(id, userID, username, ws) {
       return sendToClient(ws, {
         type: "JoinGroup",
         status: "error",
-        message: "Failed to parse group members."
+        message: "Failed to parse group members.",
       });
     }
     db.get(`SELECT groups FROM Accounts WHERE username=?`, [username], (err2, row) => {
@@ -350,14 +363,14 @@ function joinGroup(id, userID, username, ws) {
         return sendToClient(ws, {
           type: "JoinGroup",
           status: "error",
-          message: "DB error: " + err2.message
+          message: "DB error: " + err2.message,
         });
       }
       if (!row) {
         return sendToClient(ws, {
           type: "JoinGroup",
           status: "error",
-          message: "Account not found."
+          message: "Account not found.",
         });
       }
       let userGroups = [];
@@ -379,7 +392,7 @@ function joinGroup(id, userID, username, ws) {
           return sendToClient(ws, {
             type: "JoinGroup",
             status: "error",
-            message: "DB update error (Groups): " + err3.message
+            message: "DB update error (Groups): " + err3.message,
           });
         }
         db.run(`UPDATE Accounts SET groups=? WHERE username=?`, [updatedUserGroups, username], (err4) => {
@@ -387,7 +400,7 @@ function joinGroup(id, userID, username, ws) {
             return sendToClient(ws, {
               type: "JoinGroup",
               status: "error",
-              message: "DB update error (Accounts): " + err4.message
+              message: "DB update error (Accounts): " + err4.message,
             });
           }
           sendToClient(ws, {
@@ -397,7 +410,7 @@ function joinGroup(id, userID, username, ws) {
             groupid: id,
             groups: updatedUserGroups,
             userID,
-            username
+            username,
           });
         });
       });
@@ -478,24 +491,18 @@ function getUserGroupList(username) {
 
 function broadcastAll(payload) {
   const data = typeof payload === "object" ? JSON.stringify(payload) : payload;
-  console.log("the log isnt working", data)
   for (const [username, ws] of activeConnections.entries()) {
     if (ws.readyState === WebSocket.OPEN) {
-      console.log(`Broadcasting to ${username}`);
       ws.send(data);
-    } else {
-      console.log(`Skipping ${username}, WebSocket not open.`);
     }
   }
 }
 
 function leaveGroup(groupID, userID, ws) {
-
 }
 
 function updateGroup(msg, ws) {
   const { groupID, requester, newName, newIcon, kickUser } = msg;
-
   db.get(`SELECT * FROM Groups WHERE groupid=?`, [groupID], (err, groupRow) => {
     if (err) {
       return sendToClient(ws, {
@@ -504,7 +511,6 @@ function updateGroup(msg, ws) {
         message: "DB error: " + err.message,
       });
     }
-
     if (!groupRow) {
       return sendToClient(ws, {
         type: "updateGroupResult",
@@ -512,7 +518,6 @@ function updateGroup(msg, ws) {
         message: "Group not found.",
       });
     }
-
     if (groupRow.owner !== requester) {
       if (kickUser || newName || newIcon) {
         return sendToClient(ws, {
@@ -522,17 +527,14 @@ function updateGroup(msg, ws) {
         });
       }
     }
-
     let groupMembers = [];
     try {
       groupMembers = JSON.parse(groupRow.members);
     } catch {
       groupMembers = [];
     }
-
     if (kickUser && groupMembers.includes(kickUser)) {
       groupMembers = groupMembers.filter((u) => u !== kickUser);
-
       db.get(`SELECT groups FROM Accounts WHERE username=?`, [kickUser], (err2, row) => {
         if (!err2 && row) {
           let userGroups = [];
@@ -546,15 +548,13 @@ function updateGroup(msg, ws) {
         }
       });
     }
-
     const newNameToUse = newName || groupRow.name;
     const newIconToUse = newIcon || groupRow.icon;
     const updatedMembers = JSON.stringify(groupMembers);
-
     db.run(
       `UPDATE Groups SET name=?, icon=?, members=? WHERE groupid=?`,
       [newNameToUse, newIconToUse, updatedMembers, groupID],
-      (err3) => {
+      async (err3) => {
         if (err3) {
           return sendToClient(ws, {
             type: "updateGroupResult",
@@ -562,7 +562,6 @@ function updateGroup(msg, ws) {
             message: "Error updating group: " + err3.message,
           });
         }
-
         broadcastAll({
           type: "groupMessages",
           status: "success",
@@ -573,8 +572,14 @@ function updateGroup(msg, ws) {
             members: groupMembers,
           },
         });
-        
-
+        const updatedData = await getGroupData(groupID).catch(()=>null);
+        if(updatedData){
+          broadcastAll({
+            type: "refreshGroupData",
+            status: "success",
+            data: updatedData
+          });
+        }
         sendToClient(ws, {
           type: "updateGroupResult",
           success: true,
@@ -584,6 +589,7 @@ function updateGroup(msg, ws) {
     );
   });
 }
+
 const wss = new WebSocket.Server({ port: PORT }, () => {
   console.log(`WebSocket server running on ws://localhost:${PORT}`);
 });
@@ -593,9 +599,7 @@ setInterval(() => {
 }, 10000);
 
 wss.on("connection", (ws) => {
-  console.log("New client connected");
   ws.on("close", () => {
-    console.log("Client disconnected");
     for (const [uname, conn] of activeConnections.entries()) {
       if (conn === ws) {
         markUserOffline(uname);
@@ -604,7 +608,6 @@ wss.on("connection", (ws) => {
       }
     }
   });
-
   ws.on("message", async (rawData) => {
     let msg;
     try {
@@ -612,9 +615,13 @@ wss.on("connection", (ws) => {
     } catch (e) {
       return;
     }
+    let username = msg.username;
+    let correcttoken = await CheckTokenAuth(username);
     const messageType = msg.type;
+    if (correcttoken !== msg.token && messageType != "login" && messageType != "create_account") {
+      return;
+    }
     if (messageType === "ping") {
-      console.log("Received ping from", msg.username);
       const uname = msg.username;
       await markUserOnline(uname);
       if (!activeConnections.has(uname)) {
@@ -631,14 +638,14 @@ wss.on("connection", (ws) => {
     } else if (messageType === "joingroup") {
       joinGroup(msg.id, msg.userID, msg.username, ws);
     } else if (messageType === "sendmessage") {
-      const { groupID, userID, message, name } = msg;
-      sendMessage(groupID, userID, message, name, ws);
+      const { groupID, userID, message, username } = msg;
+      sendMessage(groupID, userID, message, username, ws);
       const packet = {
         type: "sendmessage",
         groupID,
         userID,
         message,
-        name
+        username
       }
       broadcastAll(packet);
     } else if (messageType === "requestGroupData") {
@@ -677,7 +684,6 @@ wss.on("connection", (ws) => {
     } else if (messageType === "leaveGroup") {
       leaveGroup(msg.groupID, msg.userID, ws);
     } else if (messageType === "updategroup") {
-      console.log("the message is: ",msg)
       updateGroup(msg, ws);
       broadcastAll({
         type: "updateGroup",
