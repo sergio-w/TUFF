@@ -1,679 +1,781 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>JustStudy CE</title>
-  <link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
-  <style>
-    :root {
-      --background: #36393f;
-      --sidebar: #2f3136;
-      --chat-bg: #36393f;
-      --secondary-bg: #2c2f33;
-      --text-color: #dcddde;
-      --accent-color: #7289da;
-      --border-color: #202225;
-      --input-bg: #202225;
-    }
-    body {
-      margin: 0;
-      font-family: "Poppins", sans-serif;
-      color: var(--text-color);
-      background-color: var(--background);
-      overflow: hidden;
-    }
-    .maincontent {
-      display: flex;
-      flex-direction: row;
-      height: 100vh;
-    }
-    .leftsidecontent {
-      width: 4vw;
-      background-color: var(--sidebar);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-top: 1vw;
-      box-sizing: border-box;
-      overflow-y: scroll;
-      scrollbar-width: none;
-      overflow-x: hidden;
-    }
-    .rightsidecontent {
-      width: 11vw;
-      background-color: var(--sidebar);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-top: 1vw;
-      box-sizing: border-box;
-      overflow-y: scroll;
-      scrollbar-width: none;
-      overflow-x: hidden;
-    }
-    .chatcontent {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      background-color: var(--chat-bg);
-      position: relative;
-      scrollbar-width: none;
-    }
-    .content {
-      overflow-x: hidden;
-      overflow-y: scroll;
-      scrollbar-color: var(--secondary-bg) var(--border-color);
-      scrollbar-width: thin;
-      flex: 1;
-      padding: 1vw;
-      box-sizing: border-box;
-    }
-    .content::-webkit-scrollbar {
-      width: 8px;
-      background-color: var(--secondary-bg);
-      border-radius: 50%;
-    }
-    .content::-webkit-scrollbar-thumb {
-      background-color: var(--border-color);
-      border-radius: 50%;
-    }
-    .content::-webkit-scrollbar-button {
-      display: none;
-    }
-    .bottombar {
-      display: flex;
-      background-color: var(--secondary-bg);
-      padding: 0.5vw;
-    }
-    .textinput {
-      flex: 1 1 auto;
-      height: 2vw;
-      font-size: 1vw;
-      background-color: var(--input-bg);
-      border: none;
-      color: var(--text-color);
-      padding: 0.3vw 0.5vw;
-      outline: none;
-      border-radius: 0.2vw;
-    }
-    .leftsidecontent-inputfield {
-      background-color: var(--input-bg);
-      border: none;
-      padding: 0.4vw;
-      margin: 0.4vw;
-      width: 13vw;
-      color: var(--text-color);
-      outline: none;
-      border-radius: 0.2vw;
-    }
-    .content-bt {
-      background-color: var(--accent-color);
-      border: none;
-      padding: 0.6vw;
-      margin: 0.4vw;
-      width: 14vw;
-      color: #fff;
-      cursor: pointer;
-      border-radius: 0.2vw;
-      font-size: 1vw;
-    }
-    .content-bt:hover {
-      opacity: 0.9;
-    }
-    .white-text {
-      font-size: 1vw;
-      margin-left: 1.5vw;
-      padding: 0.4vw;
-      color: var(--text-color);
-    }
-    .textbox {
-      background-color: var(--secondary-bg);
-      padding: 0.7vw;
-      border-radius: 0.4vw;
-      margin: 0.4vw;
-      max-width: 83vw;
-      width: auto;
-      font-size: 1vw;
-      word-break: break-all;
-    }
-    .textbox-name {
-      font-size: 0.9vw;
-      margin-left: 0.4vw;
-      padding: 0.4vw;
-      color: var(--accent-color);
-    }
-    .bg {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      left: 0;
-      top: 0;
-      z-index: -1;
-      background: linear-gradient(120deg, rgb(48, 0, 223), rgb(22, 0, 104));
-    }
-    .leftsidecontent-icon-container {
-      width: 3vw;
-      height: 3vw;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 1vw;
-    }
-    .group-icon-container {
-      width: 3vw;
-      height: 3vw;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 1vw;
-      backdrop-filter: blur(1.6vw);
-      -webkit-backdrop-filter: blur(1vw);
-      background-color: rgba(116, 116, 116, 0.2);
-      border-radius: 2vw;
-      transition: all 0.3s ease;
-    }
-    .group-icon-container:hover {
-      border-radius: 0.5vw;
-      background-color: rgba(125, 255, 166, 0.581);
-    }
-    .leftsidecontent-icon {
-      transition: all 0.4s ease;
-      border-radius: 2vw;
-      border: #7289da00 0.15vw solid;
-    }
-    .leftsidecontent-icon:hover {
-      border: #ffc400 0.15vw solid;
-      border-radius: 0.5vw;
-    }
-    .popup {
-      display: none;
-      position: fixed;
-      background: rgb(27, 27, 27);
-      border: 0.01vw solid rgb(107, 107, 107);
-      border-radius: 0.5vw;
-      padding: 0.5vw;
-      color: white;
-      font-size: 0.7vw;
-      transform: translateY(20%);
-      transition: all 0.2s ease;
-      box-shadow: 0.1vw 0.1vw 0.2vw rgba(0, 0, 0, 0.5);
-    }
-    .userinfo-container {
-      height: 3vw;
-      width: 100%;
-      display: grid;
-      align-items: center;
-      margin-bottom: 1.5vw;
-      grid-template-columns: auto 1fr;
-    }
-    .usericon-container {
-      width: 2vw;
-      height: 2vw;
-      margin-bottom: 2vw;
-      margin-top: 2vw;
-      border-radius: 2vw;
-      overflow: hidden;
-      justify-content: center;
-      align-items: center;
-      display: flex;
-      border: var(--accent-color) 0.15vw solid;
-    }
-    .usericon {
-      border-radius: 2vw;
-    }
-    .AddGroupPopup {
-      width: 20vw;
-      height: 27vw;
-      background-color: var(--sidebar);
-      border-radius: 1vw;
-      position: fixed;
-      left: 50%;
-      top: 50%;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      transform: translate(-50%, -50%);
-      transition: all 0.1s ease;
-      opacity: 0;
-      font-family: comfortaa, sans-serif;
-    }
-    .overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: black;
-      opacity: 0;
-      display: none;
-    }
-    .ShowOverlayAnim {
-      animation: ShowOverlay ease-in 0.2s forwards;
-    }
-    .HideOverlayAnim {
-      animation: HideOverlay ease-out 0.2s forwards;
-    }
-    @keyframes ShowOverlay {
-      0% {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JustStudy CE</title>
+    <link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <style>
+      :root {
+        --background: #36393f;
+        --sidebar: #2f3136;
+        --chat-bg: #36393f;
+        --secondary-bg: #2c2f33;
+        --text-color: #dcddde;
+        --accent-color: #7289da;
+        --border-color: #202225;
+        --input-bg: #202225;
+      }
+      body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        color: var(--text-color);
+        background-color: var(--background);
+        overflow: hidden;
+      }
+      .maincontent {
+        display: flex;
+        flex-direction: row;
+        height: 100vh;
+      }
+      .leftsidecontent {
+        width: 4vw;
+        background-color: var(--sidebar);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 1vw;
+        box-sizing: border-box;
+        overflow-y: scroll;
+        scrollbar-width: none;
+        overflow-x: hidden;
+      }
+      .rightsidecontent {
+        width: 11vw;
+        background-color: var(--sidebar);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 1vw;
+        box-sizing: border-box;
+        overflow-y: scroll;
+        scrollbar-width: none;
+        overflow-x: hidden;
+      }
+      .chatcontent {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background-color: var(--chat-bg);
+        position: relative;
+        scrollbar-width: none;
+      }
+      .content {
+        overflow-x: hidden;
+        overflow-y: scroll;
+        scrollbar-color: var(--secondary-bg) var(--border-color);
+        scrollbar-width: thin;
+        flex: 1;
+        padding: 1vw;
+        box-sizing: border-box;
+      }
+      .content::-webkit-scrollbar {
+        width: 8px;
+        background-color: var(--secondary-bg);
+        border-radius: 50%;
+      }
+      .content::-webkit-scrollbar-thumb {
+        background-color: var(--border-color);
+        border-radius: 50%;
+      }
+      .content::-webkit-scrollbar-button {
+        display: none;
+      }
+      .bottombar {
+        display: flex;
+        background-color: var(--secondary-bg);
+        padding: 0.5vw;
+      }
+      .textinput {
+        flex: 1 1 auto;
+        height: 2vw;
+        font-size: 1vw;
+        background-color: var(--input-bg);
+        border: none;
+        color: var(--text-color);
+        padding: 0.3vw 0.5vw;
+        outline: none;
+        border-radius: 0.2vw;
+      }
+      .leftsidecontent-inputfield {
+        background-color: var(--input-bg);
+        border: none;
+        padding: 0.4vw;
+        margin: 0.4vw;
+        width: 13vw;
+        color: var(--text-color);
+        outline: none;
+        border-radius: 0.2vw;
+      }
+      .content-bt {
+        background-color: var(--accent-color);
+        border: none;
+        padding: 0.6vw;
+        margin: 0.4vw;
+        width: 14vw;
+        color: #fff;
+        cursor: pointer;
+        border-radius: 0.2vw;
+        font-size: 1vw;
+      }
+      .content-bt:hover {
+        opacity: 0.9;
+      }
+      .white-text {
+        font-size: 1vw;
+        margin-left: 1.5vw;
+        padding: 0.4vw;
+        color: var(--text-color);
+      }
+      .textbox {
+        background-color: var(--secondary-bg);
+        padding: 0.7vw;
+        border-radius: 0.4vw;
+        margin: 0.4vw;
+        max-width: 83vw;
+        width: auto;
+        font-size: 1vw;
+        word-break: break-all;
+      }
+      .textbox-name {
+        font-size: 0.9vw;
+        margin-left: 0.4vw;
+        padding: 0.4vw;
+        color: var(--accent-color);
+      }
+      .bg {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        z-index: -1;
+        background: linear-gradient(120deg, rgb(48, 0, 223), rgb(22, 0, 104));
+      }
+      .leftsidecontent-icon-container {
+        width: 3vw;
+        height: 3vw;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 1vw;
+      }
+      .group-icon-container {
+        width: 3vw;
+        height: 3vw;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 1vw;
+        backdrop-filter: blur(1.6vw);
+        -webkit-backdrop-filter: blur(1vw);
+        background-color: rgba(116, 116, 116, 0.2);
+        border-radius: 2vw;
+        transition: all 0.3s ease;
+      }
+      .group-icon-container:hover {
+        border-radius: 0.5vw;
+        background-color: rgba(125, 255, 166, 0.581);
+      }
+      .leftsidecontent-icon {
+        transition: all 0.4s ease;
+        border-radius: 2vw;
+        border: #7289da00 0.15vw solid;
+      }
+      .leftsidecontent-icon:hover {
+        border: #ffc400 0.15vw solid;
+        border-radius: 0.5vw;
+      }
+      .popup {
+        display: none;
+        position: fixed;
+        background: rgb(27, 27, 27);
+        border: 0.01vw solid rgb(107, 107, 107);
+        border-radius: 0.5vw;
+        padding: 0.5vw;
+        color: white;
+        font-size: 0.7vw;
+        transform: translateY(20%);
+        transition: all 0.2s ease;
+        box-shadow: 0.1vw 0.1vw 0.2vw rgba(0, 0, 0, 0.5);
+      }
+      .userinfo-container {
+        height: 3vw;
+        width: 100%;
+        display: grid;
+        align-items: center;
+        margin-bottom: 1.5vw;
+        grid-template-columns: auto 1fr;
+      }
+      .usericon-container {
+        width: 2vw;
+        height: 2vw;
+        margin-bottom: 2vw;
+        margin-top: 2vw;
+        border-radius: 2vw;
+        overflow: hidden;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        border: var(--accent-color) 0.15vw solid;
+      }
+      .usericon {
+        border-radius: 2vw;
+      }
+      .AddGroupPopup {
+        width: 20vw;
+        height: 27vw;
+        background-color: var(--sidebar);
+        border-radius: 1vw;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        transform: translate(-50%, -50%);
+        transition: all 0.1s ease;
+        opacity: 0;
+        font-family: comfortaa, sans-serif;
+      }
+      .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black;
         opacity: 0;
         display: none;
       }
-      100% {
-        display: block;
-        opacity: 0.5;
+      .ShowOverlayAnim {
+        animation: ShowOverlay ease-in 0.2s forwards;
       }
-    }
-    @keyframes HideOverlay {
-      0% {
-        opacity: 0.5;
-        display: block;
+      .HideOverlayAnim {
+        animation: HideOverlay ease-out 0.2s forwards;
       }
-      100% {
+      @keyframes ShowOverlay {
+        0% {
+          opacity: 0;
+          display: none;
+        }
+        100% {
+          display: block;
+          opacity: 0.5;
+        }
+      }
+      @keyframes HideOverlay {
+        0% {
+          opacity: 0.5;
+          display: block;
+        }
+        100% {
+          opacity: 0;
+          display: none;
+        }
+      }
+      .smoothshow {
+        animation: AddGroupPopupShow ease-in 0.15s forwards;
+      }
+      .smoothhide {
+        animation: AddGroupPopupHide ease-out 0.15s forwards;
+      }
+      @keyframes AddGroupPopupShow {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      @keyframes AddGroupPopupHide {
+        0% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+      .popuptext {
+        font-size: 2vw;
+        color: white;
+      }
+      .custominput {
+        flex: 0 1 auto;
+        height: 2vw;
+        font-size: 1vw;
+        background-color: var(--input-bg);
+        border: none;
+        color: var(--text-color);
+        padding: 0.3vw 0.5vw;
+        outline: none;
+        border-radius: 0.2vw;
+        margin-top: 0.4vw;
+        margin-bottom: 0.4vw;
+      }
+      .LoginBox {
+        width: 30vw;
+        height: 20vw;
+        background-color: var(--sidebar);
+        border-radius: 1vw;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transform: translate(-50%, -50%);
+        transition: all 0.1s ease;
+        font-family: comfortaa, sans-serif;
+      }
+      .logininput {
+        flex: 0 1 auto;
+        height: 2vw;
+        font-size: 1vw;
+        width: 20vw;
+        background-color: var(--input-bg);
+        border: none;
+        color: var(--text-color);
+        padding: 0.3vw 0.5vw;
+        outline: none;
+        border-radius: 0.2vw;
+        margin-top: 0.4vw;
+        margin-bottom: 0.4vw;
+      }
+      .login-bt {
+        background-color: var(--accent-color);
+        border: none;
+        padding: 0.6vw;
+        margin: 0.4vw;
+        width: 21vw;
+        color: #fff;
+        cursor: pointer;
+        border-radius: 0.2vw;
+        font-size: 1vw;
+      }
+      .login-bt:hover {
+        opacity: 0.9;
+      }
+      .loginerrorpopup {
+        height: 2vw;
+        width: 20vw;
+        border-radius: 0.2vw;
+        position: absolute;
+        text-align: center;
+        background-color: #3baa56;
+        font-size: 1vw;
+        left: 40vw;
+      }
+      .ErrorPopupShow {
+        animation: ErrorPopupShow ease-out 0.15s forwards;
+      }
+      @keyframes ErrorPopupShow {
+        0% {
+          top: 100vh;
+        }
+        100% {
+          top: 95vh;
+        }
+      }
+      .ErrorPopupHide {
+        animation: ErrorPopupHide ease-out 0.15s forwards;
+      }
+      @keyframes ErrorPopupHide {
+        0% {
+          top: 95vh;
+        }
+        100% {
+          top: 100vh;
+        }
+      }
+      .group-header {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 0.2vw;
+        border-bottom: 0.05vw solid var(--border-color);
+      }
+      .group-name {
+        font-size: 1vw;
+        margin-left: 0.5vw;
+        font-weight: bold;
+        color: var(--text-color);
+      }
+      .settings-icon {
+        font-size: 1.2vw;
+        color: var(--text-color);
+        cursor: pointer;
+        transition: color 0.3s;
+        margin-right: 0.5vw;
+      }
+      .settings-icon:hover {
+        color: var(--accent-color);
+      }
+      .user-info {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        padding: 0.5vw 1vw;
+        border-top: 0.05vw solid var(--border-color);
+      }
+      .user-info img {
+        width: 2vw;
+        height: 2vw;
+        border-radius: 50%;
+        margin-right: 0.5vw;
+      }
+      .user-name {
+        font-size: 0.9vw;
+        color: var(--text-color);
+        margin-right: 0.5vw;
+      }
+      .userlist-content {
+        overflow-y: auto;
+        overflow-x: hidden;
+        flex: 1;
+        scrollbar-width: none;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .popup-leaveGroupButton {
+        background-color: #20222500;
+        border: none;
+        margin: 0.4vw;
+        width: 99%;
+        height: 2vw;
+        color: #fff;
+        cursor: pointer;
+        border-radius: 0.2vw;
+        font-size: 1vw;
+        transition: all 0.1s ease-in-out;
+        text-align: center;
+      }
+      .popup-leaveGroupButton:hover {
+        background-color: #ff5a70;
+      }
+      .popup-CopyID {
+        background-color: #20222500;
+        border: none;
+        margin: 0.4vw;
+        width: 95%;
+        height: 2vw;
+        color: #fff;
+        cursor: pointer;
+        border-radius: 0.2vw;
+        font-size: 1vw;
+        transition: all 0.1s ease;
+      }
+      .popup-CopyID:hover {
+        background-color: var(--accent-color);
+      }
+      .CustomPopup {
+        width: 20vw;
+        background-color: var(--sidebar);
+        border-radius: 1vw;
+        position: fixed;
+        padding-bottom: 0.5vw;
+        padding-top: 0.5vw;
+        left: 50%;
+        top: 50%;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        transform: translate(-50%, -50%);
+        transition: all 0.1s ease;
+        opacity: 0;
+        font-family: comfortaa, sans-serif;
+      }
+      @keyframes CustomPopupShow {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      @keyframes CustomPopupHide {
+        0% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+      .copyidcontainer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 95%;
+        border-radius: 0.5vw;
+        background-color: var(--input-bg);
+      }
+      .copyidinput {
+        width: 13vw;
+        height: 2vw;
+        margin-left: 0.2vw;
+        font-size: 1vw;
+        background-color: #20222500;
+        outline: none;
+        color: white;
+        border: none;
+      }
+      .GroupSettingsPopup {
+        width: 20vw;
+        background-color: var(--sidebar);
+        border-radius: 1vw;
+        position: fixed;
+        padding: 1vw;
+        left: 50%;
+        top: 50%;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        transform: translate(-50%, -50%);
+        transition: all 0.1s ease;
+        opacity: 0;
+        font-family: comfortaa, sans-serif;
+      }
+      .GroupSettingsPopupShow {
+        animation: CustomPopupShow ease-in 0.15s forwards;
+      }
+      .GroupSettingsPopupHide {
+        animation: CustomPopupHide ease-out 0.15s forwards;
+      }
+      .GroupSettingsTitle {
+        font-size: 1.4vw;
+        margin-bottom: 1vw;
+      }
+      .group-settings-input {
+        width: 90%;
+        margin-bottom: 0.5vw;
+        background-color: var(--input-bg);
+        color: white;
+        border: none;
+        border-radius: 0.3vw;
+        height: 2vw;
+        font-size: 1vw;
+        padding-left: 0.5vw;
+        margin-top: 0.3vw;
+      }
+      .kick-list-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 97%;
+        font-size: 1vw;
+        height: 2vw;
+        background-color: var(--accent-color);
+        margin-bottom: 0.1vw;
+        margin-top: 0.1vw;
+        padding-left: 0.5vw;
+        border-radius: 0.2vw;
+      }
+      .kick-button {
+        background-color: #ff5a70;
+        border: none;
+        border-radius: 0.3vw;
+        cursor: pointer;
+        font-size: 0.8vw;
+        padding: 0.3vw 0.5vw;
+      }
+      .kick-button:hover {
+        opacity: 0.9;
+      }
+      .UserSettingsOverlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black;
         opacity: 0;
         display: none;
+        z-index: 2000;
       }
-    }
-    .smoothshow {
-      animation: AddGroupPopupShow ease-in 0.15s forwards;
-    }
-    .smoothhide {
-      animation: AddGroupPopupHide ease-out 0.15s forwards;
-    }
-    @keyframes AddGroupPopupShow {
-      0% {
+      .UserSettingsPopup {
+        width: 20vw;
+        background-color: var(--sidebar);
+        border-radius: 1vw;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        transform: translate(-50%, -50%);
+        transition: all 0.1s ease;
         opacity: 0;
+        z-index: 3000;
+        font-family: comfortaa, sans-serif;
       }
-      100% {
-        opacity: 1;
+      .UserSettingsPopupShow {
+        animation: CustomPopupShow ease-in 0.15s forwards;
       }
-    }
-    @keyframes AddGroupPopupHide {
-      0% {
-        opacity: 1;
+      .UserSettingsPopupHide {
+        animation: CustomPopupHide ease-out 0.15s forwards;
       }
-      100% {
-        opacity: 0;
+      .user-settings-icon {
+        font-size: 1.2vw;
+        color: var(--text-color);
+        cursor: pointer;
+        transition: color 0.3s;
       }
-    }
-    .popuptext {
-      font-size: 2vw;
-      color: white;
-    }
-    .custominput {
-      flex: 0 1 auto;
-      height: 2vw;
-      font-size: 1vw;
-      background-color: var(--input-bg);
-      border: none;
-      color: var(--text-color);
-      padding: 0.3vw 0.5vw;
-      outline: none;
-      border-radius: 0.2vw;
-      margin-top: 0.4vw;
-      margin-bottom: 0.4vw;
-    }
-    .LoginBox {
-      width: 30vw;
-      height: 20vw;
-      background-color: var(--sidebar);
-      border-radius: 1vw;
-      position: fixed;
-      left: 50%;
-      top: 50%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transform: translate(-50%, -50%);
-      transition: all 0.1s ease;
-      font-family: comfortaa, sans-serif;
-    }
-    .logininput {
-      flex: 0 1 auto;
-      height: 2vw;
-      font-size: 1vw;
-      width: 20vw;
-      background-color: var(--input-bg);
-      border: none;
-      color: var(--text-color);
-      padding: 0.3vw 0.5vw;
-      outline: none;
-      border-radius: 0.2vw;
-      margin-top: 0.4vw;
-      margin-bottom: 0.4vw;
-    }
-    .login-bt {
-      background-color: var(--accent-color);
-      border: none;
-      padding: 0.6vw;
-      margin: 0.4vw;
-      width: 21vw;
-      color: #fff;
-      cursor: pointer;
-      border-radius: 0.2vw;
-      font-size: 1vw;
-    }
-    .login-bt:hover {
-      opacity: 0.9;
-    }
-    .loginerrorpopup {
-      height: 2vw;
-      width: 20vw;
-      border-radius: 0.2vw;
-      position: absolute;
-      text-align: center;
-      background-color: #3baa56;
-      font-size: 1vw;
-      left: 40vw;
-    }
-    .ErrorPopupShow {
-      animation: ErrorPopupShow ease-out 0.15s forwards;
-    }
-    @keyframes ErrorPopupShow {
-      0% {
-        top: 100vh;
+      .user-settings-icon:hover {
+        color: var(--accent-color);
       }
-      100% {
-        top: 95vh;
+      .usersettingscontainer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 95%;
+        border-radius: 0.5vw;
+        background-color: var(--input-bg);
+        margin-bottom: 1vw;
       }
-    }
-    .ErrorPopupHide {
-      animation: ErrorPopupHide ease-out 0.15s forwards;
-    }
-    @keyframes ErrorPopupHide {
-      0% {
-        top: 95vh;
-      }
-      100% {
-        top: 100vh;
-      }
-    }
-    .group-header {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-bottom: 0.2vw;
-      border-bottom: 0.05vw solid var(--border-color);
-    }
-    .group-name {
-      font-size: 1vw;
-      margin-left: 0.5vw;
-      font-weight: bold;
-      color: var(--text-color);
-    }
-    .settings-icon {
-      font-size: 1.2vw;
-      color: var(--text-color);
-      cursor: pointer;
-      transition: color 0.3s;
-      margin-right: 0.5vw;
-    }
-    .settings-icon:hover {
-      color: var(--accent-color);
-    }
-    .user-info {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      padding: 0.5vw 1vw;
-      border-top: 0.05vw solid var(--border-color);
-    }
-    .user-info img {
-      width: 2vw;
-      height: 2vw;
-      border-radius: 50%;
-      margin-right: 0.5vw;
-    }
-    .user-name {
-      font-size: 0.9vw;
-      color: var(--text-color);
-      margin-right: 0.5vw;
-    }
-    .userlist-content {
-      overflow-y: auto;
-      overflow-x: hidden;
-      flex: 1;
-      scrollbar-width: none;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .popup-leaveGroupButton {
-      background-color: #20222500;
-      border: none;
-      margin: 0.4vw;
-      width: 99%;
-      height: 2vw;
-      color: #fff;
-      cursor: pointer;
-      border-radius: 0.2vw;
-      font-size: 1vw;
-      transition: all 0.1s ease-in-out;
-      text-align: center;
-    }
-    .popup-leaveGroupButton:hover {
-      background-color: #ff5a70;
-    }
-    .popup-CopyID {
-      background-color: #20222500;
-      border: none;
-      margin: 0.4vw;
-      width: 95%;
-      height: 2vw;
-      color: #fff;
-      cursor: pointer;
-      border-radius: 0.2vw;
-      font-size: 1vw;
-      transition: all 0.1s ease;
-    }
-    .popup-CopyID:hover {
-      background-color: var(--accent-color);
-    }
-    .CustomPopup {
-      width: 20vw;
-      background-color: var(--sidebar);
-      border-radius: 1vw;
-      position: fixed;
-      padding-bottom: 0.5vw;
-      padding-top: 0.5vw;
-      left: 50%;
-      top: 50%;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      transform: translate(-50%, -50%);
-      transition: all 0.1s ease;
-      opacity: 0;
-      font-family: comfortaa, sans-serif;
-    }
-    @keyframes CustomPopupShow {
-      0% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
-      }
-    }
-    @keyframes CustomPopupHide {
-      0% {
-        opacity: 1;
-      }
-      100% {
-        opacity: 0;
-      }
-    }
-    .copyidcontainer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 95%;
-      border-radius: 0.5vw;
-      background-color: var(--input-bg);
-    }
-    .copyidinput {
-      width: 13vw;
-      height: 2vw;
-      margin-left: 0.2vw;
-      font-size: 1vw;
-      background-color: #20222500;
-      outline: none;
-      color: white;
-      border: none;
-    }
-    .GroupSettingsPopup {
-      width: 20vw;
-      background-color: var(--sidebar);
-      border-radius: 1vw;
-      position: fixed;
-      padding: 1vw;
-      left: 50%;
-      top: 50%;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      transform: translate(-50%, -50%);
-      transition: all 0.1s ease;
-      opacity: 0;
-      font-family: comfortaa, sans-serif;
-    }
-    .GroupSettingsPopupShow {
-      animation: CustomPopupShow ease-in 0.15s forwards;
-    }
-    .GroupSettingsPopupHide {
-      animation: CustomPopupHide ease-out 0.15s forwards;
-    }
-    .GroupSettingsTitle {
-      font-size: 1.4vw;
-      margin-bottom: 1vw;
-    }
-    .group-settings-input {
-      width: 90%;
-      margin-bottom: 0.5vw;
-      background-color: var(--input-bg);
-      color: white;
-      border: none;
-      border-radius: 0.3vw;
-      height: 2vw;
-      font-size: 1vw;
-      padding-left: 0.5vw;
-      margin-top: 0.3vw;
-    }
-    .kick-list-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 97%;
-      font-size: 1vw;
-      height: 2vw;
-      background-color: var(--accent-color);
-      margin-bottom: 0.1vw;
-      margin-top: 0.1vw;
-      padding-left: 0.5vw;
-      border-radius: 0.2vw;
-    }
-    .kick-button {
-      background-color: #ff5a70;
-      border: none;
-      border-radius: 0.3vw;
-      cursor: pointer;
-      font-size: 0.8vw;
-      padding: 0.3vw 0.5vw;
-    }
-    .kick-button:hover {
-      opacity: 0.9;
-    }
-    .UserSettingsOverlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: black;
-      opacity: 0;
-      display: none;
-      z-index: 2000;
-    }
-    .UserSettingsPopup {
-      width: 20vw;
-      background-color: var(--sidebar);
-      border-radius: 1vw;
-      position: fixed;
-      left: 50%;
-      top: 50%;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      transform: translate(-50%, -50%);
-      transition: all 0.1s ease;
-      opacity: 0;
-      z-index: 3000;
-      font-family: comfortaa, sans-serif;
-    }
-    .UserSettingsPopupShow {
-      animation: CustomPopupShow ease-in 0.15s forwards;
-    }
-    .UserSettingsPopupHide {
-      animation: CustomPopupHide ease-out 0.15s forwards;
-    }
-    .user-settings-icon {
-      font-size: 1.2vw;
-      color: var(--text-color);
-      cursor: pointer;
-      transition: color 0.3s;
-    }
-    .user-settings-icon:hover {
-      color: var(--accent-color);
-    }
-  </style>
-</head>
-<body>
-  <div class="maincontent" id="maincontent"></div>
-  <div class="bg"></div>
-  <div class="overlay"></div>
-  <div class="AddGroupPopup" id="AddGroupPopup">
-    <span class="popuptext" style="margin-bottom: 0.4vw; margin-top: 0.8vw; font-weight: bold;">Join a group</span>
-    <span class="popuptext" style="margin-bottom: 1vw; margin-left: 0.5vw; margin-right: 0.5vw;font-weight:100; font-size: 1vw; text-align: center;">Input a group id and then you can chat with your buddys</span>
-    <input class="custominput" placeholder="Enter URL here" id="joingroupid"/>
-    <button class="content-bt" onclick='joinGroup(document.getElementById("joingroupid").value)'> Join </button>
-    <span class="popuptext" style="margin-bottom: 2vw; margin-left: 0.5vw; margin-right: 0.5vw;margin-top: 1vw; font-weight:100; font-size: 1vw; text-align: center;" >Or</span>
-    <span class="popuptext" style="margin-bottom: 1vw; margin-left: 0.5vw; margin-right: 0.5vw;font-weight:100; font-size: 1vw; text-align: center;"> Make a group</span>
-    <input class="custominput" placeholder="Enter Group name here" id="creategroupname"/>
-    <button class="content-bt" onclick='createGroup(document.getElementById("creategroupname").value)'> Create</button>
-  </div>
-  <div id="GroupSettingsPopup" class="GroupSettingsPopup">
-    <div class="GroupSettingsTitle">Group Settings</div>
-    <label style="width:90%;font-size:1vw;">Server Name</label>
-    <input class="group-settings-input" id="groupSettingsName" placeholder="Enter new group name"/>
-    <label style="width:90%;font-size:1vw;">Server Icon URL</label>
-    <input class="group-settings-input" id="groupSettingsIcon" placeholder="Enter icon URL"/>
-    <label style="width:90%;font-size:1vw;">Members</label>
-    <div id="groupSettingsMembers" style="width:90% ;max-height:6vw; overflow-y:auto; border:1px solid var(--border-color); border-radius:0.3vw; margin-bottom:1vw;padding:0.3vw;"></div>
-    <button class="content-bt" style="width:40%;" onclick="saveGroupSettings()">Save</button>
-  </div>
-  <div id="UserSettingsOverlay" class="UserSettingsOverlay"></div>
-  <div id="UserSettingsPopup" class="UserSettingsPopup"></div>
-  <script>
-    let socket = null;
-    let serverlocation = "ws://localhost:9001";
-    let alternativeserver = "ws://k27dg8s9-9001.uks1.devtunnels.ms/";
-    let username = null;
-    let myuuid = customUuid();
-    let currentGroup = null;
-    let currentGroupOwner = null;
-    let currentGroupMembers = [];
-    let isRequestingSettings = false;
-    let mytoken = null;
-    ConnectToServer();
-    function InitLogin() {
-      const maincontainer = document.getElementById("maincontent");
-      maincontainer.classList.add("smoothhide");
-      maincontainer.addEventListener("animationend", function handleAnimationEnd() {
-        maincontainer.classList.remove("smoothhide");
-        maincontainer.classList.add("smoothshow");
-        maincontainer.removeEventListener("animationend", handleAnimationEnd);
-        maincontainer.innerHTML = `
+    </style>
+  </head>
+  <body>
+    <div class="maincontent" id="maincontent"></div>
+    <div class="bg"></div>
+    <div class="overlay"></div>
+    <div class="AddGroupPopup" id="AddGroupPopup">
+      <span
+        class="popuptext"
+        style="margin-bottom: 0.4vw; margin-top: 0.8vw; font-weight: bold"
+        >Join a group</span
+      >
+      <span
+        class="popuptext"
+        style="
+          margin-bottom: 1vw;
+          margin-left: 0.5vw;
+          margin-right: 0.5vw;
+          font-weight: 100;
+          font-size: 1vw;
+          text-align: center;
+        "
+        >Input a group id and then you can chat with your buddys</span
+      >
+      <input
+        class="custominput"
+        placeholder="Enter URL here"
+        id="joingroupid"
+      />
+      <button
+        class="content-bt"
+        onclick='joinGroup(document.getElementById("joingroupid").value)'
+      >
+        Join
+      </button>
+      <span
+        class="popuptext"
+        style="
+          margin-bottom: 2vw;
+          margin-left: 0.5vw;
+          margin-right: 0.5vw;
+          margin-top: 1vw;
+          font-weight: 100;
+          font-size: 1vw;
+          text-align: center;
+        "
+        >Or</span
+      >
+      <span
+        class="popuptext"
+        style="
+          margin-bottom: 1vw;
+          margin-left: 0.5vw;
+          margin-right: 0.5vw;
+          font-weight: 100;
+          font-size: 1vw;
+          text-align: center;
+        "
+      >
+        Make a group</span
+      >
+      <input
+        class="custominput"
+        placeholder="Enter Group name here"
+        id="creategroupname"
+      />
+      <button
+        class="content-bt"
+        onclick='createGroup(document.getElementById("creategroupname").value)'
+      >
+        Create
+      </button>
+    </div>
+    <div id="GroupSettingsPopup" class="GroupSettingsPopup">
+      <div class="GroupSettingsTitle">Group Settings</div>
+      <label style="width: 90%; font-size: 1vw">Server Name</label>
+      <input
+        class="group-settings-input"
+        id="groupSettingsName"
+        placeholder="Enter new group name"
+      />
+      <label style="width: 90%; font-size: 1vw">Server Icon URL</label>
+      <input
+        class="group-settings-input"
+        id="groupSettingsIcon"
+        placeholder="Enter icon URL"
+      />
+      <label style="width: 90%; font-size: 1vw">Members</label>
+      <div
+        id="groupSettingsMembers"
+        style="
+          width: 90%;
+          max-height: 6vw;
+          overflow-y: auto;
+          border: 1px solid var(--border-color);
+          border-radius: 0.3vw;
+          margin-bottom: 1vw;
+          padding: 0.3vw;
+        "
+      ></div>
+      <button
+        class="content-bt"
+        style="width: 40%"
+        onclick="saveGroupSettings()"
+      >
+        Save
+      </button>
+    </div>
+    <div id="UserSettingsOverlay" class="UserSettingsOverlay"></div>
+    <div id="UserSettingsPopup" class="UserSettingsPopup"></div>
+    <script>
+      let socket = null;
+      let serverlocation = "ws://localhost:9001/";
+      let alternativeserverlocation =
+        "https://k27dg8s9-9001.uks1.devtunnels.ms/";
+      let username = null;
+      let myuuid = customUuid();
+      let currentGroup = null;
+      let currentGroupOwner = null;
+      let currentGroupMembers = [];
+      let isRequestingSettings = false;
+      let mytoken = null;
+      function InitLogin() {
+        const maincontainer = document.getElementById("maincontent");
+        maincontainer.classList.add("smoothhide");
+        maincontainer.addEventListener(
+          "animationend",
+          function handleAnimationEnd() {
+            maincontainer.classList.remove("smoothhide");
+            maincontainer.classList.add("smoothshow");
+            maincontainer.removeEventListener(
+              "animationend",
+              handleAnimationEnd
+            );
+            maincontainer.innerHTML = `
           <div class="LoginBox" id="loginbox"> 
               <span style="font-size:2vw; text-align: center; width: 20vw; margin-top: 1vw;">Login</span>
               <span style="font-size:1vw; text-align: center; width: 20vw; margin-top: 0.5vw; margin-bottom:0.5vw">Login to start chatting with your buddies</span>
@@ -685,16 +787,28 @@
               <span style="font-size:0.8vw; text-align: left; width: 20vw;">Don't have an account? <a style="color:lightblue;" href="#" onclick="InitRegister()">Register</a></span>
           </div>
         `;
-      });
-    }
-    function InitRegister() {
-      const maincontainer = document.getElementById("maincontent");
-      maincontainer.classList.add("smoothhide");
-      maincontainer.addEventListener("animationend", function handleAnimationEnd() {
-        maincontainer.classList.remove("smoothhide");
-        maincontainer.classList.add("smoothshow");
-        maincontainer.removeEventListener("animationend", handleAnimationEnd);
-        maincontainer.innerHTML = `
+          document.getElementById("loginbox").addEventListener("keydown", (e) =>{
+              if (e.key === "Enter") {
+                Login();
+              }
+          });
+          document.getElementById("login-username").focus();
+          }
+        );
+      }
+      function InitRegister() {
+        const maincontainer = document.getElementById("maincontent");
+        maincontainer.classList.add("smoothhide");
+        maincontainer.addEventListener(
+          "animationend",
+          function handleAnimationEnd() {
+            maincontainer.classList.remove("smoothhide");
+            maincontainer.classList.add("smoothshow");
+            maincontainer.removeEventListener(
+              "animationend",
+              handleAnimationEnd
+            );
+            maincontainer.innerHTML = `
           <div class="LoginBox"> 
               <span style="font-size:2vw; text-align: center; width: 20vw; margin-top: 1vw;">Register</span>
               <span style="font-size:1vw; text-align: center; width: 20vw; margin-top: 0.5vw; margin-bottom:0.5vw">Register to start chatting with your buddies</span>
@@ -706,16 +820,22 @@
               <span style="font-size:0.8vw; text-align: left; width: 20vw;">Already have an account? <a style="color:lightblue;" href="#" onclick="InitLogin()">Login</a></span>
           </div>
         `;
-      });
-    }
-    function InitChat() {
-      const maincontainer = document.getElementById("maincontent");
-      maincontainer.classList.add("smoothhide");
-      maincontainer.addEventListener("animationend", function handleAnimationEnd() {
-        maincontainer.classList.remove("smoothhide");
-        maincontainer.classList.add("smoothshow");
-        maincontainer.removeEventListener("animationend", handleAnimationEnd);
-        maincontainer.innerHTML = `
+          }
+        );
+      }
+      function InitChat() {
+        const maincontainer = document.getElementById("maincontent");
+        maincontainer.classList.add("smoothhide");
+        maincontainer.addEventListener(
+          "animationend",
+          function handleAnimationEnd() {
+            maincontainer.classList.remove("smoothhide");
+            maincontainer.classList.add("smoothshow");
+            maincontainer.removeEventListener(
+              "animationend",
+              handleAnimationEnd
+            );
+            maincontainer.innerHTML = `
         <div class="leftsidecontent" id="leftsidecontent">
             <div class="group-icon-container" id="AddGroup">
                 <img src="/assets/img/roundAddIcon.png" class="leftsidecontent-icon" style="width: 95%; height: 95%;">
@@ -735,50 +855,55 @@
             <div class="userlist-content" id="userlist-content"></div>
             <div class="user-info">
                 <img src="/assets/img/user.svg" alt="User Icon">
-                <span class="user-name">${username || 'Username'}</span>
+                <span class="user-name">${username || "Username"}</span>
                 <i class="fa fa-cog user-settings-icon"></i>
             </div>
         </div>
         `;
-        loadData();
-        InitInput();
-        initGroupContent();
-        document.querySelector(".settings-icon").addEventListener("click", () => {
-          if(!currentGroup){
-            MakeErrorMessage("No group selected yet!", false);
-            return;
+            loadData();
+            InitInput();
+            initGroupContent();
+            document
+              .querySelector(".settings-icon")
+              .addEventListener("click", () => {
+                if (!currentGroup) {
+                  MakeErrorMessage("No group selected yet!", false);
+                  return;
+                }
+                isRequestingSettings = true;
+                getGroupData();
+              });
+            const userSettingsIcon = document.querySelector(
+              ".user-settings-icon"
+            );
+            if (userSettingsIcon) {
+              userSettingsIcon.addEventListener("click", openUserSettingsPopup);
+            }
           }
-          isRequestingSettings = true; 
-          getGroupData();
-        });
-        const userSettingsIcon = document.querySelector(".user-settings-icon");
-        if(userSettingsIcon){
-          userSettingsIcon.addEventListener("click", openUserSettingsPopup);
-        }
-      });
-    }
-    function updateUserInfo(newUsername) {
-      const userNameSpan = document.querySelector(".user-name");
-      if (userNameSpan) {
-        userNameSpan.textContent = newUsername;
+        );
       }
-    }
-    function CopyText(text) {
-      navigator.clipboard.writeText(text);
-    }
-    function createGroupIdPopup(id) {
-      const existingPopups = document.querySelectorAll(".CustomPopup");
-      existingPopups.forEach((popup) => popup.remove());
-      const overlay = document.createElement("div");
-      overlay.classList.add("overlay");
-      overlay.style.display = "block";
-      overlay.classList.remove("HideOverlayAnim");
-      overlay.classList.add("ShowOverlayAnim");
-      const popup = document.createElement("div");
-      popup.classList.add("CustomPopup");
-      popup.classList.add("smoothshow");
-      popup.style.display = "flex";
-      popup.innerHTML = `
+      function updateUserInfo(newUsername) {
+        const userNameSpan = document.querySelector(".user-name");
+        if (userNameSpan) {
+          userNameSpan.textContent = newUsername;
+        }
+      }
+      function CopyText(text) {
+        navigator.clipboard.writeText(text);
+      }
+      function createGroupIdPopup(id) {
+        const existingPopups = document.querySelectorAll(".CustomPopup");
+        existingPopups.forEach((popup) => popup.remove());
+        const overlay = document.createElement("div");
+        overlay.classList.add("overlay");
+        overlay.style.display = "block";
+        overlay.classList.remove("HideOverlayAnim");
+        overlay.classList.add("ShowOverlayAnim");
+        const popup = document.createElement("div");
+        popup.classList.add("CustomPopup");
+        popup.classList.add("smoothshow");
+        popup.style.display = "flex";
+        popup.innerHTML = `
           <span class="popuptext" style="margin-bottom: 0.4vw; margin-top: 0.8vw; font-weight: bold;">Invite People</span>
           <span class="popuptext" style="margin-bottom: 1vw; margin-left: 0.5vw; margin-right: 0.5vw; font-weight: 100; font-size: 1vw; text-align: center;">
               Click the copy button to copy the group ID.
@@ -788,511 +913,557 @@
               <button class="content-bt" style="width: 4vw;" onclick="CopyText('${id}'); MakeErrorMessage('Copied to clipboard!',true);">Copy</button>
           </div>
       `;
-      document.body.appendChild(overlay);
-      document.body.appendChild(popup);
-      overlay.addEventListener("click", () => {
+        document.body.appendChild(overlay);
+        document.body.appendChild(popup);
+        overlay.addEventListener("click", () => {
+          popup.classList.remove("smoothshow");
+          popup.classList.add("smoothhide");
+          popup.addEventListener("animationend", () => popup.remove());
+          overlay.classList.remove("ShowOverlayAnim");
+          overlay.classList.add("HideOverlayAnim");
+          overlay.addEventListener("animationend", () => overlay.remove());
+        });
+      }
+      function handleOverlayAnimationEnd() {
+        const overlay = document.querySelector(".overlay");
+        overlay.style.display = "none";
+        overlay.removeEventListener("animationend", handleOverlayAnimationEnd);
+      }
+      function addGroupPopup() {
+        const popup = document.getElementById("AddGroupPopup");
+        const overlay = document.querySelector(".overlay");
+        popup.style.display = "flex";
+        popup.classList.remove("smoothhide");
+        popup.classList.add("smoothshow");
+        overlay.style.display = "block";
+        overlay.classList.remove("HideOverlayAnim");
+        overlay.classList.add("ShowOverlayAnim");
+        popup.querySelectorAll("input").forEach((key) => {
+          key.disabled = false;
+        });
+        overlay.addEventListener("click", () => {
+          closeGroupPopup();
+        });
+      }
+      function closeGroupPopup() {
+        const popup = document.getElementById("AddGroupPopup");
+        const overlay = document.querySelector(".overlay");
         popup.classList.remove("smoothshow");
         popup.classList.add("smoothhide");
-        popup.addEventListener("animationend", () => popup.remove());
         overlay.classList.remove("ShowOverlayAnim");
         overlay.classList.add("HideOverlayAnim");
-        overlay.addEventListener("animationend", () => overlay.remove());
-      });
-    }
-    function handleOverlayAnimationEnd() {
-      const overlay = document.querySelector(".overlay");
-      overlay.style.display = "none";
-      overlay.removeEventListener("animationend", handleOverlayAnimationEnd);
-    }
-    function addGroupPopup() {
-      const popup = document.getElementById("AddGroupPopup");
-      const overlay = document.querySelector(".overlay");
-      popup.style.display = "flex";
-      popup.classList.remove("smoothhide");
-      popup.classList.add("smoothshow");
-      overlay.style.display = "block";
-      overlay.classList.remove("HideOverlayAnim");
-      overlay.classList.add("ShowOverlayAnim");
-      popup.querySelectorAll("input").forEach((key) => {
-        key.disabled = false;
-      });
-      overlay.addEventListener("click", () => {
+        overlay.addEventListener("animationend", handleOverlayAnimationEnd);
+        popup.querySelectorAll("input").forEach((key) => {
+          key.disabled = true;
+        });
+      }
+      function initGroupContent() {
+        const popup = document.createElement("div");
+        popup.classList.add("popup");
+        popup.textContent = "Add Group";
+        document.body.appendChild(popup);
+        const container = document.getElementById("AddGroup");
+        container.addEventListener("mouseover", () => {
+          const rect = container.getBoundingClientRect();
+          popup.style.display = "block";
+          const viewportWidth = window.innerWidth;
+          const leftInVW = ((rect.left + window.scrollX) / viewportWidth) * 100;
+          popup.style.left = `${leftInVW + 4}vw`;
+          popup.style.top = `${rect.top + window.scrollY}px`;
+        });
+        container.addEventListener("click", () => {
+          addGroupPopup();
+        });
+        container.addEventListener("mouseout", () => {
+          popup.style.display = "none";
+        });
+      }
+      function makebox(text, name, isself, iconurl) {
+        const container = document.createElement("div");
+        container.style.display = "flex";
+        container.style.flexDirection = "column";
+        container.style.alignItems = isself ? "flex-end" : "flex-start";
+        const textdiv = document.createElement("span");
+        textdiv.classList.add("textbox-name");
+        textdiv.innerText = name;
+        const box = document.createElement("div");
+        box.classList.add("textbox");
+        box.style.width = "auto";
+        box.style.textAlign = "left";
+        const imageRegex =
+          /(https?:\/\/[^\s]*\.(?:png|jpg|jpeg|gif|svg)(?:\?[^\s]*)?)/gi;
+        const images = [...text.matchAll(imageRegex)].map((match) => match[0]);
+        const textWithoutImages = text.replace(imageRegex, "").trim();
+        if (textWithoutImages) {
+          box.innerText = textWithoutImages;
+        } else {
+          box.style.display = "none";
+        }
+        const userinfocontainer = document.createElement("div");
+        userinfocontainer.classList.add("userinfo-container");
+        const iconcontainer = document.createElement("div");
+        iconcontainer.classList.add("usericon-container");
+        const icon = document.createElement("img");
+        icon.src = iconurl;
+        icon.style.width = "90%";
+        icon.style.height = "90%";
+        icon.classList.add("usericon-icon");
+        iconcontainer.appendChild(icon);
+        if (isself) {
+          userinfocontainer.appendChild(iconcontainer);
+          userinfocontainer.appendChild(textdiv);
+        } else {
+          userinfocontainer.appendChild(textdiv);
+          userinfocontainer.appendChild(iconcontainer);
+        }
+        container.appendChild(userinfocontainer);
+        container.appendChild(box);
+        images.forEach((imgUrl) => {
+          const imgDiv = document.createElement("div");
+          imgDiv.style.marginTop = "0.5vw";
+          const imgElement = document.createElement("img");
+          imgElement.src = imgUrl;
+          imgElement.style.maxWidth = "40vw";
+          imgElement.style.height = "auto";
+          maxHeight = "40vh";
+          imgElement.style.borderRadius = "0.5vw";
+          imgDiv.appendChild(imgElement);
+          container.appendChild(imgDiv);
+        });
+        document.getElementById("content").appendChild(container);
+        document.getElementById("content").scrollTop =
+          document.getElementById("content").scrollHeight;
+      }
+      function makeGroup(name, iconurl, id) {
+        const container = document.createElement("div");
+        container.classList.add("leftsidecontent-icon-container");
+        const icon = document.createElement("img");
+        icon.src = iconurl;
+        icon.style.width = "90%";
+        icon.style.height = "90%";
+        icon.classList.add("leftsidecontent-icon");
+        container.appendChild(icon);
+        document
+          .getElementById("leftsidecontent")
+          .insertBefore(container, document.getElementById("AddGroup"));
+        const popup = document.createElement("div");
+        popup.classList.add("popup");
+        popup.textContent = name;
+        document.body.appendChild(popup);
+        container.addEventListener("mouseover", () => {
+          const rect = container.getBoundingClientRect();
+          popup.style.display = "block";
+          const viewportWidth = window.innerWidth;
+          const leftInVW = ((rect.left + window.scrollX) / viewportWidth) * 100;
+          popup.style.left = `${leftInVW + 4}vw`;
+          popup.style.top = `${rect.top + window.scrollY}px`;
+        });
+        container.addEventListener("mouseout", () => {
+          popup.style.display = "none";
+        });
+        container.addEventListener("click", () => {
+          currentGroup = id;
+          const packet = {
+            type: "requestGroupData",
+            groupID: id,
+            userID: myuuid,
+            username,
+            token: mytoken,
+          };
+          socket.send(JSON.stringify(packet));
+          setGroupName(name);
+        });
+        container.addEventListener("contextmenu", (event) => {
+          event.preventDefault();
+          const existingPopups = document.querySelectorAll(".popup");
+          existingPopups.forEach((pop) => {
+            document.body.removeChild(pop);
+          });
+          const menupopup = document.createElement("div");
+          menupopup.classList.add("popup");
+          document.body.appendChild(menupopup);
+          const rect = container.getBoundingClientRect();
+          const viewportWidth = window.innerWidth;
+          const leftInVW = ((rect.left + window.scrollX) / viewportWidth) * 100;
+          menupopup.style.left = `${leftInVW + 1}vw`;
+          menupopup.style.top = `${rect.top + window.scrollY}px`;
+          const leaveGroupButton = document.createElement("button");
+          leaveGroupButton.classList.add("popup-leaveGroupButton");
+          leaveGroupButton.textContent = "Leave Group";
+          leaveGroupButton.addEventListener("click", () => {
+            const packet = {
+              type: "leaveGroup",
+              groupID: id,
+              userID: myuuid,
+              username,
+              token: mytoken,
+            };
+            socket.send(JSON.stringify(packet));
+            document.body.removeChild(menupopup);
+          });
+          const CopyIdButton = document.createElement("button");
+          CopyIdButton.classList.add("popup-CopyID");
+          CopyIdButton.textContent = "Group ID";
+          CopyIdButton.addEventListener("click", () => {
+            createGroupIdPopup(id);
+            document.body.removeChild(menupopup);
+          });
+          menupopup.appendChild(leaveGroupButton);
+          menupopup.appendChild(CopyIdButton);
+          menupopup.style.position = "absolute";
+          menupopup.style.display = "flex";
+          menupopup.style.flexDirection = "column";
+          menupopup.style.alignItems = "center";
+          menupopup.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
+          menupopup.style.zIndex = "1000";
+          document.body.appendChild(menupopup);
+        });
+      }
+      function makeUser(name, iconurl) {
+        const container = document.createElement("div");
+        container.style.display = "flex";
+        container.style.flexDirection = "row";
+        container.style.alignItems = "center";
+        container.style.marginBottom = "0.5vw";
+        container.style.height = "3vw";
+        container.style.width = "95%";
+        container.style.marginLeft = "0.5vw";
+        const iconcontainer = document.createElement("div");
+        iconcontainer.classList.add("usericon-container");
+        iconcontainer.style.display = "flex";
+        iconcontainer.style.alignItems = "center";
+        iconcontainer.style.justifyContent = "center";
+        iconcontainer.style.width = "2vw";
+        iconcontainer.style.height = "2vw";
+        iconcontainer.style.marginRight = "0.5vw";
+        iconcontainer.style.flexShrink = "0";
+        iconcontainer.style.flexGrow = "0";
+        const icon = document.createElement("img");
+        icon.src = iconurl;
+        icon.style.width = "90%";
+        icon.style.height = "90%";
+        icon.style.objectFit = "cover";
+        icon.style.borderRadius = "50%";
+        iconcontainer.appendChild(icon);
+        container.appendChild(iconcontainer);
+        const nameDiv = document.createElement("div");
+        nameDiv.style.fontWeight = "bold";
+        nameDiv.style.flex = "1";
+        nameDiv.style.overflow = "hidden";
+        nameDiv.style.textOverflow = "ellipsis";
+        nameDiv.style.whiteSpace = "nowrap";
+        nameDiv.innerText = name;
+        function updateFontSize() {
+          const viewportWidth = window.innerWidth;
+          const properFontSize = Math.max(
+            5,
+            Math.min(17, (viewportWidth / name.length) * 0.1)
+          );
+          nameDiv.style.fontSize = `${properFontSize}px`;
+          nameDiv.textContent = name;
+        }
+        updateFontSize();
+        window.addEventListener("resize", updateFontSize);
+        container.appendChild(nameDiv);
+        document.getElementById("userlist-content").appendChild(container);
+      }
+      function MakeErrorMessage(loginerr, success) {
+        const loginerror = document.createElement("div");
+        if (!success) {
+          loginerror.style.background = "#ff3535d2";
+        }
+        loginerror.classList.add("loginerrorpopup", "ErrorPopupShow");
+        loginerror.innerText = loginerr;
+        document.body.appendChild(loginerror);
+        loginerror.addEventListener(
+          "animationend",
+          function handleAnimationEnd() {
+            if (loginerror.classList.contains("ErrorPopupShow")) {
+              setTimeout(() => {
+                loginerror.classList.remove("ErrorPopupShow");
+                loginerror.classList.add("ErrorPopupHide");
+              }, 2000);
+            } else if (loginerror.classList.contains("ErrorPopupHide")) {
+              loginerror.remove();
+              loginerror.removeEventListener(
+                "animationend",
+                handleAnimationEnd
+              );
+            }
+          }
+        );
+      }
+      function Login() {
+        if (socket.readyState !== WebSocket.OPEN) return;
+        const usernameVal = document
+          .getElementById("login-username")
+          .value.trim();
+        const passwordVal = document
+          .getElementById("login-password")
+          .value.trim();
+        if (usernameVal && passwordVal) {
+          const payload = {
+            type: "login",
+            data: {
+              username: usernameVal,
+              password: passwordVal,
+              userID: myuuid,
+            },
+          };
+          socket.send(JSON.stringify(payload));
+        } else {
+          MakeErrorMessage("Please fill out all fields");
+        }
+      }
+      function Register() {
+        const usernameVal = document
+          .getElementById("register-username")
+          .value.trim();
+        const passwordVal = document
+          .getElementById("register-password")
+          .value.trim();
+        if (usernameVal && passwordVal) {
+          const payload = {
+            type: "create_account",
+            userID: myuuid,
+            data: { username: usernameVal, password: passwordVal },
+          };
+          socket.send(JSON.stringify(payload));
+        } else {
+          MakeErrorMessage("Please fill out all fields");
+        }
+      }
+      function InitInput() {
+        const textinput = document.getElementById("textinput");
+        textinput.addEventListener("keydown", (e) => {
+          if (
+            e.key === "Enter" &&
+            textinput.value !== "" &&
+            socket &&
+            currentGroup
+          ) {
+            const date = new Date();
+            const messagevalue = textinput.value;
+            const jsonpayload = {
+              type: "sendmessage",
+              groupID: currentGroup,
+              userID: myuuid,
+              message: messagevalue,
+              username: username,
+              time:
+                date.getHours() +
+                ":" +
+                String(date.getMinutes()).padStart(2, "0"),
+              token: mytoken,
+            };
+            socket.send(JSON.stringify(jsonpayload));
+            textinput.value = "";
+          }
+        });
+      }
+      function customUuid(length = 200) {
+        const randomValues = crypto.getRandomValues(new Uint8Array(length));
+        return Array.from(randomValues, (byte) =>
+          byte.toString(16).padStart(2, "0")
+        ).join("");
+      }
+      function genClientKey() {
+        const randomBytes = new Uint8Array(128);
+        window.crypto.getRandomValues(randomBytes);
+        const base64String = btoa(String.fromCharCode.apply(null, randomBytes));
+        return base64String;
+      }
+      function loadData() {}
+      function joinGroup(id) {
         closeGroupPopup();
-      });
-    }
-    function closeGroupPopup() {
-      const popup = document.getElementById("AddGroupPopup");
-      const overlay = document.querySelector(".overlay");
-      popup.classList.remove("smoothshow");
-      popup.classList.add("smoothhide");
-      overlay.classList.remove("ShowOverlayAnim");
-      overlay.classList.add("HideOverlayAnim");
-      overlay.addEventListener("animationend", handleOverlayAnimationEnd);
-      popup.querySelectorAll("input").forEach((key) => {
-        key.disabled = true;
-      });
-    }
-    function initGroupContent() {
-      const popup = document.createElement("div");
-      popup.classList.add("popup");
-      popup.textContent = "Add Group";
-      document.body.appendChild(popup);
-      const container = document.getElementById("AddGroup");
-      container.addEventListener("mouseover", () => {
-        const rect = container.getBoundingClientRect();
-        popup.style.display = "block";
-        const viewportWidth = window.innerWidth;
-        const leftInVW = (rect.left + window.scrollX) / viewportWidth * 100;
-        popup.style.left = `${leftInVW + 4}vw`;
-        popup.style.top = `${rect.top + window.scrollY}px`;
-      });
-      container.addEventListener("click", () => {
-        addGroupPopup();
-      });
-      container.addEventListener("mouseout", () => {
-        popup.style.display = "none";
-      });
-    }
-    function makebox(text, name, isself, iconurl) {
-      const container = document.createElement("div");
-      container.style.display = "flex";
-      container.style.flexDirection = "column";
-      container.style.alignItems = isself ? "flex-end" : "flex-start";
-      const textdiv = document.createElement("span");
-      textdiv.classList.add("textbox-name");
-      textdiv.innerText = name;
-      const box = document.createElement("div");
-      box.classList.add("textbox");
-      box.style.width = "auto";
-      box.style.textAlign = "left";
-      const imageRegex = /(https?:\/\/[^\s]*\.(?:png|jpg|jpeg|gif|svg)(?:\?[^\s]*)?)/gi;
-      const images = [...text.matchAll(imageRegex)].map(match => match[0]);
-      const textWithoutImages = text.replace(imageRegex, "").trim();
-      if (textWithoutImages) {
-        box.innerText = textWithoutImages;
-      } else {
-        box.style.display = "none";
-      }
-      const userinfocontainer = document.createElement("div");
-      userinfocontainer.classList.add("userinfo-container");
-      const iconcontainer = document.createElement("div");
-      iconcontainer.classList.add("usericon-container");
-      const icon = document.createElement("img");
-      icon.src = iconurl;
-      icon.style.width = "90%";
-      icon.style.height = "90%";
-      icon.classList.add("usericon-icon");
-      iconcontainer.appendChild(icon);
-      if (isself) {
-        userinfocontainer.appendChild(iconcontainer);
-        userinfocontainer.appendChild(textdiv);
-      } else {
-        userinfocontainer.appendChild(textdiv);
-        userinfocontainer.appendChild(iconcontainer);
-      }
-      container.appendChild(userinfocontainer);
-      container.appendChild(box);
-      images.forEach(imgUrl => {
-        const imgDiv = document.createElement("div");
-        imgDiv.style.marginTop = "0.5vw"; 
-        const imgElement = document.createElement("img");
-        imgElement.src = imgUrl;
-        imgElement.style.maxWidth = "40vw";
-        imgElement.style.height = "auto";
-        imgElement.style.borderRadius = "0.5vw";
-        imgDiv.appendChild(imgElement);
-        container.appendChild(imgDiv);
-      });
-      document.getElementById("content").appendChild(container);
-      document.getElementById("content").scrollTop = document.getElementById("content").scrollHeight;
-    }
-    function makeGroup(name, iconurl, id) {
-      const container = document.createElement("div");
-      container.classList.add("leftsidecontent-icon-container");
-      const icon = document.createElement("img");
-      icon.src = iconurl;
-      icon.style.width = "90%";
-      icon.style.height = "90%";
-      icon.classList.add("leftsidecontent-icon");
-      container.appendChild(icon);
-      document
-        .getElementById("leftsidecontent")
-        .insertBefore(container, document.getElementById("AddGroup"));
-      const popup = document.createElement("div");
-      popup.classList.add("popup");
-      popup.textContent = name;
-      document.body.appendChild(popup);
-      container.addEventListener("mouseover", () => {
-        const rect = container.getBoundingClientRect();
-        popup.style.display = "block";
-        const viewportWidth = window.innerWidth;
-        const leftInVW = (rect.left + window.scrollX) / viewportWidth * 100;
-        popup.style.left = `${leftInVW + 4}vw`;
-        popup.style.top = `${rect.top + window.scrollY}px`;
-      });
-      container.addEventListener("mouseout", () => {
-        popup.style.display = "none";
-      });
-      container.addEventListener("click", () => {
-        currentGroup = id;
         const packet = {
-          type: "requestGroupData",
-          groupID: id,
+          type: "joingroup",
+          id,
           userID: myuuid,
           username,
           token: mytoken,
         };
         socket.send(JSON.stringify(packet));
-        setGroupName(name);
-      });
-      container.addEventListener("contextmenu", (event) => {
-        event.preventDefault();
-        const existingPopups = document.querySelectorAll(".popup");
-        existingPopups.forEach((pop) => {
-          document.body.removeChild(pop);
-        });
-        const menupopup = document.createElement("div");
-        menupopup.classList.add("popup");
-        document.body.appendChild(menupopup);
-        const rect = container.getBoundingClientRect();
-        const viewportWidth = window.innerWidth;
-        const leftInVW = (rect.left + window.scrollX) / viewportWidth * 100;
-        menupopup.style.left = `${leftInVW + 1}vw`;
-        menupopup.style.top = `${rect.top + window.scrollY}px`;
-        const leaveGroupButton = document.createElement("button");
-        leaveGroupButton.classList.add("popup-leaveGroupButton");
-        leaveGroupButton.textContent = "Leave Group";
-        leaveGroupButton.addEventListener("click", () => {
-          const packet = {
-            type: "leaveGroup",
-            groupID: id,
-            userID: myuuid,
-            username,
-            token: mytoken
-          };
-          socket.send(JSON.stringify(packet));
-          document.body.removeChild(menupopup);
-        });
-        const CopyIdButton = document.createElement("button");
-        CopyIdButton.classList.add("popup-CopyID");
-        CopyIdButton.textContent = "Group ID";
-        CopyIdButton.addEventListener("click", () => {
-          createGroupIdPopup(id);
-          document.body.removeChild(menupopup);
-        });
-        menupopup.appendChild(leaveGroupButton);
-        menupopup.appendChild(CopyIdButton);
-        menupopup.style.position = "absolute";
-        menupopup.style.display = "flex";
-        menupopup.style.flexDirection = "column";
-        menupopup.style.alignItems = "center";
-        menupopup.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
-        menupopup.style.zIndex = "1000";
-        document.body.appendChild(menupopup);
-      });
-    }
-    function makeUser(name, iconurl) {
-      const container = document.createElement("div");
-      container.style.display = "flex";
-      container.style.flexDirection = "row";
-      container.style.alignItems = "center";
-      container.style.marginBottom = "0.5vw";
-      container.style.height = "3vw";
-      container.style.width = "95%";
-      container.style.marginLeft = "0.5vw";
-      const iconcontainer = document.createElement("div");
-      iconcontainer.classList.add("usericon-container");
-      iconcontainer.style.display = "flex";
-      iconcontainer.style.alignItems = "center";
-      iconcontainer.style.justifyContent = "center";
-      iconcontainer.style.width = "2vw";
-      iconcontainer.style.height = "2vw";
-      iconcontainer.style.marginRight = "0.5vw";
-      iconcontainer.style.flexShrink = "0";
-      iconcontainer.style.flexGrow = "0";
-      const icon = document.createElement("img");
-      icon.src = iconurl;
-      icon.style.width = "90%";
-      icon.style.height = "90%";
-      icon.style.objectFit = "cover";
-      icon.style.borderRadius = "50%";
-      iconcontainer.appendChild(icon);
-      container.appendChild(iconcontainer);
-      const nameDiv = document.createElement("div");
-      nameDiv.style.fontWeight = "bold";
-      nameDiv.style.flex = "1";
-      nameDiv.style.overflow = "hidden";
-      nameDiv.style.textOverflow = "ellipsis";
-      nameDiv.style.whiteSpace = "nowrap";
-      nameDiv.innerText = name;
-      function updateFontSize() {
-        const viewportWidth = window.innerWidth;
-        const properFontSize = Math.max(
-          5,
-          Math.min(17, (viewportWidth / name.length) * 0.1)
-        );
-        nameDiv.style.fontSize = `${properFontSize}px`;
-        nameDiv.textContent = name;
       }
-      updateFontSize();
-      window.addEventListener("resize", updateFontSize);
-      container.appendChild(nameDiv);
-      document.getElementById("userlist-content").appendChild(container);
-    }
-    function MakeErrorMessage(loginerr, success) {
-      const loginerror = document.createElement("div");
-      if (!success) {
-        loginerror.style.background = "#ff3535d2";
-      }
-      loginerror.classList.add("loginerrorpopup", "ErrorPopupShow");
-      loginerror.innerText = loginerr;
-      document.body.appendChild(loginerror);
-      loginerror.addEventListener("animationend", function handleAnimationEnd() {
-        if (loginerror.classList.contains("ErrorPopupShow")) {
-          setTimeout(() => {
-            loginerror.classList.remove("ErrorPopupShow");
-            loginerror.classList.add("ErrorPopupHide");
-          }, 2000);
-        } else if (loginerror.classList.contains("ErrorPopupHide")) {
-          loginerror.remove();
-          loginerror.removeEventListener("animationend", handleAnimationEnd);
-        }
-      });
-    }
-    function Login() {
-      if (socket.readyState !== WebSocket.OPEN) return;
-      const usernameVal = document.getElementById("login-username").value.trim();
-      const passwordVal = document.getElementById("login-password").value.trim();
-      console.log(myuuid)
-      if (usernameVal && passwordVal) {
-        const payload = {
-          type: "login",
-          data: { username: usernameVal, password: passwordVal, userID: myuuid }
-        };
-        socket.send(JSON.stringify(payload));
-      } else {
-        MakeErrorMessage("Please fill out all fields");
-      }
-    }
-    function Register() {
-      const usernameVal = document
-        .getElementById("register-username")
-        .value.trim();
-      const passwordVal = document
-        .getElementById("register-password")
-        .value.trim();
-      if (usernameVal && passwordVal) {
-        const payload = {
-          type: "create_account",
+      function createGroup(name) {
+        closeGroupPopup();
+        const packet = {
+          type: "makegroup",
+          groupname: name,
           userID: myuuid,
-          data: { username: usernameVal, password: passwordVal }
+          username,
+          token: mytoken,
         };
-        socket.send(JSON.stringify(payload));
-      } else {
-        MakeErrorMessage("Please fill out all fields");
+        socket.send(JSON.stringify(packet));
       }
-    }
-    function InitInput() {
-      const textinput = document.getElementById("textinput");
-      textinput.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" && textinput.value !== "" && socket && currentGroup) {
-          const date = new Date();
-          const messagevalue = textinput.value;
-          const jsonpayload = {
-            type: "sendmessage",
-            groupID: currentGroup,
-            userID: myuuid,
-            message: messagevalue,
-            username: username,
-            time:
-              date.getHours() + ":" + String(date.getMinutes()).padStart(2, "0"),
-            token: mytoken
-          };
-          socket.send(JSON.stringify(jsonpayload));
-          textinput.value = "";
-        }
-      });
-    }
-    function customUuid(length = 200) {
-      const randomValues = crypto.getRandomValues(new Uint8Array(length));
-      return Array.from(randomValues, (byte) =>
-        byte.toString(16).padStart(2, "0")
-      ).join("");
-    }
-    function genClientKey() {
-      const randomBytes = new Uint8Array(128);
-      window.crypto.getRandomValues(randomBytes);
-      const base64String = btoa(String.fromCharCode.apply(null, randomBytes));
-      return base64String;
-    }
-    function loadData() {
-    }
-    function joinGroup(id) {
-      closeGroupPopup();
-      const packet = {
-        type: "joingroup",
-        id,
-        userID: myuuid,
-        username,
-        token: mytoken
-      };
-      socket.send(JSON.stringify(packet));
-    }
-    function createGroup(name) {
-      closeGroupPopup();
-      const packet = {
-        type: "makegroup",
-        groupname: name,
-        userID: myuuid,
-        username,
-        token: mytoken
-      };
-      socket.send(JSON.stringify(packet));
-    }
-    function UpdateGroupList(groups) {
-      function waitForElement() {
-        const leftSideContent = document.getElementById("leftsidecontent");
-        if (leftSideContent) {
-          clearInterval(checkInterval);
-          leftSideContent.innerHTML = `
+      function UpdateGroupList(groups) {
+        function waitForElement() {
+          const leftSideContent = document.getElementById("leftsidecontent");
+          if (leftSideContent) {
+            clearInterval(checkInterval);
+            leftSideContent.innerHTML = `
             <div class="group-icon-container" id="AddGroup">
                 <img src="/assets/img/roundAddIcon.png" class="leftsidecontent-icon" style="width: 95%; height: 95%;">
             </div>
           `;
-          initGroupContent();
-          groups.forEach((group) => {
-            makeGroup(group.name, group.icon, group.id);
+            initGroupContent();
+            groups.forEach((group) => {
+              makeGroup(group.name, group.icon, group.id);
+            });
+          }
+        }
+        const checkInterval = setInterval(waitForElement, 100);
+      }
+      function sendGroupPacket(uName) {
+        myuuid = customUuid();
+        const packet = {
+          type: "GetUserGroupList",
+          username: uName,
+          userID: myuuid,
+          token: mytoken,
+        };
+        socket.send(JSON.stringify(packet));
+      }
+      function getGroupData() {
+        if (!currentGroup) return;
+        const packet = {
+          type: "requestGroupData",
+          groupID: currentGroup,
+          userID: myuuid,
+          username,
+          token: mytoken,
+        };
+        socket.send(JSON.stringify(packet));
+      }
+      function setGroupName(name) {
+        const groupNameSpan = document.querySelector(".group-name");
+        if (groupNameSpan) {
+          groupNameSpan.textContent = name;
+        }
+      }
+      function openGroupSettingsPopup(groupData) {
+        const popup = document.getElementById("GroupSettingsPopup");
+        const overlay = document.querySelector(".overlay");
+        popup.style.display = "flex";
+        popup.classList.remove("GroupSettingsPopupHide");
+        popup.classList.add("GroupSettingsPopupShow");
+        overlay.style.display = "block";
+        overlay.classList.remove("HideOverlayAnim");
+        overlay.classList.add("ShowOverlayAnim");
+        document.getElementById("groupSettingsName").value =
+          groupData.groupName || "";
+        document.getElementById("groupSettingsIcon").value =
+          groupData.groupIcon || "";
+        currentGroupOwner = groupData.owner;
+        currentGroupMembers = groupData.allmembers || [];
+        const membersContainer = document.getElementById(
+          "groupSettingsMembers"
+        );
+        membersContainer.innerHTML = "";
+        currentGroupMembers.forEach((m) => {
+          const row = document.createElement("div");
+          row.classList.add("kick-list-item");
+          row.innerHTML = `<span>${m.username}</span>`;
+          if (
+            username === currentGroupOwner &&
+            m.username !== currentGroupOwner
+          ) {
+            const kickBtn = document.createElement("button");
+            kickBtn.classList.add("kick-button");
+            kickBtn.textContent = "Kick";
+            kickBtn.onclick = () => {
+              kickUserFromGroup(m.username);
+            };
+            row.appendChild(kickBtn);
+          }
+          membersContainer.appendChild(row);
+        });
+        overlay.addEventListener("click", closeGroupSettingsPopup);
+      }
+      function closeGroupSettingsPopup() {
+        const popup = document.getElementById("GroupSettingsPopup");
+        const overlay = document.querySelector(".overlay");
+        popup.classList.remove("GroupSettingsPopupShow");
+        popup.classList.add("GroupSettingsPopupHide");
+        popup.addEventListener("animationend", handlePopupAnimationEnd);
+        overlay.classList.remove("ShowOverlayAnim");
+        overlay.classList.add("HideOverlayAnim");
+        overlay.addEventListener("animationend", handleOverlayAnimationEnd);
+        overlay.removeEventListener("click", closeGroupSettingsPopup);
+        isRequestingSettings = false;
+      }
+      function handlePopupAnimationEnd(event) {
+        const popup = event.target;
+        popup.style.display = "none";
+        popup.removeEventListener("animationend", handlePopupAnimationEnd);
+      }
+      function handleOverlayAnimationEnd(event) {
+        const overlay = event.target;
+        overlay.style.display = "none";
+        overlay.removeEventListener("animationend", handleOverlayAnimationEnd);
+      }
+      function kickUserFromGroup(user) {
+        MakeErrorMessage("Requested to kick " + user, true);
+        const packet = {
+          type: "updategroup",
+          groupID: currentGroup,
+          userID: myuuid,
+          requester: username,
+          username,
+          kickUser: user,
+          token: mytoken,
+        };
+        socket.send(JSON.stringify(packet));
+      }
+      function saveGroupSettings() {
+        const newName = document
+          .getElementById("groupSettingsName")
+          .value.trim();
+        const newIcon = document
+          .getElementById("groupSettingsIcon")
+          .value.trim();
+        MakeErrorMessage("Requested to save new settings", true);
+        const packet = {
+          type: "updategroup",
+          groupID: currentGroup,
+          requester: username,
+          newName,
+          username,
+          newIcon,
+          token: mytoken,
+        };
+        socket.send(JSON.stringify(packet));
+        closeGroupSettingsPopup();
+      }
+      function refreshUserList(members) {
+        const userlistContent = document.getElementById("userlist-content");
+        if (userlistContent) {
+          userlistContent.innerHTML = "";
+          members.forEach((m) => {
+            makeUser(m.username, m.icon);
           });
         }
       }
-      const checkInterval = setInterval(waitForElement, 100);
-    }
-    function sendGroupPacket(uName) {
-      myuuid = customUuid();
-      const packet = {
-        type: "GetUserGroupList",
-        username: uName,
-        userID: myuuid,
-        token: mytoken
-      };
-      socket.send(JSON.stringify(packet));
-    }
-    function getGroupData() {
-      if (!currentGroup) return;
-      const packet = {
-        type: "requestGroupData",
-        groupID: currentGroup,
-        userID: myuuid,
-        username,
-        token: mytoken
-      };
-      socket.send(JSON.stringify(packet));
-    }
-    function setGroupName(name) {
-      const groupNameSpan = document.querySelector(".group-name");
-      if (groupNameSpan) {
-        groupNameSpan.textContent = name;
-      }
-    }
-    function openGroupSettingsPopup(groupData) {
-      const popup = document.getElementById("GroupSettingsPopup");
-      const overlay = document.querySelector(".overlay");
-      popup.style.display = "flex";
-      popup.classList.remove("GroupSettingsPopupHide");
-      popup.classList.add("GroupSettingsPopupShow");
-      overlay.style.display = "block";
-      overlay.classList.remove("HideOverlayAnim");
-      overlay.classList.add("ShowOverlayAnim");
-      document.getElementById("groupSettingsName").value =
-      groupData.groupName || "";
-      document.getElementById("groupSettingsIcon").value =
-      groupData.groupIcon || "";
-      currentGroupOwner = groupData.owner;
-      currentGroupMembers = groupData.allmembers || [];
-      const membersContainer = document.getElementById("groupSettingsMembers");
-      membersContainer.innerHTML = "";
-      currentGroupMembers.forEach((m) => {
-        const row = document.createElement("div");
-        row.classList.add("kick-list-item");
-        row.innerHTML = `<span>${m.username}</span>`;
-        if (username === currentGroupOwner && m.username !== currentGroupOwner) {
-          const kickBtn = document.createElement("button");
-          kickBtn.classList.add("kick-button");
-          kickBtn.textContent = "Kick";
-          kickBtn.onclick = () => {
-            kickUserFromGroup(m.username);
-          };
-          row.appendChild(kickBtn);
+
+      function handleUserUpdate(action, user, icon) {
+        console.log(action, user);
+        const userlistContent = document.getElementById("userlist-content");
+        if (!userlistContent) return;
+
+        if (action === "add") {
+          makeUser(user.username, user.icon || "");
+        } else if (action === "remove") {
+          const users = Array.from(userlistContent.children);
+          users.forEach((userElement) => {
+            if (userElement.textContent.trim() === user.username) {
+              userlistContent.removeChild(userElement);
+            }
+          });
         }
-        membersContainer.appendChild(row);
-      });
-      overlay.addEventListener("click", closeGroupSettingsPopup);
-    }
-    function closeGroupSettingsPopup() {
-      const popup = document.getElementById("GroupSettingsPopup");
-      const overlay = document.querySelector(".overlay");
-      popup.classList.remove("GroupSettingsPopupShow");
-      popup.classList.add("GroupSettingsPopupHide");
-      popup.addEventListener("animationend", handlePopupAnimationEnd);
-      overlay.classList.remove("ShowOverlayAnim");
-      overlay.classList.add("HideOverlayAnim");
-      overlay.addEventListener("animationend", handleOverlayAnimationEnd);
-      overlay.removeEventListener("click", closeGroupSettingsPopup);
-      isRequestingSettings = false;
-    }
-    function handlePopupAnimationEnd(event) {
-      const popup = event.target;
-      popup.style.display = "none";
-      popup.removeEventListener("animationend", handlePopupAnimationEnd);
-    }
-    function handleOverlayAnimationEnd(event) {
-      const overlay = event.target;
-      overlay.style.display = "none";
-      overlay.removeEventListener("animationend", handleOverlayAnimationEnd);
-    }
-    function kickUserFromGroup(user) {
-      MakeErrorMessage("Requested to kick "+user, true);
-      const packet = { type: "updategroup", groupID: currentGroup, userID: myuuid, requester: username,username, kickUser: user,token: mytoken };
-      socket.send(JSON.stringify(packet));
-    }
-    function saveGroupSettings() {
-      const newName = document.getElementById("groupSettingsName").value.trim();
-      const newIcon = document.getElementById("groupSettingsIcon").value.trim();
-      MakeErrorMessage("Requested to save new settings", true);
-      const packet = { type: "updategroup", groupID: currentGroup, requester: username, newName, username, newIcon,token: mytoken };
-      socket.send(JSON.stringify(packet));
-      closeGroupSettingsPopup();
-    }
-    function refreshUserList(members) {
-      const userlistContent = document.getElementById("userlist-content");
-      if (userlistContent) {
-        userlistContent.innerHTML = ""; 
-        members.forEach((m) => {
-          makeUser(m.username, m.icon);
-        });
       }
-    }
-
-    function handleUserUpdate(action, user, icon) {
-      console.log(action, user);
-      const userlistContent = document.getElementById("userlist-content");
-      if (!userlistContent) return;
-
-      if (action === "add") {
-        makeUser(user.username, user.icon || "");
-      } else if (action === "remove") {
-
-        const users = Array.from(userlistContent.children);
-        users.forEach((userElement) => {
-          if (userElement.textContent.trim() === user.username) {
-            userlistContent.removeChild(userElement);
-          }
-        });
-      }
-    }
-    function pingServer() {
-      if (socket.readyState !== WebSocket.OPEN) return;
-      setTimeout(() => {
+      function pingServer() {
+        if (socket.readyState !== WebSocket.OPEN) return;
+        setTimeout(() => {
           const packet = {
             type: "ping",
             username,
@@ -1301,225 +1472,252 @@
           socket.send(JSON.stringify(packet));
           pingServer();
         }, 500);
-    }
-    function attemptReconnect() {
-      if (socket.readyState === WebSocket.OPEN) return;
-      setTimeout(() => {
-        ConnectToServer();
-        attemptReconnect();
-      }, 500);
-    }
-    function ConnectToServer() {
-      socket = new WebSocket(serverlocation);
+      }
+      function attemptReconnect() {
+        if (socket.readyState === WebSocket.OPEN) return;
+        setTimeout(() => {
+          ConnectToServer();
+          attemptReconnect();
+        }, 500);
+      }
+      function ConnectToServer() {
+        socket = new WebSocket(
+          confirm() == true ? serverlocation : alternativeserverlocation
+        );
 
-      socket.onopen = () => {
-        pingServer();
-      };
+        socket.onopen = () => {
+          pingServer();
+        };
 
-      socket.addEventListener("message", (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          console.log(data)
-          if (data.status !== "error") {
-            if (data && data.userID === myuuid) {
-              myuuid = customUuid();
-              switch (data.type) {
-                case "Login":
-                  console.log("here")
-                  InitChat();
-                  username = data.username;
-                  mytoken = data.token;
-                  MakeErrorMessage(data.message, true);
-                  sendGroupPacket(username);
-                  updateUserInfo(username);
-                  break;
+        socket.addEventListener("message", (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            console.log(data);
+            if (data.status !== "error") {
+              if (data && data.userID === myuuid) {
+                myuuid = customUuid();
+                switch (data.type) {
+                  case "Login":
+                    console.log("here");
+                    InitChat();
+                    username = data.username;
+                    mytoken = data.token;
+                    MakeErrorMessage(data.message, true);
+                    sendGroupPacket(username);
+                    updateUserInfo(username);
+                    break;
 
-                case "CreateAccount":
-                  MakeErrorMessage(data.message, true);
-                  break;
+                  case "CreateAccount":
+                    MakeErrorMessage(data.message, true);
+                    break;
 
-                case "MakeGroup":
-                  MakeErrorMessage(data.message, true);
-                  break;
+                  case "MakeGroup":
+                    MakeErrorMessage(data.message, true);
+                    break;
 
-                case "JoinGroup":
-                  MakeErrorMessage(data.message, true);
-                  sendGroupPacket(username);
-                  const joinGroupPacket = {
-                    type: "requestGroupData",
-                    groupID: data.groupID,
-                    userID: myuuid,
-                    username,
-                    token: mytoken,
-                  };
-                  socket.send(JSON.stringify(joinGroupPacket));
-                  break;
+                  case "JoinGroup":
+                    MakeErrorMessage(data.message, true);
+                    sendGroupPacket(username);
+                    const joinGroupPacket = {
+                      type: "requestGroupData",
+                      groupID: data.groupID,
+                      userID: myuuid,
+                      username,
+                      token: mytoken,
+                    };
+                    socket.send(JSON.stringify(joinGroupPacket));
+                    break;
 
-                case "groupMessages":
-                  const content = document.getElementById("content");
-                  const memberslist = document.getElementById("userlist-content");
-                  if (content && memberslist) {
-                    content.innerHTML = "";
-                    memberslist.innerHTML = "";
-                    const fixeddata = data.data;
-                    const messages = fixeddata.data;
-                    const members = fixeddata.allmembers;
-                    messages.forEach((msg) => {
-                      makebox(msg.message, msg.username + " " + (msg.time || ""), false, "/assets/img/user.svg");
-                    });
-                    refreshUserList(members);
-                    if (isRequestingSettings) {
-                      openGroupSettingsPopup(fixeddata);
-                    }
-                  }
-                  break;
-
-                case "getGroupList":
-                  UpdateGroupList(data.groups);
-                  break;
-
-                case "updateGroup":
-                  const { groupID, newName, kickUser, joinUser, allmembers } = data;
-
-                  if (groupID === currentGroup) {
-                    setGroupName(newName || "No Group :(");
-                  }
-
-                  if (kickUser) {
-                    const kickedUsers = Array.isArray(kickUser) ? kickUser : [kickUser];
-                    kickedUsers.forEach((user) => {
-                      if (user === username && groupID === currentGroup) {
-                        InitChat();
-                        setGroupName("No Group :(");
-                      } else {
-                        handleUserUpdate("remove", { username: user });
-                      }
-                    });
-                  }
-
-                  if (joinUser) {
-                    const joinedUsers = Array.isArray(joinUser) ? joinUser : [joinUser];
-                    joinedUsers.forEach((user) => {
-                      handleUserUpdate("add", user);
-                    });
-                  }
-
-                  if (Array.isArray(allmembers)) {
-                    refreshUserList(allmembers);
-                  }
-                  break;
-
-                case "sendmessage":
-                  getGroupData();
-                  break;
-
-                case "refreshGroupData":
-                  loadData();
-                  initGroupContent();
-                  getGroupData();
-                  sendGroupPacket(username);
-                  if (data.data && data.data.groupid === currentGroup) {
-                    const cont = document.getElementById("content");
-                    const lst = document.getElementById("userlist-content");
-                    if (cont && lst) {
-                      cont.innerHTML = "";
-                      lst.innerHTML = "";
-                      const fix = data.data;
-                      const msgList = fix.data || [];
-                      const memList = fix.allmembers || [];
-                      msgList.forEach((msg) => {
-                        makebox(msg.message, msg.username, false, "/assets/img/user.svg");
+                  case "groupMessages":
+                    const content = document.getElementById("content");
+                    const memberslist =
+                      document.getElementById("userlist-content");
+                    if (content && memberslist) {
+                      content.innerHTML = "";
+                      memberslist.innerHTML = "";
+                      const fixeddata = data.data;
+                      const messages = fixeddata.data;
+                      const members = fixeddata.allmembers;
+                      messages.forEach((msg) => {
+                        makebox(
+                          msg.message,
+                          msg.username + " " + (msg.time || ""),
+                          false,
+                          "/assets/img/user.svg"
+                        );
                       });
-                      refreshUserList(memList);
+                      refreshUserList(members);
+                      if (isRequestingSettings) {
+                        openGroupSettingsPopup(fixeddata);
+                      }
                     }
-                  }
-                  break;
+                    break;
+
+                  case "getGroupList":
+                    UpdateGroupList(data.groups);
+                    break;
+
+                  case "updateGroup":
+                    const { groupID, newName, kickUser, joinUser, allmembers } =
+                      data;
+
+                    if (groupID === currentGroup) {
+                      setGroupName(newName || "No Group :(");
+                    }
+
+                    if (kickUser) {
+                      const kickedUsers = Array.isArray(kickUser)
+                        ? kickUser
+                        : [kickUser];
+                      kickedUsers.forEach((user) => {
+                        if (user === username && groupID === currentGroup) {
+                          InitChat();
+                          setGroupName("No Group :(");
+                        } else {
+                          handleUserUpdate("remove", { username: user });
+                        }
+                      });
+                    }
+
+                    if (joinUser) {
+                      const joinedUsers = Array.isArray(joinUser)
+                        ? joinUser
+                        : [joinUser];
+                      joinedUsers.forEach((user) => {
+                        handleUserUpdate("add", user);
+                      });
+                    }
+
+                    if (Array.isArray(allmembers)) {
+                      refreshUserList(allmembers);
+                    }
+                    break;
+
+                  case "sendmessage":
+                    getGroupData();
+                    break;
+
+                  case "refreshGroupData":
+                    loadData();
+                    initGroupContent();
+                    getGroupData();
+                    sendGroupPacket(username);
+                    if (data.data && data.data.groupid === currentGroup) {
+                      const cont = document.getElementById("content");
+                      const lst = document.getElementById("userlist-content");
+                      if (cont && lst) {
+                        cont.innerHTML = "";
+                        lst.innerHTML = "";
+                        const fix = data.data;
+                        const msgList = fix.data || [];
+                        const memList = fix.allmembers || [];
+                        msgList.forEach((msg) => {
+                          makebox(
+                            msg.message,
+                            msg.username,
+                            false,
+                            "/assets/img/user.svg"
+                          );
+                        });
+                        refreshUserList(memList);
+                      }
+                    }
+                    break;
+                }
+              } else {
+                switch (data.type) {
+                  case "sendmessage":
+                    getGroupData();
+                    break;
+
+                  case "updateGroup":
+                    const { groupID, newName, kickUser, joinUser, allmembers } =
+                      data;
+                    loadData();
+                    initGroupContent();
+                    getGroupData();
+                    sendGroupPacket(username);
+                    if (groupID === currentGroup) {
+                      setGroupName(newName || "No Group :(");
+                    }
+
+                    if (kickUser) {
+                      const kickedUsers = Array.isArray(kickUser)
+                        ? kickUser
+                        : [kickUser];
+                      kickedUsers.forEach((user) => {
+                        if (user === username && groupID === currentGroup) {
+                          InitChat();
+                          setGroupName("No Group :(");
+                        } else {
+                          handleUserUpdate("remove", { username: user });
+                        }
+                      });
+                    }
+
+                    if (joinUser) {
+                      const joinedUsers = Array.isArray(joinUser)
+                        ? joinUser
+                        : [joinUser];
+                      joinedUsers.forEach((user) => {
+                        handleUserUpdate("add", user);
+                      });
+                    }
+
+                    if (Array.isArray(allmembers)) {
+                      refreshUserList(allmembers);
+                    }
+                    break;
+                }
               }
             } else {
-              switch (data.type) {
-                case "sendmessage":
-                  getGroupData();
-                  break;
-
-                case "updateGroup":
-                  const { groupID, newName, kickUser, joinUser, allmembers } = data;
-                  loadData();
-                  initGroupContent();
-                  getGroupData();
-                  sendGroupPacket(username);
-                  if (groupID === currentGroup) {
-                    setGroupName(newName || "No Group :(");
-                  }
-
-                  if (kickUser) {
-                    const kickedUsers = Array.isArray(kickUser) ? kickUser : [kickUser];
-                    kickedUsers.forEach((user) => {
-                      if (user === username && groupID === currentGroup) {
-                        InitChat();
-                        setGroupName("No Group :(");
-                      } else {
-                        handleUserUpdate("remove", { username: user });
-                      }
-                    });
-                  }
-
-                  if (joinUser) {
-                    const joinedUsers = Array.isArray(joinUser) ? joinUser : [joinUser];
-                    joinedUsers.forEach((user) => {
-                      handleUserUpdate("add", user);
-                    });
-                  }
-
-                  if (Array.isArray(allmembers)) {
-                    refreshUserList(allmembers);
-                  }
-                  break;
-              }
+              MakeErrorMessage(data.message, false);
             }
-          } else {
-            MakeErrorMessage(data.message, false);
+          } catch (e) {
+            console.error("Error parsing message:", e);
           }
-        } catch (e) {
-          console.error("Error parsing message:", e);
-        }
+        });
+      }
 
-        
-      });
-    }
-
-    function openUserSettingsPopup(){
-      const overlay = document.getElementById("UserSettingsOverlay");
-      const popup = document.getElementById("UserSettingsPopup");
-      overlay.style.display = "block";
-      popup.style.display = "flex";
-      popup.innerHTML = `
-      Work on progress! (sorry i didnt have time for update week)
+      function openUserSettingsPopup() {
+        const overlay = document.getElementById("UserSettingsOverlay");
+        const popup = document.getElementById("UserSettingsPopup");
+        overlay.style.display = "block";
+        popup.style.display = "flex";
+        popup.innerHTML = `
+      <div class="GroupSettingsTitle" style="margin-top: 1vw;">User Settings</div>
+      <label style="width:90%;font-size:1vw;">Profile Icon</label>
+      <input class="group-settings-input" placeholder="User Profile Icon URL" id="UserIconURL"/>
+      <div class="usersettingscontainer">
+        <input class="group-settings-input" style="margin-top:0.5vw"type="color" id="idinput" />
+        <button class="content-bt" style="width: 4vw;" onclick="">Save</button>
+      </div>
       `;
-      overlay.classList.remove("HideOverlayAnim");
-      popup.classList.remove("UserSettingsPopupHide");
-      overlay.classList.add("ShowOverlayAnim");
-      popup.classList.add("UserSettingsPopupShow");
-      overlay.addEventListener("click", closeUserSettingsPopup);
-    }
-    function closeUserSettingsPopup(){
-      const overlay = document.getElementById("UserSettingsOverlay");
-      const popup = document.getElementById("UserSettingsPopup");
-      overlay.classList.remove("ShowOverlayAnim");
-      popup.classList.remove("UserSettingsPopupShow");
-      overlay.classList.add("HideOverlayAnim");
-      popup.classList.add("UserSettingsPopupHide");
-      overlay.addEventListener("animationend", function hideOverlay(){
-        overlay.style.display = "none";
-        overlay.removeEventListener("animationend", hideOverlay);
-      });
-      popup.addEventListener("animationend", function hidePopup(){
-        popup.style.display = "none";
-        popup.removeEventListener("animationend", hidePopup);
-      });
-      overlay.removeEventListener("click", closeUserSettingsPopup);
-    }
-    InitLogin();
-    ConnectToServer();
-  </script>
-</body>
+        overlay.classList.remove("HideOverlayAnim");
+        popup.classList.remove("UserSettingsPopupHide");
+        overlay.classList.add("ShowOverlayAnim");
+        popup.classList.add("UserSettingsPopupShow");
+        overlay.addEventListener("click", closeUserSettingsPopup);
+      }
+      function closeUserSettingsPopup() {
+        const overlay = document.getElementById("UserSettingsOverlay");
+        const popup = document.getElementById("UserSettingsPopup");
+        overlay.classList.remove("ShowOverlayAnim");
+        popup.classList.remove("UserSettingsPopupShow");
+        overlay.classList.add("HideOverlayAnim");
+        popup.classList.add("UserSettingsPopupHide");
+        overlay.addEventListener("animationend", function hideOverlay() {
+          overlay.style.display = "none";
+          overlay.removeEventListener("animationend", hideOverlay);
+        });
+        popup.addEventListener("animationend", function hidePopup() {
+          popup.style.display = "none";
+          popup.removeEventListener("animationend", hidePopup);
+        });
+        overlay.removeEventListener("click", closeUserSettingsPopup);
+      }
+      InitLogin();
+      ConnectToServer();
+    </script>
+  </body>
 </html>

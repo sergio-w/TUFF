@@ -12,7 +12,6 @@ function generateToken() {
 }
 
 const dbFile = path.join(__dirname, "database.db");
-const dbExists = fs.existsSync(dbFile);
 const db = new sqlite3.Database(dbFile);
 
 db.serialize(() => {
@@ -376,6 +375,127 @@ async function login(account, password, userID, ws) {
   });
 }
 
+function joinGroup(id, userID, username, ws) {
+  // Fetch the group details based on group ID
+  db.get(
+    `SELECT groupid, members FROM Groups WHERE groupid = ?`,
+    [id],
+    (err, groupRow) => {
+      if (err) {
+        return sendToClient(ws, {
+          type: "JoinGroup",
+          status: "error",
+          message: "DB error: " + err.message,
+        });
+      }
+
+      // Check if the group exists
+      if (!groupRow) {
+        return sendToClient(ws, {
+          type: "JoinGroup",
+          status: "error",
+          message: "Group not found!",
+        });
+      }
+
+      let groupMembers = [];
+      try {
+        groupMembers = JSON.parse(groupRow.members || "[]");
+      } catch (parseErr) {
+        return sendToClient(ws, {
+          type: "JoinGroup",
+          status: "error",
+          message: "Failed to parse group members.",
+        });
+      }
+
+      // Fetch the user's current groups
+      db.get(
+        `SELECT groups FROM Accounts WHERE username = ?`,
+        [username],
+        (err2, row) => {
+          if (err2) {
+            return sendToClient(ws, {
+              type: "JoinGroup",
+              status: "error",
+              message: "DB error: " + err2.message,
+            });
+          }
+
+          // Check if the account exists
+          if (!row) {
+            return sendToClient(ws, {
+              type: "JoinGroup",
+              status: "error",
+              message: "Account not found.",
+            });
+          }
+
+          let userGroups = [];
+          try {
+            userGroups = JSON.parse(row.groups || "[]");
+          } catch (parseErr) {
+            userGroups = [];
+          }
+
+          // Add the group ID to the user's groups if not already present
+          if (!userGroups.includes(id)) {
+            userGroups.push(id);
+          }
+
+          // Add the username to the group's members if not already present
+          if (!groupMembers.includes(username)) {
+            groupMembers.push(username);
+          }
+
+          const updatedUserGroups = JSON.stringify(userGroups);
+          const updatedGroupMembers = JSON.stringify(groupMembers);
+
+          // Update the group's members in the database
+          db.run(
+            `UPDATE Groups SET members = ? WHERE groupid = ?`,
+            [updatedGroupMembers, id],
+            (err3) => {
+              if (err3) {
+                return sendToClient(ws, {
+                  type: "JoinGroup",
+                  status: "error",
+                  message: "DB update error (Groups): " + err3.message,
+                });
+              }
+
+              // Update the user's groups in the database
+              db.run(
+                `UPDATE Accounts SET groups = ? WHERE username = ?`,
+                [updatedUserGroups, username],
+                (err4) => {
+                  if (err4) {
+                    return sendToClient(ws, {
+                      type: "JoinGroup",
+                      status: "error",
+                      message: "DB update error (Accounts): " + err4.message,
+                    });
+                  }
+
+                  // Send a success response to the client
+                  sendToClient(ws, {
+                    type: "JoinGroup",
+                    status: "success",
+                    message: "Joined group successfully.",
+                    groupid: id,
+                    groups: updatedUserGroups,
+                    userID,
+                    username,
+                  });
+                }
+              );
+            }
+          );
+        }
+      );
+    }
+  );
+}
 
 function makeGroup(name, icon, userID, username, ws) {
   db.get(`SELECT name FROM Groups WHERE name=?`, [name], (err, row) => {
