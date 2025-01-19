@@ -1273,12 +1273,13 @@
       }
     }
 
-    function handleUserUpdate(action, user) {
+    function handleUserUpdate(action, user, icon) {
+      console.log(action, user);
       const userlistContent = document.getElementById("userlist-content");
       if (!userlistContent) return;
 
       if (action === "add") {
-        makeUser(user.username, user.icon);
+        makeUser(user.username, user.icon || "");
       } else if (action === "remove") {
 
         const users = Array.from(userlistContent.children);
@@ -1289,18 +1290,30 @@
         });
       }
     }
-    function ConnectToServer() {
-      socket = new WebSocket(serverlocation);
-
-      socket.onopen = () => {
-        setTimeout(() => {
+    function pingServer() {
+      if (socket.readyState !== WebSocket.OPEN) return;
+      setTimeout(() => {
           const packet = {
             type: "ping",
             username,
             token: mytoken,
           };
           socket.send(JSON.stringify(packet));
+          pingServer();
         }, 500);
+    }
+    function attemptReconnect() {
+      if (socket.readyState === WebSocket.OPEN) return;
+      setTimeout(() => {
+        ConnectToServer();
+        attemptReconnect();
+      }, 500);
+    }
+    function ConnectToServer() {
+      socket = new WebSocket(serverlocation);
+
+      socket.onopen = () => {
+        pingServer();
       };
 
       socket.addEventListener("message", (event) => {
@@ -1400,6 +1413,10 @@
                   break;
 
                 case "refreshGroupData":
+                  loadData();
+                  initGroupContent();
+                  getGroupData();
+                  sendGroupPacket(username);
                   if (data.data && data.data.groupid === currentGroup) {
                     const cont = document.getElementById("content");
                     const lst = document.getElementById("userlist-content");
@@ -1425,12 +1442,14 @@
 
                 case "updateGroup":
                   const { groupID, newName, kickUser, joinUser, allmembers } = data;
-
+                  loadData();
+                  initGroupContent();
+                  getGroupData();
+                  sendGroupPacket(username);
                   if (groupID === currentGroup) {
                     setGroupName(newName || "No Group :(");
                   }
 
-                  // Handle users kicked
                   if (kickUser) {
                     const kickedUsers = Array.isArray(kickUser) ? kickUser : [kickUser];
                     kickedUsers.forEach((user) => {
@@ -1443,7 +1462,6 @@
                     });
                   }
 
-                  // Handle users joined
                   if (joinUser) {
                     const joinedUsers = Array.isArray(joinUser) ? joinUser : [joinUser];
                     joinedUsers.forEach((user) => {
@@ -1451,7 +1469,6 @@
                     });
                   }
 
-                  // Refresh the full member list
                   if (Array.isArray(allmembers)) {
                     refreshUserList(allmembers);
                   }
@@ -1470,7 +1487,8 @@
         };
 
         socket.onclose = () => {
-          setTimeout(ConnectToServer, 1000);
+          MakeErrorMessage("Disconnected. attemping reconnect", false);
+          attemptReconnect();
         };
       });
     }

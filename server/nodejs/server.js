@@ -589,7 +589,15 @@ function updateGroup(msg, ws) {
     );
   });
 }
-
+async function getUserData(username) {
+  return new Promise((resolve, reject) => {
+    db.get(`SELECT username, icon FROM Accounts WHERE username=?`, [username], (err, row) => {
+      if (err) return reject(err);
+      if (!row) return resolve(null);
+      resolve(row);
+    });
+  });
+}
 const wss = new WebSocket.Server({ port: PORT }, () => {
   console.log(`WebSocket server running on ws://localhost:${PORT}`);
 });
@@ -637,6 +645,16 @@ wss.on("connection", (ws) => {
       makeGroup(msg.groupname, null, msg.userID, msg.username, ws);
     } else if (messageType === "joingroup") {
       joinGroup(msg.id, msg.userID, msg.username, ws);
+      const userData = await getUserData(msg.username).catch(() => null);
+      const groupData = await getGroupData(msg.id).catch(() => null);
+      broadcastAll({
+        type: "updateGroup",
+        groupID: msg.id,
+        newName: groupData.groupName || null,
+        newIcon: groupData.groupIcon || null,
+        kickUser: null,
+        joinUser: userData || null
+      });
     } else if (messageType === "sendmessage") {
       const { groupID, userID, message, username } = msg;
       sendMessage(groupID, userID, message, username, ws);
@@ -691,6 +709,7 @@ wss.on("connection", (ws) => {
         newName: msg.newName || null,
         newIcon: msg.newIcon || null,
         kickUser: msg.kickUser || null,
+        joinUser: null
       });
     } else {
       sendToClient(ws, {
