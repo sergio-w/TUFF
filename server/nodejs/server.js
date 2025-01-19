@@ -8,7 +8,7 @@ const PORT = 9001;
 const activeConnections = new Map();
 
 function generateToken() {
-  return crypto.randomBytes(64).toString("base64");
+  return crypto.randomBytes(128).toString("base64");
 }
 
 const dbFile = path.join(__dirname, "database.db");
@@ -81,11 +81,21 @@ function markUserOffline(username) {
         if (err) {
           return reject(err);
         }
-        resolve();
+        db.run(
+          `UPDATE Accounts SET token = 'None' WHERE username = ?`,
+          [username],
+          (tokenErr) => {
+            if (tokenErr) {
+              return reject(tokenErr);
+            }
+            resolve();
+          }
+        );
       }
     );
   });
 }
+
 
 function cleanupStaleUsers(timeoutSeconds = 60) {
   const cutoff = Date.now() - timeoutSeconds * 1000;
@@ -165,7 +175,7 @@ function createAccount(username, password, userID, ws) {
       });
     } else {
       const initialToken = "None";
-      const defaultIcon = "/assets/img/favicon.ico";
+      const defaultIcon = "/assets/img/user.svg";
       const emptyGroups = "[]";
       db.run(
         `INSERT INTO Accounts (username, password, token, icon, groups) VALUES (?, ?, ?, ?, ?)`,
@@ -192,57 +202,6 @@ function createAccount(username, password, userID, ws) {
   });
 }
 
-function login(account, password, userID, ws) {
-  const hashedPassword = crypto.createHash("sha256").update(password).digest("hex");
-  db.get(`SELECT password, token, groups FROM Accounts WHERE username=?`, [account], async (err, row) => {
-    if (err) {
-      sendToClient(ws, {
-        type: "Login",
-        status: "error",
-        message: "DB error: " + err.message
-      });
-      return;
-    }
-    if (!row) {
-      sendToClient(ws, {
-        type: "Login",
-        status: "error",
-        message: "Account not found."
-      });
-      return;
-    }
-    const dbPassword = row.password;
-    if (dbPassword !== hashedPassword) {
-      sendToClient(ws, {
-        type: "Login",
-        status: "error",
-        message: "Incorrect password."
-      });
-      return;
-    }
-    try {
-      const newToken = await setupToken(account);
-      await markUserOnline(account);
-      activeConnections.set(account, ws);
-      sendToClient(ws, {
-        type: "Login",
-        status: "success",
-        message: "Logging in!",
-        userID,
-        token: newToken,
-        username: account,
-        groups: row.groups,
-        token: newToken
-      });
-    } catch (e) {
-      sendToClient(ws, {
-        type: "Login",
-        status: "error",
-        message: "An error occurred: " + e.message
-      });
-    }
-  });
-}
 
 function getGroupData(groupID) {
   return new Promise((resolve, reject) => {
@@ -332,91 +291,91 @@ async function sendMessage(groupID, userID, messagecontent, username, ws) {
   });
 }
 
-function joinGroup(id, userID, username, ws) {
-  db.get(`SELECT groupid, members FROM Groups WHERE groupid=?`, [id], (err, groupRow) => {
+async function login(account, password, userID, ws) {
+  const hashedPassword = crypto.createHash("sha256").update(password).digest("hex");
+  
+  db.get(`SELECT password, token, groups FROM Accounts WHERE username=?`, [account], async (err, row) => {
     if (err) {
-      return sendToClient(ws, {
-        type: "JoinGroup",
+      sendToClient(ws, {
+        type: "Login",
         status: "error",
-        message: "DB error: " + err.message,
+        message: "DB error: " + err.message
       });
+      return;
     }
-    if (!groupRow) {
-      return sendToClient(ws, {
-        type: "JoinGroup",
+    if (!row) {
+      sendToClient(ws, {
+        type: "Login",
         status: "error",
-        message: "Group not found!",
+        message: "Account not found."
       });
+      return;
     }
-    let groupMembers = [];
-    try {
-      groupMembers = JSON.parse(groupRow.members || "[]");
-    } catch (parseErr) {
-      return sendToClient(ws, {
-        type: "JoinGroup",
+    const dbPassword = row.password;
+    if (dbPassword !== hashedPassword) {
+      sendToClient(ws, {
+        type: "Login",
         status: "error",
-        message: "Failed to parse group members.",
+        message: "Incorrect password."
       });
+      return;
     }
-    db.get(`SELECT groups FROM Accounts WHERE username=?`, [username], (err2, row) => {
-      if (err2) {
-        return sendToClient(ws, {
-          type: "JoinGroup",
+
+    if (row.token !== "None") {
+      if (activeConnections.has(account)) {
+        sendToClient(ws, {
+          type: "Login",
           status: "error",
-          message: "DB error: " + err2.message,
+          message: "User is already logged in."
         });
-      }
-      if (!row) {
-        return sendToClient(ws, {
-          type: "JoinGroup",
-          status: "error",
-          message: "Account not found.",
-        });
-      }
-      let userGroups = [];
-      try {
-        userGroups = JSON.parse(row.groups || "[]");
-      } catch (parseErr) {
-        userGroups = [];
-      }
-      if (!userGroups.includes(id)) {
-        userGroups.push(id);
-      }
-      if (!groupMembers.includes(username)) {
-        groupMembers.push(username);
-      }
-      const updatedUserGroups = JSON.stringify(userGroups);
-      const updatedGroupMembers = JSON.stringify(groupMembers);
-      db.run(`UPDATE Groups SET members=? WHERE groupid=?`, [updatedGroupMembers, id], (err3) => {
-        if (err3) {
-          return sendToClient(ws, {
-            type: "JoinGroup",
-            status: "error",
-            message: "DB update error (Groups): " + err3.message,
-          });
-        }
-        db.run(`UPDATE Accounts SET groups=? WHERE username=?`, [updatedUserGroups, username], (err4) => {
-          if (err4) {
-            return sendToClient(ws, {
-              type: "JoinGroup",
-              status: "error",
-              message: "DB update error (Accounts): " + err4.message,
-            });
+        return;
+      } else {
+        db.run(
+          `UPDATE Accounts SET token = 'None' WHERE username = ?`,
+          [account],
+          (updateErr) => {
+            if (updateErr) {
+              sendToClient(ws, {
+                type: "Login",
+                status: "error",
+                message: "Error resetting token: " + updateErr.message
+              });
+              return;
+            }
+            proceedWithLogin();
           }
-          sendToClient(ws, {
-            type: "JoinGroup",
-            status: "success",
-            message: "Joined group successfully.",
-            groupid: id,
-            groups: updatedUserGroups,
-            userID,
-            username,
-          });
+        );
+        return;
+      }
+    } else {
+      proceedWithLogin();
+    }
+
+    async function proceedWithLogin() {
+      try {
+        const newToken = await setupToken(account);
+        await markUserOnline(account);
+        activeConnections.set(account, ws);
+        sendToClient(ws, {
+          type: "Login",
+          status: "success",
+          message: "Logging in!",
+          userID,
+          token: newToken,
+          username: account,
+          groups: row.groups
         });
-      });
-    });
+      } catch (e) {
+        sendToClient(ws, {
+          type: "Login",
+          status: "error",
+          message: "An error occurred: " + e.message
+        });
+      }
+    }
   });
 }
+
 
 function makeGroup(name, icon, userID, username, ws) {
   db.get(`SELECT name FROM Groups WHERE name=?`, [name], (err, row) => {
@@ -607,10 +566,15 @@ setInterval(() => {
 }, 10000);
 
 wss.on("connection", (ws) => {
-  ws.on("close", () => {
+  ws.on("close", async () => {
     for (const [uname, conn] of activeConnections.entries()) {
       if (conn === ws) {
-        markUserOffline(uname);
+        try {
+          await markUserOffline(uname);
+          console.log(`User ${uname} marked as offline and token reset.`);
+        } catch (error) {
+          console.error(`Error marking user ${uname} offline:`, error);
+        }
         activeConnections.delete(uname);
         break;
       }

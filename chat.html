@@ -741,7 +741,6 @@
         </div>
         `;
         loadData();
-        ConnectToServer();
         InitInput();
         initGroupContent();
         document.querySelector(".settings-icon").addEventListener("click", () => {
@@ -866,7 +865,7 @@
       box.classList.add("textbox");
       box.style.width = "auto";
       box.style.textAlign = "left";
-      const imageRegex = /(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg)(\?.*)?)/gi;
+      const imageRegex = /(https?:\/\/[^\s]*\.(?:png|jpg|jpeg|gif|svg)(?:\?[^\s]*)?)/gi;
       const images = [...text.matchAll(imageRegex)].map(match => match[0]);
       const textWithoutImages = text.replace(imageRegex, "").trim();
       if (textWithoutImages) {
@@ -898,7 +897,7 @@
         imgDiv.style.marginTop = "0.5vw"; 
         const imgElement = document.createElement("img");
         imgElement.src = imgUrl;
-        imgElement.style.maxWidth = "50%";
+        imgElement.style.maxWidth = "40vw";
         imgElement.style.height = "auto";
         imgElement.style.borderRadius = "0.5vw";
         imgDiv.appendChild(imgElement);
@@ -1061,13 +1060,14 @@
       });
     }
     function Login() {
+      if (socket.readyState !== WebSocket.OPEN) return;
       const usernameVal = document.getElementById("login-username").value.trim();
       const passwordVal = document.getElementById("login-password").value.trim();
+      console.log(myuuid)
       if (usernameVal && passwordVal) {
-        let userID = myuuid;
         const payload = {
           type: "login",
-          data: { username: usernameVal, password: passwordVal, userID }
+          data: { username: usernameVal, password: passwordVal, userID: myuuid }
         };
         socket.send(JSON.stringify(payload));
       } else {
@@ -1319,12 +1319,13 @@
       socket.addEventListener("message", (event) => {
         try {
           const data = JSON.parse(event.data);
-
+          console.log(data)
           if (data.status !== "error") {
             if (data && data.userID === myuuid) {
               myuuid = customUuid();
               switch (data.type) {
                 case "Login":
+                  console.log("here")
                   InitChat();
                   username = data.username;
                   mytoken = data.token;
@@ -1482,14 +1483,7 @@
           console.error("Error parsing message:", e);
         }
 
-        socket.onerror = (error) => {
-          console.error("WebSocket error:", error);
-        };
-
-        socket.onclose = () => {
-          MakeErrorMessage("Disconnected. attemping reconnect", false);
-          attemptReconnect();
-        };
+        
       });
     }
 
@@ -1499,7 +1493,7 @@
       overlay.style.display = "block";
       popup.style.display = "flex";
       popup.innerHTML = `
-      testing
+      Work on progress! (sorry i didnt have time for update week)
       `;
       overlay.classList.remove("HideOverlayAnim");
       popup.classList.remove("UserSettingsPopupHide");
@@ -1525,6 +1519,7 @@
       overlay.removeEventListener("click", closeUserSettingsPopup);
     }
     InitLogin();
+    ConnectToServer();
   </script>
 </body>
 </html>
