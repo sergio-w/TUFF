@@ -166,7 +166,8 @@
       font-size: 0.9vw;
       margin-left: 0.4vw;
       padding: 0.4vw;
-      color: var(--accent-color);
+      display: flex;
+      align-items: center;
     }
 
     .bg {
@@ -228,6 +229,7 @@
       transform: translateY(20%);
       transition: all 0.2s ease;
       box-shadow: 0.1vw 0.1vw 0.2vw rgba(0, 0, 0, 0.5);
+      z-index: 9999;
     }
 
     .userinfo-container {
@@ -271,6 +273,7 @@
       transition: all 0.1s ease;
       opacity: 0;
       font-family: comfortaa, sans-serif;
+      z-index: 9000;
     }
 
     .overlay {
@@ -282,6 +285,7 @@
       background-color: black;
       opacity: 0;
       display: none;
+      z-index: 7000;
     }
 
     .ShowOverlayAnim {
@@ -463,6 +467,8 @@
       margin-left: 0.5vw;
       font-weight: bold;
       color: var(--text-color);
+      display: flex;
+      align-items: center;
     }
 
     .settings-icon {
@@ -496,6 +502,8 @@
       font-size: 0.9vw;
       color: var(--text-color);
       margin-right: 0.5vw;
+      display: flex;
+      align-items: center;
     }
 
     .userlist-content {
@@ -558,6 +566,7 @@
       transition: all 0.1s ease;
       opacity: 0;
       font-family: comfortaa, sans-serif;
+      z-index: 9999;
     }
 
     @keyframes CustomPopupShow {
@@ -615,6 +624,7 @@
       transition: all 0.1s ease;
       opacity: 0;
       font-family: comfortaa, sans-serif;
+      z-index: 9001;
     }
 
     .GroupSettingsPopupShow {
@@ -727,6 +737,16 @@
       background-color: var(--input-bg);
       margin-bottom: 1vw;
     }
+
+    /* Badge icon images / placeholders */
+    .badge-icon {
+      width: 1.5vw;
+      height: 1.5vw;
+      margin-left: 0.3vw;
+      display: inline-block;
+      vertical-align: middle;
+      object-fit: contain;
+    }
   </style>
 </head>
 
@@ -796,8 +816,7 @@
   <script>
     let socket = null;
     let serverlocation = "ws://chattingisveryveryfuninmathslessons.juststudy.uk:9001/";
-    let alternativeserverlocation =
-      "ws://localhost:9001";
+    let alternativeserverlocation = "ws://localhost:9001";
     let username = null;
     let myuuid = customUuid();
     let currentGroup = null;
@@ -805,7 +824,28 @@
     let currentGroupMembers = [];
     let isRequestingSettings = false;
     let mytoken = null;
+
     document.body.style.setProperty("--accent-color", localStorage.getItem("accent-color"));
+
+    const badgeIcons = {
+      developer: {
+        icon: "/assets/img/devIcon.png", // Green spanner
+        label: "Developer",
+      },
+      staff: {
+        icon: "/assets/img/staffIcon.png", // Purple admin
+        label: "Staff",
+      },
+      verified: {
+        icon: "/assets/img/verifiedIcon.png", // Light Blue w/ Orange tick
+        label: "Verified",
+      },
+      owner: {
+        icon: "/assets/img/crownIcon.png", // Crown
+        label: "Owner",
+      },
+    };
+
     function InitLogin() {
       const maincontainer = document.getElementById("maincontent");
       maincontainer.classList.add("smoothhide");
@@ -814,22 +854,20 @@
         function handleAnimationEnd() {
           maincontainer.classList.remove("smoothhide");
           maincontainer.classList.add("smoothshow");
-          maincontainer.removeEventListener(
-            "animationend",
-            handleAnimationEnd
-          );
-          maincontainer.innerHTML = `
-          <div class="LoginBox" id="loginbox"> 
-              <span style="font-size:2vw; text-align: center; width: 20vw; margin-top: 1vw;">Login</span>
-              <span style="font-size:1vw; text-align: center; width: 20vw; margin-top: 0.5vw; margin-bottom:0.5vw">Login to start chatting with your buddies</span>
-              <span style="font-size:0.8vw; text-align: left; width: 20vw;">Username<code style="color:red">*</code></span>
-              <input id="login-username" class="logininput" placeholder="Enter Username here"></input>
-              <span style="font-size:0.8vw; text-align: left; width: 20vw;">Password<code style="color:red">*</code></span>
-              <input id="login-password" class="logininput" type="password" placeholder="Enter Password here"></input>
-              <button class="login-bt" onclick="Login()">Login</button>
-              <span style="font-size:0.8vw; text-align: left; width: 20vw;">Don't have an account? <a style="color:lightblue;" href="#" onclick="InitRegister()">Register</a></span>
-          </div>
-        `;
+          maincontainer.removeEventListener("animationend", handleAnimationEnd);
+
+          maincontainer.innerHTML =
+            "<div class='LoginBox' id='loginbox'>" +
+            "<span style='font-size:2vw; text-align: center; width: 20vw; margin-top: 1vw;'>Login</span>" +
+            "<span style='font-size:1vw; text-align: center; width: 20vw; margin-top: 0.5vw; margin-bottom:0.5vw'>Login to start chatting with your buddies</span>" +
+            "<span style='font-size:0.8vw; text-align: left; width: 20vw;'>Username<code style='color:red'>*</code></span>" +
+            "<input id='login-username' class='logininput' placeholder='Enter Username here'></input>" +
+            "<span style='font-size:0.8vw; text-align: left; width: 20vw;'>Password<code style='color:red'>*</code></span>" +
+            "<input id='login-password' class='logininput' type='password' placeholder='Enter Password here'></input>" +
+            "<button class='login-bt' onclick='Login()'>Login</button>" +
+            "<span style='font-size:0.8vw; text-align: left; width: 20vw;'>Don't have an account? <a style='color:lightblue;' href='#' onclick='InitRegister()'>Register</a></span>" +
+            "</div>";
+
           document.getElementById("loginbox").addEventListener("keydown", (e) => {
             if (e.key === "Enter") {
               Login();
@@ -839,6 +877,7 @@
         }
       );
     }
+
     function InitRegister() {
       const maincontainer = document.getElementById("maincontent");
       maincontainer.classList.add("smoothhide");
@@ -847,25 +886,23 @@
         function handleAnimationEnd() {
           maincontainer.classList.remove("smoothhide");
           maincontainer.classList.add("smoothshow");
-          maincontainer.removeEventListener(
-            "animationend",
-            handleAnimationEnd
-          );
-          maincontainer.innerHTML = `
-          <div class="LoginBox"> 
-              <span style="font-size:2vw; text-align: center; width: 20vw; margin-top: 1vw;">Register</span>
-              <span style="font-size:1vw; text-align: center; width: 20vw; margin-top: 0.5vw; margin-bottom:0.5vw">Register to start chatting with your buddies</span>
-              <span style="font-size:0.8vw; text-align: left; width: 20vw;">Username<code style="color:red">*</code></span>
-              <input id="register-username" class="logininput" placeholder="Enter Username here"></input>
-              <span style="font-size:0.8vw; text-align: left; width: 20vw;">Password<code style="color:red">*</code></span>
-              <input id="register-password" class="logininput" type="password" placeholder="Enter Password here"></input>
-              <button class="login-bt" onclick="Register()">Register</button>
-              <span style="font-size:0.8vw; text-align: left; width: 20vw;">Already have an account? <a style="color:lightblue;" href="#" onclick="InitLogin()">Login</a></span>
-          </div>
-        `;
+          maincontainer.removeEventListener("animationend", handleAnimationEnd);
+
+          maincontainer.innerHTML =
+            "<div class='LoginBox'>" +
+            "<span style='font-size:2vw; text-align: center; width: 20vw; margin-top: 1vw;'>Register</span>" +
+            "<span style='font-size:1vw; text-align: center; width: 20vw; margin-top: 0.5vw; margin-bottom:0.5vw'>Register to start chatting with your buddies</span>" +
+            "<span style='font-size:0.8vw; text-align: left; width: 20vw;'>Username<code style='color:red'>*</code></span>" +
+            "<input id='register-username' class='logininput' placeholder='Enter Username here'></input>" +
+            "<span style='font-size:0.8vw; text-align: left; width: 20vw;'>Password<code style='color:red'>*</code></span>" +
+            "<input id='register-password' class='logininput' type='password' placeholder='Enter Password here'></input>" +
+            "<button class='login-bt' onclick='Register()'>Register</button>" +
+            "<span style='font-size:0.8vw; text-align: left; width: 20vw;'>Already have an account? <a style='color:lightblue;' href='#' onclick='InitLogin()'>Login</a></span>" +
+            "</div>";
         }
       );
     }
+
     function InitChat() {
       const maincontainer = document.getElementById("maincontent");
       maincontainer.classList.add("smoothhide");
@@ -874,193 +911,297 @@
         function handleAnimationEnd() {
           maincontainer.classList.remove("smoothhide");
           maincontainer.classList.add("smoothshow");
-          maincontainer.removeEventListener(
-            "animationend",
-            handleAnimationEnd
-          );
-          maincontainer.innerHTML = `
-        <div class="leftsidecontent" id="leftsidecontent">
-            <div class="group-icon-container" id="AddGroup">
-                <img src="/assets/img/roundAddIcon.png" class="leftsidecontent-icon" style="width: 95%; height: 95%;">
-            </div>
-        </div>
-        <div class="chatcontent">
-            <div id="content" class="content"></div>
-            <div class="bottombar">
-                <input class="textinput" id="textinput" placeholder="Enter something to text"></input>
-            </div>
-        </div>
-        <div class="rightsidecontent" id="rightsidecontent">
-            <div class="group-header">
-                <span class="group-name">No Group :(</span>
-                <i class="fa fa-cog settings-icon"></i>
-            </div>
-            <div class="userlist-content" id="userlist-content"></div>
-            <div class="user-info">
-                <img src="/assets/img/user.svg" alt="User Icon">
-                <span class="user-name">${username || "Username"}</span>
-                <i class="fa fa-cog user-settings-icon"></i>
-            </div>
-        </div>
-        `;
+          maincontainer.removeEventListener("animationend", handleAnimationEnd);
+
+          maincontainer.innerHTML =
+            "<div class='leftsidecontent' id='leftsidecontent'>" +
+            "<div class='group-icon-container' id='AddGroup'>" +
+            "<img src='/assets/img/roundAddIcon.png' class='leftsidecontent-icon' style='width:95%;height:95%;'>" +
+            "</div>" +
+            "</div>" +
+            "<div class='chatcontent'>" +
+            "<div id='content' class='content'></div>" +
+            "<div class='bottombar'>" +
+            "<input class='textinput' id='textinput' placeholder='Enter something to text'></input>" +
+            "</div>" +
+            "</div>" +
+            "<div class='rightsidecontent' id='rightsidecontent'>" +
+            "<div class='group-header'>" +
+            "<span class='group-name'>No Group :(</span>" +
+            "<i class='fa fa-cog settings-icon'></i>" +
+            "</div>" +
+            "<div class='userlist-content' id='userlist-content'></div>" +
+            "<div class='user-info'>" +
+            "<img src='/assets/img/user.svg' alt='User Icon'>" +
+            "<span class='user-name'>" + (username || "Username") + "</span>" +
+            "<i class='fa fa-cog user-settings-icon'></i>" +
+            "</div>" +
+            "</div>";
+
           loadData();
           InitInput();
           initGroupContent();
-          document
-            .querySelector(".settings-icon")
-            .addEventListener("click", () => {
-              if (!currentGroup) {
-                MakeErrorMessage("No group selected yet!", false);
-                return;
-              }
-              isRequestingSettings = true;
-              getGroupData();
-            });
-          const userSettingsIcon = document.querySelector(
-            ".user-settings-icon"
-          );
+
+          document.querySelector(".settings-icon").addEventListener("click", () => {
+            if (!currentGroup) {
+              MakeErrorMessage("No group selected yet!", false);
+              return;
+            }
+            isRequestingSettings = true;
+            getGroupData();
+          });
+
+          const userSettingsIcon = document.querySelector(".user-settings-icon");
           if (userSettingsIcon) {
             userSettingsIcon.addEventListener("click", openUserSettingsPopup);
           }
         }
       );
     }
+
     function updateUserInfo(newUsername) {
       const userNameSpan = document.querySelector(".user-name");
       if (userNameSpan) {
         userNameSpan.textContent = newUsername;
       }
     }
+
     function CopyText(text) {
       navigator.clipboard.writeText(text);
     }
+
     function createGroupIdPopup(id) {
       const existingPopups = document.querySelectorAll(".CustomPopup");
       existingPopups.forEach((popup) => popup.remove());
+
       const overlay = document.createElement("div");
       overlay.classList.add("overlay");
       overlay.style.display = "block";
       overlay.classList.remove("HideOverlayAnim");
       overlay.classList.add("ShowOverlayAnim");
+
       const popup = document.createElement("div");
       popup.classList.add("CustomPopup");
       popup.classList.add("smoothshow");
       popup.style.display = "flex";
-      popup.innerHTML = `
-          <span class="popuptext" style="margin-bottom: 0.4vw; margin-top: 0.8vw; font-weight: bold;">Invite People</span>
-          <span class="popuptext" style="margin-bottom: 1vw; margin-left: 0.5vw; margin-right: 0.5vw; font-weight: 100; font-size: 1vw; text-align: center;">
-              Click the copy button to copy the group ID.
-          </span>
-          <div class="copyidcontainer">
-              <input class="copyidinput" id="idinput" value="${id}" readOnly />
-              <button class="content-bt" style="width: 4vw;" onclick="CopyText('${id}'); MakeErrorMessage('Copied to clipboard!',true);">Copy</button>
-          </div>
-      `;
+      popup.innerHTML =
+        "<span class='popuptext' style='margin-bottom: 0.4vw; margin-top: 0.8vw; font-weight: bold;'>Invite People</span>" +
+        "<span class='popuptext' style='margin-bottom: 1vw; margin-left: 0.5vw; margin-right: 0.5vw; font-weight: 100; font-size: 1vw; text-align: center;'>Click the copy button to copy the group ID.</span>" +
+        "<div class='copyidcontainer'>" +
+        "<input class='copyidinput' id='idinput' value='" + id + "' readOnly />" +
+        "<button class='content-bt' style='width: 4vw;' onclick=\"CopyText('" + id + "'); MakeErrorMessage('Copied to clipboard!',true);\">Copy</button>" +
+        "</div>";
+
       document.body.appendChild(overlay);
       document.body.appendChild(popup);
+
       overlay.addEventListener("click", () => {
         popup.classList.remove("smoothshow");
         popup.classList.add("smoothhide");
         popup.addEventListener("animationend", () => popup.remove());
+
         overlay.classList.remove("ShowOverlayAnim");
         overlay.classList.add("HideOverlayAnim");
         overlay.addEventListener("animationend", () => overlay.remove());
       });
     }
-    function handleOverlayAnimationEnd() {
-      const overlay = document.querySelector(".overlay");
-      overlay.style.display = "none";
-      overlay.removeEventListener("animationend", handleOverlayAnimationEnd);
-    }
+
     function addGroupPopup() {
       const popup = document.getElementById("AddGroupPopup");
       const overlay = document.querySelector(".overlay");
       popup.style.display = "flex";
       popup.classList.remove("smoothhide");
       popup.classList.add("smoothshow");
+
       overlay.style.display = "block";
       overlay.classList.remove("HideOverlayAnim");
       overlay.classList.add("ShowOverlayAnim");
+
       popup.querySelectorAll("input").forEach((key) => {
         key.disabled = false;
       });
+
       overlay.addEventListener("click", () => {
         closeGroupPopup();
       });
     }
+
     function closeGroupPopup() {
       const popup = document.getElementById("AddGroupPopup");
       const overlay = document.querySelector(".overlay");
+
       popup.classList.remove("smoothshow");
       popup.classList.add("smoothhide");
+
       overlay.classList.remove("ShowOverlayAnim");
       overlay.classList.add("HideOverlayAnim");
       overlay.addEventListener("animationend", handleOverlayAnimationEnd);
+
       popup.querySelectorAll("input").forEach((key) => {
         key.disabled = true;
       });
     }
+
     function initGroupContent() {
       const popup = document.createElement("div");
       popup.classList.add("popup");
       popup.textContent = "Add Group";
       document.body.appendChild(popup);
+
       const container = document.getElementById("AddGroup");
       container.addEventListener("mouseover", () => {
         const rect = container.getBoundingClientRect();
         popup.style.display = "block";
         const viewportWidth = window.innerWidth;
         const leftInVW = ((rect.left + window.scrollX) / viewportWidth) * 100;
-        popup.style.left = `${leftInVW + 4}vw`;
-        popup.style.top = `${rect.top + window.scrollY}px`;
+        popup.style.left = (leftInVW + 4) + "vw";
+        popup.style.top = (rect.top + window.scrollY) + "px";
       });
+
       container.addEventListener("click", () => {
         addGroupPopup();
       });
+
       container.addEventListener("mouseout", () => {
         popup.style.display = "none";
       });
     }
-    function makebox(text, name, isself, iconurl) {
+
+    const badgeEmojis = {
+      developer: "🛠️",
+      staff: "🛡️",
+      verified: "✅",
+      owner: "👑"
+    };
+
+
+    function getAllBadgeIcons(badgesArray, isOwner, thetextdiv) {
+      const container = document.createElement("span");
+      container.style.display = "inline-flex";
+      container.style.alignItems = "center";
+
+      const orderedBadges = ["developer", "staff", "verified"];
+      orderedBadges.forEach((b) => {
+        if (badgesArray && badgesArray.includes(b)) {
+          container.appendChild(document.createTextNode(badgeEmojis[b] + " "));
+        }
+      });
+
+      if (isOwner) {
+        container.appendChild(document.createTextNode(badgeEmojis.owner + " "));
+      }
+
+      return container;
+    }
+    const badgeColors = {
+        developer: "#850000",
+        staff: "#ff5a70",
+        groupOwner: "#ffd700 ",
+        verified: "#3baa56",
+        default: "var(--accent-color)",
+    };
+
+    function getProfileBadgeIcon(badgesArray, isOwner, textElement) {
+      let chosen = null;
+
+
+      if (badgesArray && badgesArray.includes("developer")) {
+        chosen = "developer";
+      } else if (badgesArray && badgesArray.includes("staff")) {
+        chosen = "staff";
+      } else if (badgesArray && badgesArray.includes("verified")) {
+        chosen = "verified";
+      }
+
+      if (textElement) {
+        if (isOwner) {
+          textElement.style.color = badgeColors.groupOwner || badgeColors.default;
+        } else {
+          textElement.style.color = badgeColors[chosen] || badgeColors.default;
+        }
+      }
+
+      const container = document.createElement("span");
+      container.style.display = "inline-flex";
+      container.style.alignItems = "center";
+
+      if (chosen) {
+        container.appendChild(document.createTextNode(badgeEmojis[chosen] + " "));
+      }
+
+      if (isOwner) {
+        container.appendChild(document.createTextNode(badgeEmojis.owner + " "));
+      }
+
+      return container;
+    }
+
+
+    function makebox(text, name, isself, iconurl, badgesArray, isOwner) {
       const container = document.createElement("div");
       container.style.display = "flex";
       container.style.flexDirection = "column";
       container.style.alignItems = isself ? "flex-end" : "flex-start";
+      let chosen;
       const textdiv = document.createElement("span");
       textdiv.classList.add("textbox-name");
-      textdiv.innerText = name;
+
+      if (badgesArray && badgesArray.includes("developer")) {
+        chosen = "developer";
+      } else if (badgesArray && badgesArray.includes("staff")) {
+        chosen = "staff";
+      } else if (badgesArray && badgesArray.includes("verified")) {
+        chosen = "verified";
+      }
+
+      if (textdiv) {
+        if (isOwner) {
+          textdiv.style.color = badgeColors["groupOwner"] || badgeColors.default;
+        } else {
+          textdiv.style.color = badgeColors[chosen] || badgeColors.default;
+        }
+      }
+      const nameSpan = document.createElement("span");
+      nameSpan.innerText = name;
+
+      const badgesSpan = getAllBadgeIcons(badgesArray, isOwner, textdiv);
+      textdiv.appendChild(nameSpan);
+      textdiv.appendChild(badgesSpan);
+
       const box = document.createElement("div");
       box.classList.add("textbox");
       box.style.width = "auto";
       box.style.textAlign = "left";
-      const imageRegex =
-        /(https?:\/\/[^\s]*\.(?:png|jpg|jpeg|gif|svg)(?:\?[^\s]*)?)/gi;
+
+      const imageRegex = /(https?:\/\/[^\s]*\.(?:png|jpg|jpeg|gif|svg)(?:\?[^\s]*)?)/gi;
       const images = [...text.matchAll(imageRegex)].map((match) => match[0]);
       const textWithoutImages = text.replace(imageRegex, "").trim();
+
       if (textWithoutImages) {
         box.innerText = textWithoutImages;
       } else {
         box.style.display = "none";
       }
+
       const userinfocontainer = document.createElement("div");
       userinfocontainer.classList.add("userinfo-container");
+
       const iconcontainer = document.createElement("div");
       iconcontainer.classList.add("usericon-container");
+
       const icon = document.createElement("img");
       icon.src = iconurl;
       icon.style.width = "100%";
       icon.style.height = "100%";
       icon.classList.add("usericon-icon");
       iconcontainer.appendChild(icon);
-      if (isself) {
-        userinfocontainer.appendChild(iconcontainer);
-        userinfocontainer.appendChild(textdiv);
-      } else {
-        userinfocontainer.appendChild(textdiv);
-        userinfocontainer.appendChild(iconcontainer);
-      }
+
+      userinfocontainer.appendChild(textdiv);
+      userinfocontainer.appendChild(iconcontainer);
+
       container.appendChild(userinfocontainer);
       container.appendChild(box);
+
       images.forEach((imgUrl) => {
         const imgDiv = document.createElement("div");
         imgDiv.style.marginTop = "0.5vw";
@@ -1068,42 +1209,49 @@
         imgElement.src = imgUrl;
         imgElement.style.maxWidth = "40vw";
         imgElement.style.height = "auto";
-        maxHeight = "40vh";
         imgElement.style.borderRadius = "0.5vw";
         imgDiv.appendChild(imgElement);
         container.appendChild(imgDiv);
       });
+
       document.getElementById("content").appendChild(container);
       document.getElementById("content").scrollTop =
         document.getElementById("content").scrollHeight;
     }
+
     function makeGroup(name, iconurl, id) {
       const container = document.createElement("div");
       container.classList.add("leftsidecontent-icon-container");
+
       const icon = document.createElement("img");
       icon.src = iconurl;
       icon.style.width = "90%";
       icon.style.height = "90%";
       icon.classList.add("leftsidecontent-icon");
       container.appendChild(icon);
+
       document
         .getElementById("leftsidecontent")
         .insertBefore(container, document.getElementById("AddGroup"));
+
       const popup = document.createElement("div");
       popup.classList.add("popup");
       popup.textContent = name;
       document.body.appendChild(popup);
+
       container.addEventListener("mouseover", () => {
         const rect = container.getBoundingClientRect();
         popup.style.display = "block";
         const viewportWidth = window.innerWidth;
         const leftInVW = ((rect.left + window.scrollX) / viewportWidth) * 100;
-        popup.style.left = `${leftInVW + 4}vw`;
-        popup.style.top = `${rect.top + window.scrollY}px`;
+        popup.style.left = (leftInVW + 4) + "vw";
+        popup.style.top = (rect.top + window.scrollY) + "px";
       });
+
       container.addEventListener("mouseout", () => {
         popup.style.display = "none";
       });
+
       container.addEventListener("click", () => {
         currentGroup = id;
         const packet = {
@@ -1116,20 +1264,25 @@
         socket.send(JSON.stringify(packet));
         setGroupName(name);
       });
+
       container.addEventListener("contextmenu", (event) => {
         event.preventDefault();
         const existingPopups = document.querySelectorAll(".popup");
         existingPopups.forEach((pop) => {
-          document.body.removeChild(pop);
+          if (pop !== popup) {
+            document.body.removeChild(pop);
+          }
         });
         const menupopup = document.createElement("div");
         menupopup.classList.add("popup");
         document.body.appendChild(menupopup);
+
         const rect = container.getBoundingClientRect();
         const viewportWidth = window.innerWidth;
         const leftInVW = ((rect.left + window.scrollX) / viewportWidth) * 100;
-        menupopup.style.left = `${leftInVW + 1}vw`;
-        menupopup.style.top = `${rect.top + window.scrollY}px`;
+        menupopup.style.left = (leftInVW + 1) + "vw";
+        menupopup.style.top = (rect.top + window.scrollY) + "px";
+
         const leaveGroupButton = document.createElement("button");
         leaveGroupButton.classList.add("popup-leaveGroupButton");
         leaveGroupButton.textContent = "Leave Group";
@@ -1137,6 +1290,7 @@
           kickUserFromGroup(username, currentGroup);
           document.body.removeChild(menupopup);
         });
+
         const CopyIdButton = document.createElement("button");
         CopyIdButton.classList.add("popup-CopyID");
         CopyIdButton.textContent = "Group ID";
@@ -1144,18 +1298,19 @@
           createGroupIdPopup(id);
           document.body.removeChild(menupopup);
         });
+
         menupopup.appendChild(leaveGroupButton);
         menupopup.appendChild(CopyIdButton);
+
         menupopup.style.position = "absolute";
         menupopup.style.display = "flex";
         menupopup.style.flexDirection = "column";
         menupopup.style.alignItems = "center";
-        menupopup.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
         menupopup.style.zIndex = "1000";
-        document.body.appendChild(menupopup);
       });
     }
-    function makeUser(name, iconurl) {
+
+    function makeUser(name, iconurl, badges, isGroupOwner) {
       const container = document.createElement("div");
       container.style.display = "flex";
       container.style.flexDirection = "row";
@@ -1164,6 +1319,7 @@
       container.style.height = "3vw";
       container.style.width = "95%";
       container.style.marginLeft = "0.5vw";
+
       const iconcontainer = document.createElement("div");
       iconcontainer.classList.add("usericon-container");
       iconcontainer.style.display = "flex";
@@ -1174,6 +1330,7 @@
       iconcontainer.style.marginRight = "0.5vw";
       iconcontainer.style.flexShrink = "0";
       iconcontainer.style.flexGrow = "0";
+
       const icon = document.createElement("img");
       icon.src = iconurl;
       icon.style.width = "90%";
@@ -1182,27 +1339,35 @@
       icon.style.borderRadius = "50%";
       iconcontainer.appendChild(icon);
       container.appendChild(iconcontainer);
+
       const nameDiv = document.createElement("div");
       nameDiv.style.fontWeight = "bold";
       nameDiv.style.flex = "1";
       nameDiv.style.overflow = "hidden";
       nameDiv.style.textOverflow = "ellipsis";
       nameDiv.style.whiteSpace = "nowrap";
-      nameDiv.innerText = name;
+      const textWrap = document.createElement("span");
+      textWrap.innerText = name;
+      nameDiv.appendChild(textWrap);
+
+      const userBadgeSpan = getProfileBadgeIcon(badges, isGroupOwner, nameDiv);
+      nameDiv.appendChild(userBadgeSpan);
+
       function updateFontSize() {
         const viewportWidth = window.innerWidth;
         const properFontSize = Math.max(
           5,
           Math.min(17, (viewportWidth / name.length) * 0.1)
         );
-        nameDiv.style.fontSize = `${properFontSize}px`;
-        nameDiv.textContent = name;
+        nameDiv.style.fontSize = properFontSize + "px";
       }
       updateFontSize();
       window.addEventListener("resize", updateFontSize);
+
       container.appendChild(nameDiv);
       document.getElementById("userlist-content").appendChild(container);
     }
+
     function MakeErrorMessage(loginerr, success) {
       const loginerror = document.createElement("div");
       if (!success) {
@@ -1211,6 +1376,7 @@
       loginerror.classList.add("loginerrorpopup", "ErrorPopupShow");
       loginerror.innerText = loginerr;
       document.body.appendChild(loginerror);
+
       loginerror.addEventListener(
         "animationend",
         function handleAnimationEnd() {
@@ -1221,22 +1387,17 @@
             }, 2000);
           } else if (loginerror.classList.contains("ErrorPopupHide")) {
             loginerror.remove();
-            loginerror.removeEventListener(
-              "animationend",
-              handleAnimationEnd
-            );
+            loginerror.removeEventListener("animationend", handleAnimationEnd);
           }
         }
       );
     }
+
     function Login() {
       if (socket.readyState !== WebSocket.OPEN) return;
-      const usernameVal = document
-        .getElementById("login-username")
-        .value.trim();
-      const passwordVal = document
-        .getElementById("login-password")
-        .value.trim();
+      const usernameVal = document.getElementById("login-username").value.trim();
+      const passwordVal = document.getElementById("login-password").value.trim();
+
       if (usernameVal && passwordVal) {
         const payload = {
           type: "login",
@@ -1251,6 +1412,7 @@
         MakeErrorMessage("Please fill out all fields");
       }
     }
+
     function Register() {
       const usernameVal = document
         .getElementById("register-username")
@@ -1258,6 +1420,7 @@
       const passwordVal = document
         .getElementById("register-password")
         .value.trim();
+
       if (usernameVal && passwordVal) {
         const payload = {
           type: "create_account",
@@ -1269,6 +1432,7 @@
         MakeErrorMessage("Please fill out all fields");
       }
     }
+
     function InitInput() {
       const textinput = document.getElementById("textinput");
       textinput.addEventListener("keydown", (e) => {
@@ -1289,7 +1453,6 @@
                 MakeErrorMessage("Something went wrong. Please try again later!", true);
                 return;
               }
-
               const badWord = data.find(item => messagevalue.toLowerCase().includes(item.match.toLowerCase()));
               if (badWord) {
                 MakeErrorMessage("No bad words allowed!", false);
@@ -1308,6 +1471,7 @@
                   String(date.getMinutes()).padStart(2, "0"),
                 token: mytoken,
               };
+
               socket.send(JSON.stringify(jsonpayload));
               textinput.value = "";
             })
@@ -1318,19 +1482,25 @@
         }
       });
     }
+
     function customUuid(length = 200) {
       const randomValues = crypto.getRandomValues(new Uint8Array(length));
       return Array.from(randomValues, (byte) =>
         byte.toString(16).padStart(2, "0")
       ).join("");
     }
+
     function genClientKey() {
       const randomBytes = new Uint8Array(128);
       window.crypto.getRandomValues(randomBytes);
       const base64String = btoa(String.fromCharCode.apply(null, randomBytes));
       return base64String;
     }
-    function loadData() { }
+
+    function loadData() {
+
+    }
+
     function joinGroup(id) {
       closeGroupPopup();
       const packet = {
@@ -1342,6 +1512,7 @@
       };
       socket.send(JSON.stringify(packet));
     }
+
     function createGroup(name) {
       closeGroupPopup();
       const packet = {
@@ -1353,16 +1524,16 @@
       };
       socket.send(JSON.stringify(packet));
     }
+
     function UpdateGroupList(groups) {
       function waitForElement() {
         const leftSideContent = document.getElementById("leftsidecontent");
         if (leftSideContent) {
           clearInterval(checkInterval);
-          leftSideContent.innerHTML = `
-            <div class="group-icon-container" id="AddGroup">
-                <img src="/assets/img/roundAddIcon.png" class="leftsidecontent-icon" style="width: 95%; height: 95%;">
-            </div>
-          `;
+          leftSideContent.innerHTML =
+            "<div class='group-icon-container' id='AddGroup'>" +
+            "<img src='/assets/img/roundAddIcon.png' class='leftsidecontent-icon' style='width: 95%; height: 95%;'>" +
+            "</div>";
           initGroupContent();
           groups.forEach((group) => {
             makeGroup(group.name, group.icon, group.id);
@@ -1371,6 +1542,7 @@
       }
       const checkInterval = setInterval(waitForElement, 100);
     }
+
     function sendGroupPacket(uName) {
       myuuid = customUuid();
       const packet = {
@@ -1381,6 +1553,7 @@
       };
       socket.send(JSON.stringify(packet));
     }
+
     function getGroupData() {
       if (!currentGroup) return;
       const packet = {
@@ -1392,35 +1565,41 @@
       };
       socket.send(JSON.stringify(packet));
     }
+
     function setGroupName(name) {
       const groupNameSpan = document.querySelector(".group-name");
       if (groupNameSpan) {
         groupNameSpan.textContent = name;
       }
     }
+
     function openGroupSettingsPopup(groupData) {
       const popup = document.getElementById("GroupSettingsPopup");
       const overlay = document.querySelector(".overlay");
+
       popup.style.display = "flex";
       popup.classList.remove("GroupSettingsPopupHide");
       popup.classList.add("GroupSettingsPopupShow");
+
       overlay.style.display = "block";
       overlay.classList.remove("HideOverlayAnim");
       overlay.classList.add("ShowOverlayAnim");
+
       document.getElementById("groupSettingsName").value =
         groupData.groupName || "";
       document.getElementById("groupSettingsIcon").value =
         groupData.groupIcon || "";
       currentGroupOwner = groupData.owner;
       currentGroupMembers = groupData.allmembers || [];
-      const membersContainer = document.getElementById(
-        "groupSettingsMembers"
-      );
+
+      const membersContainer = document.getElementById("groupSettingsMembers");
       membersContainer.innerHTML = "";
+
       currentGroupMembers.forEach((m) => {
         const row = document.createElement("div");
         row.classList.add("kick-list-item");
-        row.innerHTML = `<span>${m.username}</span>`;
+        row.innerHTML = "<span>" + m.username + "</span>";
+
         if (
           username === currentGroupOwner &&
           m.username !== currentGroupOwner
@@ -1435,30 +1614,38 @@
         }
         membersContainer.appendChild(row);
       });
+
       overlay.addEventListener("click", closeGroupSettingsPopup);
     }
+
     function closeGroupSettingsPopup() {
       const popup = document.getElementById("GroupSettingsPopup");
       const overlay = document.querySelector(".overlay");
+
       popup.classList.remove("GroupSettingsPopupShow");
       popup.classList.add("GroupSettingsPopupHide");
       popup.addEventListener("animationend", handlePopupAnimationEnd);
+
       overlay.classList.remove("ShowOverlayAnim");
       overlay.classList.add("HideOverlayAnim");
       overlay.addEventListener("animationend", handleOverlayAnimationEnd);
       overlay.removeEventListener("click", closeGroupSettingsPopup);
+
       isRequestingSettings = false;
     }
+
     function handlePopupAnimationEnd(event) {
       const popup = event.target;
       popup.style.display = "none";
       popup.removeEventListener("animationend", handlePopupAnimationEnd);
     }
+
     function handleOverlayAnimationEnd(event) {
       const overlay = event.target;
       overlay.style.display = "none";
       overlay.removeEventListener("animationend", handleOverlayAnimationEnd);
     }
+
     function kickUserFromGroup(user) {
       MakeErrorMessage("Requested to kick " + user, true);
       const packet = {
@@ -1472,14 +1659,12 @@
       };
       socket.send(JSON.stringify(packet));
     }
+
     function saveGroupSettings() {
-      const newName = document
-        .getElementById("groupSettingsName")
-        .value.trim();
-      const newIcon = document
-        .getElementById("groupSettingsIcon")
-        .value.trim();
+      const newName = document.getElementById("groupSettingsName").value.trim();
+      const newIcon = document.getElementById("groupSettingsIcon").value.trim();
       MakeErrorMessage("Requested to save new settings", true);
+
       const packet = {
         type: "updategroup",
         groupID: currentGroup,
@@ -1490,33 +1675,60 @@
         token: mytoken,
       };
       socket.send(JSON.stringify(packet));
+
       closeGroupSettingsPopup();
     }
+
     function refreshUserList(members) {
       const userlistContent = document.getElementById("userlist-content");
       if (userlistContent) {
         userlistContent.innerHTML = "";
         members.forEach((m) => {
-          makeUser(m.username, m.icon);
+          const isOwner = (m.username === currentGroupOwner);
+          makeUser(
+            m.username,
+            m.icon || "/assets/img/user.svg",
+            m.badges || [],
+            isOwner
+          );
         });
       }
     }
 
-    function handleUserUpdate(action, user, icon) {
-      console.log(action, user);
+    function handleUserUpdate(action, user) {
       const userlistContent = document.getElementById("userlist-content");
       if (!userlistContent) return;
+
       if (action === "add") {
-        console.log(usern.icon);
-        makeUser(user.username, user.icon || "");
+        makeUser(
+          user.username,
+          user.icon || "/assets/img/user.svg",
+          user.badges || [],
+          user.isOwner || false
+        );
       } else if (action === "remove") {
         const users = Array.from(userlistContent.children);
         users.forEach((userElement) => {
-          if (userElement.textContent.trim() === user.username) {
+          if (
+            userElement.querySelector("div") &&
+            userElement.querySelector("div").textContent.trim().startsWith(user.username)
+          ) {
             userlistContent.removeChild(userElement);
           }
         });
       }
+    }
+    function refreshCurrentGroup() {
+        if (currentGroup) {
+            const packet = {
+                type: "requestGroupData",
+                groupID: currentGroup,
+                userID: myuuid,
+                username,
+                token: mytoken,
+            };
+            socket.send(JSON.stringify(packet));
+        }
     }
     function pingServer() {
       if (socket.readyState !== WebSocket.OPEN) return;
@@ -1530,6 +1742,7 @@
         pingServer();
       }, 3000);
     }
+
     function attemptReconnect() {
       if (socket.readyState === WebSocket.OPEN) return;
       setTimeout(() => {
@@ -1537,6 +1750,7 @@
         attemptReconnect();
       }, 500);
     }
+
     function ConnectToServer() {
       socket = new WebSocket(serverlocation);
 
@@ -1552,7 +1766,6 @@
               myuuid = customUuid();
               switch (data.type) {
                 case "Login":
-                  console.log("here");
                   InitChat();
                   username = data.username;
                   mytoken = data.token;
@@ -1572,108 +1785,87 @@
                 case "JoinGroup":
                   MakeErrorMessage(data.message, true);
                   sendGroupPacket(username);
-                  const joinGroupPacket = {
-                    type: "requestGroupData",
-                    groupID: data.groupID,
-                    userID: myuuid,
-                    username,
-                    token: mytoken,
-                  };
-                  socket.send(JSON.stringify(joinGroupPacket));
+                  {
+                    const joinGroupPacket = {
+                      type: "requestGroupData",
+                      groupID: data.groupID,
+                      userID: myuuid,
+                      username,
+                      token: mytoken,
+                    };
+                    socket.send(JSON.stringify(joinGroupPacket));
+                  }
                   break;
 
-                case "groupMessages":
+                case "groupMessages": {
                   const content = document.getElementById("content");
-                  const memberslist =
-                    document.getElementById("userlist-content");
+                  const memberslist = document.getElementById("userlist-content");
                   if (content && memberslist) {
                     content.innerHTML = "";
                     memberslist.innerHTML = "";
+
                     const fixeddata = data.data;
                     const messages = fixeddata.data;
                     const members = fixeddata.allmembers;
+                    currentGroupOwner = fixeddata.owner || null;
+
                     messages.forEach((msg) => {
+                      const isOwner = (msg.username === currentGroupOwner);
                       makebox(
                         msg.message,
                         msg.username + " " + (msg.time || ""),
                         false,
-                        msg.icon || "/assets/img/user.svg"
+                        msg.icon || "/assets/img/user.svg",
+                        msg.badges || [],
+                        isOwner
                       );
                     });
+
                     refreshUserList(members);
                     if (isRequestingSettings) {
                       openGroupSettingsPopup(fixeddata);
                     }
                   }
                   break;
+                }
 
                 case "getGroupList":
                   UpdateGroupList(data.groups);
                   break;
-
-                case "updateGroup":
-                  const { groupID, newName, kickUser, joinUser, allmembers } =
-                    data;
-
-                  if (groupID === currentGroup) {
-                    setGroupName(newName || "No Group :(");
-                  }
-
-                  if (kickUser) {
-                    const kickedUsers = Array.isArray(kickUser)
-                      ? kickUser
-                      : [kickUser];
-                    kickedUsers.forEach((user) => {
-                      if (user === username && groupID === currentGroup) {
-                        InitChat();
-                        setGroupName("No Group :(");
-                      } else {
-                        handleUserUpdate("remove", { username: user });
-                      }
-                    });
-                  }
-
-                  if (joinUser) {
-                    const joinedUsers = Array.isArray(joinUser)
-                      ? joinUser
-                      : [joinUser];
-                    joinedUsers.forEach((user) => {
-                      handleUserUpdate("add", user);
-                    });
-                  }
-
-                  if (Array.isArray(allmembers)) {
-                    refreshUserList(allmembers);
-                  }
-                  break;
-
                 case "sendmessage":
                   getGroupData();
                   break;
 
                 case "refreshGroupData":
-                  loadData();
-                  initGroupContent();
-                  getGroupData();
-                  sendGroupPacket(username);
-                  if (data.data && data.data.groupid === currentGroup) {
-                    const cont = document.getElementById("content");
-                    const lst = document.getElementById("userlist-content");
-                    if (cont && lst) {
-                      cont.innerHTML = "";
-                      lst.innerHTML = "";
-                      const fix = data.data;
-                      const msgList = fix.data || [];
-                      const memList = fix.allmembers || [];
-                      msgList.forEach((msg) => {
-                        makebox(
-                          msg.message,
-                          msg.username,
-                          false,
-                          "/assets/img/user.svg"
-                        );
-                      });
-                      refreshUserList(memList);
+                  {
+                    console.log("got group data")
+                    loadData();
+                    initGroupContent();
+                    getGroupData();
+                    sendGroupPacket(username);
+                    if (data.data && data.data.groupid === currentGroup) {
+                      const cont = document.getElementById("content");
+                      const lst = document.getElementById("userlist-content");
+                      if (cont && lst) {
+                        cont.innerHTML = "";
+                        lst.innerHTML = "";
+                        const fix = data.data;
+                        const msgList = fix.data || [];
+                        const memList = fix.allmembers || [];
+                        currentGroupOwner = fix.owner || null;
+
+                        msgList.forEach((msg) => {
+                          makebox(
+                            msg.message,
+                            msg.username,
+                            false,
+                            "/assets/img/user.svg",
+                            msg.badges || [],
+                            msg.username === currentGroupOwner
+                          );
+                        });
+                        refreshUserList(memList);
+                      }
                     }
                   }
                   break;
@@ -1683,46 +1875,25 @@
                 case "sendmessage":
                   getGroupData();
                   break;
+                  case "updateGroup": {
+                    const { groupID, newName, kickUser, joinUser, allmembers } = data;
+                    getGroupData();
+                    console.log("")
+                    if (groupID === currentGroup) {
+                        if (newName) {
+                            setGroupName(newName);
+                        }
+                        if (username == kickUser){
+                          InitChat();
+                          setGroupName("No Group :()");
+                        }
+                        if (Array.isArray(allmembers)) {
+                            refreshUserList(allmembers);
+                        }
+                    }
 
-                case "updateGroup":
-                  console.log("updating group")
-                  const { groupID, newName, kickUser, joinUser, allmembers } =
-                    data;
-                  loadData();
-                  initGroupContent();
-                  getGroupData();
-                  sendGroupPacket(username);
-                  if (groupID === currentGroup) {
-                    setGroupName(newName || "No Group :(");
-                  }
-
-                  if (kickUser) {
-                    const kickedUsers = Array.isArray(kickUser)
-                      ? kickUser
-                      : [kickUser];
-                    kickedUsers.forEach((user) => {
-                      if (user === username && groupID === currentGroup) {
-                        InitChat();
-                        setGroupName("No Group :(");
-                      } else {
-                        handleUserUpdate("remove", { username: user });
-                      }
-                    });
-                  }
-
-                  if (joinUser) {
-                    const joinedUsers = Array.isArray(joinUser)
-                      ? joinUser
-                      : [joinUser];
-                    joinedUsers.forEach((user) => {
-                      handleUserUpdate("add", user);
-                    });
-                  }
-
-                  if (Array.isArray(allmembers)) {
-                    refreshUserList(allmembers);
-                  }
-                  break;
+                    break;
+                }
               }
             }
           } else {
@@ -1737,25 +1908,27 @@
     function openUserSettingsPopup() {
       const overlay = document.getElementById("UserSettingsOverlay");
       const popup = document.getElementById("UserSettingsPopup");
+
       overlay.style.display = "block";
       popup.style.display = "flex";
-      popup.innerHTML = `
-      <div class="GroupSettingsTitle" style="margin-top: 1vw;">User Settings</div>
-      <label style="width:90%;font-size:1vw;">Profile Icon</label>
-       <div class="usersettingscontainer">
-        <input class="group-settings-input" placeholder="User Profile Icon URL" id="UserIconURL"/>
-        <button class="content-bt" style="width: 4vw;"id="saveiconbt" onclick="">Save</button>
-      </div>
-      <div class="usersettingscontainer">
-        <input class="group-settings-input"  style="margin-top:0.5vw"type="color" id="colorinput" />
-        <button class="content-bt" style="width: 4vw;"id="savecolorbt" onclick="">Save</button>
-      </div>
-      `;
+
+      popup.innerHTML =
+        "<div class='GroupSettingsTitle' style='margin-top:1vw;'>User Settings</div>" +
+        "<label style='width:90%;font-size:1vw;'>Profile Icon</label>" +
+        "<div class='usersettingscontainer'>" +
+        "<input class='group-settings-input' placeholder='User Profile Icon URL' id='UserIconURL'/>" +
+        "<button class='content-bt' style='width:4vw;' id='saveiconbt'>Save</button>" +
+        "</div>" +
+        "<div class='usersettingscontainer'>" +
+        "<input class='group-settings-input' style='margin-top:0.5vw' type='color' id='colorinput' />" +
+        "<button class='content-bt' style='width:4vw;' id='savecolorbt'>Save</button>" +
+        "</div>";
+
       document.getElementById("colorinput").value = localStorage.getItem("accent-color");
       document.getElementById("savecolorbt").addEventListener("click", () => {
         document.body.style.setProperty("--accent-color", document.getElementById("colorinput").value);
         localStorage.setItem("accent-color", document.getElementById("colorinput").value);
-      })
+      });
       document.getElementById("saveiconbt").addEventListener("click", () => {
         const url = document.getElementById("UserIconURL").value;
         if (url) {
@@ -1770,20 +1943,25 @@
             socket.send(JSON.stringify(payload));
           }
         }
-      })
+      });
+
       overlay.classList.remove("HideOverlayAnim");
       popup.classList.remove("UserSettingsPopupHide");
       overlay.classList.add("ShowOverlayAnim");
       popup.classList.add("UserSettingsPopupShow");
+
       overlay.addEventListener("click", closeUserSettingsPopup);
     }
+
     function closeUserSettingsPopup() {
       const overlay = document.getElementById("UserSettingsOverlay");
       const popup = document.getElementById("UserSettingsPopup");
+
       overlay.classList.remove("ShowOverlayAnim");
       popup.classList.remove("UserSettingsPopupShow");
       overlay.classList.add("HideOverlayAnim");
       popup.classList.add("UserSettingsPopupHide");
+
       overlay.addEventListener("animationend", function hideOverlay() {
         overlay.style.display = "none";
         overlay.removeEventListener("animationend", hideOverlay);
@@ -1794,6 +1972,7 @@
       });
       overlay.removeEventListener("click", closeUserSettingsPopup);
     }
+
     InitLogin();
     ConnectToServer();
   </script>
