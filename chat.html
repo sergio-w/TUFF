@@ -32,6 +32,7 @@
         color: var(--text-color);
         background-color: var(--background);
         overflow: hidden;
+        transition: background 0.7s ease-in-out;
       }
       .maincontent {
         display: flex;
@@ -753,7 +754,7 @@
     <div id="UserSettingsPopup" class="UserSettingsPopup"></div>
     <script>
       let socket = null;
-      let serverlocation = "https://k27dg8s9-9001.uks1.devtunnels.ms/";
+      let serverlocation = "ws://chattingisveryveryfuninmathslessons.juststudy.uk:9001/";
       let alternativeserverlocation =
         "ws://localhost:9001";
       let username = null;
@@ -1482,9 +1483,7 @@
         }, 500);
       }
       function ConnectToServer() {
-        socket = new WebSocket(
-          confirm() == true ? serverlocation : alternativeserverlocation
-        );
+        socket = new WebSocket(serverlocation);
 
         socket.onopen = () => {
           pingServer();
