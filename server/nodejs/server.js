@@ -33,13 +33,17 @@ db.serialize(() => {
       icon TEXT NOT NULL
     )
   `);
+
+  // Make sure Messages table has icon column:
   db.run(`
     CREATE TABLE IF NOT EXISTS Messages (
       groupid TEXT NOT NULL,
       username TEXT NOT NULL,
-      message TEXT NOT NULL
+      message TEXT NOT NULL,
+      icon TEXT NOT NULL
     )
   `);
+
   db.run(`
     CREATE TABLE IF NOT EXISTS OnlineUsers (
       username TEXT PRIMARY KEY,
@@ -95,7 +99,6 @@ function markUserOffline(username) {
   });
 }
 
-
 function cleanupStaleUsers(timeoutSeconds = 60) {
   const cutoff = Date.now() - timeoutSeconds * 1000;
   db.all(`SELECT username, last_seen FROM OnlineUsers WHERE status='online'`, [], (err, rows) => {
@@ -110,6 +113,7 @@ function cleanupStaleUsers(timeoutSeconds = 60) {
     });
   });
 }
+
 async function CheckTokenAuth(username) {
   return new Promise((resolve, reject) => {
     db.get(`SELECT token FROM Accounts WHERE username=?`, [username], (err, row) => {
@@ -201,10 +205,11 @@ function createAccount(username, password, userID, ws) {
   });
 }
 
-
+// Include icon in the messages so each message can display the user's current icon
 function getGroupData(groupID) {
   return new Promise((resolve, reject) => {
-    db.all(`SELECT username, message FROM Messages WHERE groupid=?`, [groupID], (err, rows) => {
+    // Make sure we select icon from the Messages table
+    db.all(`SELECT username, message, icon FROM Messages WHERE groupid=?`, [groupID], (err, rows) => {
       if (err) return reject(err);
       db.get(`SELECT groupid, members, owner, name, icon FROM Groups WHERE groupid=?`, [groupID], (err2, groupRow) => {
         if (err2) return reject(err2);
@@ -227,7 +232,8 @@ function getGroupData(groupID) {
           .then((allmemberdata) => {
             const data = rows.map((r) => ({
               username: r.username,
-              message: r.message
+              message: r.message,
+              icon: r.icon
             }));
             resolve({
               data,
@@ -243,7 +249,7 @@ function getGroupData(groupID) {
   });
 }
 
-async function sendMessage(groupID, userID, messagecontent, username, ws) {
+async function sendMessage(groupID, userID, messagecontent, username, icon, ws) {
   db.get(`SELECT groupid FROM Groups WHERE groupid=?`, [groupID], (err, groupRow) => {
     if (err) {
       return sendToClient(ws, {
@@ -259,9 +265,10 @@ async function sendMessage(groupID, userID, messagecontent, username, ws) {
         message: "Group does not exist!"
       });
     }
+    // We now insert the user's current icon each time they send a message
     db.run(
-      `INSERT INTO Messages (groupid, username, message) VALUES (?, ?, ?)`,
-      [groupID, username, messagecontent],
+      `INSERT INTO Messages (groupid, username, message, icon) VALUES (?, ?, ?, ?)`,
+      [groupID, username, messagecontent, icon],
       async (insertErr) => {
         if (insertErr) {
           return sendToClient(ws, {
@@ -277,7 +284,7 @@ async function sendMessage(groupID, userID, messagecontent, username, ws) {
           message: messagecontent
         });
         const data = await getGroupData(groupID).catch(() => null);
-        if(data){
+        if (data) {
           sendToClient(ws, {
             type: "groupMessages",
             status: "success",
@@ -292,7 +299,7 @@ async function sendMessage(groupID, userID, messagecontent, username, ws) {
 
 async function login(account, password, userID, ws) {
   const hashedPassword = crypto.createHash("sha256").update(password).digest("hex");
-  
+
   db.get(`SELECT password, token, groups FROM Accounts WHERE username=?`, [account], async (err, row) => {
     if (err) {
       sendToClient(ws, {
@@ -376,7 +383,6 @@ async function login(account, password, userID, ws) {
 }
 
 function joinGroup(id, userID, username, ws) {
-  // Fetch the group details based on group ID
   db.get(
     `SELECT groupid, members FROM Groups WHERE groupid = ?`,
     [id],
@@ -388,8 +394,6 @@ function joinGroup(id, userID, username, ws) {
           message: "DB error: " + err.message,
         });
       }
-
-      // Check if the group exists
       if (!groupRow) {
         return sendToClient(ws, {
           type: "JoinGroup",
@@ -409,7 +413,6 @@ function joinGroup(id, userID, username, ws) {
         });
       }
 
-      // Fetch the user's current groups
       db.get(
         `SELECT groups FROM Accounts WHERE username = ?`,
         [username],
@@ -421,8 +424,6 @@ function joinGroup(id, userID, username, ws) {
               message: "DB error: " + err2.message,
             });
           }
-
-          // Check if the account exists
           if (!row) {
             return sendToClient(ws, {
               type: "JoinGroup",
@@ -438,12 +439,9 @@ function joinGroup(id, userID, username, ws) {
             userGroups = [];
           }
 
-          // Add the group ID to the user's groups if not already present
           if (!userGroups.includes(id)) {
             userGroups.push(id);
           }
-
-          // Add the username to the group's members if not already present
           if (!groupMembers.includes(username)) {
             groupMembers.push(username);
           }
@@ -451,7 +449,6 @@ function joinGroup(id, userID, username, ws) {
           const updatedUserGroups = JSON.stringify(userGroups);
           const updatedGroupMembers = JSON.stringify(groupMembers);
 
-          // Update the group's members in the database
           db.run(
             `UPDATE Groups SET members = ? WHERE groupid = ?`,
             [updatedGroupMembers, id],
@@ -463,8 +460,6 @@ function joinGroup(id, userID, username, ws) {
                   message: "DB update error (Groups): " + err3.message,
                 });
               }
-
-              // Update the user's groups in the database
               db.run(
                 `UPDATE Accounts SET groups = ? WHERE username = ?`,
                 [updatedUserGroups, username],
@@ -476,8 +471,6 @@ function joinGroup(id, userID, username, ws) {
                       message: "DB update error (Accounts): " + err4.message,
                     });
                   }
-
-                  // Send a success response to the client
                   sendToClient(ws, {
                     type: "JoinGroup",
                     status: "success",
@@ -568,9 +561,20 @@ function getUserGroupList(username) {
   });
 }
 
+// Re-added getUserData function, used to get the updated icon
+function getUserData(username) {
+  return new Promise((resolve, reject) => {
+    db.get(`SELECT username, icon, groups, token FROM Accounts WHERE username=?`, [username], (err, row) => {
+      if (err) return reject(err);
+      if (!row) return resolve(null);
+      resolve(row);
+    });
+  });
+}
+
 function broadcastAll(payload) {
   const data = typeof payload === "object" ? JSON.stringify(payload) : payload;
-  for (const [username, ws] of activeConnections.entries()) {
+  for (const [uname, ws] of activeConnections.entries()) {
     if (ws.readyState === WebSocket.OPEN) {
       ws.send(data);
     }
@@ -578,6 +582,7 @@ function broadcastAll(payload) {
 }
 
 function leaveGroup(groupID, userID, ws) {
+  // Implementation can be added if needed
 }
 
 function updateGroup(msg, ws) {
@@ -651,8 +656,8 @@ function updateGroup(msg, ws) {
             members: groupMembers,
           },
         });
-        const updatedData = await getGroupData(groupID).catch(()=>null);
-        if(updatedData){
+        const updatedData = await getGroupData(groupID).catch(() => null);
+        if (updatedData) {
           broadcastAll({
             type: "refreshGroupData",
             status: "success",
@@ -668,15 +673,34 @@ function updateGroup(msg, ws) {
     );
   });
 }
-async function getUserData(username) {
+
+async function updateUser(msg) {
   return new Promise((resolve, reject) => {
-    db.get(`SELECT username, icon FROM Accounts WHERE username=?`, [username], (err, row) => {
-      if (err) return reject(err);
-      if (!row) return resolve(null);
-      resolve(row);
-    });
+    const { username, newIcon } = msg;
+    db.run(
+      `UPDATE Accounts SET icon = ? WHERE username = ?`,
+      [newIcon, username],
+      function (err) {
+        if (err) return reject(err);
+        resolve();
+      }
+    );
   });
 }
+
+async function getGroupInfo(groupID) {
+  return new Promise((resolve, reject) => {
+    db.get(
+      `SELECT groupid, name, icon FROM Groups WHERE groupid = ?`,
+      [groupID],
+      (err, row) => {
+        if (err) return reject(err);
+        resolve(row);
+      }
+    );
+  });
+}
+
 const wss = new WebSocket.Server({ port: PORT }, () => {
   console.log(`WebSocket server running on ws://localhost:${PORT}`);
 });
@@ -700,6 +724,7 @@ wss.on("connection", (ws) => {
       }
     }
   });
+
   ws.on("message", async (rawData) => {
     let msg;
     try {
@@ -713,6 +738,7 @@ wss.on("connection", (ws) => {
     if (correcttoken !== msg.token && messageType != "login" && messageType != "create_account") {
       return;
     }
+
     if (messageType === "ping") {
       const uname = msg.username;
       await markUserOnline(uname);
@@ -721,12 +747,16 @@ wss.on("connection", (ws) => {
       }
       return;
     }
+
     if (messageType === "create_account") {
       createAccount(msg.data.username, msg.data.password, msg.userID, ws);
+
     } else if (messageType === "login") {
       login(msg.data.username, msg.data.password, msg.data.userID, ws);
+
     } else if (messageType === "makegroup") {
       makeGroup(msg.groupname, null, msg.userID, msg.username, ws);
+
     } else if (messageType === "joingroup") {
       joinGroup(msg.id, msg.userID, msg.username, ws);
       const userData = await getUserData(msg.username).catch(() => null);
@@ -734,22 +764,27 @@ wss.on("connection", (ws) => {
       broadcastAll({
         type: "updateGroup",
         groupID: msg.id,
-        newName: groupData.groupName || null,
-        newIcon: groupData.groupIcon || null,
+        newName: groupData?.groupName || null,
+        newIcon: groupData?.groupIcon || null,
         kickUser: null,
         joinUser: userData || null
       });
+
     } else if (messageType === "sendmessage") {
+      const userinfo = await getUserData(msg.username).catch(() => null);
       const { groupID, userID, message, username } = msg;
-      sendMessage(groupID, userID, message, username, ws);
+      const { icon } = userinfo || {};
+      sendMessage(groupID, userID, message, username, icon, ws);
+
       const packet = {
         type: "sendmessage",
         groupID,
         userID,
         message,
         username
-      }
+      };
       broadcastAll(packet);
+
     } else if (messageType === "requestGroupData") {
       try {
         const data = await getGroupData(msg.groupID);
@@ -766,6 +801,7 @@ wss.on("connection", (ws) => {
           message: e.message
         });
       }
+
     } else if (messageType === "GetUserGroupList") {
       const uname = msg.username;
       try {
@@ -783,8 +819,10 @@ wss.on("connection", (ws) => {
           message: e.message
         });
       }
+
     } else if (messageType === "leaveGroup") {
       leaveGroup(msg.groupID, msg.userID, ws);
+
     } else if (messageType === "updategroup") {
       updateGroup(msg, ws);
       broadcastAll({
@@ -795,6 +833,20 @@ wss.on("connection", (ws) => {
         kickUser: msg.kickUser || null,
         joinUser: null
       });
+
+    } else if (messageType === "updateuser") {
+      await updateUser(msg);
+      const updatedGroup = await getGroupInfo(msg.groupID);
+      if (updatedGroup) {
+        broadcastAll({
+          type: "updateGroup",
+          groupID: msg.groupID,
+          newName: updatedGroup.name,
+          newIcon: updatedGroup.icon,
+          kickUser: null,
+          joinUser: null,
+        });
+      }
     } else {
       sendToClient(ws, {
         status: "error",

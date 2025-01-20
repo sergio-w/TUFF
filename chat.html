@@ -753,9 +753,9 @@
     <div id="UserSettingsPopup" class="UserSettingsPopup"></div>
     <script>
       let socket = null;
-      let serverlocation = "ws://localhost:9001/";
+      let serverlocation = "https://k27dg8s9-9001.uks1.devtunnels.ms/";
       let alternativeserverlocation =
-        "https://k27dg8s9-9001.uks1.devtunnels.ms/";
+        "ws://localhost:9001";
       let username = null;
       let myuuid = customUuid();
       let currentGroup = null;
@@ -763,6 +763,7 @@
       let currentGroupMembers = [];
       let isRequestingSettings = false;
       let mytoken = null;
+      document.body.style.setProperty("--accent-color", localStorage.getItem("accent-color"));
       function InitLogin() {
         const maincontainer = document.getElementById("maincontent");
         maincontainer.classList.add("smoothhide");
@@ -1005,8 +1006,8 @@
         iconcontainer.classList.add("usericon-container");
         const icon = document.createElement("img");
         icon.src = iconurl;
-        icon.style.width = "90%";
-        icon.style.height = "90%";
+        icon.style.width = "100%";
+        icon.style.height = "100%";
         icon.classList.add("usericon-icon");
         iconcontainer.appendChild(icon);
         if (isself) {
@@ -1449,8 +1450,8 @@
         console.log(action, user);
         const userlistContent = document.getElementById("userlist-content");
         if (!userlistContent) return;
-
         if (action === "add") {
+          console.log(usern.icon);
           makeUser(user.username, user.icon || "");
         } else if (action === "remove") {
           const users = Array.from(userlistContent.children);
@@ -1471,7 +1472,7 @@
           };
           socket.send(JSON.stringify(packet));
           pingServer();
-        }, 500);
+        },3000);
       }
       function attemptReconnect() {
         if (socket.readyState === WebSocket.OPEN) return;
@@ -1492,7 +1493,6 @@
         socket.addEventListener("message", (event) => {
           try {
             const data = JSON.parse(event.data);
-            console.log(data);
             if (data.status !== "error") {
               if (data && data.userID === myuuid) {
                 myuuid = customUuid();
@@ -1543,7 +1543,7 @@
                           msg.message,
                           msg.username + " " + (msg.time || ""),
                           false,
-                          "/assets/img/user.svg"
+                          msg.icon || "/assets/img/user.svg"
                         );
                       });
                       refreshUserList(members);
@@ -1631,6 +1631,7 @@
                     break;
 
                   case "updateGroup":
+                    console.log("updating group")
                     const { groupID, newName, kickUser, joinUser, allmembers } =
                       data;
                     loadData();
@@ -1687,12 +1688,35 @@
         popup.innerHTML = `
       <div class="GroupSettingsTitle" style="margin-top: 1vw;">User Settings</div>
       <label style="width:90%;font-size:1vw;">Profile Icon</label>
-      <input class="group-settings-input" placeholder="User Profile Icon URL" id="UserIconURL"/>
+       <div class="usersettingscontainer">
+        <input class="group-settings-input" placeholder="User Profile Icon URL" id="UserIconURL"/>
+        <button class="content-bt" style="width: 4vw;"id="saveiconbt" onclick="">Save</button>
+      </div>
       <div class="usersettingscontainer">
-        <input class="group-settings-input" style="margin-top:0.5vw"type="color" id="idinput" />
-        <button class="content-bt" style="width: 4vw;" onclick="">Save</button>
+        <input class="group-settings-input"  style="margin-top:0.5vw"type="color" id="colorinput" />
+        <button class="content-bt" style="width: 4vw;"id="savecolorbt" onclick="">Save</button>
       </div>
       `;
+        document.getElementById("colorinput").value = localStorage.getItem("accent-color");
+        document.getElementById("savecolorbt").addEventListener("click", () => {
+          document.body.style.setProperty("--accent-color", document.getElementById("colorinput").value);
+          localStorage.setItem("accent-color", document.getElementById("colorinput").value);
+        })
+        document.getElementById("saveiconbt").addEventListener("click", () => {
+          const url = document.getElementById("UserIconURL").value;
+          if (url) {
+            if (socket.readyState === WebSocket.OPEN) {
+              const payload = {
+                type: "updateuser",
+                userID: myuuid,
+                username: username,
+                newIcon: url,
+                token:mytoken
+              };
+              socket.send(JSON.stringify(payload));
+            }
+          }
+        })
         overlay.classList.remove("HideOverlayAnim");
         popup.classList.remove("UserSettingsPopupHide");
         overlay.classList.add("ShowOverlayAnim");
