@@ -858,7 +858,14 @@
     let isRequestingSettings = false;
     let mytoken = null;
 
-    document.body.style.setProperty("--accent-color", localStorage.getItem("accent-color"));
+    const cssVariables = ["--accent-color", "--secondary-bg", "--sidebar", "--text-color"];
+    cssVariables.forEach((variable) => {
+      const storedValue = localStorage.getItem(variable);
+      if (storedValue) {
+        document.body.style.setProperty(variable, storedValue);
+      }
+    });
+
 
     const badgeIcons = {
       developer: {
@@ -1200,88 +1207,112 @@
 
 
     function makebox(text, name, isself, iconurl, badgesArray, isOwner) {
-      const container = document.createElement("div");
-      container.style.display = "flex";
-      container.style.flexDirection = "column";
-      container.style.alignItems = isself ? "flex-end" : "flex-start";
-      container.lazyload = true;
-      let chosen;
-      const textdiv = document.createElement("span");
-      textdiv.classList.add("textbox-name");
+  const container = document.createElement("div");
+  container.style.display = "flex";
+  container.style.flexDirection = "column";
+  container.style.alignItems = isself ? "flex-end" : "flex-start";
+  container.lazyload = true;
 
-      if (badgesArray && badgesArray.includes("developer")) {
-        chosen = "developer";
-      } else if (badgesArray && badgesArray.includes("staff")) {
-        chosen = "staff";
-      } else if (badgesArray && badgesArray.includes("verified")) {
-        chosen = "verified";
-      }
+  let chosen;
+  const textdiv = document.createElement("span");
+  textdiv.classList.add("textbox-name");
 
-      if (textdiv) {
-        if (isOwner) {
-          textdiv.style.color = badgeColors["groupOwner"] || badgeColors.default;
-        } else {
-          textdiv.style.color = badgeColors[chosen] || badgeColors.default;
-        }
-      }
-      const nameSpan = document.createElement("span");
-      nameSpan.innerText = name;
+  if (badgesArray && badgesArray.includes("developer")) {
+    chosen = "developer";
+  } else if (badgesArray && badgesArray.includes("staff")) {
+    chosen = "staff";
+  } else if (badgesArray && badgesArray.includes("verified")) {
+    chosen = "verified";
+  }
 
-      const badgesSpan = getAllBadgeIcons(badgesArray, isOwner, textdiv);
-      textdiv.appendChild(nameSpan);
-      textdiv.appendChild(badgesSpan);
+  if (textdiv) {
+    if (isOwner) {
+      textdiv.style.color = badgeColors["groupOwner"] || badgeColors.default;
+    } else {
+      textdiv.style.color = badgeColors[chosen] || badgeColors.default;
+    }
+  }
+  const nameSpan = document.createElement("span");
+  nameSpan.innerText = name;
 
-      const box = document.createElement("div");
-      box.classList.add("textbox");
-      box.style.width = "auto";
-      box.style.textAlign = "left";
+  const badgesSpan = getAllBadgeIcons(badgesArray, isOwner, textdiv);
+  textdiv.appendChild(nameSpan);
+  textdiv.appendChild(badgesSpan);
 
-      const imageRegex = /(https?:\/\/[^\s]*\.(?:png|jpg|jpeg|gif|svg)(?:\?[^\s]*)?)/gi;
-      const images = [...text.matchAll(imageRegex)].map((match) => match[0]);
-      const videoRegex = /(https?:\/\/[^\s]*\.(?:mp4|webm)(?:\?[^\s]*)?)/gi;
-      const videos = [...text.matchAll(videoRegex)].map((match) => match[0]);
-      const textWithoutImagesNVideos = text.replace(imageRegex, "").replace(videoRegex, "").trim();
-      if (textWithoutImagesNVideos) {
-        box.innerText = textWithoutImagesNVideos;
-      } else {
-        box.style.display = "none";
-      }
+  const box = document.createElement("div");
+  box.classList.add("textbox");
+  box.style.width = "auto";
+  box.style.textAlign = "left";
+  let isValidImage = function(urlTocheck="", defaultValue=false){
+    var image = new Image();
+    image.src = urlTocheck;
+    if (image.width == 0) {
+       return defaultValue;
+    } else {
+       return urlTocheck;
+    }
+ }
+  const links = text.split(/\s+/); 
+  links.forEach((link) => {
+    if (link.startsWith("http://") || link.startsWith("https://")) {
+      const fileExtension = link.split(".").pop().toLowerCase();
+      const contentDiv = document.createElement("div");
+      contentDiv.style.marginTop = "0.5vw";
 
-      const userinfocontainer = document.createElement("div");
-      userinfocontainer.classList.add("userinfo-container");
-
-      const iconcontainer = document.createElement("div");
-      iconcontainer.classList.add("usericon-container");
-
-      const icon = document.createElement("img");
-      icon.src = iconurl;
-      icon.style.width = "100%";
-      icon.style.height = "100%";
-      icon.classList.add("usericon-icon");
-      iconcontainer.appendChild(icon);
-
-      userinfocontainer.appendChild(textdiv);
-      userinfocontainer.appendChild(iconcontainer);
-
-      container.appendChild(userinfocontainer);
-      container.appendChild(box);
-
-      images.forEach((imgUrl) => {
-        const imgDiv = document.createElement("div");
-        imgDiv.style.marginTop = "0.5vw";
+      if (isValidImage(link) != false) {
         const imgElement = document.createElement("img");
-        imgElement.src = imgUrl;
+        imgElement.src = link;
         imgElement.style.maxWidth = "40vw";
         imgElement.style.height = "auto";
         imgElement.style.borderRadius = "0.5vw";
-        imgDiv.appendChild(imgElement);
-        container.appendChild(imgDiv);
-      });
-
-      document.getElementById("content").appendChild(container);
-      document.getElementById("content").scrollTop =
-        document.getElementById("content").scrollHeight;
+        contentDiv.appendChild(imgElement);
+      } else if (["mp4", "webm","gif"].includes(fileExtension)) {
+        const videoElement = document.createElement("video");
+        videoElement.src = link;
+        videoElement.controls = true;
+        videoElement.style.maxWidth = "40vw";
+        videoElement.style.borderRadius = "0.5vw";
+        contentDiv.appendChild(videoElement);
+      } else {
+        const linkElement = document.createElement("a");
+        linkElement.href = link;
+        linkElement.innerText = link;
+        linkElement.target = "_blank";
+        linkElement.style.wordBreak = "break-word";
+        contentDiv.appendChild(linkElement);
+      }
+      container.appendChild(contentDiv);
+    } else {
+      const textSpan = document.createElement("span");
+      textSpan.innerText = link + " ";
+      box.appendChild(textSpan);
     }
+  });
+
+  const userinfocontainer = document.createElement("div");
+  userinfocontainer.classList.add("userinfo-container");
+
+  const iconcontainer = document.createElement("div");
+  iconcontainer.classList.add("usericon-container");
+
+  const icon = document.createElement("img");
+  icon.src = iconurl;
+  icon.style.width = "100%";
+  icon.style.height = "100%";
+  icon.classList.add("usericon-icon");
+  iconcontainer.appendChild(icon);
+
+  userinfocontainer.appendChild(textdiv);
+  userinfocontainer.appendChild(iconcontainer);
+
+  container.appendChild(userinfocontainer);
+  container.appendChild(box);
+
+  document.getElementById("content").appendChild(container);
+  document.getElementById("content").scrollTop =
+    document.getElementById("content").scrollHeight;
+}
+
 
     function makeGroup(name, iconurl, id) {
       const container = document.createElement("div");
@@ -1993,23 +2024,69 @@
       overlay.style.display = "block";
       popup.style.display = "flex";
 
-      popup.innerHTML =
-        "<div class='GroupSettingsTitle' style='margin-top:1vw;'>User Settings</div>" +
-        "<label style='width:90%;font-size:1vw;'>Profile Icon</label>" +
-        "<div class='usersettingscontainer'>" +
-        "<input class='group-settings-input' placeholder='User Profile Icon URL' id='UserIconURL'/>" +
-        "<button class='content-bt' style='width:4vw;' id='saveiconbt'>Save</button>" +
-        "</div>" +
-        "<div class='usersettingscontainer'>" +
-        "<input class='group-settings-input' style='margin-top:0.5vw' type='color' id='colorinput' />" +
-        "<button class='content-bt' style='width:4vw;' id='savecolorbt'>Save</button>" +
-        "</div>";
+      popup.innerHTML = `
+      <div class='GroupSettingsTitle' style='margin-top:1vw;'>User Settings</div>
+      <label style='width:90%;font-size:1vw;'>Profile Icon</label>
+      <div class='usersettingscontainer'>
+        <input class='group-settings-input' placeholder='User Profile Icon URL' id='UserIconURL' />
+        <button class='content-bt' style='width:4vw;' id='saveiconbt'>Save</button>
+      </div>
+      <label style='width:90%;font-size:1vw;'>Change Accent Color</label>
+      <div class='usersettingscontainer'>
+        <input class='group-settings-input' style='margin-top:0.5vw' type='color' id='input-accent_color' />
+        <button class='content-bt' style='width:4vw;' id='save-accent_color'>Save</button>
+      </div>
+      <label style='width:90%;font-size:1vw;'>Change Background</label>
+      <div class='usersettingscontainer'>
+        <input class='group-settings-input' style='margin-top:0.5vw' type='color' id='input-background' />
+        <button class='content-bt' style='width:4vw;' id='save-background'>Save</button>
+      </div>
+      <label style='width:90%;font-size:1vw;'>Change Sidebar</label>
+      <div class='usersettingscontainer'>
+        <input class='group-settings-input' style='margin-top:0.5vw' type='color' id='input-sidebar' />
+        <button class='content-bt' style='width:4vw;' id='save-sidebar'>Save</button>
+      </div>
+      <label style='width:90%;font-size:1vw;'>Change Text Color</label>
+      <div class='usersettingscontainer'>
+        <input class='group-settings-input' style='margin-top:0.5vw' type='color' id='input-text_color' />
+        <button class='content-bt' style='width:4vw;' id='save-text_color'>Save</button>
+      </div>
+      `;
+      
+        document.getElementById("input-accent_color").value = localStorage.getItem("--accent-color") || 
+          getComputedStyle(document.documentElement).getPropertyValue("--accent-color").trim();
+        document.getElementById("save-accent_color").addEventListener("click", () => {
+          const newValue = document.getElementById("input-accent_color").value;
+          document.body.style.setProperty("--accent-color", newValue);
+          localStorage.setItem("--accent-color", newValue);
+        });
 
-      document.getElementById("colorinput").value = localStorage.getItem("accent-color");
-      document.getElementById("savecolorbt").addEventListener("click", () => {
-        document.body.style.setProperty("--accent-color", document.getElementById("colorinput").value);
-        localStorage.setItem("accent-color", document.getElementById("colorinput").value);
-      });
+        document.getElementById("input-background").value = localStorage.getItem("--secondary-bg") || 
+          getComputedStyle(document.documentElement).getPropertyValue("--secondary-bg").trim();
+        document.getElementById("save-background").addEventListener("click", () => {
+          const newValue = document.getElementById("input-background").value;
+          document.body.style.setProperty("--secondary-bg", newValue);
+          localStorage.setItem("--secondary-bg", newValue);
+        });
+
+        document.getElementById("input-sidebar").value = localStorage.getItem("--sidebar") || 
+          getComputedStyle(document.documentElement).getPropertyValue("--sidebar").trim();
+        document.getElementById("save-sidebar").addEventListener("click", () => {
+          const newValue = document.getElementById("input-sidebar").value;
+          document.body.style.setProperty("--sidebar", newValue);
+          localStorage.setItem("--sidebar", newValue);
+        });
+
+        document.getElementById("input-text_color").value = localStorage.getItem("--text-color") || 
+          getComputedStyle(document.documentElement).getPropertyValue("--text-color").trim();
+        document.getElementById("save-text_color").addEventListener("click", () => {
+          const newValue = document.getElementById("input-text_color").value;
+          document.body.style.setProperty("--text-color", newValue);
+          localStorage.setItem("--text-color", newValue);
+        });
+
+
+    
       document.getElementById("saveiconbt").addEventListener("click", () => {
         const url = document.getElementById("UserIconURL").value;
         if (url) {
