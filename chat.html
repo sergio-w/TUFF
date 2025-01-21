@@ -792,7 +792,13 @@
       bottom: 0;
       right: 0;
     }
-
+    .messagetime{
+      font-size: 0.8vw;
+      color: var(--text-color);
+      margin-left: 0.5vw;
+      margin-right: 0.5vw;
+      align-self: flex-end;
+    }
   </style>
 </head>
 
@@ -1209,114 +1215,117 @@
     }
 
 
-    function makebox(text, name, isself, iconurl, badgesArray, isOwner) {
-  const container = document.createElement("div");
-  container.style.display = "flex";
-  container.style.flexDirection = "column";
-  container.style.alignItems = isself ? "flex-end" : "flex-start";
-  container.lazyload = true;
+    function makebox(text, name, isself, iconurl, badgesArray, isOwner, messagetime) {
+      const container = document.createElement("div");
+      container.style.display = "flex";
+      container.style.flexDirection = "column";
+      container.style.alignItems = isself ? "flex-end" : "flex-start";
+      container.lazyload = true;
 
-  let chosen;
-  const textdiv = document.createElement("span");
-  textdiv.classList.add("textbox-name");
+      let chosen;
+      const textdiv = document.createElement("span");
+      textdiv.classList.add("textbox-name");
 
-  if (badgesArray && badgesArray.includes("developer")) {
-    chosen = "developer";
-  } else if (badgesArray && badgesArray.includes("staff")) {
-    chosen = "staff";
-  } else if (badgesArray && badgesArray.includes("verified")) {
-    chosen = "verified";
-  }
-
-  if (textdiv) {
-    if (isOwner) {
-      textdiv.style.color = badgeColors["groupOwner"] || badgeColors.default;
-    } else {
-      textdiv.style.color = badgeColors[chosen] || badgeColors.default;
-    }
-  }
-  const nameSpan = document.createElement("span");
-  nameSpan.innerText = name;
-
-  const badgesSpan = getAllBadgeIcons(badgesArray, isOwner, textdiv);
-  textdiv.appendChild(nameSpan);
-  textdiv.appendChild(badgesSpan);
-
-  const box = document.createElement("div");
-  box.classList.add("textbox");
-  box.style.width = "auto";
-  box.style.textAlign = "left";
-  let isValidImage = function(urlTocheck="", defaultValue=false){
-    var image = new Image();
-    image.src = urlTocheck;
-    if (image.width == 0) {
-       return defaultValue;
-    } else {
-       return urlTocheck;
-    }
- }
-  const links = text.split(/\s+/); 
-  links.forEach((link) => {
-    if (link.startsWith("http://") || link.startsWith("https://")) {
-      const fileExtension = link.split(".").pop().toLowerCase();
-      const contentDiv = document.createElement("div");
-      contentDiv.style.marginTop = "0.5vw";
-
-      if (isValidImage(link) != false) {
-        const imgElement = document.createElement("img");
-        imgElement.src = link;
-        imgElement.style.maxWidth = "40vw";
-        imgElement.style.height = "auto";
-        imgElement.style.borderRadius = "0.5vw";
-        contentDiv.appendChild(imgElement);
-      } else if (["mp4", "webm","gif"].includes(fileExtension)) {
-        const videoElement = document.createElement("video");
-        videoElement.src = link;
-        videoElement.controls = true;
-        videoElement.style.maxWidth = "40vw";
-        videoElement.style.borderRadius = "0.5vw";
-        contentDiv.appendChild(videoElement);
-      } else {
-        const linkElement = document.createElement("a");
-        linkElement.href = link;
-        linkElement.innerText = link;
-        linkElement.target = "_blank";
-        linkElement.style.wordBreak = "break-word";
-        contentDiv.appendChild(linkElement);
+      if (badgesArray && badgesArray.includes("developer")) {
+        chosen = "developer";
+      } else if (badgesArray && badgesArray.includes("staff")) {
+        chosen = "staff";
+      } else if (badgesArray && badgesArray.includes("verified")) {
+        chosen = "verified";
       }
-      container.appendChild(contentDiv);
-    } else {
-      const textSpan = document.createElement("span");
-      textSpan.innerText = link + " ";
-      box.appendChild(textSpan);
+
+      if (textdiv) {
+        if (isOwner) {
+          textdiv.style.color = badgeColors["groupOwner"] || badgeColors.default;
+        } else {
+          textdiv.style.color = badgeColors[chosen] || badgeColors.default;
+        }
+      }
+      const nameSpan = document.createElement("span");
+      nameSpan.innerText = name;
+      const timeSpan = document.createElement("span");
+      timeSpan.classList.add("messagetime");
+      timeSpan.innerText = messagetime;
+      const badgesSpan = getAllBadgeIcons(badgesArray, isOwner, textdiv);
+      textdiv.appendChild(nameSpan);
+      textdiv.appendChild(badgesSpan);
+
+      const box = document.createElement("div");
+      box.classList.add("textbox");
+      box.style.width = "auto";
+      box.style.textAlign = "left";
+      let isValidImage = function(urlTocheck="", defaultValue=false){
+        var image = new Image();
+        image.src = urlTocheck;
+        if (image.width == 0) {
+          return defaultValue;
+        } else {
+          return urlTocheck;
+        }
     }
-  });
+      const links = text.split(/\s+/); 
+      links.forEach((link) => {
+        if (link.startsWith("http://") || link.startsWith("https://")) {
+          const fileExtension = link.split(".").pop().toLowerCase();
+          const contentDiv = document.createElement("div");
+          contentDiv.style.marginTop = "0.5vw";
 
-  const userinfocontainer = document.createElement("div");
-  userinfocontainer.classList.add("userinfo-container");
+          if (isValidImage(link) != false) {
+            const imgElement = document.createElement("img");
+            imgElement.src = link;
+            imgElement.style.maxWidth = "40vw";
+            imgElement.style.height = "auto";
+            imgElement.style.borderRadius = "0.5vw";
+            contentDiv.appendChild(imgElement);
+          } else if (["mp4", "webm","gif"].includes(fileExtension)) {
+            const videoElement = document.createElement("video");
+            videoElement.src = link;
+            videoElement.controls = true;
+            videoElement.style.maxWidth = "40vw";
+            videoElement.style.borderRadius = "0.5vw";
+            contentDiv.appendChild(videoElement);
+          } else {
+            const linkElement = document.createElement("a");
+            linkElement.href = link;
+            linkElement.innerText = link;
+            linkElement.target = "_blank";
+            linkElement.style.wordBreak = "break-word";
+            contentDiv.appendChild(linkElement);
+          }
+          container.appendChild(contentDiv);
+        } else {
+          const textSpan = document.createElement("span");
+          textSpan.innerText = link + " ";
+          box.appendChild(textSpan);
+        }
+      });
 
-  const iconcontainer = document.createElement("div");
-  iconcontainer.classList.add("usericon-container");
+      const userinfocontainer = document.createElement("div");
+      userinfocontainer.classList.add("userinfo-container");
 
-  const icon = document.createElement("img");
-  icon.src = iconurl;
-  icon.style.width = "100%";
-  icon.style.height = "100%";
-  icon.classList.add("usericon-icon");
-  iconcontainer.appendChild(icon);
+      const iconcontainer = document.createElement("div");
+      iconcontainer.classList.add("usericon-container");
 
-  userinfocontainer.appendChild(textdiv);
-  userinfocontainer.appendChild(iconcontainer);
+      const icon = document.createElement("img");
+      icon.src = iconurl;
+      icon.style.width = "100%";
+      icon.style.height = "100%";
+      icon.classList.add("usericon-icon");
+      iconcontainer.appendChild(icon);
 
-  container.appendChild(userinfocontainer);
-  container.appendChild(box);
+      userinfocontainer.appendChild(textdiv);
+      container.appendChild(timeSpan);
+      userinfocontainer.appendChild(iconcontainer);
 
-  document.getElementById("content").appendChild(container);
-  if (autoscroll) {
-    document.getElementById("content").scrollTop =
-    document.getElementById("content").scrollHeight; 
-  }
-}
+      container.appendChild(userinfocontainer);
+      container.appendChild(box);
+
+      document.getElementById("content").appendChild(container);
+      if (autoscroll) {
+        document.getElementById("content").scrollTop =
+        document.getElementById("content").scrollHeight; 
+      }
+    }
 
 
     function makeGroup(name, iconurl, id) {
@@ -1444,7 +1453,6 @@
       const useractive = document.createElement("div");
       useractive.classList.add("useractive");
       iconcontainer.appendChild(useractive);
-      console.log(isactive);
       useractive.style.backgroundColor = isactive ? "#7bf570" : "#8f6066";
       
       const nameDiv = document.createElement("div");
@@ -1574,11 +1582,7 @@
                 userID: myuuid,
                 message: messagevalue,
                 username: username,
-                time:
-                  date.getHours() +
-                  ":" +
-                  String(date.getMinutes()).padStart(2, "0"),
-                token: mytoken,
+                token: mytoken
               };
 
               socket.send(JSON.stringify(jsonpayload));
@@ -1939,13 +1943,15 @@
 
                     messages.forEach((msg) => {
                       const isOwner = (msg.username === currentGroupOwner);
+                      console.log(msg);  
                       makebox(
                         msg.message,
                         msg.username + " " + (msg.time || ""),
                         false,
                         msg.icon || "/assets/img/user.svg",
                         msg.badges || [],
-                        isOwner
+                        isOwner,
+                        msg.time
                       );
                     });
 
@@ -1989,7 +1995,8 @@
                             false,
                             "/assets/img/user.svg",
                             msg.badges || [],
-                            msg.username === currentGroupOwner
+                            msg.username === currentGroupOwner,
+                            msg.time
                           );
                         });
                         refreshUserList(memList);
