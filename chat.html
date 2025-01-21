@@ -242,6 +242,7 @@
       align-items: center;
       margin-bottom: 1.5vw;
       grid-template-columns: auto 1fr;
+      position: relative;
     }
 
     .usericon-container {
@@ -792,12 +793,14 @@
       bottom: 0;
       right: 0;
     }
-    .messagetime{
+    .messagetime {
       font-size: 0.8vw;
       color: var(--text-color);
       margin-left: 0.5vw;
       margin-right: 0.5vw;
-      align-self: flex-end;
+      position: absolute;
+      right: 0;
+      bottom:0;
     }
   </style>
 </head>
@@ -1312,11 +1315,10 @@
       icon.style.height = "100%";
       icon.classList.add("usericon-icon");
       iconcontainer.appendChild(icon);
-
+      
       userinfocontainer.appendChild(textdiv);
-      container.appendChild(timeSpan);
       userinfocontainer.appendChild(iconcontainer);
-
+      userinfocontainer.appendChild(timeSpan);
       container.appendChild(userinfocontainer);
       container.appendChild(box);
 
@@ -1553,13 +1555,14 @@
 
     function InitInput() {
       const textinput = document.getElementById("textinput");
+      const emojiinput = document.getElementById("search");
       const emojipicker = document.getElementById("emojipicker");
       document.querySelector('emoji-picker').addEventListener('emoji-click', event => {
           if (textinput.selectionStart > 0) {
               textinput.value = textinput.value.substring(0, textinput.selectionStart - 1) + textinput.value.substring(textinput.selectionEnd);
           }
           textinput.value += event.detail.emoji.unicode;
-          textinput.focus();
+          emojiinput.focus();
           emojipicker.style.display = "none";
       });
       textinput.addEventListener("keydown", (e) => {
@@ -1946,7 +1949,7 @@
                       console.log(msg);  
                       makebox(
                         msg.message,
-                        msg.username + " " + (msg.time || ""),
+                        msg.username,
                         false,
                         msg.icon || "/assets/img/user.svg",
                         msg.badges || [],
