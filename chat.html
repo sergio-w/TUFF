@@ -13,6 +13,7 @@
     rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
   <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
   <style>
     :root {
       --background: #36393f;
@@ -869,7 +870,7 @@
     let currentGroupMembers = [];
     let isRequestingSettings = false;
     let mytoken = null;
-
+    let autoscroll = true;
     const cssVariables = ["--accent-color", "--secondary-bg", "--sidebar", "--text-color","--input-bg","--background"];
     cssVariables.forEach((variable) => {
       const storedValue = localStorage.getItem(variable);
@@ -980,6 +981,15 @@
           loadData();
           InitInput();
           initGroupContent();
+          document.getElementById('content').addEventListener('scroll', event => {
+              const {scrollHeight, scrollTop, clientHeight} = event.target;
+
+              if (Math.abs(scrollHeight - clientHeight - scrollTop) < 1) {
+                  autoscroll = true;
+              } else {
+                  autoscroll = false
+              }
+          });
           const random_emoji = ["😊", "😉", "😎", "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "😊", "😇", "🙂", "🙃", "😉"];
           const emojibt = document.getElementById("emoji-bt");
           emojibt.addEventListener("mouseenter", () =>{
@@ -1302,8 +1312,10 @@
   container.appendChild(box);
 
   document.getElementById("content").appendChild(container);
-  document.getElementById("content").scrollTop =
-    document.getElementById("content").scrollHeight;
+  if (autoscroll) {
+    document.getElementById("content").scrollTop =
+    document.getElementById("content").scrollHeight; 
+  }
 }
 
 
@@ -2006,8 +2018,8 @@
                     }
                   }
                   getGroupData();
-
                   break;
+                  
               }
             }
           } else {
