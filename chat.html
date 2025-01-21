@@ -83,6 +83,7 @@
       flex: 1;
       padding: 1vw;
       box-sizing: border-box;
+      background-color: var(--background);
     }
 
     .content::-webkit-scrollbar {
@@ -243,16 +244,17 @@
     }
 
     .usericon-container {
-      width: 2vw;
-      height: 2vw;
-      margin-bottom: 2vw;
-      margin-top: 2vw;
-      border-radius: 2vw;
-      overflow: hidden;
+      width: 2.5vw;
+      height: 2.5vw;
+      margin-bottom: 1.5vw;
+      margin-top: 1.5vw;
+      border-radius: 1.5vw;
+      overflow:hidden;
       justify-content: center;
       align-items: center;
       display: flex;
-      border: var(--accent-color) 0.15vw solid;
+      position: relative;
+      border: 0.15vw solid var(--accent-color);
     }
 
     .usericon {
@@ -780,6 +782,16 @@
       border-radius: 0.5vw;
       background-color: var(--input-bg);
     }
+    .useractive {
+      outline: 0.2vw solid var(--sidebar);
+      height: 0.6vw;
+      width: 0.6vw;
+      border-radius: 50%;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+
   </style>
 </head>
 
@@ -858,7 +870,7 @@
     let isRequestingSettings = false;
     let mytoken = null;
 
-    const cssVariables = ["--accent-color", "--secondary-bg", "--sidebar", "--text-color"];
+    const cssVariables = ["--accent-color", "--secondary-bg", "--sidebar", "--text-color","--input-bg","--background"];
     cssVariables.forEach((variable) => {
       const storedValue = localStorage.getItem(variable);
       if (storedValue) {
@@ -866,25 +878,6 @@
       }
     });
 
-
-    const badgeIcons = {
-      developer: {
-        icon: "/assets/img/devIcon.png", // Green spanner
-        label: "Developer",
-      },
-      staff: {
-        icon: "/assets/img/staffIcon.png", // Purple admin
-        label: "Staff",
-      },
-      verified: {
-        icon: "/assets/img/verifiedIcon.png", // Light Blue w/ Orange tick
-        label: "Verified",
-      },
-      owner: {
-        icon: "/assets/img/crownIcon.png", // Crown
-        label: "Owner",
-      },
-    };
 
     function InitLogin() {
       const maincontainer = document.getElementById("maincontent");
@@ -1405,7 +1398,7 @@
       });
     }
 
-    function makeUser(name, iconurl, badges, isGroupOwner) {
+    function makeUser(name, iconurl, badges, isGroupOwner,isactive) {
       const container = document.createElement("div");
       container.style.display = "flex";
       container.style.flexDirection = "row";
@@ -1425,7 +1418,8 @@
       iconcontainer.style.marginRight = "0.5vw";
       iconcontainer.style.flexShrink = "0";
       iconcontainer.style.flexGrow = "0";
-
+      iconcontainer.style.overflow = "visible";
+      iconcontainer.style.border = "none";
       const icon = document.createElement("img");
       icon.src = iconurl;
       icon.style.width = "90%";
@@ -1434,7 +1428,13 @@
       icon.style.borderRadius = "50%";
       iconcontainer.appendChild(icon);
       container.appendChild(iconcontainer);
-
+      
+      const useractive = document.createElement("div");
+      useractive.classList.add("useractive");
+      iconcontainer.appendChild(useractive);
+      console.log(isactive);
+      useractive.style.backgroundColor = isactive ? "#7bf570" : "#8f6066";
+      
       const nameDiv = document.createElement("div");
       nameDiv.style.fontWeight = "bold";
       nameDiv.style.flex = "1";
@@ -1789,7 +1789,8 @@
             m.username,
             m.icon || "/assets/img/user.svg",
             m.badges || [],
-            isOwner
+            isOwner,
+            m.status
           );
         });
       }
@@ -1804,7 +1805,8 @@
           user.username,
           user.icon || "/assets/img/user.svg",
           user.badges || [],
-          user.isOwner || false
+          user.isOwner || false,
+          user.status
         );
       } else if (action === "remove") {
         const users = Array.from(userlistContent.children);
@@ -2041,6 +2043,11 @@
         <input class='group-settings-input' style='margin-top:0.5vw' type='color' id='input-background' />
         <button class='content-bt' style='width:4vw;' id='save-background'>Save</button>
       </div>
+      <label style='width:90%;font-size:1vw;'>Change Secondary Background</label>
+      <div class='usersettingscontainer'>
+        <input class='group-settings-input' style='margin-top:0.5vw' type='color' id='input-secondary-background' />
+        <button class='content-bt' style='width:4vw;' id='save-secondary-background'>Save</button>
+      </div>
       <label style='width:90%;font-size:1vw;'>Change Sidebar</label>
       <div class='usersettingscontainer'>
         <input class='group-settings-input' style='margin-top:0.5vw' type='color' id='input-sidebar' />
@@ -2050,6 +2057,11 @@
       <div class='usersettingscontainer'>
         <input class='group-settings-input' style='margin-top:0.5vw' type='color' id='input-text_color' />
         <button class='content-bt' style='width:4vw;' id='save-text_color'>Save</button>
+      </div>
+      <label style='width:90%;font-size:1vw;'>Change Input Color</label>
+      <div class='usersettingscontainer'>
+        <input class='group-settings-input' style='margin-top:0.5vw' type='color' id='input-input-bg' />
+        <button class='content-bt' style='width:4vw;' id='save-input-bg'>Save</button>
       </div>
       `;
       
@@ -2061,14 +2073,20 @@
           localStorage.setItem("--accent-color", newValue);
         });
 
-        document.getElementById("input-background").value = localStorage.getItem("--secondary-bg") || 
+        document.getElementById("input-secondary-background").value = localStorage.getItem("--secondary-bg") || 
           getComputedStyle(document.documentElement).getPropertyValue("--secondary-bg").trim();
-        document.getElementById("save-background").addEventListener("click", () => {
-          const newValue = document.getElementById("input-background").value;
+        document.getElementById("save-secondary-background").addEventListener("click", () => {
+          const newValue = document.getElementById("input-secondary-background").value;
           document.body.style.setProperty("--secondary-bg", newValue);
           localStorage.setItem("--secondary-bg", newValue);
         });
-
+        document.getElementById("input-background").value = localStorage.getItem("--background") || 
+          getComputedStyle(document.documentElement).getPropertyValue("--background").trim();
+        document.getElementById("save-background").addEventListener("click", () => {
+          const newValue = document.getElementById("input-background").value;
+          document.body.style.setProperty("--background", newValue);
+          localStorage.setItem("--background", newValue);
+        });
         document.getElementById("input-sidebar").value = localStorage.getItem("--sidebar") || 
           getComputedStyle(document.documentElement).getPropertyValue("--sidebar").trim();
         document.getElementById("save-sidebar").addEventListener("click", () => {
@@ -2084,7 +2102,13 @@
           document.body.style.setProperty("--text-color", newValue);
           localStorage.setItem("--text-color", newValue);
         });
-
+        document.getElementById("input-input-bg").value = localStorage.getItem("--input-bg") || 
+          getComputedStyle(document.documentElement).getPropertyValue("--input-bg").trim();
+        document.getElementById("save-input-bg").addEventListener("click", () => {
+          const newValue = document.getElementById("input-input-bg").value;
+          document.body.style.setProperty("--input-bg", newValue);
+          localStorage.setItem("--input-bg", newValue);
+        });
 
     
       document.getElementById("saveiconbt").addEventListener("click", () => {
