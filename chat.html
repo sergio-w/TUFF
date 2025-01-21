@@ -12,6 +12,7 @@
     href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
   <style>
     :root {
       --background: #36393f;
@@ -747,6 +748,38 @@
       vertical-align: middle;
       object-fit: contain;
     }
+    .emojipicker{
+      position: fixed;
+      display: none;
+      top: 53%;
+      height: 39vh;
+      width: 20vw;
+    }
+    .emoji-bt{
+      background-color: #00000000;
+      font-size: 1.5vw;
+      border: none;
+      outline: none;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .gelatineeffect {
+      animation: gelatine 0.5s forwards;
+    }
+    @keyframes gelatine {
+      from, to { transform: scale(1, 1); }
+      25% { transform: scale(0.9, 1.1); }
+      50% { transform: scale(1.1, 0.9); }
+      75% { transform: scale(0.95, 1.05); }
+    }
+    .chatinputcontainer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      border-radius: 0.5vw;
+      background-color: var(--input-bg);
+    }
   </style>
 </head>
 
@@ -924,7 +957,11 @@
             "<div class='chatcontent'>" +
             "<div id='content' class='content'></div>" +
             "<div class='bottombar'>" +
+            `<emoji-picker class="emojipicker" id="emojipicker"></emoji-picker>`+
+            "<div class='chatinputcontainer'>" +
             "<input class='textinput' id='textinput' placeholder='Enter something to text'></input>" +
+            `<button class='emoji-bt' style='width:2.5vw;' id="emoji-bt">😊</button>` +
+            "</div>"+
             "</div>" +
             "</div>" +
             "<div class='rightsidecontent' id='rightsidecontent'>" +
@@ -943,7 +980,29 @@
           loadData();
           InitInput();
           initGroupContent();
-
+          const random_emoji = ["😊", "😉", "😎", "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "😊", "😇", "🙂", "🙃", "😉"];
+          const emojibt = document.getElementById("emoji-bt");
+          emojibt.addEventListener("mouseenter", () =>{
+            emojibt.innerText = random_emoji[Math.floor(Math.random()*random_emoji.length)];
+            emojibt.classList.remove("gelatineeffect");
+            emojibt.classList.add("gelatineeffect");
+            emojibt.addEventListener("animationend", () => {
+              emojibt.classList.remove("gelatineeffect");
+            })
+          })
+          emojibt.addEventListener("click", () => {
+            if (document.getElementById("emojipicker").style.display == "flex"){
+              document.getElementById("emojipicker").style.display = "none";
+            } else {
+              document.getElementById("emojipicker").style.display = "flex";
+            }
+            emojibt.innerText = random_emoji[Math.floor(Math.random()*random_emoji.length)];
+            emojibt.classList.remove("gelatineeffect");
+            emojibt.classList.add("gelatineeffect");
+            emojibt.addEventListener("animationend", () => {
+              emojibt.classList.remove("gelatineeffect");
+            })
+          })
           document.querySelector(".settings-icon").addEventListener("click", () => {
             if (!currentGroup) {
               MakeErrorMessage("No group selected yet!", false);
@@ -1082,7 +1141,7 @@
       container.style.display = "inline-flex";
       container.style.alignItems = "center";
 
-      const orderedBadges = ["developer", "staff", "verified"];
+      const orderedBadges = ["groupOwner", "developer", "staff", "verified"];
       orderedBadges.forEach((b) => {
         if (badgesArray && badgesArray.includes(b)) {
           container.appendChild(document.createTextNode(badgeEmojis[b] + " "));
@@ -1096,18 +1155,19 @@
       return container;
     }
     const badgeColors = {
-        developer: "#850000",
-        staff: "#ff5a70",
-        groupOwner: "#ffd700 ",
-        verified: "#3baa56",
-        default: "var(--accent-color)",
+      developer: "#FF160C",
+      staff: "#ff5a70",
+      groupOwner: "#ffd700 ",
+      verified: "#3baa56",
+      default: "var(--accent-color)",
     };
 
     function getProfileBadgeIcon(badgesArray, isOwner, textElement) {
       let chosen = null;
 
-
-      if (badgesArray && badgesArray.includes("developer")) {
+      if (badgesArray && badgesArray.includes("groupOwner")) {
+        chosen = "groupOwner";
+      } else if (badgesArray && badgesArray.includes("developer")) {
         chosen = "developer";
       } else if (badgesArray && badgesArray.includes("staff")) {
         chosen = "staff";
@@ -1144,6 +1204,7 @@
       container.style.display = "flex";
       container.style.flexDirection = "column";
       container.style.alignItems = isself ? "flex-end" : "flex-start";
+      container.lazyload = true;
       let chosen;
       const textdiv = document.createElement("span");
       textdiv.classList.add("textbox-name");
@@ -1177,10 +1238,11 @@
 
       const imageRegex = /(https?:\/\/[^\s]*\.(?:png|jpg|jpeg|gif|svg)(?:\?[^\s]*)?)/gi;
       const images = [...text.matchAll(imageRegex)].map((match) => match[0]);
-      const textWithoutImages = text.replace(imageRegex, "").trim();
-
-      if (textWithoutImages) {
-        box.innerText = textWithoutImages;
+      const videoRegex = /(https?:\/\/[^\s]*\.(?:mp4|webm)(?:\?[^\s]*)?)/gi;
+      const videos = [...text.matchAll(videoRegex)].map((match) => match[0]);
+      const textWithoutImagesNVideos = text.replace(imageRegex, "").replace(videoRegex, "").trim();
+      if (textWithoutImagesNVideos) {
+        box.innerText = textWithoutImagesNVideos;
       } else {
         box.style.display = "none";
       }
@@ -1415,7 +1477,7 @@
       }
     }
 
-    function Register() {
+    async function Register() {
       const usernameVal = document
         .getElementById("register-username")
         .value.trim();
@@ -1429,7 +1491,10 @@
           userID: myuuid,
           data: { username: usernameVal, password: passwordVal },
         };
-        socket.send(JSON.stringify(payload));
+        await socket.send(JSON.stringify(payload));
+
+        alert("Account created successfully!");
+        window.location.reload();
       } else {
         MakeErrorMessage("Please fill out all fields");
       }
@@ -1437,30 +1502,29 @@
 
     function InitInput() {
       const textinput = document.getElementById("textinput");
+      const emojipicker = document.getElementById("emojipicker");
+      document.querySelector('emoji-picker').addEventListener('emoji-click', event => {
+          if (textinput.selectionStart > 0) {
+              textinput.value = textinput.value.substring(0, textinput.selectionStart - 1) + textinput.value.substring(textinput.selectionEnd);
+          }
+          textinput.value += event.detail.emoji.unicode;
+          textinput.focus();
+          emojipicker.style.display = "none";
+      });
       textinput.addEventListener("keydown", (e) => {
-        if (
-          e.key === "Enter" &&
-          textinput.value !== "" &&
-          socket &&
-          currentGroup
-        ) {
+        if (e.key === "Enter" && textinput.value !== "" && socket && currentGroup) {
           const date = new Date();
           const messagevalue = textinput.value;
-
-          fetch('/assets/json/nonowords.json')
-            .then((response) => response.json())
-            .then((data) => {
-              if (!Array.isArray(data)) {
-                console.error("Invalid JSON format: expected an array");
-                MakeErrorMessage("Something went wrong. Please try again later!", true);
-                return;
-              }
-              const badWord = data.find(item => messagevalue.toLowerCase().includes(item.match.toLowerCase()));
-              if (badWord) {
+          emojipicker.style.display = "none";
+          fetch("/assets/json/nonowords.json")
+            .then(response => response.json())
+            .then(data => {
+              const naughtwordlist = data.filter;
+              const containsBadWord = naughtwordlist.some(word => messagevalue.toLowerCase().includes(word.toLowerCase()));
+              if (containsBadWord) {
                 MakeErrorMessage("No bad words allowed!", false);
                 return;
               }
-
               const jsonpayload = {
                 type: "sendmessage",
                 groupID: currentGroup,
@@ -1477,10 +1541,13 @@
               socket.send(JSON.stringify(jsonpayload));
               textinput.value = "";
             })
-            .catch((error) => {
-              console.error("Error fetching bad words JSON:", error);
-              MakeErrorMessage("Unable to load bad words list. Please try again later!", true);
-            });
+            .catch(error => console.error("Error fetching bad words list:", error));
+        } else if (socket && currentGroup){
+          if (e.key == ":") {
+            emojipicker.style.display = "flex";
+          } else {
+            emojipicker.style.display = "none";
+          }
         }
       });
     }
@@ -1721,16 +1788,16 @@
       }
     }
     function refreshCurrentGroup() {
-        if (currentGroup) {
-            const packet = {
-                type: "requestGroupData",
-                groupID: currentGroup,
-                userID: myuuid,
-                username,
-                token: mytoken,
-            };
-            socket.send(JSON.stringify(packet));
-        }
+      if (currentGroup) {
+        const packet = {
+          type: "requestGroupData",
+          groupID: currentGroup,
+          userID: myuuid,
+          username,
+          token: mytoken,
+        };
+        socket.send(JSON.stringify(packet));
+      }
     }
     function pingServer() {
       if (socket.readyState !== WebSocket.OPEN) return;
@@ -1891,17 +1958,17 @@
                 case "sendmessage":
                   getGroupData();
                   break;
-                case "updateGroup": 
+                case "updateGroup":
                   const { groupID, newName, kickUser, joinUser, allmembers } = data;
                   if (groupID === currentGroup) {
-                      if (newName) {
-                          setGroupName(newName);
-                      }
-                      if (username == kickUser){
-                        InitChat();
-                      }
+                    if (newName) {
+                      setGroupName(newName);
+                    }
+                    if (username == kickUser) {
+                      InitChat();
+                    }
                   } else {
-                    if (username == kickUser){
+                    if (username == kickUser) {
                       sendGroupPacket(username);
                     }
                   }
