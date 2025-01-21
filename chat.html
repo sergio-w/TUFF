@@ -236,14 +236,12 @@
     }
 
     .userinfo-container {
-      height: 3vw;
-      width: 100%;
-      display: grid;
+      display: flex;
+      justify-content: flex-start;
       align-items: center;
-      margin-bottom: 1.5vw;
-      grid-template-columns: auto 1fr;
-      position: relative;
+      width: 100%;
     }
+
 
     .usericon-container {
       width: 2.5vw;
@@ -798,9 +796,7 @@
       color: var(--text-color);
       margin-left: 0.5vw;
       margin-right: 0.5vw;
-      position: absolute;
-      right: 0;
-      bottom:0;
+
     }
   </style>
 </head>
@@ -1247,7 +1243,8 @@
       const nameSpan = document.createElement("span");
       nameSpan.innerText = name;
       const timeSpan = document.createElement("span");
-      timeSpan.classList.add("messagetime");
+      timeSpan.style.color = "var(--accent-color)";
+      timeSpan.style.marginLeft = "0.5vw";
       timeSpan.innerText = messagetime;
       const badgesSpan = getAllBadgeIcons(badgesArray, isOwner, textdiv);
       textdiv.appendChild(nameSpan);
