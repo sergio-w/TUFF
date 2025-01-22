@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
   <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
   <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
   <style>
     :root {
       --background: #36393f;
@@ -1325,6 +1326,9 @@
           box.appendChild(textSpan);
         }
       });
+      if (box.innerText.trim() === "") {
+        box.style.display = "none";
+      }
 
       document.getElementById("content").appendChild(container);
       if (autoscroll) {
@@ -1534,7 +1538,6 @@
       }
     }
     // this is the fingerprint thing. haha have fun making multiple accounts
-    import FingerprintJS from '@fingerprintjs/fingerprintjs';
     async function Register() {
       const usernameVal = document
         .getElementById("register-username")
@@ -1550,25 +1553,21 @@
           return visitorId;
       };
 
-      getFingerprint().then(visitorId => console.log(visitorId));
-      if (visitorId != null) {
-        MakeErrorMessage("You already have an account", false);
-        return;
-      } else {
+      getFingerprint()
         if (usernameVal && passwordVal) {
-        const payload = {
-          type: "create_account",
-          userID: myuuid,
-          data: { username: usernameVal, password: passwordVal },
-        };
-        await socket.send(JSON.stringify(payload));
+          const payload = {
+            type: "create_account",
+            userID: myuuid,
+            data: { username: usernameVal, password: passwordVal },
+            deviceid: visitorId
+          };
+          await socket.send(JSON.stringify(payload));
 
-        alert("Account created successfully!");
-        window.location.reload();
-      } else {
-        MakeErrorMessage("Please fill out all fields");
-      }
-      }
+          alert("Account created successfully!");
+          window.location.reload();
+        } else {
+          MakeErrorMessage("Please fill out all fields");
+        }
     }
 
     function InitInput() {
