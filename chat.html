@@ -1538,6 +1538,17 @@
       }
     }
     // this is the fingerprint thing. haha have fun making multiple accounts
+    async function getFingerprint() {
+      let visitorId = localStorage.getItem('visitorId');
+      if (!visitorId) {
+        const fp = await FingerprintJS.load();
+        const result = await fp.get();
+        visitorId = result.visitorId;
+        localStorage.setItem('visitorId', visitorId); // Cache it
+      }
+      return visitorId;
+    }
+
     async function Register() {
       const usernameVal = document
         .getElementById("register-username")
@@ -1545,30 +1556,32 @@
       const passwordVal = document
         .getElementById("register-password")
         .value.trim();
-        let visibleid = null;
-        const getFingerprint = async () => {
-          const fp = await FingerprintJS.load();
-          const result = await fp.get();
-          visitorId = result.visitorId;
-          return visitorId;
-      };
 
-      getFingerprint()
-        if (usernameVal && passwordVal) {
-          const payload = {
-            type: "create_account",
-            userID: myuuid,
-            data: { username: usernameVal, password: passwordVal },
-            deviceid: visitorId
-          };
-          await socket.send(JSON.stringify(payload));
+      if (!usernameVal || !passwordVal) {
+        MakeErrorMessage("Please fill out all fields");
+        return;
+      }
 
-          alert("Account created successfully!");
-          window.location.reload();
-        } else {
-          MakeErrorMessage("Please fill out all fields");
-        }
+      try {
+        const visitorId = await getFingerprint();
+
+        const payload = {
+          type: "create_account",
+          userID: myuuid,
+          data: { username: usernameVal, password: passwordVal },
+          deviceid: visitorId,
+        };
+
+        await socket.send(JSON.stringify(payload));
+
+        alert("Account created successfully!");
+        window.location.reload();
+      } catch (error) {
+        console.error("Error during registration:", error);
+        MakeErrorMessage("An error occurred. Please try again later.");
+      }
     }
+
 
     function InitInput() {
       const textinput = document.getElementById("textinput");
@@ -1982,7 +1995,9 @@
                   }
                   break;
                 }
-
+                case "CreateAccount":
+                  MakeErrorMessage(data.message, true);
+                  break;
                 case "getGroupList":
                   UpdateGroupList(data.groups);
                   break;
