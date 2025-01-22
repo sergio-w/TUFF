@@ -85,6 +85,9 @@
       padding: 1vw;
       box-sizing: border-box;
       background-color: var(--background);
+      background-image: radial-gradient(circle, rgba(255, 255, 255, 0.171) 5%, rgba(255, 255, 255, 0) 5%);
+      background-size: 4.5vw 4.5vw;
+      background-position: -0.5vw -0.4vw;
     }
 
     .content::-webkit-scrollbar {
@@ -1264,6 +1267,26 @@
           return urlTocheck;
         }
     }
+
+      const userinfocontainer = document.createElement("div");
+      userinfocontainer.classList.add("userinfo-container");
+
+      const iconcontainer = document.createElement("div");
+      iconcontainer.classList.add("usericon-container");
+
+      const icon = document.createElement("img");
+      icon.src = iconurl;
+      icon.style.width = "100%";
+      icon.style.height = "100%";
+      icon.classList.add("usericon-icon");
+      iconcontainer.appendChild(icon);
+      
+      userinfocontainer.appendChild(textdiv);
+      userinfocontainer.appendChild(iconcontainer);
+      userinfocontainer.appendChild(timeSpan);
+      container.appendChild(userinfocontainer);
+
+      container.appendChild(box);
       const links = text.split(/\s+/); 
       links.forEach((link) => {
         if (link.startsWith("http://") || link.startsWith("https://")) {
@@ -1291,7 +1314,9 @@
             linkElement.innerText = link;
             linkElement.target = "_blank";
             linkElement.style.wordBreak = "break-word";
-            contentDiv.appendChild(linkElement);
+            box.appendChild(linkElement);
+            const space = document.createTextNode(" ");
+            box.appendChild(space);
           }
           container.appendChild(contentDiv);
         } else {
@@ -1300,25 +1325,6 @@
           box.appendChild(textSpan);
         }
       });
-
-      const userinfocontainer = document.createElement("div");
-      userinfocontainer.classList.add("userinfo-container");
-
-      const iconcontainer = document.createElement("div");
-      iconcontainer.classList.add("usericon-container");
-
-      const icon = document.createElement("img");
-      icon.src = iconurl;
-      icon.style.width = "100%";
-      icon.style.height = "100%";
-      icon.classList.add("usericon-icon");
-      iconcontainer.appendChild(icon);
-      
-      userinfocontainer.appendChild(textdiv);
-      userinfocontainer.appendChild(iconcontainer);
-      userinfocontainer.appendChild(timeSpan);
-      container.appendChild(userinfocontainer);
-      container.appendChild(box);
 
       document.getElementById("content").appendChild(container);
       if (autoscroll) {
