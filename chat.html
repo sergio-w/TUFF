@@ -1533,7 +1533,8 @@
         MakeErrorMessage("Please fill out all fields");
       }
     }
-
+    // this is the fingerprint thing. haha have fun making multiple accounts
+    import FingerprintJS from '@fingerprintjs/fingerprintjs';
     async function Register() {
       const usernameVal = document
         .getElementById("register-username")
@@ -1541,8 +1542,20 @@
       const passwordVal = document
         .getElementById("register-password")
         .value.trim();
+        let visibleid = null;
+        const getFingerprint = async () => {
+          const fp = await FingerprintJS.load();
+          const result = await fp.get();
+          visitorId = result.visitorId;
+          return visitorId;
+      };
 
-      if (usernameVal && passwordVal) {
+      getFingerprint().then(visitorId => console.log(visitorId));
+      if (visitorId != null) {
+        MakeErrorMessage("You already have an account", false);
+        return;
+      } else {
+        if (usernameVal && passwordVal) {
         const payload = {
           type: "create_account",
           userID: myuuid,
@@ -1554,6 +1567,7 @@
         window.location.reload();
       } else {
         MakeErrorMessage("Please fill out all fields");
+      }
       }
     }
 
