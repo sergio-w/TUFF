@@ -1195,5 +1195,12 @@
         "url": "studyguide/rdscht2/index.html",
         "desc": "Continue your journey in the thrilling sequel to the escape adventure.",
         "category": "Science Lab"
+    },
+    {
+        "name": "Battleship War",
+        "img": "assets/icons/180.png",
+        "url": "studyguide/b-w/index.html",
+        "desc": "Try to sink your opponents battleship in this satisfying 3D title.",
+        "category": "Science Lab"
     }
 ]
