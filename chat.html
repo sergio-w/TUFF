@@ -1518,6 +1518,14 @@
       );
     }
 
+    function loadBadWords() {
+      fetch("/assets/json/nonowords.json")
+            .then(response => response.json())
+            .then(data => {
+              sessionStorage.setItem("nonowords", JSON.stringify(data.filter));
+            })
+            .catch(error => console.error("Error fetching bad words list:", error));
+    }
     function Login() {
       if (socket.readyState !== WebSocket.OPEN) return;
       const usernameVal = document.getElementById("login-username").value.trim();
@@ -1533,6 +1541,7 @@
           },
         };
         socket.send(JSON.stringify(payload));
+        loadBadWords();
       } else {
         MakeErrorMessage("Please fill out all fields");
       }
@@ -1600,28 +1609,23 @@
           const date = new Date();
           const messagevalue = textinput.value;
           emojipicker.style.display = "none";
-          fetch("/assets/json/nonowords.json")
-            .then(response => response.json())
-            .then(data => {
-              const naughtwordlist = data.filter;
-              const containsBadWord = naughtwordlist.some(word => messagevalue.toLowerCase().includes(word.toLowerCase()));
-              if (containsBadWord) {
-                MakeErrorMessage("No bad words allowed!", false);
-                return;
-              }
-              const jsonpayload = {
-                type: "sendmessage",
-                groupID: currentGroup,
-                userID: myuuid,
-                message: messagevalue,
-                username: username,
-                token: mytoken
-              };
+          const naughtwordlist = JSON.parse(sessionStorage.getItem("nonowords"));
+          const containsBadWord = naughtwordlist.some(word => messagevalue.toLowerCase().includes(word.toLowerCase()));
+          if (containsBadWord) {
+            MakeErrorMessage("No bad words allowed!", false);
+            return;
+          }
+          const jsonpayload = {
+            type: "sendmessage",
+            groupID: currentGroup,
+            userID: myuuid,
+            message: messagevalue,
+            username: username,
+            token: mytoken
+          };
 
-              socket.send(JSON.stringify(jsonpayload));
-              textinput.value = "";
-            })
-            .catch(error => console.error("Error fetching bad words list:", error));
+          socket.send(JSON.stringify(jsonpayload));
+          textinput.value = "";
         } else if (socket && currentGroup){
           if (e.key == ":") {
             emojipicker.style.display = "flex";
