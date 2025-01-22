@@ -1878,51 +1878,36 @@
            );
          }
 
-         function loadBadWords() {
-           fetch("/assets/json/nonowords.json")
-             .then((response) => response.json())
-             .then((data) => {
-               sessionStorage.setItem("nonowords", JSON.stringify(data.filter));
-             })
-             .catch((error) =>
-               console.error("Error fetching bad words list:", error)
-             );
-         }
-         function Login() {
-           if (socket.readyState !== WebSocket.OPEN) return;
-           const usernameVal = document
-             .getElementById("login-username")
-             .value.trim();
-           const passwordVal = document
-             .getElementById("login-password")
-             .value.trim();
+    function Login() {
+      if (socket.readyState !== WebSocket.OPEN) return;
+      const usernameVal = document.getElementById("login-username").value.trim();
+      const passwordVal = document.getElementById("login-password").value.trim();
 
-           if (usernameVal && passwordVal) {
-             const payload = {
-               type: "login",
-               data: {
-                 username: usernameVal,
-                 password: passwordVal,
-                 userID: myuuid,
-               },
-             };
-             socket.send(JSON.stringify(payload));
-             loadBadWords();
-           } else {
-             MakeErrorMessage("Please fill out all fields");
-           }
-         }
-         // this is the fingerprint thing. haha have fun making multiple accounts
-         async function getFingerprint() {
-           let visitorId = localStorage.getItem("visitorId");
-           if (!visitorId) {
-             const fp = await FingerprintJS.load();
-             const result = await fp.get();
-             visitorId = result.visitorId;
-             localStorage.setItem("visitorId", visitorId);
-           }
-           return visitorId;
-         }
+      if (usernameVal && passwordVal) {
+        const payload = {
+          type: "login",
+          data: {
+            username: usernameVal,
+            password: passwordVal,
+            userID: myuuid,
+          },
+        };
+        socket.send(JSON.stringify(payload));
+      } else {
+        MakeErrorMessage("Please fill out all fields");
+      }
+    }
+    // this is the fingerprint thing. haha have fun making multiple accounts
+    async function getFingerprint() {
+      let visitorId = localStorage.getItem('visitorId');
+      if (!visitorId) {
+        const fp = await FingerprintJS.load();
+        const result = await fp.get();
+        visitorId = result.visitorId;
+        localStorage.setItem('visitorId', visitorId); // Cache it
+      }
+      return visitorId;
+    }
 
          async function Register() {
            const usernameVal = document
@@ -1957,97 +1942,54 @@
            }
          }
 
-         function InitInput() {
-           const textinput = document.getElementById("textinput");
-           const emojiinput = document.getElementById("search");
-           const emojipicker = document.getElementById("emojipicker");
-           document
-             .querySelector("emoji-picker")
-             .addEventListener("emoji-click", (event) => {
-               textinput.value += event.detail.emoji.unicode;
-               emojiinput.focus();
-               emojipicker.style.display = "none";
-             });
-           textinput.addEventListener("input", () => {
-             textinput.style.height = "auto";
-             textinput.style.height = `${textinput.scrollHeight}px`;
-           });
+    function InitInput() {
+      const textinput = document.getElementById("textinput");
+      const emojiinput = document.getElementById("search");
+      const emojipicker = document.getElementById("emojipicker");
+      document.querySelector('emoji-picker').addEventListener('emoji-click', event => {
+          if (textinput.selectionStart > 0) {
+              textinput.value = textinput.value.substring(0, textinput.selectionStart - 1) + textinput.value.substring(textinput.selectionEnd);
+          }
+          textinput.value += event.detail.emoji.unicode;
+          emojiinput.focus();
+          emojipicker.style.display = "none";
+      });
+      textinput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && textinput.value !== "" && socket && currentGroup) {
+          const date = new Date();
+          const messagevalue = textinput.value;
+          emojipicker.style.display = "none";
+          fetch("/assets/json/nonowords.json")
+            .then(response => response.json())
+            .then(data => {
+              const naughtwordlist = data.filter;
+              const containsBadWord = naughtwordlist.some(word => messagevalue.toLowerCase().includes(word.toLowerCase()));
+              if (containsBadWord) {
+                MakeErrorMessage("No bad words allowed!", false);
+                return;
+              }
+              const jsonpayload = {
+                type: "sendmessage",
+                groupID: currentGroup,
+                userID: myuuid,
+                message: messagevalue,
+                username: username,
+                token: mytoken
+              };
 
-           textinput.addEventListener("keydown", (e) => {
-             if (e.key === "Enter" && !e.shiftKey) {
-               e.preventDefault();
-               if (
-                 e.key === "Enter" &&
-                 textinput.value !== "" &&
-                 socket &&
-                 currentGroup
-               ) {
-                 const fileInput = document.getElementById("fileUpload");
-                 const date = new Date();
-                 const messagevalue = textinput.value;
-                 emojipicker.style.display = "none";
-                 const naughtwordlist = JSON.parse(
-                   sessionStorage.getItem("nonowords")
-                 );
-                 const containsBadWord = naughtwordlist.some((word) =>
-                   messagevalue.toLowerCase().includes(word.toLowerCase())
-                 );
-                 if (containsBadWord) {
-                   MakeErrorMessage("No bad words allowed!", false);
-                   return;
-                 }
-
-                 const file = fileInput.files && fileInput.files[0];
-
-                 if (file) {
-                   const formData = new FormData();
-                   formData.append('file', file);
-
-                   fetch(`https://skib.juststudy.uk/fileUpload?groupID=${currentGroup}&userID=${myuuid}`, {
-                     method: "POST",
-                     body: formData,
-                    })
-                     .then((res) => res.json())
-                     .then((data) => {
-                       const combinedMessage = `${data.file}, ${messagevalue}`;
-                       const jsonpayload = {
-                         type: "sendmessage",
-                         groupID: currentGroup,
-                         userID: myuuid,
-                         message: combinedMessage,
-                         username: username,
-                         token: mytoken,
-                       };
-                       socket.send(JSON.stringify(jsonpayload));
-                       textinput.value = "";
-                       fileInput.value = "";
-                       fileLabel.textContent = "Choose File";
-                     })
-                     .catch((err) => {
-                       console.error(err);
-                     });
-                 } else {
-                   const jsonpayload = {
-                     type: "sendmessage",
-                     groupID: currentGroup,
-                     userID: myuuid,
-                     message: messagevalue,
-                     username: username,
-                     token: mytoken,
-                   };
-                   socket.send(JSON.stringify(jsonpayload));
-                   textinput.value = "";
-                 }
-               } else if (socket && currentGroup) {
-                 if (e.key == ":") {
-                   emojipicker.style.display = "flex";
-                 } else {
-                   emojipicker.style.display = "none";
-                 }
-               }
-             }
-           });
-         }
+              socket.send(JSON.stringify(jsonpayload));
+              textinput.value = "";
+            })
+            .catch(error => console.error("Error fetching bad words list:", error));
+        } else if (socket && currentGroup){
+          if (e.key == ":") {
+            emojipicker.style.display = "flex";
+          } else {
+            emojipicker.style.display = "none";
+          }
+        }
+      });
+    }
 
          function customUuid(length = 200) {
            const randomValues = crypto.getRandomValues(new Uint8Array(length));
