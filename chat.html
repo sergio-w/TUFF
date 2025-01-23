@@ -917,6 +917,22 @@
       width: 100% !important;
       height: auto !important;
     }
+
+    .BannedBox {
+      width: 30vw;
+      height: 25vw;
+      background-color: var(--sidebar);
+      border-radius: 1vw;
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transform: translate(-50%, -50%);
+      transition: all 0.1s ease;
+      font-family: comfortaa, sans-serif;
+    }
   </style>
 </head>
 
@@ -1014,10 +1030,11 @@
     function showBannedScreen(reason) {
       const maincontainer = document.getElementById("maincontent");
       maincontainer.innerHTML = `
-        <div class='LoginBox'>
-          <span style='font-size:2vw; text-align: center; width: 20vw; margin-top: 1vw;'>Account Banned</span>
+        <div class='BannedBox'>
+          <span style='font-size:2vw; text-align: center; width: 20vw; margin-top: 1vw; font-weight: bold'>Account Banned</span>
+          </br></br>
           <span style='font-size:1vw; text-align: center; width: 20vw; margin-top: 0.5vw; margin-bottom: 1vw;'>Reason: ${reason}</span>
-          <span style='font-size:0.8vw; text-align: center; width: 20vw;'>If you believe this is an error, please contact support.</span>
+          <span style='font-size:0.8vw; text-align: center; width: 20vw; font-weight: italic'>If you believe this is an error, please contact support.</span>
         </div>`;
     }
 
@@ -1558,7 +1575,7 @@
           } else if (link.startsWith("~")) {
             let nextindex = 0;
             if (!link.endsWith("~")) {
-              nextindex = links.findIndex((item, index) => item.includes("*") && index > current_index);
+              nextindex = links.findIndex((item, index) => item.includes("~") && index > current_index);
               if (nextindex !== -1) {
                 link = links.slice(current_index, nextindex + 1).join(" ");
               }
@@ -1997,9 +2014,9 @@
               })
                 .then((res) => res.json())
                 .then((data) => {
-                  var combinesMessage;
+                  var combinedMessage;
                   if (messagevalue !== "") {
-                    combinesMessage = `${data.file} ${messagevalue}`;
+                    combinedMessage = `${data.file} ${messagevalue}`;
                   } else {
                     combinedMessage = `${data.file}`;
                   }
@@ -2286,18 +2303,6 @@
         });
       }
     }
-    function refreshCurrentGroup() {
-      if (currentGroup) {
-        const packet = {
-          type: "requestGroupData",
-          groupID: currentGroup,
-          userID: myuuid,
-          username,
-          token: mytoken,
-        };
-        socket.send(JSON.stringify(packet));
-      }
-    }
     function pingServer() {
       if (socket.readyState !== WebSocket.OPEN) return;
       setTimeout(() => {
@@ -2318,41 +2323,34 @@
         attemptReconnect();
       }, 500);
     }
-    function resetChatUI() {
-      const content = document.getElementById("content");
-      if (content) {
-        content.innerHTML = "";
-      }
-
-      const userList = document.getElementById("userlist-content");
-      if (userList) {
-        userList.innerHTML = "";
-      }
-
-      setGroupName("No Group :(");
-      MakeErrorMessage("You have been kicked from the group.", false);
+    function updateUserListUI(members,Owner) {
+      const userlistContent = document.getElementById("userlist-content");
+      userlistContent.innerHTML = "";
+      members.forEach((member) => {
+        makeUser(member.username, member.icon, member.badges,Owner == member.username, member.status === "online", member.status === "online");
+      });
     }
-
-    function ConnectToServer() {
+    async function ConnectToServer() {
       socket = new WebSocket(serverlocation);
 
       socket.onopen = () => {
         pingServer();
       };
 
-      socket.addEventListener("message", (event) => {
+      socket.addEventListener("message", async (event) => {
         try {
           const data = JSON.parse(event.data);
-          console.log("Received data:", data);
           if (data.status === "banned") {
-            showBannedScreen(data.reason || "No reason provided");
+            await console.log(data);
+            await console.log(data.message || "Something went wrong...")
+            showBannedScreen(data.message || "No reason provided");
           } else if (data.status !== "error") {
             if (data && data.userID === myuuid) {
               myuuid = customUuid();
               switch (data.type) {
                 case "Login":
                   if (data.banned) {
-                    showBannedScreen(data.reason);
+                    showBannedScreen(data.message || "No reason provided");
                   } else {
                     if (data.failed) {
                       MakeErrorMessage('Something went wrong. Please try again...');
@@ -2427,13 +2425,8 @@
                 case "getGroupList":
                   UpdateGroupList(data.groups);
                   break;
-                case "sendmessage":
-                  getGroupData();
-                  break;
-
                 case "refreshGroupData":
                   {
-                    console.log("got group data");
                     loadData();
                     initGroupContent();
                     getGroupData();
@@ -2468,10 +2461,24 @@
               }
             } else {
               switch (data.type) {
+                case "updateUserList":
+                  if (currentGroup == data.groupID) {
+                    updateUserListUI(data.memList,data.Owner);
+                  }
+                  break;
+                case "requestGroupUserList":
+                  const packet = {
+                    type: "requestServerUserList",
+                    groupID: currentGroup,
+                    token: mytoken,
+                    username: username,
+                    userID: myuuid
+                  };
+                  socket.send(JSON.stringify(packet));
+                  break;
                 case "sendmessage":
                   if (data.groupID == currentGroup) {
-                    console.log(data.IsOwner)
-                    makebox(data.message, data.username, false, data.icon, data.badges, data.IsOwner, data.time); 
+                    makebox(data.message, data.username, false, data.icon, data.badges, data.IsOwner, data.time);
                   }
                   break;
                 case "updateGroup":
@@ -2505,7 +2512,7 @@
       const link = document.createElement("a");
       link.style.display = "none";
 
-      let themeJson = {
+      const themeJson = {
         accent: localStorage.getItem("--accent-color"),
         secondary_bg: localStorage.getItem("--secondary-bg"),
         primary_bg: localStorage.getItem("--background"),
@@ -2513,15 +2520,8 @@
         text: localStorage.getItem("--text-color"),
         input_bg: localStorage.getItem("--input-bg"),
       };
-      const file = new Blob([JSON.stringify(themeJson)], {
-        type: "application/json",
-      });
 
-      link.href = URL.createObjectURL(file);
-      link.download = "theme.json";
-      link.click();
-
-      URL.revokeObjectURL(link.href);
+      navigator.clipboard.writeText(JSON.stringify(themeJson))
     }
     function setTheme(themejs) {
       console.log("Setting theme...");
@@ -2551,6 +2551,22 @@
       localStorage.setItem("--input-bg", InputBGColor);
     }
 
+    function switchPreset() {
+      // Theme names correspond the <option> value tags
+      const themes = {
+        "dracula-oled": { "accent": "#ff7800", "secondary_bg": "#000000", "primary_bg": "#000000", "sidebar": "#000000", "text": "#8ff0a4", "input_bg": "#241f31" },
+        "simple-dark-red": { "accent": "#e01b24", "secondary_bg": "#3d3846", "primary_bg": "#3d3846", "sidebar": "#3d3846", "text": "#f66151", "input_bg": "#5e5c64" },
+        "simple-dark-green": { "accent": "#33d17a", "secondary_bg": "#3d3846", "primary_bg": "#3d3846", "sidebar": "#3d3846", "text": "#8ff0a4", "input_bg": "#5e5c64" },
+        "simple-dark-blue": { "accent": "#3584e4", "secondary_bg": "#3d3846", "primary_bg": "#3d3846", "sidebar": "#3d3846", "text": "#99c1f1", "input_bg": "#5e5c64" },
+        "simple-dark-yellow": { "accent": "#f5c211", "secondary_bg": "#3d3846", "primary_bg": "#3d3846", "sidebar": "#3d3846", "text": "#f9f06b", "input_bg": "#5e5c64" },
+        "zesty-bright": {"accent":"#ff7800","secondary_bg":"#ffffff","primary_bg":"#ffffff","sidebar":"#deddda","text":"#000000","input_bg":"#62a0ea"},
+        "zesty-dark": {"accent":"#e66100","secondary_bg":"#3d3846","primary_bg":"#3d3846","sidebar":"#5e5c64","text":"#ffffff","input_bg":"#3584e4"},
+        "zesty-oled": {"accent":"#e66100","secondary_bg":"#000000","primary_bg":"#000000","sidebar":"#241f31","text":"#ffffff","input_bg":"#1a5fb4"},
+      };
+      const comboBoxVal = document.getElementById("color-schemes-box").value;
+      setTheme(themes[comboBoxVal]);
+    }
+
     function openUserSettingsPopup() {
       const overlay = document.getElementById("UserSettingsOverlay");
       const popup = document.getElementById("UserSettingsPopup");
@@ -2567,12 +2583,18 @@
          </div>
          <label style='width:90%;font-size:1vw;'>Color Schemes</label>
          <div class='usersettingscontainer'>
-           <select name="color-schemes" id="color-schemes-box">
-             <option onclick=setTheme({"accent":"#ff7800","secondary_bg":"#000000","primary_bg":"#000000","sidebar":"#000000","text":"#8ff0a4","input_bg":"#241f31"})>Dracula OLED</option>
-             <option onclick=setTheme({"accent":"#241f31","secondary_bg":"#3d3846","primary_bg":"#3d3846","sidebar":"#5e5c64","text":"#f9f06b","input_bg":"#e01b24"})>Sublime Grey</option>
-
+           <select name="color-schemes" id="color-schemes-box" onchange=switchPreset()>
+             <option value="" selected disabled hidden>-- Choose a theme --</option>
+             <option value="dracula-oled">Dracula OLED</option>
+             <option value="simple-dark-red">Simple Dark - Red</option>
+             <option value="simple-dark-green">Simple Dark - Green</option>  
+             <option value="simple-dark-blue">Simple Dark - Blue</option>
+             <option value="simple-dark-yellow">Simple Dark - Yellow</option>
+             <option value="zesty-bright">Zesty Bright</option>
+             <option value="zesty-dark">Zesty Dark</option>
+             <option value="zesty-oled">Zesty OLED</option>
            </select>
-           <button class='content-bt' id='save-theme' onclick=dumpTheme()>Save theme to file</button>
+           <button class='content-bt' id='save-theme' onclick=dumpTheme()>Copy theme JSON to clipboard</button>
          </div>
          <label style='width:90%;font-size:1vw;'>Change Accent Color</label>
          <div class='usersettingscontainer'>
@@ -2720,9 +2742,6 @@
       overlay.addEventListener("animationend", function hideOverlay() {
         overlay.style.display = "none";
         overlay.removeEventListener("animationend", hideOverlay);
-      });
-      popup.addEventListener("animationend", function hidePopup() {
-        popup.style.display = "none";
         popup.removeEventListener("animationend", hidePopup);
       });
       overlay.removeEventListener("click", closeUserSettingsPopup);
