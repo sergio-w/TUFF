@@ -1,963 +1,944 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>JustStudy CE</title>
-    <link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <script
-      type="module"
-      src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="http://code.jquery.com/jquery-latest.min.js"
-    ></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
-    <style>
-      :root {
-        --background: #36393f;
-        --sidebar: #2f3136;
-        --chat-bg: #36393f;
-        --secondary-bg: #2c2f33;
-        --text-color: #dcddde;
-        --accent-color: #7289da;
-        --border-color: #202225;
-        --input-bg: #202225;
-      }
 
-      body {
-        margin: 0;
-        font-family: "Poppins", sans-serif;
-        color: var(--text-color);
-        background-color: var(--background);
-        overflow: hidden;
-        transition: background 0.7s ease-in-out;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JustStudy CE</title>
+  <link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>
+  <style>
+    :root {
+      --background: #36393f;
+      --sidebar: #2f3136;
+      --chat-bg: #36393f;
+      --secondary-bg: #2c2f33;
+      --text-color: #dcddde;
+      --accent-color: #7289da;
+      --border-color: #202225;
+      --input-bg: #202225;
+    }
 
-      .maincontent {
-        display: flex;
-        flex-direction: row;
-        height: 100vh;
-      }
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      color: var(--text-color);
+      background-color: var(--background);
+      overflow: hidden;
+      transition: background 0.7s ease-in-out;
+    }
 
-      .leftsidecontent {
-        width: 4vw;
-        background-color: var(--sidebar);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding-top: 1vw;
-        box-sizing: border-box;
-        overflow-y: scroll;
-        scrollbar-width: none;
-        overflow-x: hidden;
-      }
+    .maincontent {
+      display: flex;
+      flex-direction: row;
+      height: 100vh;
+    }
 
-      .rightsidecontent {
-        width: 11vw;
-        background-color: var(--sidebar);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding-top: 1vw;
-        box-sizing: border-box;
-        overflow-y: scroll;
-        scrollbar-width: none;
-        overflow-x: hidden;
-      }
+    .leftsidecontent {
+      width: 4vw;
+      background-color: var(--sidebar);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 1vw;
+      box-sizing: border-box;
+      overflow-y: scroll;
+      scrollbar-width: none;
+      overflow-x: hidden;
+    }
 
-      .chatcontent {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        background-color: var(--chat-bg);
-        position: relative;
-        scrollbar-width: none;
-      }
+    .rightsidecontent {
+      width: 11vw;
+      background-color: var(--sidebar);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 1vw;
+      box-sizing: border-box;
+      overflow-y: scroll;
+      scrollbar-width: none;
+      overflow-x: hidden;
+    }
 
-      .content {
-        overflow-x: hidden;
-        overflow-y: scroll;
-        scrollbar-color: var(--secondary-bg) var(--border-color);
-        scrollbar-width: thin;
-        flex: 1;
-        padding: 1vw;
-        box-sizing: border-box;
-        background-color: var(--background);
-        background-image: radial-gradient(
-          circle,
+    .chatcontent {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--chat-bg);
+      position: relative;
+      scrollbar-width: none;
+    }
+
+    .content {
+      overflow-x: hidden;
+      overflow-y: scroll;
+      scrollbar-color: var(--secondary-bg) var(--border-color);
+      scrollbar-width: thin;
+      flex: 1;
+      padding: 1vw;
+      box-sizing: border-box;
+      background-color: var(--background);
+      background-image: radial-gradient(circle,
           rgba(255, 255, 255, 0.171) 5%,
-          rgba(255, 255, 255, 0) 5%
-        );
-        background-size: 4.5vw 4.5vw;
-        background-position: -0.5vw -0.4vw;
-      }
-
-      .content::-webkit-scrollbar {
-        width: 8px;
-        background-color: var(--secondary-bg);
-        border-radius: 50%;
-      }
-
-      .content::-webkit-scrollbar-thumb {
-        background-color: var(--border-color);
-        border-radius: 50%;
-      }
-
-      .content::-webkit-scrollbar-button {
-        display: none;
-      }
-
-      .bottombar {
-        display: flex;
-        background-color: var(--secondary-bg);
-        padding: 0.5vw;
-      }
-
-      .textinput {
-        flex: 1 1 auto;
-        min-height: 4vh;
-        max-height: 30vh;
-        font-size: 1vw;
-        background-color: var(--input-bg);
-        border: none;
-        color: var(--text-color);
-        padding: 1vh 1vw;
-        outline: none;
-        border-radius: 0.5vw;
-        resize: none;
-        overflow-y: scroll;
-        line-height: 2vh;
-        box-sizing: border-box;
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-      }
-
-      .textinput::-webkit-scrollbar {
-        display: none;
-      }
-
-      .leftsidecontent-inputfield {
-        background-color: var(--input-bg);
-        border: none;
-        padding: 0.4vw;
-        margin: 0.4vw;
-        width: 13vw;
-        color: var(--text-color);
-        outline: none;
-        border-radius: 0.2vw;
-      }
-
-      .content-bt {
-        background-color: var(--accent-color);
-        border: none;
-        padding: 0.6vw;
-        margin: 0.4vw;
-        width: 14vw;
-        color: #fff;
-        cursor: pointer;
-        border-radius: 0.2vw;
-        font-size: 1vw;
-      }
-
-      .content-bt:hover {
-        opacity: 0.9;
-      }
-
-      .white-text {
-        font-size: 1vw;
-        margin-left: 1.5vw;
-        padding: 0.4vw;
-        color: var(--text-color);
-      }
-
-      .textbox {
-        background-color: var(--secondary-bg);
-        padding: 0.7vw;
-        border-radius: 0.4vw;
-        margin: 0.4vw;
-        max-width: 83vw;
-        width: auto;
-        font-size: 1vw;
-        word-break: break-all;
-        white-space: pre-line;
-      }
-
-      .textbox-name {
-        font-size: 0.9vw;
-        margin-left: 0.4vw;
-        padding: 0.4vw;
-        display: flex;
-        align-items: center;
-      }
-
-      .bg {
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        left: 0;
-        top: 0;
-        z-index: -1;
-        background: linear-gradient(120deg, rgb(48, 0, 223), rgb(22, 0, 104));
-      }
-
-      .leftsidecontent-icon-container {
-        width: 3vw;
-        height: 3vw;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 1vw;
-      }
-
-      .group-icon-container {
-        width: 3vw;
-        height: 3vw;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 1vw;
-        backdrop-filter: blur(1.6vw);
-        -webkit-backdrop-filter: blur(1vw);
-        background-color: rgba(116, 116, 116, 0.2);
-        border-radius: 2vw;
-        transition: all 0.3s ease;
-      }
-
-      .group-icon-container:hover {
-        border-radius: 0.5vw;
-        background-color: rgba(125, 255, 166, 0.581);
-      }
-
-      .leftsidecontent-icon {
-        transition: all 0.4s ease;
-        border-radius: 2vw;
-        border: #7289da00 0.15vw solid;
-      }
-
-      .leftsidecontent-icon:hover {
-        border: #ffc400 0.15vw solid;
-        border-radius: 0.5vw;
-      }
-
-      .popup {
-        display: none;
-        position: fixed;
-        background: rgb(27, 27, 27);
-        border: 0.01vw solid rgb(107, 107, 107);
-        border-radius: 0.5vw;
-        padding: 0.5vw;
-        color: white;
-        font-size: 0.7vw;
-        transform: translateY(20%);
-        transition: all 0.2s ease;
-        box-shadow: 0.1vw 0.1vw 0.2vw rgba(0, 0, 0, 0.5);
-        z-index: 9999;
-      }
-
-      .userinfo-container {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        width: 100%;
-      }
-
-      .usericon-container {
-        width: 2.5vw;
-        height: 2.5vw;
-        margin-bottom: 1.5vw;
-        margin-top: 1.5vw;
-        border-radius: 1.5vw;
-        overflow: hidden;
-        justify-content: center;
-        align-items: center;
-        display: flex;
-        position: relative;
-        border: 0.15vw solid var(--accent-color);
-      }
-
-      .usericon {
-        border-radius: 2vw;
-      }
-
-      .AddGroupPopup {
-        width: 20vw;
-        height: 27vw;
-        background-color: var(--sidebar);
-        border-radius: 1vw;
-        position: fixed;
-        left: 50%;
-        top: 50%;
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        transform: translate(-50%, -50%);
-        transition: all 0.1s ease;
-        opacity: 0;
-        font-family: comfortaa, sans-serif;
-        z-index: 9000;
-      }
-
-      .overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: black;
-        opacity: 0;
-        display: none;
-        z-index: 7000;
-      }
-
-      .ShowOverlayAnim {
-        animation: ShowOverlay ease-in 0.2s forwards;
-      }
-
-      .HideOverlayAnim {
-        animation: HideOverlay ease-out 0.2s forwards;
-      }
-
-      @keyframes ShowOverlay {
-        0% {
-          opacity: 0;
-          display: none;
-        }
-
-        100% {
-          display: block;
-          opacity: 0.5;
-        }
-      }
-
-      @keyframes HideOverlay {
-        0% {
-          opacity: 0.5;
-          display: block;
-        }
-
-        100% {
-          opacity: 0;
-          display: none;
-        }
-      }
-
-      .smoothshow {
-        animation: AddGroupPopupShow ease-in 0.15s forwards;
-      }
-
-      .smoothhide {
-        animation: AddGroupPopupHide ease-out 0.15s forwards;
-      }
-
-      @keyframes AddGroupPopupShow {
-        0% {
-          opacity: 0;
-        }
-
-        100% {
-          opacity: 1;
-        }
-      }
-
-      @keyframes AddGroupPopupHide {
-        0% {
-          opacity: 1;
-        }
-
-        100% {
-          opacity: 0;
-        }
-      }
-
-      .popuptext {
-        font-size: 2vw;
-        color: white;
-      }
-
-      .custominput {
-        flex: 0 1 auto;
-        height: 2vw;
-        font-size: 1vw;
-        background-color: var(--input-bg);
-        border: none;
-        color: var(--text-color);
-        padding: 0.3vw 0.5vw;
-        outline: none;
-        border-radius: 0.2vw;
-        margin-top: 0.4vw;
-        margin-bottom: 0.4vw;
-      }
-
-      .LoginBox {
-        width: 30vw;
-        height: 20vw;
-        background-color: var(--sidebar);
-        border-radius: 1vw;
-        position: fixed;
-        left: 50%;
-        top: 50%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        transform: translate(-50%, -50%);
-        transition: all 0.1s ease;
-        font-family: comfortaa, sans-serif;
-      }
-
-      .logininput {
-        flex: 0 1 auto;
-        height: 2vw;
-        font-size: 1vw;
-        width: 20vw;
-        background-color: var(--input-bg);
-        border: none;
-        color: var(--text-color);
-        padding: 0.3vw 0.5vw;
-        outline: none;
-        border-radius: 0.2vw;
-        margin-top: 0.4vw;
-        margin-bottom: 0.4vw;
-      }
-
-      .login-bt {
-        background-color: var(--accent-color);
-        border: none;
-        padding: 0.6vw;
-        margin: 0.4vw;
-        width: 21vw;
-        color: #fff;
-        cursor: pointer;
-        border-radius: 0.2vw;
-        font-size: 1vw;
-      }
-
-      .login-bt:hover {
-        opacity: 0.9;
-      }
-
-      .loginerrorpopup {
-        height: 2vw;
-        width: 20vw;
-        border-radius: 0.2vw;
-        position: absolute;
-        text-align: center;
-        background-color: #3baa56;
-        font-size: 1vw;
-        left: 40vw;
-      }
-
-      .ErrorPopupShow {
-        animation: ErrorPopupShow ease-out 0.15s forwards;
-      }
-
-      @keyframes ErrorPopupShow {
-        0% {
-          top: 100vh;
-        }
-
-        100% {
-          top: 95vh;
-        }
-      }
-
-      .ErrorPopupHide {
-        animation: ErrorPopupHide ease-out 0.15s forwards;
-      }
-
-      @keyframes ErrorPopupHide {
-        0% {
-          top: 95vh;
-        }
-
-        100% {
-          top: 100vh;
-        }
-      }
-
-      .group-header {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding-bottom: 0.2vw;
-        border-bottom: 0.05vw solid var(--border-color);
-      }
-
-      .group-name {
-        font-size: 1vw;
-        margin-left: 0.5vw;
-        font-weight: bold;
-        color: var(--text-color);
-        display: flex;
-        align-items: center;
-      }
-
-      .settings-icon {
-        font-size: 1.2vw;
-        color: var(--text-color);
-        cursor: pointer;
-        transition: color 0.3s;
-        margin-right: 0.5vw;
-      }
-
-      .settings-icon:hover {
-        color: var(--accent-color);
-      }
-
-      .user-info {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        padding: 0.5vw 1vw;
-        border-top: 0.05vw solid var(--border-color);
-      }
-
-      .user-info img {
-        width: 2vw;
-        height: 2vw;
-        border-radius: 50%;
-        margin-right: 0.5vw;
-      }
-
-      .user-name {
-        font-size: 0.9vw;
-        color: var(--text-color);
-        margin-right: 0.5vw;
-        display: flex;
-        align-items: center;
-      }
-
-      .userlist-content {
-        overflow-y: auto;
-        overflow-x: hidden;
-        flex: 1;
-        scrollbar-width: none;
-        width: 100%;
-        box-sizing: border-box;
-      }
-
-      .popup-leaveGroupButton {
-        background-color: #20222500;
-        border: none;
-        margin: 0.4vw;
-        width: 99%;
-        height: 2vw;
-        color: #fff;
-        cursor: pointer;
-        border-radius: 0.2vw;
-        font-size: 1vw;
-        transition: all 0.1s ease-in-out;
-        text-align: center;
-      }
-
-      .popup-leaveGroupButton:hover {
-        background-color: #ff5a70;
-      }
-
-      .popup-CopyID {
-        background-color: #20222500;
-        border: none;
-        margin: 0.4vw;
-        width: 95%;
-        height: 2vw;
-        color: #fff;
-        cursor: pointer;
-        border-radius: 0.2vw;
-        font-size: 1vw;
-        transition: all 0.1s ease;
-      }
-
-      .popup-CopyID:hover {
-        background-color: var(--accent-color);
-      }
-
-      .CustomPopup {
-        width: 20vw;
-        background-color: var(--sidebar);
-        border-radius: 1vw;
-        position: fixed;
-        padding-bottom: 0.5vw;
-        padding-top: 0.5vw;
-        left: 50%;
-        top: 50%;
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        transform: translate(-50%, -50%);
-        transition: all 0.1s ease;
-        opacity: 0;
-        font-family: comfortaa, sans-serif;
-        z-index: 9999;
-      }
-
-      @keyframes CustomPopupShow {
-        0% {
-          opacity: 0;
-        }
-
-        100% {
-          opacity: 1;
-        }
-      }
-
-      @keyframes CustomPopupHide {
-        0% {
-          opacity: 1;
-        }
-
-        100% {
-          opacity: 0;
-        }
-      }
-
-      .copyidcontainer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 95%;
-        border-radius: 0.5vw;
-        background-color: var(--input-bg);
-      }
-
-      .copyidinput {
-        width: 13vw;
-        height: 2vw;
-        margin-left: 0.2vw;
-        font-size: 1vw;
-        background-color: #20222500;
-        outline: none;
-        color: white;
-        border: none;
-      }
-
-      .GroupSettingsPopup {
-        width: 20vw;
-        background-color: var(--sidebar);
-        border-radius: 1vw;
-        position: fixed;
-        padding: 1vw;
-        left: 50%;
-        top: 50%;
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        transform: translate(-50%, -50%);
-        transition: all 0.1s ease;
-        opacity: 0;
-        font-family: comfortaa, sans-serif;
-        z-index: 9001;
-      }
-
-      .GroupSettingsPopupShow {
-        animation: CustomPopupShow ease-in 0.15s forwards;
-      }
-
-      .GroupSettingsPopupHide {
-        animation: CustomPopupHide ease-out 0.15s forwards;
-      }
-
-      .GroupSettingsTitle {
-        font-size: 1.4vw;
-        margin-bottom: 1vw;
-      }
-
-      .group-settings-input {
-        width: 90%;
-        margin-bottom: 0.5vw;
-        background-color: var(--input-bg);
-        color: white;
-        border: none;
-        border-radius: 0.3vw;
-        height: 2vw;
-        font-size: 1vw;
-        padding-left: 0.5vw;
-        margin-top: 0.3vw;
-      }
-
-      .kick-list-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 97%;
-        font-size: 1vw;
-        height: 2vw;
-        background-color: var(--accent-color);
-        margin-bottom: 0.1vw;
-        margin-top: 0.1vw;
-        padding-left: 0.5vw;
-        border-radius: 0.2vw;
-      }
-
-      .kick-button {
-        background-color: #ff5a70;
-        border: none;
-        border-radius: 0.3vw;
-        cursor: pointer;
-        font-size: 0.8vw;
-        padding: 0.3vw 0.5vw;
-      }
-
-      .kick-button:hover {
-        opacity: 0.9;
-      }
-
-      .UserSettingsOverlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: black;
+          rgba(255, 255, 255, 0) 5%);
+      background-size: 4.5vw 4.5vw;
+      background-position: -0.5vw -0.4vw;
+    }
+
+    .content::-webkit-scrollbar {
+      width: 8px;
+      background-color: var(--secondary-bg);
+      border-radius: 50%;
+    }
+
+    .content::-webkit-scrollbar-thumb {
+      background-color: var(--border-color);
+      border-radius: 50%;
+    }
+
+    .content::-webkit-scrollbar-button {
+      display: none;
+    }
+
+    .bottombar {
+      display: flex;
+      background-color: var(--secondary-bg);
+      padding: 0.5vw;
+    }
+
+    .textinput {
+      flex: 1 1 auto;
+      min-height: 4vh;
+      max-height: 30vh;
+      font-size: 1vw;
+      background-color: var(--input-bg);
+      border: none;
+      color: var(--text-color);
+      padding: 1vh 1vw;
+      outline: none;
+      border-radius: 0.5vw;
+      resize: none;
+      overflow-y: scroll;
+      line-height: 2vh;
+      box-sizing: border-box;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .textinput::-webkit-scrollbar {
+      display: none;
+    }
+
+    .leftsidecontent-inputfield {
+      background-color: var(--input-bg);
+      border: none;
+      padding: 0.4vw;
+      margin: 0.4vw;
+      width: 13vw;
+      color: var(--text-color);
+      outline: none;
+      border-radius: 0.2vw;
+    }
+
+    .content-bt {
+      background-color: var(--accent-color);
+      border: none;
+      padding: 0.6vw;
+      margin: 0.4vw;
+      width: 14vw;
+      color: #fff;
+      cursor: pointer;
+      border-radius: 0.2vw;
+      font-size: 1vw;
+    }
+
+    .content-bt:hover {
+      opacity: 0.9;
+    }
+
+    .white-text {
+      font-size: 1vw;
+      margin-left: 1.5vw;
+      padding: 0.4vw;
+      color: var(--text-color);
+    }
+
+    .textbox {
+      background-color: var(--secondary-bg);
+      padding: 0.7vw;
+      border-radius: 0.4vw;
+      margin: 0.4vw;
+      max-width: 83vw;
+      width: auto;
+      font-size: 1vw;
+      word-break: break-all;
+      white-space: pre-line;
+    }
+
+    .textbox-name {
+      font-size: 0.9vw;
+      margin-left: 0.4vw;
+      padding: 0.4vw;
+      display: flex;
+      align-items: center;
+    }
+
+    .bg {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      z-index: -1;
+      background: linear-gradient(120deg, rgb(48, 0, 223), rgb(22, 0, 104));
+    }
+
+    .leftsidecontent-icon-container {
+      width: 3vw;
+      height: 3vw;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1vw;
+    }
+
+    .group-icon-container {
+      width: 3vw;
+      height: 3vw;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1vw;
+      backdrop-filter: blur(1.6vw);
+      -webkit-backdrop-filter: blur(1vw);
+      background-color: rgba(116, 116, 116, 0.2);
+      border-radius: 2vw;
+      transition: all 0.3s ease;
+    }
+
+    .group-icon-container:hover {
+      border-radius: 0.5vw;
+      background-color: rgba(125, 255, 166, 0.581);
+    }
+
+    .leftsidecontent-icon {
+      transition: all 0.4s ease;
+      border-radius: 2vw;
+      border: #7289da00 0.15vw solid;
+    }
+
+    .leftsidecontent-icon:hover {
+      border: #ffc400 0.15vw solid;
+      border-radius: 0.5vw;
+    }
+
+    .popup {
+      display: none;
+      position: fixed;
+      background: rgb(27, 27, 27);
+      border: 0.01vw solid rgb(107, 107, 107);
+      border-radius: 0.5vw;
+      padding: 0.5vw;
+      color: white;
+      font-size: 0.7vw;
+      transform: translateY(20%);
+      transition: all 0.2s ease;
+      box-shadow: 0.1vw 0.1vw 0.2vw rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+    }
+
+    .userinfo-container {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      width: 100%;
+    }
+
+    .usericon-container {
+      width: 2.5vw;
+      height: 2.5vw;
+      margin-bottom: 1.5vw;
+      margin-top: 1.5vw;
+      border-radius: 1.5vw;
+      overflow: hidden;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      position: relative;
+      border: 0.15vw solid var(--accent-color);
+    }
+
+    .usericon {
+      border-radius: 2vw;
+    }
+
+    .AddGroupPopup {
+      width: 20vw;
+      height: 27vw;
+      background-color: var(--sidebar);
+      border-radius: 1vw;
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      transform: translate(-50%, -50%);
+      transition: all 0.1s ease;
+      opacity: 0;
+      font-family: comfortaa, sans-serif;
+      z-index: 9000;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      opacity: 0;
+      display: none;
+      z-index: 7000;
+    }
+
+    .ShowOverlayAnim {
+      animation: ShowOverlay ease-in 0.2s forwards;
+    }
+
+    .HideOverlayAnim {
+      animation: HideOverlay ease-out 0.2s forwards;
+    }
+
+    @keyframes ShowOverlay {
+      0% {
         opacity: 0;
         display: none;
-        z-index: 2000;
       }
 
-      .UserSettingsPopup {
-        width: 20vw;
-        background-color: var(--sidebar);
-        border-radius: 1vw;
-        position: fixed;
-        left: 50%;
-        top: 50%;
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        transform: translate(-50%, -50%);
-        transition: all 0.1s ease;
+      100% {
+        display: block;
+        opacity: 0.5;
+      }
+    }
+
+    @keyframes HideOverlay {
+      0% {
+        opacity: 0.5;
+        display: block;
+      }
+
+      100% {
         opacity: 0;
-        z-index: 3000;
-        font-family: comfortaa, sans-serif;
-      }
-
-      .UserSettingsPopupShow {
-        animation: CustomPopupShow ease-in 0.15s forwards;
-      }
-
-      .UserSettingsPopupHide {
-        animation: CustomPopupHide ease-out 0.15s forwards;
-      }
-
-      .user-settings-icon {
-        font-size: 1.2vw;
-        color: var(--text-color);
-        cursor: pointer;
-        transition: color 0.3s;
-      }
-
-      .user-settings-icon:hover {
-        color: var(--accent-color);
-      }
-
-      .usersettingscontainer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 95%;
-        border-radius: 0.5vw;
-        background-color: var(--input-bg);
-        margin-bottom: 1vw;
-      }
-
-      /* Badge icon images / placeholders */
-      .badge-icon {
-        width: 1.5vw;
-        height: 1.5vw;
-        margin-left: 0.3vw;
-        display: inline-block;
-        vertical-align: middle;
-        object-fit: contain;
-      }
-
-      .emojipicker {
-        position: fixed;
-        display: none;
-        top: 53%;
-        height: 39vh;
-        width: 20vw;
-      }
-
-      .emoji-bt {
-        background-color: #00000000;
-        font-size: 1.5vw;
-        border: none;
-        outline: none;
-        text-align: center;
-        vertical-align: middle;
-      }
-
-      .gelatineeffect {
-        animation: gelatine 0.5s forwards;
-      }
-
-      @keyframes gelatine {
-        from,
-        to {
-          transform: scale(1, 1);
-        }
-
-        25% {
-          transform: scale(0.9, 1.1);
-        }
-
-        50% {
-          transform: scale(1.1, 0.9);
-        }
-
-        75% {
-          transform: scale(0.95, 1.05);
-        }
-      }
-
-      .file-upload-container {
-        display: flex;
-        align-items: center;
-        gap: 0.5vw;
-      }
-
-      .file-label {
-        display: inline-block;
-        background-color: var(--accent-color);
-        color: #fff;
-        padding: 0.6vw 1.2vw;
-        border-radius: 0.4vw;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        white-space: nowrap;
-        margin-right: 0.5vw;
-      }
-
-      .file-label:hover {
-        background-color: #5a6fb2;
-      }
-
-      .file-label:active {
-        background-color: #425187;
-      }
-
-      .file-label + input[type="file"] {
         display: none;
       }
+    }
 
-      .chatinputcontainer {
-        display: flex;
-        align-items: center;
-        gap: 0.5vw;
-        padding: 0.5vw;
-        background-color: var(--input-bg);
-        border-radius: 0.5vw;
+    .smoothshow {
+      animation: AddGroupPopupShow ease-in 0.15s forwards;
+    }
+
+    .smoothhide {
+      animation: AddGroupPopupHide ease-out 0.15s forwards;
+    }
+
+    @keyframes AddGroupPopupShow {
+      0% {
+        opacity: 0;
       }
 
-      .textinput {
-        flex: 1;
-        margin: 0;
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes AddGroupPopupHide {
+      0% {
+        opacity: 1;
       }
 
-      .chatinputcontainer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        border-radius: 0.5vw;
-        background-color: var(--input-bg);
-        -ms-overflow-style: none;
-        scrollbar-width: none;
+      100% {
+        opacity: 0;
+      }
+    }
+
+    .popuptext {
+      font-size: 2vw;
+      color: white;
+    }
+
+    .custominput {
+      flex: 0 1 auto;
+      height: 2vw;
+      font-size: 1vw;
+      background-color: var(--input-bg);
+      border: none;
+      color: var(--text-color);
+      padding: 0.3vw 0.5vw;
+      outline: none;
+      border-radius: 0.2vw;
+      margin-top: 0.4vw;
+      margin-bottom: 0.4vw;
+    }
+
+    .LoginBox {
+      width: 30vw;
+      height: 25vw;
+      background-color: var(--sidebar);
+      border-radius: 1vw;
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transform: translate(-50%, -50%);
+      transition: all 0.1s ease;
+      font-family: comfortaa, sans-serif;
+    }
+
+    .logininput {
+      flex: 0 1 auto;
+      height: 2vw;
+      font-size: 1vw;
+      width: 20vw;
+      background-color: var(--input-bg);
+      border: none;
+      color: var(--text-color);
+      padding: 0.3vw 0.5vw;
+      outline: none;
+      border-radius: 0.2vw;
+      margin-top: 0.4vw;
+      margin-bottom: 0.4vw;
+    }
+
+    .login-bt {
+      background-color: var(--accent-color);
+      border: none;
+      padding: 0.6vw;
+      margin: 0.4vw;
+      width: 21vw;
+      color: #fff;
+      cursor: pointer;
+      border-radius: 0.2vw;
+      font-size: 1vw;
+    }
+
+    .login-bt:hover {
+      opacity: 0.9;
+    }
+
+    .loginerrorpopup {
+      height: 2vw;
+      width: 20vw;
+      border-radius: 0.2vw;
+      position: absolute;
+      text-align: center;
+      background-color: #3baa56;
+      font-size: 1vw;
+      left: 40vw;
+    }
+
+    .ErrorPopupShow {
+      animation: ErrorPopupShow ease-out 0.15s forwards;
+    }
+
+    @keyframes ErrorPopupShow {
+      0% {
+        top: 100vh;
       }
 
-      .useractive {
-        outline: 0.2vw solid var(--sidebar);
-        height: 0.6vw;
-        width: 0.6vw;
-        border-radius: 50%;
-        position: absolute;
-        bottom: 0;
-        right: 0;
+      100% {
+        top: 95vh;
+      }
+    }
+
+    .ErrorPopupHide {
+      animation: ErrorPopupHide ease-out 0.15s forwards;
+    }
+
+    @keyframes ErrorPopupHide {
+      0% {
+        top: 95vh;
       }
 
-      .messagetime {
-        font-size: 0.8vw;
-        color: var(--text-color);
-        margin-left: 0.5vw;
-        margin-right: 0.5vw;
+      100% {
+        top: 100vh;
+      }
+    }
+
+    .group-header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 0.2vw;
+      border-bottom: 0.05vw solid var(--border-color);
+    }
+
+    .group-name {
+      font-size: 1vw;
+      margin-left: 0.5vw;
+      font-weight: bold;
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+    }
+
+    .settings-icon {
+      font-size: 1.2vw;
+      color: var(--text-color);
+      cursor: pointer;
+      transition: color 0.3s;
+      margin-right: 0.5vw;
+    }
+
+    .settings-icon:hover {
+      color: var(--accent-color);
+    }
+
+    .user-info {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      padding: 0.5vw 1vw;
+      border-top: 0.05vw solid var(--border-color);
+    }
+
+    .user-info img {
+      width: 2vw;
+      height: 2vw;
+      border-radius: 50%;
+      margin-right: 0.5vw;
+    }
+
+    .user-name {
+      font-size: 0.9vw;
+      color: var(--text-color);
+      margin-right: 0.5vw;
+      display: flex;
+      align-items: center;
+    }
+
+    .userlist-content {
+      overflow-y: auto;
+      overflow-x: hidden;
+      flex: 1;
+      scrollbar-width: none;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .popup-leaveGroupButton {
+      background-color: #20222500;
+      border: none;
+      margin: 0.4vw;
+      width: 99%;
+      height: 2vw;
+      color: #fff;
+      cursor: pointer;
+      border-radius: 0.2vw;
+      font-size: 1vw;
+      transition: all 0.1s ease-in-out;
+      text-align: center;
+    }
+
+    .popup-leaveGroupButton:hover {
+      background-color: #ff5a70;
+    }
+
+    .popup-CopyID {
+      background-color: #20222500;
+      border: none;
+      margin: 0.4vw;
+      width: 95%;
+      height: 2vw;
+      color: #fff;
+      cursor: pointer;
+      border-radius: 0.2vw;
+      font-size: 1vw;
+      transition: all 0.1s ease;
+    }
+
+    .popup-CopyID:hover {
+      background-color: var(--accent-color);
+    }
+
+    .CustomPopup {
+      width: 20vw;
+      background-color: var(--sidebar);
+      border-radius: 1vw;
+      position: fixed;
+      padding-bottom: 0.5vw;
+      padding-top: 0.5vw;
+      left: 50%;
+      top: 50%;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      transform: translate(-50%, -50%);
+      transition: all 0.1s ease;
+      opacity: 0;
+      font-family: comfortaa, sans-serif;
+      z-index: 9999;
+    }
+
+    @keyframes CustomPopupShow {
+      0% {
+        opacity: 0;
       }
 
-      .audioplayer {
-        display: flex;
-        align-items: center;
-        width: 20vw;
-        min-height: 4vw;
-        border-radius: 0.5vw;
-        background-color: var(--input-bg);
-        margin-bottom: 1vw;
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes CustomPopupHide {
+      0% {
+        opacity: 1;
       }
 
-      .playbt {
-        font-size: 1.2vw;
-        background-color: var(--accent-color);
-        color: var(--text-color);
-        height: 2.5vw;
-        width: 2.5vw;
-        outline: none;
-        border: none;
-        margin-left: 0.35vw;
-        border-radius: 0.5vw;
-        cursor: pointer;
-        transition: color 0.3s;
+      100% {
+        opacity: 0;
+      }
+    }
+
+    .copyidcontainer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 95%;
+      border-radius: 0.5vw;
+      background-color: var(--input-bg);
+    }
+
+    .copyidinput {
+      width: 13vw;
+      height: 2vw;
+      margin-left: 0.2vw;
+      font-size: 1vw;
+      background-color: #20222500;
+      outline: none;
+      color: white;
+      border: none;
+    }
+
+    .GroupSettingsPopup {
+      width: 20vw;
+      background-color: var(--sidebar);
+      border-radius: 1vw;
+      position: fixed;
+      padding: 1vw;
+      left: 50%;
+      top: 50%;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      transform: translate(-50%, -50%);
+      transition: all 0.1s ease;
+      opacity: 0;
+      font-family: comfortaa, sans-serif;
+      z-index: 9001;
+    }
+
+    .GroupSettingsPopupShow {
+      animation: CustomPopupShow ease-in 0.15s forwards;
+    }
+
+    .GroupSettingsPopupHide {
+      animation: CustomPopupHide ease-out 0.15s forwards;
+    }
+
+    .GroupSettingsTitle {
+      font-size: 1.4vw;
+      margin-bottom: 1vw;
+    }
+
+    .group-settings-input {
+      width: 90%;
+      margin-bottom: 0.5vw;
+      background-color: var(--input-bg);
+      color: white;
+      border: none;
+      border-radius: 0.3vw;
+      height: 2vw;
+      font-size: 1vw;
+      padding-left: 0.5vw;
+      margin-top: 0.3vw;
+    }
+
+    .kick-list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 97%;
+      font-size: 1vw;
+      height: 2vw;
+      background-color: var(--accent-color);
+      margin-bottom: 0.1vw;
+      margin-top: 0.1vw;
+      padding-left: 0.5vw;
+      border-radius: 0.2vw;
+    }
+
+    .kick-button {
+      background-color: #ff5a70;
+      border: none;
+      border-radius: 0.3vw;
+      cursor: pointer;
+      font-size: 0.8vw;
+      padding: 0.3vw 0.5vw;
+    }
+
+    .kick-button:hover {
+      opacity: 0.9;
+    }
+
+    .UserSettingsOverlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      opacity: 0;
+      display: none;
+      z-index: 2000;
+    }
+
+    .UserSettingsPopup {
+      width: 20vw;
+      background-color: var(--sidebar);
+      border-radius: 1vw;
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      transform: translate(-50%, -50%);
+      transition: all 0.1s ease;
+      opacity: 0;
+      z-index: 3000;
+      font-family: comfortaa, sans-serif;
+    }
+
+    .UserSettingsPopupShow {
+      animation: CustomPopupShow ease-in 0.15s forwards;
+    }
+
+    .UserSettingsPopupHide {
+      animation: CustomPopupHide ease-out 0.15s forwards;
+    }
+
+    .user-settings-icon {
+      font-size: 1.2vw;
+      color: var(--text-color);
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .user-settings-icon:hover {
+      color: var(--accent-color);
+    }
+
+    .usersettingscontainer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 95%;
+      border-radius: 0.5vw;
+      background-color: var(--input-bg);
+      margin-bottom: 1vw;
+    }
+
+    /* Badge icon images / placeholders */
+    .badge-icon {
+      width: 1.5vw;
+      height: 1.5vw;
+      margin-left: 0.3vw;
+      display: inline-block;
+      vertical-align: middle;
+      object-fit: contain;
+    }
+
+    .emojipicker {
+      position: fixed;
+      display: none;
+      top: 53%;
+      height: 39vh;
+      width: 20vw;
+    }
+
+    .emoji-bt {
+      background-color: #00000000;
+      font-size: 1.5vw;
+      border: none;
+      outline: none;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .gelatineeffect {
+      animation: gelatine 0.5s forwards;
+    }
+
+    @keyframes gelatine {
+
+      from,
+      to {
+        transform: scale(1, 1);
       }
 
-      .audiotimeline {
-        width: 9vw;
-        height: 0.5vw;
+      25% {
+        transform: scale(0.9, 1.1);
       }
-    </style>
-  </head>
 
-  <body>
-    <div class="maincontent" id="maincontent"></div>
-    <div class="bg"></div>
-    <div class="overlay"></div>
-    <div class="AddGroupPopup" id="AddGroupPopup">
-      <span
-        class="popuptext"
-        style="margin-bottom: 0.4vw; margin-top: 0.8vw; font-weight: bold"
-        >Join a group</span
-      >
-      <span
-        class="popuptext"
-        style="
+      50% {
+        transform: scale(1.1, 0.9);
+      }
+
+      75% {
+        transform: scale(0.95, 1.05);
+      }
+    }
+
+    .file-upload-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5vw;
+    }
+
+    .file-label {
+      display: inline-block;
+      background-color: var(--accent-color);
+      color: #fff;
+      padding: 0.6vw 1.2vw;
+      border-radius: 0.4vw;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      white-space: nowrap;
+      margin-right: 0.5vw;
+    }
+
+    .file-label:hover {
+      background-color: #5a6fb2;
+    }
+
+    .file-label:active {
+      background-color: #425187;
+    }
+
+    .file-label+input[type="file"] {
+      display: none;
+    }
+
+    .chatinputcontainer {
+      display: flex;
+      align-items: center;
+      gap: 0.5vw;
+      padding: 0.5vw;
+      background-color: var(--input-bg);
+      border-radius: 0.5vw;
+    }
+
+    .textinput {
+      flex: 1;
+      margin: 0;
+    }
+
+    .chatinputcontainer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      border-radius: 0.5vw;
+      background-color: var(--input-bg);
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .useractive {
+      outline: 0.2vw solid var(--sidebar);
+      height: 0.6vw;
+      width: 0.6vw;
+      border-radius: 50%;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+
+    .messagetime {
+      font-size: 0.8vw;
+      color: var(--text-color);
+      margin-left: 0.5vw;
+      margin-right: 0.5vw;
+    }
+
+    .audioplayer {
+      display: flex;
+      align-items: center;
+      width: 20vw;
+      min-height: 4vw;
+      border-radius: 0.5vw;
+      background-color: var(--input-bg);
+      margin-bottom: 1vw;
+    }
+
+    .playbt {
+      font-size: 1.2vw;
+      background-color: var(--accent-color);
+      color: var(--text-color);
+      height: 2.5vw;
+      width: 2.5vw;
+      outline: none;
+      border: none;
+      margin-left: 0.35vw;
+      border-radius: 0.5vw;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .audiotimeline {
+      width: 9vw;
+      height: 0.5vw;
+    }
+
+    .cf-turnstile {
+      display: block !important;
+      visibility: visible !important;
+      width: 100% !important;
+      height: auto !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="maincontent" id="maincontent"></div>
+  <div class="bg"></div>
+  <div class="overlay"></div>
+  <div class="AddGroupPopup" id="AddGroupPopup">
+    <span class="popuptext" style="margin-bottom: 0.4vw; margin-top: 0.8vw; font-weight: bold">Join a group</span>
+    <span class="popuptext" style="
           margin-bottom: 1vw;
           margin-left: 0.5vw;
           margin-right: 0.5vw;
           font-weight: 100;
           font-size: 1vw;
           text-align: center;
-        "
-        >Input a group id and then you can chat with your buddys</span
-      >
-      <input
-        class="custominput"
-        placeholder="Enter URL here"
-        id="joingroupid"
-      />
-      <button
-        class="content-bt"
-        onclick='joinGroup(document.getElementById("joingroupid").value)'
-      >
-        Join
-      </button>
-      <span
-        class="popuptext"
-        style="
+        ">Input a group id and then you can chat with your buddys</span>
+    <input class="custominput" placeholder="Enter URL here" id="joingroupid" />
+    <button class="content-bt" onclick='joinGroup(document.getElementById("joingroupid").value)'>
+      Join
+    </button>
+    <span class="popuptext" style="
           margin-bottom: 2vw;
           margin-left: 0.5vw;
           margin-right: 0.5vw;
@@ -965,52 +946,29 @@
           font-weight: 100;
           font-size: 1vw;
           text-align: center;
-        "
-        >Or</span
-      >
-      <span
-        class="popuptext"
-        style="
+        ">Or</span>
+    <span class="popuptext" style="
           margin-bottom: 1vw;
           margin-left: 0.5vw;
           margin-right: 0.5vw;
           font-weight: 100;
           font-size: 1vw;
           text-align: center;
-        "
-      >
-        Make a group</span
-      >
-      <input
-        class="custominput"
-        placeholder="Enter Group name here"
-        id="creategroupname"
-      />
-      <button
-        class="content-bt"
-        onclick='createGroup(document.getElementById("creategroupname").value)'
-      >
-        Create
-      </button>
-    </div>
-    <div id="GroupSettingsPopup" class="GroupSettingsPopup">
-      <div class="GroupSettingsTitle">Group Settings</div>
-      <label style="width: 90%; font-size: 1vw">Server Name</label>
-      <input
-        class="group-settings-input"
-        id="groupSettingsName"
-        placeholder="Enter new group name"
-      />
-      <label style="width: 90%; font-size: 1vw">Server Icon URL</label>
-      <input
-        class="group-settings-input"
-        id="groupSettingsIcon"
-        placeholder="Enter icon URL"
-      />
-      <label style="width: 90%; font-size: 1vw">Members</label>
-      <div
-        id="groupSettingsMembers"
-        style="
+        ">
+      Make a group</span>
+    <input class="custominput" placeholder="Enter Group name here" id="creategroupname" />
+    <button class="content-bt" onclick='createGroup(document.getElementById("creategroupname").value)'>
+      Create
+    </button>
+  </div>
+  <div id="GroupSettingsPopup" class="GroupSettingsPopup">
+    <div class="GroupSettingsTitle">Group Settings</div>
+    <label style="width: 90%; font-size: 1vw">Server Name</label>
+    <input class="group-settings-input" id="groupSettingsName" placeholder="Enter new group name" />
+    <label style="width: 90%; font-size: 1vw">Server Icon URL</label>
+    <input class="group-settings-input" id="groupSettingsIcon" placeholder="Enter icon URL" />
+    <label style="width: 90%; font-size: 1vw">Members</label>
+    <div id="groupSettingsMembers" style="
           width: 90%;
           max-height: 6vw;
           overflow-y: auto;
@@ -1018,870 +976,918 @@
           border-radius: 0.3vw;
           margin-bottom: 1vw;
           padding: 0.3vw;
-        "
-      ></div>
-      <button
-        class="content-bt"
-        style="width: 40%"
-        onclick="saveGroupSettings()"
-      >
-        Save
-      </button>
-    </div>
-    <div id="UserSettingsOverlay" class="UserSettingsOverlay"></div>
-    <div id="UserSettingsPopup" class="UserSettingsPopup"></div>
-    <script>
-         let socket = null;
-         let serverlocation = "wss://chat-wss.juststudy.uk";
-         let alternativeserverlocation =
-           "ws://chattingisveryveryfuninmathslessons.juststudy.uk:9001";
-         let username = null;
-         let myuuid = customUuid();
-         let currentGroup = null;
-         let currentGroupOwner = null;
-         let currentGroupMembers = [];
-         let isRequestingSettings = false;
-         let mytoken = null;
-         let autoscroll = true;
-         const cssVariables = [
-           "--accent-color",
-           "--secondary-bg",
-           "--sidebar",
-           "--text-color",
-           "--input-bg",
-           "--background",
-         ];
-         cssVariables.forEach((variable) => {
-           const storedValue = localStorage.getItem(variable);
-           if (storedValue) {
-             document.body.style.setProperty(variable, storedValue);
-           }
-         });
-
-         function InitLogin() {
-           const maincontainer = document.getElementById("maincontent");
-           maincontainer.classList.add("smoothhide");
-           maincontainer.addEventListener(
-             "animationend",
-             function handleAnimationEnd() {
-               maincontainer.classList.remove("smoothhide");
-               maincontainer.classList.add("smoothshow");
-               maincontainer.removeEventListener(
-                 "animationend",
-                 handleAnimationEnd
-               );
-
-               maincontainer.innerHTML =
-                 "<div class='LoginBox' id='loginbox'>" +
-                 "<span style='font-size:2vw; text-align: center; width: 20vw; margin-top: 1vw;'>Login</span>" +
-                 "<span style='font-size:1vw; text-align: center; width: 20vw; margin-top: 0.5vw; margin-bottom:0.5vw'>Login to start chatting with your buddies</span>" +
-                 "<span style='font-size:0.8vw; text-align: left; width: 20vw;'>Username<code style='color:red'>*</code></span>" +
-                 "<input id='login-username' class='logininput' placeholder='Enter Username here'></input>" +
-                 "<span style='font-size:0.8vw; text-align: left; width: 20vw;'>Password<code style='color:red'>*</code></span>" +
-                 "<input id='login-password' class='logininput' type='password' placeholder='Enter Password here'></input>" +
-                 "<button class='login-bt' onclick='Login()'>Login</button>" +
-                 "<span style='font-size:0.8vw; text-align: left; width: 20vw;'>Don't have an account? <a style='color:lightblue;' href='#' onclick='InitRegister()'>Register</a></span>" +
-                 "</div>";
-
-               document
-                 .getElementById("loginbox")
-                 .addEventListener("keydown", (e) => {
-                   if (e.key === "Enter") {
-                     Login();
-                   }
-                 });
-               document.getElementById("login-username").focus();
-             }
-           );
-         }
-
-         function InitRegister() {
-           const maincontainer = document.getElementById("maincontent");
-           maincontainer.classList.add("smoothhide");
-           maincontainer.addEventListener(
-             "animationend",
-             function handleAnimationEnd() {
-               maincontainer.classList.remove("smoothhide");
-               maincontainer.classList.add("smoothshow");
-               maincontainer.removeEventListener(
-                 "animationend",
-                 handleAnimationEnd
-               );
-
-               maincontainer.innerHTML =
-                 "<div class='LoginBox'>" +
-                 "<span style='font-size:2vw; text-align: center; width: 20vw; margin-top: 1vw;'>Register</span>" +
-                 "<span style='font-size:1vw; text-align: center; width: 20vw; margin-top: 0.5vw; margin-bottom:0.5vw'>Register to start chatting with your buddies</span>" +
-                 "<span style='font-size:0.8vw; text-align: left; width: 20vw;'>Username<code style='color:red'>*</code></span>" +
-                 "<input id='register-username' class='logininput' placeholder='Enter Username here'></input>" +
-                 "<span style='font-size:0.8vw; text-align: left; width: 20vw;'>Password<code style='color:red'>*</code></span>" +
-                 "<input id='register-password' class='logininput' type='password' placeholder='Enter Password here'></input>" +
-                 "<button class='login-bt' onclick='Register()'>Register</button>" +
-                 "<span style='font-size:0.8vw; text-align: left; width: 20vw;'>Already have an account? <a style='color:lightblue;' href='#' onclick='InitLogin()'>Login</a></span>" +
-                 "</div>";
-             }
-           );
-         }
-
-         function InitChat() {
-           const maincontainer = document.getElementById("maincontent");
-           maincontainer.classList.add("smoothhide");
-           currentGroup = null;
-           isRequestingSettings = false;
-           maincontainer.addEventListener(
-             "animationend",
-             function handleAnimationEnd() {
-               maincontainer.classList.remove("smoothhide");
-               maincontainer.classList.add("smoothshow");
-               maincontainer.removeEventListener(
-                 "animationend",
-                 handleAnimationEnd
-               );
-
-               maincontainer.innerHTML =
-                 "<div class='leftsidecontent' id='leftsidecontent'>" +
-                 "<div class='group-icon-container' id='AddGroup'>" +
-                 "<img src='/assets/img/roundAddIcon.png' class='leftsidecontent-icon' style='width:95%;height:95%;'>" +
-                 "</div>" +
-                 "</div>" +
-                 "<div class='chatcontent'>" +
-                 "<div id='content' class='content'></div>" +
-                 "<div class='bottombar'>" +
-                 `<emoji-picker class="emojipicker" id="emojipicker"></emoji-picker>` +
-                 "<div class='chatinputcontainer'>" +
-                 "<div class='file-upload-container'>" +
-                 '<label for="fileUpload" id="fileLabel" class="file-label"><i class="fa fa-upload" aria-hidden="true"></i></label>' +
-                 '<input type="file" id="fileUpload" accept="*" style="display: none;" />' +
-                 "</div>" +
-                 "<textarea class='textinput' id='textinput' placeholder='Enter something to text' rows=1></textarea>" +
-                 `<button class='emoji-bt' style='width:2.5vw;' id="emoji-bt">😊</button>` +
-                 "</div>" +
-                 "</div>" +
-                 "</div>" +
-                 "<div class='rightsidecontent' id='rightsidecontent'>" +
-                 "<div class='group-header'>" +
-                 "<span class='group-name'>No Group :(</span>" +
-                 "<i class='fa fa-cog settings-icon'></i>" +
-                 "</div>" +
-                 "<div class='userlist-content' id='userlist-content'></div>" +
-                 "<div class='user-info'>" +
-                 "<img src='/assets/img/user.svg' alt='User Icon'>" +
-                 "<span class='user-name'>" +
-                 (username || "Username") +
-                 "</span>" +
-                 "<i class='fa fa-cog user-settings-icon' id='usersettings'></i>" +
-                 "</div>" +
-                 "</div>";
-
-               loadData();
-               InitInput();
-               initGroupContent();
-               const fileInput = document.getElementById("fileUpload");
-               const fileLabel = document.getElementById("fileLabel");
-               const maxSizeMB = 50;
-               const maxSizeBytes = maxSizeMB * 1024 * 1024;
-
-               fileInput.addEventListener("change", () => {
-                 if (fileInput.files.length > 0) {
-                   const file = fileInput.files[0];
-                   if (file.size > maxSizeBytes) {
-                     MakeErrorMessage("File size exceeded. 50mb MAX...");
-                     fileInput.value = "";
-                     fileLabel.textContent = "Choose File";
-                   } else {
-                     fileLabel.textContent = file.name;
-                   }
-                 }
-               });
-               document
-                 .getElementById("content")
-                 .addEventListener("scroll", (event) => {
-                   const { scrollHeight, scrollTop, clientHeight } = event.target;
-
-                   if (Math.abs(scrollHeight - clientHeight - scrollTop) < 1) {
-                     autoscroll = true;
-                   } else {
-                     autoscroll = false;
-                   }
-                 });
-               const random_emoji = [
-                 "😊",
-                 "😉",
-                 "😎",
-                 "😀",
-                 "😃",
-                 "😄",
-                 "😁",
-                 "😆",
-                 "😅",
-                 "😂",
-                 "🤣",
-                 "😊",
-                 "😇",
-                 "🙂",
-                 "🙃",
-                 "😉",
-               ];
-               const emojibt = document.getElementById("emoji-bt");
-               emojibt.addEventListener("mouseenter", () => {
-                 emojibt.innerText =
-                   random_emoji[Math.floor(Math.random() * random_emoji.length)];
-                 emojibt.classList.remove("gelatineeffect");
-                 emojibt.classList.add("gelatineeffect");
-                 emojibt.addEventListener("animationend", () => {
-                   emojibt.classList.remove("gelatineeffect");
-                 });
-               });
-               emojibt.addEventListener("click", () => {
-                 if (
-                   document.getElementById("emojipicker").style.display == "flex"
-                 ) {
-                   document.getElementById("emojipicker").style.display = "none";
-                 } else {
-                   document.getElementById("emojipicker").style.display = "flex";
-                 }
-                 emojibt.innerText =
-                   random_emoji[Math.floor(Math.random() * random_emoji.length)];
-                 emojibt.classList.remove("gelatineeffect");
-                 emojibt.classList.add("gelatineeffect");
-                 emojibt.addEventListener("animationend", () => {
-                   emojibt.classList.remove("gelatineeffect");
-                 });
-               });
-               document
-                 .querySelector(".settings-icon")
-                 .addEventListener("click", () => {
-                   if (!currentGroup) {
-                     MakeErrorMessage("No group selected yet!", false);
-                     return;
-                   }
-                   isRequestingSettings = true;
-                   getGroupData();
-                 });
-
-               const userSettingsIcon = document.querySelector(
-                 ".user-settings-icon"
-               );
-               if (userSettingsIcon) {
-                 userSettingsIcon.addEventListener("click", openUserSettingsPopup);
-               }
-             }
-           );
-         }
-
-         function updateUserInfo(newUsername) {
-           const userNameSpan = document.querySelector(".user-name");
-           if (userNameSpan) {
-             userNameSpan.textContent = newUsername;
-           }
-         }
-
-         function CopyText(text) {
-           navigator.clipboard.writeText(text);
-         }
-
-         function createGroupIdPopup(id) {
-           const existingPopups = document.querySelectorAll(".CustomPopup");
-           existingPopups.forEach((popup) => popup.remove());
-
-           const overlay = document.createElement("div");
-           overlay.classList.add("overlay");
-           overlay.style.display = "block";
-           overlay.classList.remove("HideOverlayAnim");
-           overlay.classList.add("ShowOverlayAnim");
-
-           const popup = document.createElement("div");
-           popup.classList.add("CustomPopup");
-           popup.classList.add("smoothshow");
-           popup.style.display = "flex";
-           popup.innerHTML =
-             "<span class='popuptext' style='margin-bottom: 0.4vw; margin-top: 0.8vw; font-weight: bold;'>Invite People</span>" +
-             "<span class='popuptext' style='margin-bottom: 1vw; margin-left: 0.5vw; margin-right: 0.5vw; font-weight: 100; font-size: 1vw; text-align: center;'>Click the copy button to copy the group ID.</span>" +
-             "<div class='copyidcontainer'>" +
-             "<input class='copyidinput' id='idinput' value='" +
-             id +
-             "' readOnly />" +
-             "<button class='content-bt' style='width: 4vw;' onclick=\"CopyText('" +
-             id +
-             "'); MakeErrorMessage('Copied to clipboard!',true);\">Copy</button>" +
-             "</div>";
-
-           document.body.appendChild(overlay);
-           document.body.appendChild(popup);
-
-           overlay.addEventListener("click", () => {
-             popup.classList.remove("smoothshow");
-             popup.classList.add("smoothhide");
-             popup.addEventListener("animationend", () => popup.remove());
-
-             overlay.classList.remove("ShowOverlayAnim");
-             overlay.classList.add("HideOverlayAnim");
-             overlay.addEventListener("animationend", () => overlay.remove());
-           });
-         }
-
-         function addGroupPopup() {
-           const popup = document.getElementById("AddGroupPopup");
-           const overlay = document.querySelector(".overlay");
-           popup.style.display = "flex";
-           popup.classList.remove("smoothhide");
-           popup.classList.add("smoothshow");
-
-           overlay.style.display = "block";
-           overlay.classList.remove("HideOverlayAnim");
-           overlay.classList.add("ShowOverlayAnim");
-
-           popup.querySelectorAll("input").forEach((key) => {
-             key.disabled = false;
-           });
-
-           overlay.addEventListener("click", () => {
-             closeGroupPopup();
-           });
-         }
-
-         function closeGroupPopup() {
-           const popup = document.getElementById("AddGroupPopup");
-           const overlay = document.querySelector(".overlay");
-
-           popup.classList.remove("smoothshow");
-           popup.classList.add("smoothhide");
-
-           overlay.classList.remove("ShowOverlayAnim");
-           overlay.classList.add("HideOverlayAnim");
-           overlay.addEventListener("animationend", handleOverlayAnimationEnd);
-
-           popup.querySelectorAll("input").forEach((key) => {
-             key.disabled = true;
-           });
-         }
-
-         function initGroupContent() {
-           const popup = document.createElement("div");
-           popup.classList.add("popup");
-           popup.textContent = "Add Group";
-           document.body.appendChild(popup);
-
-           const container = document.getElementById("AddGroup");
-           container.addEventListener("mouseover", () => {
-             const rect = container.getBoundingClientRect();
-             popup.style.display = "block";
-             const viewportWidth = window.innerWidth;
-             const leftInVW = ((rect.left + window.scrollX) / viewportWidth) * 100;
-             popup.style.left = leftInVW + 4 + "vw";
-             popup.style.top = rect.top + window.scrollY + "px";
-           });
-
-           container.addEventListener("click", () => {
-             addGroupPopup();
-           });
-
-           container.addEventListener("mouseout", () => {
-             popup.style.display = "none";
-           });
-         }
-
-         const badgeEmojis = {
-           developer: "🛠️",
-           staff: "🛡️",
-           verified: "✅",
-           owner: "👑",
-         };
-
-         function getAllBadgeIcons(badgesArray, isOwner, thetextdiv) {
-           const container = document.createElement("span");
-           container.style.display = "inline-flex";
-           container.style.alignItems = "center";
-
-           const orderedBadges = ["groupOwner", "developer", "staff", "verified"];
-           orderedBadges.forEach((b) => {
-             if (badgesArray && badgesArray.includes(b)) {
-               container.appendChild(
-                 document.createTextNode(badgeEmojis[b] + " ")
-               );
-             }
-           });
-
-           if (isOwner) {
-             container.appendChild(
-               document.createTextNode(badgeEmojis.owner + " ")
-             );
-           }
-
-           return container;
-         }
-         const badgeColors = {
-           developer: "#FF160C",
-           staff: "#ff5a70",
-           groupOwner: "#ffd700 ",
-           verified: "#3baa56",
-           default: "var(--accent-color)",
-         };
-
-         function getProfileBadgeIcon(badgesArray, isOwner, textElement) {
-           let chosen = null;
-
-           if (badgesArray && badgesArray.includes("groupOwner")) {
-             chosen = "groupOwner";
-           } else if (badgesArray && badgesArray.includes("developer")) {
-             chosen = "developer";
-           } else if (badgesArray && badgesArray.includes("staff")) {
-             chosen = "staff";
-           } else if (badgesArray && badgesArray.includes("verified")) {
-             chosen = "verified";
-           }
-
-           if (textElement) {
-             if (isOwner) {
-               textElement.style.color =
-                 badgeColors.groupOwner || badgeColors.default;
-             } else {
-               textElement.style.color =
-                 badgeColors[chosen] || badgeColors.default;
-             }
-           }
-
-           const container = document.createElement("span");
-           container.style.display = "inline-flex";
-           container.style.alignItems = "center";
-
-           if (chosen) {
-             container.appendChild(
-               document.createTextNode(badgeEmojis[chosen] + " ")
-             );
-           }
-
-           if (isOwner) {
-             container.appendChild(
-               document.createTextNode(badgeEmojis.owner + " ")
-             );
-           }
-
-           return container;
-         }
-
-         function makebox(text,name,isself,iconurl,badgesArray,isOwner,messagetime) {
-           const container = document.createElement("div");
-           container.style.display = "flex";
-           container.style.flexDirection = "column";
-           container.style.alignItems = isself ? "flex-end" : "flex-start";
-
-           let chosen;
-           const textdiv = document.createElement("span");
-           textdiv.classList.add("textbox-name");
-
-           if (badgesArray && badgesArray.includes("developer")) {
-             chosen = "developer";
-           } else if (badgesArray && badgesArray.includes("staff")) {
-             chosen = "staff";
-           } else if (badgesArray && badgesArray.includes("verified")) {
-             chosen = "verified";
-           }
-
-           if (textdiv) {
-             if (isOwner) {
-               textdiv.style.color =
-                 badgeColors["groupOwner"] || badgeColors.default;
-             } else {
-               textdiv.style.color = badgeColors[chosen] || badgeColors.default;
-             }
-           }
-           const nameSpan = document.createElement("span");
-           nameSpan.innerText = name;
-           const timeSpan = document.createElement("span");
-           timeSpan.style.color = "var(--accent-color)";
-           timeSpan.style.marginLeft = "0.5vw";
-           timeSpan.style.fontSize = "1vw";
-           timeSpan.innerText = messagetime;
-           const badgesSpan = getAllBadgeIcons(badgesArray, isOwner, textdiv);
-           textdiv.appendChild(nameSpan);
-           textdiv.appendChild(badgesSpan);
-
-           const box = document.createElement("div");
-           box.classList.add("textbox");
-           box.style.width = "auto";
-           box.style.textAlign = "left";
-
-           const userinfocontainer = document.createElement("div");
-           userinfocontainer.classList.add("userinfo-container");
-
-           const iconcontainer = document.createElement("div");
-           iconcontainer.classList.add("usericon-container");
-
-           const icon = document.createElement("img");
-           icon.src = iconurl;
-           icon.style.width = "100%";
-           icon.style.height = "100%";
-           icon.classList.add("usericon-icon");
-           iconcontainer.appendChild(icon);
-
-           userinfocontainer.appendChild(textdiv);
-           userinfocontainer.appendChild(iconcontainer);
-           userinfocontainer.appendChild(timeSpan);
-           container.appendChild(userinfocontainer);
-
-           container.appendChild(box);
-           function isValidImage(urlTocheck = "") {
-             var image = new Image();
-             image.src = urlTocheck;
-             if (image.width == 0) {
-               return false;
-             } else {
-               return true;
-             }
-           }
-           let textBuffer = "";
-           const links = text.split(/( |\n)/);
-           let current_index = 0;
-           links.forEach((link) => {
-             if (link.startsWith("http://") || link.startsWith("https://") || link.startsWith("*") || link.startsWith("~")) {
-               if (textBuffer) {
-                 const textNode = document.createTextNode(textBuffer + " ");
-                 box.appendChild(textNode);
-                 textBuffer = "";
-               }
-               const fileExtension = link.split(".").pop().toLowerCase();
-               const contentDiv = document.createElement("div");
-               contentDiv.style.marginTop = "0.5vw";
-               if (link.startsWith("*")) {
-                let nextindex = 0;
-                if (!link.endsWith("*")) {
-                    nextindex = links.findIndex((item, index) => item.includes("*") && index > current_index);
-                    if (nextindex !== -1) {
-                        link = links.slice(current_index, nextindex + 1).join(" ");
-                    }
-                }
-                const boldtext = document.createElement("span");
-                boldtext.innerText = link.slice(1, link.length - 1);
-                boldtext.style.fontWeight = "bold";
-                box.appendChild(boldtext);
-                links.splice(current_index, nextindex);
-                } else if (link.startsWith("~")) {
-                let nextindex = 0;
-                if (!link.endsWith("~")) {
-                    nextindex = links.findIndex((item, index) => item.includes("*") && index > current_index);
-                    if (nextindex !== -1) {
-                        link = links.slice(current_index, nextindex + 1).join(" ");
-                    }
-                }
-                const ilatictext = document.createElement("span");
-                ilatictext.innerText = link.slice(1, link.length - 1);
-                ilatictext.style.fontWeight = "italic";
-                box.appendChild(ilatictext);
-                links.splice(current_index, nextindex);
-               } else if (isValidImage(link) != false) {
-                 const imgElement = document.createElement("img");
-                 imgElement.src = link;
-                 imgElement.style.maxWidth = "40vw";
-                 imgElement.style.height = "auto";
-                 imgElement.style.borderRadius = "1vw";
-                 imgElement.lazyload = true;
-                 contentDiv.appendChild(imgElement);
-               } else if (["mp4", "webm", "gif"].includes(fileExtension)) {
-                 const videoElement = document.createElement("video");
-                 videoElement.src = link;
-                 videoElement.controls = true;
-                 videoElement.style.maxWidth = "40vw";
-                 videoElement.style.borderRadius = "0.5vw";
-                 videoElement.lazyload = true;
-                 contentDiv.appendChild(videoElement);
-               } else if (["mp3", "ogg", "opus"].includes(fileExtension)) {
-                 const AudioElement = document.createElement("div");
-                 AudioElement.classList.add("audioplayer");
-
-                 var audio = new Audio(link);
-
-                 const PlayBT = document.createElement("button");
-                 PlayBT.classList.add("playbt");
-                 PlayBT.innerHTML = `<i class="fa fa-play" aria-hidden="true"></i>`;
-
-                 let isPlaying = false;
-                 let audiotime = "00:00";
-                 let fullaudiotime = "00:00";
-
-                 const AudioTime = document.createElement("span");
-                 AudioTime.style.fontSize = "0.9vw";
-                 AudioTime.style.whiteSpace = "nowrap";
-                 AudioTime.style.marginRight = "0.5vw";
-                 AudioTime.style.marginLeft = "0.5vw";
-                 AudioTime.textContent = `${audiotime} / ${fullaudiotime}`;
-
-                 const timeline = document.createElement("input");
-                 timeline.type = "range";
-                 timeline.min = 0;
-                 timeline.step = "0.01";
-                 timeline.classList.add("audiotimeline");
-                 timeline.style.flex = "1";
-                 timeline.style.marginRight = "1vw";
-
-                 const timeContainer = document.createElement("div");
-                 timeContainer.style.display = "flex";
-                 timeContainer.style.alignItems = "center";
-                 timeContainer.style.gap = "0.5vw";
-                 timeContainer.style.width = "100%";
-                 timeContainer.appendChild(AudioTime);
-                 timeContainer.appendChild(timeline);
-
-                 function formatTime(seconds) {
-                   const minutes = Math.floor(seconds / 60);
-                   const secs = Math.floor(seconds % 60);
-                   return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
-                 }
-
-                 PlayBT.addEventListener("click", () => {
-                   isPlaying = !isPlaying;
-                   PlayBT.innerHTML = isPlaying
-                     ? `<i class="fa fa-pause" aria-hidden="true"></i>`
-                     : `<i class="fa fa-play" aria-hidden="true"></i>`;
-                   if (isPlaying) {
-                     audio.play();
-                   } else {
-                     audio.pause();
-                   }
-                 });
-
-                 audio.addEventListener("timeupdate", () => {
-                   audiotime = formatTime(audio.currentTime);
-                   AudioTime.textContent = `${audiotime} / ${fullaudiotime}`;
-                   timeline.value = audio.currentTime;
-                   if (audio.currentTime == audio.duration) {
-                     timeline.value = timeline.max;
-                   }
-                 });
-
-                 audio.addEventListener("loadedmetadata", () => {
-                   fullaudiotime = formatTime(audio.duration);
-                   AudioTime.textContent = `${audiotime} / ${fullaudiotime}`;
-                   timeline.max = audio.duration;
-                 });
-
-                 AudioElement.appendChild(PlayBT);
-                 AudioElement.appendChild(timeContainer);
-
-                 contentDiv.appendChild(AudioElement);
-               } else {
-                 const linkElement = document.createElement("a");
-                 linkElement.href = link;
-                 linkElement.innerText = link;
-                 linkElement.target = "_blank";
-                 linkElement.style.wordBreak = "break-word";
-                 box.appendChild(linkElement);
-                 const space = document.createTextNode(" ");
-                 box.appendChild(space);
-               }
-               container.appendChild(contentDiv);
-             } else {
-               textBuffer += link + " ";
-             }
-             current_index += 1;
-           });
-           if (textBuffer) {
-             const textNode = document.createTextNode(textBuffer);
-             box.appendChild(textNode);
-           }
-
-           if (box.innerText.trim() === "") {
-             box.style.display = "none";
-           }
-
-           document.getElementById("content").appendChild(container);
-           if (autoscroll) {
-             document.getElementById("content").scrollTop =
-               document.getElementById("content").scrollHeight;
-           }
-         }
-
-         function makeGroup(name, iconurl, id) {
-           const container = document.createElement("div");
-           container.classList.add("leftsidecontent-icon-container");
-
-           const icon = document.createElement("img");
-           icon.src = iconurl;
-           icon.style.width = "90%";
-           icon.style.height = "90%";
-           icon.classList.add("leftsidecontent-icon");
-           container.appendChild(icon);
-
-           document
-             .getElementById("leftsidecontent")
-             .insertBefore(container, document.getElementById("AddGroup"));
-
-           const popup = document.createElement("div");
-           popup.classList.add("popup");
-           popup.textContent = name;
-           document.body.appendChild(popup);
-
-           container.addEventListener("mouseover", () => {
-             const rect = container.getBoundingClientRect();
-             popup.style.display = "block";
-             const viewportWidth = window.innerWidth;
-             const leftInVW = ((rect.left + window.scrollX) / viewportWidth) * 100;
-             popup.style.left = leftInVW + 4 + "vw";
-             popup.style.top = rect.top + window.scrollY + "px";
-           });
-
-           container.addEventListener("mouseout", () => {
-             popup.style.display = "none";
-           });
-
-           container.addEventListener("click", () => {
-             currentGroup = id;
-             const packet = {
-               type: "requestGroupData",
-               groupID: id,
-               userID: myuuid,
-               username,
-               token: mytoken,
-             };
-             socket.send(JSON.stringify(packet));
-             setGroupName(name);
-           });
-
-           container.addEventListener("contextmenu", (event) => {
-             event.preventDefault();
-             const existingPopups = document.querySelectorAll(".popup");
-             existingPopups.forEach((pop) => {
-               if (pop !== popup) {
-                 document.body.removeChild(pop);
-               }
-             });
-             const menupopup = document.createElement("div");
-             menupopup.classList.add("popup");
-             document.body.appendChild(menupopup);
-
-             const rect = container.getBoundingClientRect();
-             const viewportWidth = window.innerWidth;
-             const leftInVW = ((rect.left + window.scrollX) / viewportWidth) * 100;
-             menupopup.style.left = leftInVW + 1 + "vw";
-             menupopup.style.top = rect.top + window.scrollY + "px";
-
-             const leaveGroupButton = document.createElement("button");
-             leaveGroupButton.classList.add("popup-leaveGroupButton");
-             leaveGroupButton.textContent = "Leave Group";
-             leaveGroupButton.addEventListener("click", () => {
-               kickUserFromGroup(username, currentGroup);
-               document.body.removeChild(menupopup);
-             });
-
-             const CopyIdButton = document.createElement("button");
-             CopyIdButton.classList.add("popup-CopyID");
-             CopyIdButton.textContent = "Group ID";
-             CopyIdButton.addEventListener("click", () => {
-               createGroupIdPopup(id);
-               document.body.removeChild(menupopup);
-             });
-
-             menupopup.appendChild(leaveGroupButton);
-             menupopup.appendChild(CopyIdButton);
-
-             menupopup.style.position = "absolute";
-             menupopup.style.display = "flex";
-             menupopup.style.flexDirection = "column";
-             menupopup.style.alignItems = "center";
-             menupopup.style.zIndex = "1000";
-           });
-         }
-
-         function makeUser(name, iconurl, badges, isGroupOwner, isactive) {
-           const container = document.createElement("div");
-           container.style.display = "flex";
-           container.style.flexDirection = "row";
-           container.style.alignItems = "center";
-           container.style.marginBottom = "0.5vw";
-           container.style.height = "3vw";
-           container.style.width = "95%";
-           container.style.marginLeft = "0.5vw";
-
-           const iconcontainer = document.createElement("div");
-           iconcontainer.classList.add("usericon-container");
-           iconcontainer.style.display = "flex";
-           iconcontainer.style.alignItems = "center";
-           iconcontainer.style.justifyContent = "center";
-           iconcontainer.style.width = "2vw";
-           iconcontainer.style.height = "2vw";
-           iconcontainer.style.marginRight = "0.5vw";
-           iconcontainer.style.flexShrink = "0";
-           iconcontainer.style.flexGrow = "0";
-           iconcontainer.style.overflow = "visible";
-           iconcontainer.style.border = "none";
-           const icon = document.createElement("img");
-           icon.src = iconurl;
-           icon.style.width = "90%";
-           icon.style.height = "90%";
-           icon.style.objectFit = "cover";
-           icon.style.borderRadius = "50%";
-           iconcontainer.appendChild(icon);
-           container.appendChild(iconcontainer);
-
-           const useractive = document.createElement("div");
-           useractive.classList.add("useractive");
-           iconcontainer.appendChild(useractive);
-           useractive.style.backgroundColor = isactive ? "#7bf570" : "#8f6066";
-
-           const nameDiv = document.createElement("div");
-           nameDiv.style.fontWeight = "bold";
-           nameDiv.style.flex = "1";
-           nameDiv.style.overflow = "hidden";
-           nameDiv.style.textOverflow = "ellipsis";
-           nameDiv.style.whiteSpace = "nowrap";
-           const textWrap = document.createElement("span");
-           textWrap.innerText = name;
-           nameDiv.appendChild(textWrap);
-
-           const userBadgeSpan = getProfileBadgeIcon(
-             badges,
-             isGroupOwner,
-             nameDiv
-           );
-           nameDiv.appendChild(userBadgeSpan);
-
-           function updateFontSize() {
-             const viewportWidth = window.innerWidth;
-             const properFontSize = Math.max(
-               5,
-               Math.min(17, (viewportWidth / name.length) * 0.1)
-             );
-             nameDiv.style.fontSize = properFontSize + "px";
-           }
-           updateFontSize();
-           window.addEventListener("resize", updateFontSize);
-
-           container.appendChild(nameDiv);
-           document.getElementById("userlist-content").appendChild(container);
-         }
-
-         function MakeErrorMessage(loginerr, success) {
-           const loginerror = document.createElement("div");
-           if (!success) {
-             loginerror.style.background = "#ff3535d2";
-           }
-           loginerror.classList.add("loginerrorpopup", "ErrorPopupShow");
-           loginerror.innerText = loginerr;
-           document.body.appendChild(loginerror);
-
-           loginerror.addEventListener(
-             "animationend",
-             function handleAnimationEnd() {
-               if (loginerror.classList.contains("ErrorPopupShow")) {
-                 setTimeout(() => {
-                   loginerror.classList.remove("ErrorPopupShow");
-                   loginerror.classList.add("ErrorPopupHide");
-                 }, 2000);
-               } else if (loginerror.classList.contains("ErrorPopupHide")) {
-                 loginerror.remove();
-                 loginerror.removeEventListener(
-                   "animationend",
-                   handleAnimationEnd
-                 );
-               }
-             }
-           );
-         }
+        "></div>
+    <button class="content-bt" style="width: 40%" onclick="saveGroupSettings()">
+      Save
+    </button>
+  </div>
+  <div id="UserSettingsOverlay" class="UserSettingsOverlay"></div>
+  <div id="UserSettingsPopup" class="UserSettingsPopup"></div>
+  <script>
+    let socket = null;
+    let serverlocation = "wss://chat-wss.juststudy.uk";
+    let alternativeserverlocation =
+      "ws://chattingisveryveryfuninmathslessons.juststudy.uk:9001";
+    let username = null;
+    let myuuid = customUuid();
+    let currentGroup = null;
+    let currentGroupOwner = null;
+    let currentGroupMembers = [];
+    let isRequestingSettings = false;
+    let mytoken = null;
+    let autoscroll = true;
+    const cssVariables = [
+      "--accent-color",
+      "--secondary-bg",
+      "--sidebar",
+      "--text-color",
+      "--input-bg",
+      "--background",
+    ];
+    cssVariables.forEach((variable) => {
+      const storedValue = localStorage.getItem(variable);
+      if (storedValue) {
+        document.body.style.setProperty(variable, storedValue);
+      }
+    });
+
+    function showBannedScreen(reason) {
+      const maincontainer = document.getElementById("maincontent");
+      maincontainer.innerHTML = `
+        <div class='LoginBox'>
+          <span style='font-size:2vw; text-align: center; width: 20vw; margin-top: 1vw;'>Account Banned</span>
+          <span style='font-size:1vw; text-align: center; width: 20vw; margin-top: 0.5vw; margin-bottom: 1vw;'>Reason: ${reason}</span>
+          <span style='font-size:0.8vw; text-align: center; width: 20vw;'>If you believe this is an error, please contact support.</span>
+        </div>`;
+    }
+
+
+
+    function InitLogin() {
+      const maincontainer = document.getElementById("maincontent");
+      maincontainer.classList.add("smoothhide");
+      maincontainer.addEventListener(
+        "animationend",
+        function handleAnimationEnd() {
+          maincontainer.classList.remove("smoothhide");
+          maincontainer.classList.add("smoothshow");
+          maincontainer.removeEventListener(
+            "animationend",
+            handleAnimationEnd
+          );
+
+          // maincontainer.innerHTML =
+          //   "<div class='LoginBox' id='loginbox'>" +
+          //   "<span style='font-size:2vw; text-align: center; width: 20vw; margin-top: 1vw;'>Login</span>" +
+          //   "<span style='font-size:1vw; text-align: center; width: 20vw; margin-top: 0.5vw; margin-bottom:0.5vw'>Login to start chatting with your buddies</span>" +
+          //   "<span style='font-size:0.8vw; text-align: left; width: 20vw;'>Username<code style='color:red'>*</code></span>" +
+          //   "<input id='login-username' class='logininput' placeholder='Enter Username here'></input>" +
+          //   "<span style='font-size:0.8vw; text-align: left; width: 20vw;'>Password<code style='color:red'>*</code></span>" +
+          //   "<input id='login-password' class='logininput' type='password' placeholder='Enter Password here'></input>" +
+          //   "<div class='cf-turnstile' data-sitekey='0x4AAAAAAA6CH1nnSGPXUk04' data-theme='dark' id='login-turnstile'></div>" +
+          //   "<button class='login-bt' onclick='Login()'>Login</button>" +
+          //   "<span style='font-size:0.8vw; text-align: left; width: 20vw;'>Don't have an account? <a style='color:lightblue;' href='#' onclick='InitRegister()'>Register</a></span>" +
+          //   "</div>";
+
+          maincontainer.innerHTML = `
+          <div class="LoginBox">
+            <span style="font-size: 2vw; text-align: center; width: 20vw; margin-top: 1vw;">Login</span>
+            <span style="font-size: 1vw; text-align: center; width: 20vw; margin-top: 0.5vw; margin-bottom: 1vw;">Login to start chatting with your buddies</span>
+            
+            <span style="font-size: 0.8vw; text-align: left; width: 20vw;">Username<code style="color: red">*</code></span>
+            <input id="login-username" class="logininput" placeholder="Enter Username here">
+            
+            <span style="font-size: 0.8vw; text-align: left; width: 20vw;">Password<code style="color: red">*</code></span>
+            <input id="login-password" class="logininput" type="password" placeholder="Enter Password here">
+            
+            <!-- Cloudflare Turnstile Widget -->
+            </br>
+            <center>
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAAA6CH1nnSGPXUk04" data-theme="dark" id="login-turnstile"></div>
+            </center>
+            <button class="login-bt" onclick="Login()">Login</button>
+            
+            <span style="font-size: 0.8vw; text-align: left; width: 20vw;">Don't have an account? 
+              <a style="color: lightblue;" href="#" onclick="InitRegister()">Register</a>
+            </span>
+          </div>`;
+
+          // document
+          //   .getElementById("loginbox")
+          //   .addEventListener("keydown", (e) => {
+          //     if (e.key === "Enter") {
+          //       Login();
+          //     }
+          //   });
+          document.getElementById("login-username").focus();
+          turnstile.render('#login-turnstile', {
+            sitekey: '0x4AAAAAAA6CH1nnSGPXUk04',
+            theme: 'dark'
+          });
+
+        }
+      );
+    }
+
+    function InitRegister() {
+      const maincontainer = document.getElementById("maincontent");
+      maincontainer.classList.add("smoothhide");
+      maincontainer.addEventListener(
+        "animationend",
+        function handleAnimationEnd() {
+          maincontainer.classList.remove("smoothhide");
+          maincontainer.classList.add("smoothshow");
+          maincontainer.removeEventListener(
+            "animationend",
+            handleAnimationEnd
+          );
+
+          maincontainer.innerHTML =
+            "<div class='LoginBox'>" +
+            "<span style='font-size:2vw; text-align: center; width: 20vw; margin-top: 1vw;'>Register</span>" +
+            "<span style='font-size:1vw; text-align: center; width: 20vw; margin-top: 0.5vw; margin-bottom:0.5vw'>Register to start chatting with your buddies</span>" +
+            "<span style='font-size:0.8vw; text-align: left; width: 20vw;'>Username<code style='color:red'>*</code></span>" +
+            "<input id='register-username' class='logininput' placeholder='Enter Username here'></input>" +
+            "<span style='font-size:0.8vw; text-align: left; width: 20vw;'>Password<code style='color:red'>*</code></span>" +
+            "<input id='register-password' class='logininput' type='password' placeholder='Enter Password here'></input>" +
+            "<div class='cf-turnstile' data-sitekey='0x4AAAAAAA6CH1nnSGPXUk04'></div>" +
+            "<button class='login-bt' onclick='Register()'>Register</button>" +
+            "<span style='font-size:0.8vw; text-align: left; width: 20vw;'>Already have an account? <a style='color:lightblue;' href='#' onclick='InitLogin()'>Login</a></span>" +
+            "</div>";
+        }
+      );
+    }
+
+    function InitChat() {
+      const maincontainer = document.getElementById("maincontent");
+      maincontainer.classList.add("smoothhide");
+      currentGroup = null;
+      isRequestingSettings = false;
+      maincontainer.addEventListener(
+        "animationend",
+        function handleAnimationEnd() {
+          maincontainer.classList.remove("smoothhide");
+          maincontainer.classList.add("smoothshow");
+          maincontainer.removeEventListener(
+            "animationend",
+            handleAnimationEnd
+          );
+
+          maincontainer.innerHTML =
+            "<div class='leftsidecontent' id='leftsidecontent'>" +
+            "<div class='group-icon-container' id='AddGroup'>" +
+            "<img src='/assets/img/roundAddIcon.png' class='leftsidecontent-icon' style='width:95%;height:95%;'>" +
+            "</div>" +
+            "</div>" +
+            "<div class='chatcontent'>" +
+            "<div id='content' class='content'></div>" +
+            "<div class='bottombar'>" +
+            `<emoji-picker class="emojipicker" id="emojipicker"></emoji-picker>` +
+            "<div class='chatinputcontainer'>" +
+            "<div class='file-upload-container'>" +
+            '<label for="fileUpload" id="fileLabel" class="file-label"><i class="fa fa-upload" aria-hidden="true"></i></label>' +
+            '<input type="file" id="fileUpload" accept="*" style="display: none;" />' +
+            "</div>" +
+            "<textarea class='textinput' id='textinput' placeholder='Enter something to text' rows=1></textarea>" +
+            `<button class='emoji-bt' style='width:2.5vw;' id="emoji-bt">😊</button>` +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "<div class='rightsidecontent' id='rightsidecontent'>" +
+            "<div class='group-header'>" +
+            "<span class='group-name'>No Group :(</span>" +
+            "<i class='fa fa-cog settings-icon'></i>" +
+            "</div>" +
+            "<div class='userlist-content' id='userlist-content'></div>" +
+            "<div class='user-info'>" +
+            "<img src='/assets/img/user.svg' alt='User Icon'>" +
+            "<span class='user-name'>" +
+            (username || "Username") +
+            "</span>" +
+            "<i class='fa fa-cog user-settings-icon' id='usersettings'></i>" +
+            "</div>" +
+            "</div>";
+
+          loadData();
+          InitInput();
+          initGroupContent();
+          const fileInput = document.getElementById("fileUpload");
+          const fileLabel = document.getElementById("fileLabel");
+          const maxSizeMB = 50;
+          const maxSizeBytes = maxSizeMB * 1024 * 1024;
+
+          fileInput.addEventListener("change", () => {
+            if (fileInput.files.length > 0) {
+              const file = fileInput.files[0];
+              if (file.size > maxSizeBytes) {
+                MakeErrorMessage("File size exceeded. 50mb MAX...");
+                fileInput.value = "";
+                fileLabel.textContent = "Choose File";
+              } else {
+                fileLabel.textContent = file.name;
+              }
+            }
+          });
+          document
+            .getElementById("content")
+            .addEventListener("scroll", (event) => {
+              const { scrollHeight, scrollTop, clientHeight } = event.target;
+
+              if (Math.abs(scrollHeight - clientHeight - scrollTop) < 1) {
+                autoscroll = true;
+              } else {
+                autoscroll = false;
+              }
+            });
+          const random_emoji = [
+            "😊",
+            "😉",
+            "😎",
+            "😀",
+            "😃",
+            "😄",
+            "😁",
+            "😆",
+            "😅",
+            "😂",
+            "🤣",
+            "😊",
+            "😇",
+            "🙂",
+            "🙃",
+            "😉",
+          ];
+          const emojibt = document.getElementById("emoji-bt");
+          emojibt.addEventListener("mouseenter", () => {
+            emojibt.innerText =
+              random_emoji[Math.floor(Math.random() * random_emoji.length)];
+            emojibt.classList.remove("gelatineeffect");
+            emojibt.classList.add("gelatineeffect");
+            emojibt.addEventListener("animationend", () => {
+              emojibt.classList.remove("gelatineeffect");
+            });
+          });
+          emojibt.addEventListener("click", () => {
+            if (
+              document.getElementById("emojipicker").style.display == "flex"
+            ) {
+              document.getElementById("emojipicker").style.display = "none";
+            } else {
+              document.getElementById("emojipicker").style.display = "flex";
+            }
+            emojibt.innerText =
+              random_emoji[Math.floor(Math.random() * random_emoji.length)];
+            emojibt.classList.remove("gelatineeffect");
+            emojibt.classList.add("gelatineeffect");
+            emojibt.addEventListener("animationend", () => {
+              emojibt.classList.remove("gelatineeffect");
+            });
+          });
+          document
+            .querySelector(".settings-icon")
+            .addEventListener("click", () => {
+              if (!currentGroup) {
+                MakeErrorMessage("No group selected yet!", false);
+                return;
+              }
+              isRequestingSettings = true;
+              getGroupData();
+            });
+
+          const userSettingsIcon = document.querySelector(
+            ".user-settings-icon"
+          );
+          if (userSettingsIcon) {
+            userSettingsIcon.addEventListener("click", openUserSettingsPopup);
+          }
+        }
+      );
+    }
+
+    function updateUserInfo(newUsername) {
+      const userNameSpan = document.querySelector(".user-name");
+      if (userNameSpan) {
+        userNameSpan.textContent = newUsername;
+      }
+    }
+
+    function CopyText(text) {
+      navigator.clipboard.writeText(text);
+    }
+
+    function createGroupIdPopup(id) {
+      const existingPopups = document.querySelectorAll(".CustomPopup");
+      existingPopups.forEach((popup) => popup.remove());
+
+      const overlay = document.createElement("div");
+      overlay.classList.add("overlay");
+      overlay.style.display = "block";
+      overlay.classList.remove("HideOverlayAnim");
+      overlay.classList.add("ShowOverlayAnim");
+
+      const popup = document.createElement("div");
+      popup.classList.add("CustomPopup");
+      popup.classList.add("smoothshow");
+      popup.style.display = "flex";
+      popup.innerHTML =
+        "<span class='popuptext' style='margin-bottom: 0.4vw; margin-top: 0.8vw; font-weight: bold;'>Invite People</span>" +
+        "<span class='popuptext' style='margin-bottom: 1vw; margin-left: 0.5vw; margin-right: 0.5vw; font-weight: 100; font-size: 1vw; text-align: center;'>Click the copy button to copy the group ID.</span>" +
+        "<div class='copyidcontainer'>" +
+        "<input class='copyidinput' id='idinput' value='" +
+        id +
+        "' readOnly />" +
+        "<button class='content-bt' style='width: 4vw;' onclick=\"CopyText('" +
+        id +
+        "'); MakeErrorMessage('Copied to clipboard!',true);\">Copy</button>" +
+        "</div>";
+
+      document.body.appendChild(overlay);
+      document.body.appendChild(popup);
+
+      overlay.addEventListener("click", () => {
+        popup.classList.remove("smoothshow");
+        popup.classList.add("smoothhide");
+        popup.addEventListener("animationend", () => popup.remove());
+
+        overlay.classList.remove("ShowOverlayAnim");
+        overlay.classList.add("HideOverlayAnim");
+        overlay.addEventListener("animationend", () => overlay.remove());
+      });
+    }
+
+    function addGroupPopup() {
+      const popup = document.getElementById("AddGroupPopup");
+      const overlay = document.querySelector(".overlay");
+      popup.style.display = "flex";
+      popup.classList.remove("smoothhide");
+      popup.classList.add("smoothshow");
+
+      overlay.style.display = "block";
+      overlay.classList.remove("HideOverlayAnim");
+      overlay.classList.add("ShowOverlayAnim");
+
+      popup.querySelectorAll("input").forEach((key) => {
+        key.disabled = false;
+      });
+
+      overlay.addEventListener("click", () => {
+        closeGroupPopup();
+      });
+    }
+
+    function closeGroupPopup() {
+      const popup = document.getElementById("AddGroupPopup");
+      const overlay = document.querySelector(".overlay");
+
+      popup.classList.remove("smoothshow");
+      popup.classList.add("smoothhide");
+
+      overlay.classList.remove("ShowOverlayAnim");
+      overlay.classList.add("HideOverlayAnim");
+      overlay.addEventListener("animationend", handleOverlayAnimationEnd);
+
+      popup.querySelectorAll("input").forEach((key) => {
+        key.disabled = true;
+      });
+    }
+
+    function initGroupContent() {
+      const popup = document.createElement("div");
+      popup.classList.add("popup");
+      popup.textContent = "Add Group";
+      document.body.appendChild(popup);
+
+      const container = document.getElementById("AddGroup");
+      container.addEventListener("mouseover", () => {
+        const rect = container.getBoundingClientRect();
+        popup.style.display = "block";
+        const viewportWidth = window.innerWidth;
+        const leftInVW = ((rect.left + window.scrollX) / viewportWidth) * 100;
+        popup.style.left = leftInVW + 4 + "vw";
+        popup.style.top = rect.top + window.scrollY + "px";
+      });
+
+      container.addEventListener("click", () => {
+        addGroupPopup();
+      });
+
+      container.addEventListener("mouseout", () => {
+        popup.style.display = "none";
+      });
+    }
+
+    const badgeEmojis = {
+      developer: "🛠️",
+      staff: "🛡️",
+      verified: "✅",
+      owner: "👑",
+      annoying: "🍆",
+    };
+
+    function getAllBadgeIcons(badgesArray, isOwner, thetextdiv) {
+      const container = document.createElement("span");
+      container.style.display = "inline-flex";
+      container.style.alignItems = "center";
+
+      const orderedBadges = ["groupOwner", "developer", "staff", "annoying", "verified"];
+      orderedBadges.forEach((b) => {
+        if (badgesArray && badgesArray.includes(b)) {
+          container.appendChild(
+            document.createTextNode(badgeEmojis[b] + " ")
+          );
+        }
+      });
+
+      if (isOwner) {
+        container.appendChild(
+          document.createTextNode(badgeEmojis.owner + " ")
+        );
+      }
+
+      return container;
+    }
+    const badgeColors = {
+      developer: "#FF160C",
+      staff: "#ff5a70",
+      groupOwner: "#ffd700 ",
+      verified: "#3baa56",
+      annoying: "#800080",
+      default: "var(--accent-color)",
+    };
+
+    function getProfileBadgeIcon(badgesArray, isOwner, textElement) {
+      let chosen = null;
+
+      if (badgesArray && badgesArray.includes("groupOwner")) {
+        chosen = "groupOwner";
+      } else if (badgesArray && badgesArray.includes("developer")) {
+        chosen = "developer";
+      } else if (badgesArray && badgesArray.includes("staff")) {
+        chosen = "staff";
+      } else if (badgesArray && badgesArray.includes("annoying")) {
+        chosen = "annoying";
+      } else if (badgesArray && badgesArray.includes("verified")) {
+        chosen = "verified";
+      }
+
+      if (textElement) {
+        if (isOwner) {
+          textElement.style.color =
+            badgeColors.groupOwner || badgeColors.default;
+        } else {
+          textElement.style.color =
+            badgeColors[chosen] || badgeColors.default;
+        }
+      }
+
+      const container = document.createElement("span");
+      container.style.display = "inline-flex";
+      container.style.alignItems = "center";
+
+      if (chosen) {
+        container.appendChild(
+          document.createTextNode(badgeEmojis[chosen] + " ")
+        );
+      }
+
+      if (isOwner) {
+        container.appendChild(
+          document.createTextNode(badgeEmojis.owner + " ")
+        );
+      }
+
+      return container;
+    }
+
+    function makebox(text, name, isself, iconurl, badgesArray, isOwner, messagetime) {
+      const container = document.createElement("div");
+      container.style.display = "flex";
+      container.style.flexDirection = "column";
+      container.style.alignItems = isself ? "flex-end" : "flex-start";
+
+      let chosen;
+      const textdiv = document.createElement("span");
+      textdiv.classList.add("textbox-name");
+
+      if (badgesArray && badgesArray.includes("developer")) {
+        chosen = "developer";
+      } else if (badgesArray && badgesArray.includes("staff")) {
+        chosen = "staff";
+      } else if (badgesArray && badgesArray.includes("verified")) {
+        chosen = "verified";
+      }
+
+      if (textdiv) {
+        if (isOwner) {
+          textdiv.style.color =
+            badgeColors["groupOwner"] || badgeColors.default;
+        } else {
+          textdiv.style.color = badgeColors[chosen] || badgeColors.default;
+        }
+      }
+      const nameSpan = document.createElement("span");
+      nameSpan.innerText = name;
+      const timeSpan = document.createElement("span");
+      timeSpan.style.color = "var(--accent-color)";
+      timeSpan.style.marginLeft = "0.5vw";
+      timeSpan.style.fontSize = "1vw";
+      timeSpan.innerText = messagetime;
+      const badgesSpan = getAllBadgeIcons(badgesArray, isOwner, textdiv);
+      textdiv.appendChild(nameSpan);
+      textdiv.appendChild(badgesSpan);
+
+      const box = document.createElement("div");
+      box.classList.add("textbox");
+      box.style.width = "auto";
+      box.style.textAlign = "left";
+
+      const userinfocontainer = document.createElement("div");
+      userinfocontainer.classList.add("userinfo-container");
+
+      const iconcontainer = document.createElement("div");
+      iconcontainer.classList.add("usericon-container");
+
+      const icon = document.createElement("img");
+      icon.src = iconurl;
+      icon.style.width = "100%";
+      icon.style.height = "100%";
+      icon.classList.add("usericon-icon");
+      iconcontainer.appendChild(icon);
+
+      userinfocontainer.appendChild(textdiv);
+      userinfocontainer.appendChild(iconcontainer);
+      userinfocontainer.appendChild(timeSpan);
+      container.appendChild(userinfocontainer);
+
+      container.appendChild(box);
+      function isValidImage(urlTocheck = "") {
+        var image = new Image();
+        image.src = urlTocheck;
+        if (image.width == 0) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+      let textBuffer = "";
+      const links = text.split(/( |\n)/);
+      let current_index = 0;
+      links.forEach((link) => {
+        if (link.startsWith("http://") || link.startsWith("https://") || link.startsWith("*") || link.startsWith("~")) {
+          if (textBuffer) {
+            const textNode = document.createTextNode(textBuffer + " ");
+            box.appendChild(textNode);
+            textBuffer = "";
+          }
+          const fileExtension = link.split(".").pop().toLowerCase();
+          const contentDiv = document.createElement("div");
+          contentDiv.style.marginTop = "0.5vw";
+          if (link.startsWith("*")) {
+            let nextindex = 0;
+            if (!link.endsWith("*")) {
+              nextindex = links.findIndex((item, index) => item.includes("*") && index > current_index);
+              if (nextindex !== -1) {
+                link = links.slice(current_index, nextindex + 1).join(" ");
+              }
+            }
+            const boldtext = document.createElement("span");
+            boldtext.innerText = link.slice(1, link.length - 1);
+            boldtext.style.fontWeight = "bold";
+            box.appendChild(boldtext);
+            links.splice(current_index, nextindex);
+          } else if (link.startsWith("~")) {
+            let nextindex = 0;
+            if (!link.endsWith("~")) {
+              nextindex = links.findIndex((item, index) => item.includes("*") && index > current_index);
+              if (nextindex !== -1) {
+                link = links.slice(current_index, nextindex + 1).join(" ");
+              }
+            }
+            const ilatictext = document.createElement("span");
+            ilatictext.innerText = link.slice(1, link.length - 1);
+            ilatictext.style.fontStyle = "italic";
+            box.appendChild(ilatictext);
+            links.splice(current_index, nextindex);
+          } else if (isValidImage(link) != false) {
+            const imgElement = document.createElement("img");
+            imgElement.src = link;
+            imgElement.style.maxWidth = "40vw";
+            imgElement.style.height = "auto";
+            imgElement.style.borderRadius = "1vw";
+            imgElement.lazyload = true;
+            contentDiv.appendChild(imgElement);
+          } else if (["mp4", "webm", "gif"].includes(fileExtension)) {
+            const videoElement = document.createElement("video");
+            videoElement.src = link;
+            videoElement.controls = true;
+            videoElement.style.maxWidth = "40vw";
+            videoElement.style.borderRadius = "0.5vw";
+            videoElement.lazyload = true;
+            contentDiv.appendChild(videoElement);
+          } else if (["mp3", "ogg", "opus"].includes(fileExtension)) {
+            const AudioElement = document.createElement("div");
+            AudioElement.classList.add("audioplayer");
+
+            var audio = new Audio(link);
+
+            const PlayBT = document.createElement("button");
+            PlayBT.classList.add("playbt");
+            PlayBT.innerHTML = `<i class="fa fa-play" aria-hidden="true"></i>`;
+
+            let isPlaying = false;
+            let audiotime = "00:00";
+            let fullaudiotime = "00:00";
+
+            const AudioTime = document.createElement("span");
+            AudioTime.style.fontSize = "0.9vw";
+            AudioTime.style.whiteSpace = "nowrap";
+            AudioTime.style.marginRight = "0.5vw";
+            AudioTime.style.marginLeft = "0.5vw";
+            AudioTime.textContent = `${audiotime} / ${fullaudiotime}`;
+
+            const timeline = document.createElement("input");
+            timeline.type = "range";
+            timeline.min = 0;
+            timeline.step = "0.01";
+            timeline.classList.add("audiotimeline");
+            timeline.style.flex = "1";
+            timeline.style.marginRight = "1vw";
+
+            const timeContainer = document.createElement("div");
+            timeContainer.style.display = "flex";
+            timeContainer.style.alignItems = "center";
+            timeContainer.style.gap = "0.5vw";
+            timeContainer.style.width = "100%";
+            timeContainer.appendChild(AudioTime);
+            timeContainer.appendChild(timeline);
+
+            function formatTime(seconds) {
+              const minutes = Math.floor(seconds / 60);
+              const secs = Math.floor(seconds % 60);
+              return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+            }
+
+            PlayBT.addEventListener("click", () => {
+              isPlaying = !isPlaying;
+              PlayBT.innerHTML = isPlaying
+                ? `<i class="fa fa-pause" aria-hidden="true"></i>`
+                : `<i class="fa fa-play" aria-hidden="true"></i>`;
+              if (isPlaying) {
+                audio.play();
+              } else {
+                audio.pause();
+              }
+            });
+
+            audio.addEventListener("timeupdate", () => {
+              audiotime = formatTime(audio.currentTime);
+              AudioTime.textContent = `${audiotime} / ${fullaudiotime}`;
+              timeline.value = audio.currentTime;
+              if (audio.currentTime == audio.duration) {
+                timeline.value = timeline.max;
+              }
+            });
+
+            audio.addEventListener("loadedmetadata", () => {
+              fullaudiotime = formatTime(audio.duration);
+              AudioTime.textContent = `${audiotime} / ${fullaudiotime}`;
+              timeline.max = audio.duration;
+            });
+
+            AudioElement.appendChild(PlayBT);
+            AudioElement.appendChild(timeContainer);
+
+            contentDiv.appendChild(AudioElement);
+          } else {
+            const linkElement = document.createElement("a");
+            linkElement.href = link;
+            linkElement.innerText = link;
+            linkElement.target = "_blank";
+            linkElement.style.wordBreak = "break-word";
+            box.appendChild(linkElement);
+            const space = document.createTextNode(" ");
+            box.appendChild(space);
+          }
+          container.appendChild(contentDiv);
+        } else {
+          textBuffer += link + " ";
+        }
+        current_index += 1;
+      });
+      if (textBuffer) {
+        const textNode = document.createTextNode(textBuffer);
+        box.appendChild(textNode);
+      }
+
+      if (box.innerText.trim() === "") {
+        box.style.display = "none";
+      }
+
+      document.getElementById("content").appendChild(container);
+      if (autoscroll) {
+        document.getElementById("content").scrollTop =
+          document.getElementById("content").scrollHeight;
+      }
+    }
+
+    function makeGroup(name, iconurl, id) {
+      const container = document.createElement("div");
+      container.classList.add("leftsidecontent-icon-container");
+
+      const icon = document.createElement("img");
+      icon.src = iconurl;
+      icon.style.width = "90%";
+      icon.style.height = "90%";
+      icon.classList.add("leftsidecontent-icon");
+      container.appendChild(icon);
+
+      document
+        .getElementById("leftsidecontent")
+        .insertBefore(container, document.getElementById("AddGroup"));
+
+      const popup = document.createElement("div");
+      popup.classList.add("popup");
+      popup.textContent = name;
+      document.body.appendChild(popup);
+
+      container.addEventListener("mouseover", () => {
+        const rect = container.getBoundingClientRect();
+        popup.style.display = "block";
+        const viewportWidth = window.innerWidth;
+        const leftInVW = ((rect.left + window.scrollX) / viewportWidth) * 100;
+        popup.style.left = leftInVW + 4 + "vw";
+        popup.style.top = rect.top + window.scrollY + "px";
+      });
+
+      container.addEventListener("mouseout", () => {
+        popup.style.display = "none";
+      });
+
+      container.addEventListener("click", () => {
+        currentGroup = id;
+        const packet = {
+          type: "requestGroupData",
+          groupID: id,
+          userID: myuuid,
+          username,
+          token: mytoken,
+        };
+        socket.send(JSON.stringify(packet));
+        setGroupName(name);
+      });
+
+      container.addEventListener("contextmenu", (event) => {
+        event.preventDefault();
+        const existingPopups = document.querySelectorAll(".popup");
+        existingPopups.forEach((pop) => {
+          if (pop !== popup) {
+            document.body.removeChild(pop);
+          }
+        });
+        const menupopup = document.createElement("div");
+        menupopup.classList.add("popup");
+        document.body.appendChild(menupopup);
+
+        const rect = container.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+        const leftInVW = ((rect.left + window.scrollX) / viewportWidth) * 100;
+        menupopup.style.left = leftInVW + 1 + "vw";
+        menupopup.style.top = rect.top + window.scrollY + "px";
+
+        const leaveGroupButton = document.createElement("button");
+        leaveGroupButton.classList.add("popup-leaveGroupButton");
+        leaveGroupButton.textContent = "Leave Group";
+        leaveGroupButton.addEventListener("click", () => {
+          kickUserFromGroup(username, currentGroup);
+          document.body.removeChild(menupopup);
+        });
+
+        const CopyIdButton = document.createElement("button");
+        CopyIdButton.classList.add("popup-CopyID");
+        CopyIdButton.textContent = "Group ID";
+        CopyIdButton.addEventListener("click", () => {
+          createGroupIdPopup(id);
+          document.body.removeChild(menupopup);
+        });
+
+        menupopup.appendChild(leaveGroupButton);
+        menupopup.appendChild(CopyIdButton);
+
+        menupopup.style.position = "absolute";
+        menupopup.style.display = "flex";
+        menupopup.style.flexDirection = "column";
+        menupopup.style.alignItems = "center";
+        menupopup.style.zIndex = "1000";
+      });
+    }
+
+    function makeUser(name, iconurl, badges, isGroupOwner, isactive) {
+      const container = document.createElement("div");
+      container.style.display = "flex";
+      container.style.flexDirection = "row";
+      container.style.alignItems = "center";
+      container.style.marginBottom = "0.5vw";
+      container.style.height = "3vw";
+      container.style.width = "95%";
+      container.style.marginLeft = "0.5vw";
+
+      const iconcontainer = document.createElement("div");
+      iconcontainer.classList.add("usericon-container");
+      iconcontainer.style.display = "flex";
+      iconcontainer.style.alignItems = "center";
+      iconcontainer.style.justifyContent = "center";
+      iconcontainer.style.width = "2vw";
+      iconcontainer.style.height = "2vw";
+      iconcontainer.style.marginRight = "0.5vw";
+      iconcontainer.style.flexShrink = "0";
+      iconcontainer.style.flexGrow = "0";
+      iconcontainer.style.overflow = "visible";
+      iconcontainer.style.border = "none";
+      const icon = document.createElement("img");
+      icon.src = iconurl;
+      icon.style.width = "90%";
+      icon.style.height = "90%";
+      icon.style.objectFit = "cover";
+      icon.style.borderRadius = "50%";
+      iconcontainer.appendChild(icon);
+      container.appendChild(iconcontainer);
+
+      const useractive = document.createElement("div");
+      useractive.classList.add("useractive");
+      iconcontainer.appendChild(useractive);
+      useractive.style.backgroundColor = isactive ? "#7bf570" : "#8f6066";
+
+      const nameDiv = document.createElement("div");
+      nameDiv.style.fontWeight = "bold";
+      nameDiv.style.flex = "1";
+      nameDiv.style.overflow = "hidden";
+      nameDiv.style.textOverflow = "ellipsis";
+      nameDiv.style.whiteSpace = "nowrap";
+      const textWrap = document.createElement("span");
+      textWrap.innerText = name;
+      nameDiv.appendChild(textWrap);
+
+      const userBadgeSpan = getProfileBadgeIcon(
+        badges,
+        isGroupOwner,
+        nameDiv
+      );
+      nameDiv.appendChild(userBadgeSpan);
+
+      function updateFontSize() {
+        const viewportWidth = window.innerWidth;
+        const properFontSize = Math.max(
+          5,
+          Math.min(17, (viewportWidth / name.length) * 0.1)
+        );
+        nameDiv.style.fontSize = properFontSize + "px";
+      }
+      updateFontSize();
+      window.addEventListener("resize", updateFontSize);
+
+      container.appendChild(nameDiv);
+      document.getElementById("userlist-content").appendChild(container);
+    }
+
+    function MakeErrorMessage(loginerr, success) {
+      const loginerror = document.createElement("div");
+      if (!success) {
+        loginerror.style.background = "#ff3535d2";
+      }
+      loginerror.classList.add("loginerrorpopup", "ErrorPopupShow");
+      loginerror.innerText = loginerr;
+      document.body.appendChild(loginerror);
+
+      loginerror.addEventListener(
+        "animationend",
+        function handleAnimationEnd() {
+          if (loginerror.classList.contains("ErrorPopupShow")) {
+            setTimeout(() => {
+              loginerror.classList.remove("ErrorPopupShow");
+              loginerror.classList.add("ErrorPopupHide");
+            }, 2000);
+          } else if (loginerror.classList.contains("ErrorPopupHide")) {
+            loginerror.remove();
+            loginerror.removeEventListener(
+              "animationend",
+              handleAnimationEnd
+            );
+          }
+        }
+      );
+    }
 
     function Login() {
       if (socket.readyState !== WebSocket.OPEN) return;
       const usernameVal = document.getElementById("login-username").value.trim();
-      const passwordVal = document.getElementById("login-password").value.trim();
+      const passwordVal = document.getElementById("login-password").value.trim(); 7
+      const turnstileResponse = document.querySelector('input[name="cf-turnstile-response"]').value;
+
+      if (!turnstileResponse) {
+        MakeErrorMessage("Please complete the CAPTCHA.");
+        return;
+      }
+
 
       if (usernameVal && passwordVal) {
         const payload = {
@@ -1890,6 +1896,7 @@
             username: usernameVal,
             password: passwordVal,
             userID: myuuid,
+            turnstile: turnstileResponse,
           },
         };
         socket.send(JSON.stringify(payload));
@@ -1909,593 +1916,649 @@
       return visitorId;
     }
 
-         async function Register() {
-           const usernameVal = document
-             .getElementById("register-username")
-             .value.trim();
-           const passwordVal = document
-             .getElementById("register-password")
-             .value.trim();
+    async function Register() {
+      const usernameVal = document
+        .getElementById("register-username")
+        .value.trim();
+      const passwordVal = document
+        .getElementById("register-password")
+        .value.trim();
 
-           if (!usernameVal || !passwordVal) {
-             MakeErrorMessage("Please fill out all fields");
-             return;
-           }
+      if (!usernameVal || !passwordVal) {
+        MakeErrorMessage("Please fill out all fields");
+        return;
+      }
 
-           try {
-             const visitorId = await getFingerprint();
+      try {
+        const visitorId = await getFingerprint();
 
-             const payload = {
-               type: "create_account",
-               userID: myuuid,
-               data: { username: usernameVal, password: passwordVal },
-               deviceid: visitorId,
-             };
+        const payload = {
+          type: "create_account",
+          userID: myuuid,
+          data: { username: usernameVal, password: passwordVal },
+          deviceid: visitorId,
+        };
 
-             await socket.send(JSON.stringify(payload));
+        await socket.send(JSON.stringify(payload));
 
-             alert("Account created successfully!");
-             window.location.reload();
-           } catch (error) {
-             console.error("Error during registration:", error);
-             MakeErrorMessage("An error occurred. Please try again later.");
-           }
-         }
+        alert("Account created successfully!");
+        window.location.reload();
+      } catch (error) {
+        console.error("Error during registration:", error);
+        MakeErrorMessage("An error occurred. Please try again later.");
+      }
+    }
 
     function InitInput() {
       const textinput = document.getElementById("textinput");
       const emojiinput = document.getElementById("search");
       const emojipicker = document.getElementById("emojipicker");
       document.querySelector('emoji-picker').addEventListener('emoji-click', event => {
-          if (textinput.selectionStart > 0) {
-              textinput.value = textinput.value.substring(0, textinput.selectionStart - 1) + textinput.value.substring(textinput.selectionEnd);
-          }
-          textinput.value += event.detail.emoji.unicode;
-          emojiinput.focus();
-          emojipicker.style.display = "none";
+        textinput.value += event.detail.emoji.unicode;
+        emojiinput.focus();
+        emojipicker.style.display = "none";
       });
       textinput.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" && textinput.value !== "" && socket && currentGroup) {
-          const date = new Date();
-          const messagevalue = textinput.value;
-          emojipicker.style.display = "none";
-          fetch("/assets/json/nonowords.json")
-            .then(response => response.json())
-            .then(data => {
-              const naughtwordlist = data.filter;
-              const containsBadWord = naughtwordlist.some(word => messagevalue.toLowerCase().includes(word.toLowerCase()));
-              if (containsBadWord) {
-                MakeErrorMessage("No bad words allowed!", false);
-                return;
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          if (
+            e.key === "Enter" &&
+            textinput.value !== "" &&
+            socket &&
+            currentGroup
+          ) {
+            const fileInput = document.getElementById("fileUpload");
+            const date = new Date();
+            const messagevalue = textinput.value;
+            emojipicker.style.display = "none";
+            // const naughtwordlist = JSON.parse(
+            //   sessionStorage.getItem("nonowords")
+            // );
+            // const containsBadWord = naughtwordlist.some((word) =>
+            //   messagevalue.toLowerCase().includes(word.toLowerCase())
+            // );
+            // if (containsBadWord) {
+            //   MakeErrorMessage("No bad words allowed!", false);
+            //   return;
+            // }
+
+            const file = fileInput.files && fileInput.files[0];
+
+            if (file) {
+              const formData = new FormData();
+              formData.append('file', file);
+              if (username === "Hauxy") {
+                return MakeErrorMessage('File Uploads Locked for: 24 hours');
               }
+
+              fetch(`https://skib.juststudy.uk/fileUpload?groupID=${currentGroup}&userID=${username}`, {
+                method: "POST",
+                body: formData,
+              })
+                .then((res) => res.json())
+                .then((data) => {
+                  var combinesMessage;
+                  if (messagevalue !== "") {
+                    combinesMessage = `${data.file} ${messagevalue}`;
+                  } else {
+                    combinedMessage = `${data.file}`;
+                  }
+                  const jsonpayload = {
+                    type: "sendmessage",
+                    groupID: currentGroup,
+                    userID: myuuid,
+                    message: combinedMessage,
+                    username: username,
+                    token: mytoken,
+                  };
+                  socket.send(JSON.stringify(jsonpayload));
+                  textinput.value = "";
+                  fileInput.value = "";
+                  fileLabel.textContent = "Choose File";
+                })
+                .catch((err) => {
+                  console.error(err);
+                });
+            } else {
               const jsonpayload = {
                 type: "sendmessage",
                 groupID: currentGroup,
                 userID: myuuid,
                 message: messagevalue,
                 username: username,
-                token: mytoken
+                token: mytoken,
               };
-
               socket.send(JSON.stringify(jsonpayload));
               textinput.value = "";
-            })
-            .catch(error => console.error("Error fetching bad words list:", error));
-        } else if (socket && currentGroup){
-          if (e.key == ":") {
-            emojipicker.style.display = "flex";
-          } else {
-            emojipicker.style.display = "none";
+            }
+          } else if (socket && currentGroup) {
+            if (e.key == ":") {
+              emojipicker.style.display = "flex";
+            } else {
+              emojipicker.style.display = "none";
+            }
           }
         }
       });
     }
 
-         function customUuid(length = 200) {
-           const randomValues = crypto.getRandomValues(new Uint8Array(length));
-           return Array.from(randomValues, (byte) =>
-             byte.toString(16).padStart(2, "0")
-           ).join("");
-         }
+    function customUuid(length = 200) {
+      const randomValues = crypto.getRandomValues(new Uint8Array(length));
+      return Array.from(randomValues, (byte) =>
+        byte.toString(16).padStart(2, "0")
+      ).join("");
+    }
 
-         function genClientKey() {
-           const randomBytes = new Uint8Array(128);
-           window.crypto.getRandomValues(randomBytes);
-           const base64String = btoa(String.fromCharCode.apply(null, randomBytes));
-           return base64String;
-         }
+    function genClientKey() {
+      const randomBytes = new Uint8Array(128);
+      window.crypto.getRandomValues(randomBytes);
+      const base64String = btoa(String.fromCharCode.apply(null, randomBytes));
+      return base64String;
+    }
 
-         function loadData() {}
+    function loadData() { }
 
-         function joinGroup(id) {
-           closeGroupPopup();
-           const packet = {
-             type: "joingroup",
-             id,
-             userID: myuuid,
-             username,
-             token: mytoken,
-           };
-           socket.send(JSON.stringify(packet));
-         }
+    function joinGroup(id) {
+      closeGroupPopup();
+      const packet = {
+        type: "joingroup",
+        id,
+        userID: myuuid,
+        username,
+        token: mytoken,
+      };
+      socket.send(JSON.stringify(packet));
+    }
 
-         function createGroup(name) {
-           closeGroupPopup();
-           const packet = {
-             type: "makegroup",
-             groupname: name,
-             userID: myuuid,
-             username,
-             token: mytoken,
-           };
-           socket.send(JSON.stringify(packet));
-         }
+    function createGroup(name) {
+      closeGroupPopup();
+      const packet = {
+        type: "makegroup",
+        groupname: name,
+        userID: myuuid,
+        username,
+        token: mytoken,
+      };
+      socket.send(JSON.stringify(packet));
+    }
 
-         function UpdateGroupList(groups) {
-           function waitForElement() {
-             const leftSideContent = document.getElementById("leftsidecontent");
-             if (leftSideContent) {
-               clearInterval(checkInterval);
-               leftSideContent.innerHTML =
-                 "<div class='group-icon-container' id='AddGroup'>" +
-                 "<img src='/assets/img/roundAddIcon.png' class='leftsidecontent-icon' style='width: 95%; height: 95%;'>" +
-                 "</div>";
-               initGroupContent();
-               groups.forEach((group) => {
-                 makeGroup(group.name, group.icon, group.id);
-               });
-             }
-           }
-           const checkInterval = setInterval(waitForElement, 100);
-         }
+    function UpdateGroupList(groups) {
+      function waitForElement() {
+        const leftSideContent = document.getElementById("leftsidecontent");
+        if (leftSideContent) {
+          clearInterval(checkInterval);
+          leftSideContent.innerHTML =
+            "<div class='group-icon-container' id='AddGroup'>" +
+            "<img src='/assets/img/roundAddIcon.png' class='leftsidecontent-icon' style='width: 95%; height: 95%;'>" +
+            "</div>";
+          initGroupContent();
+          groups.forEach((group) => {
+            makeGroup(group.name, group.icon, group.id);
+          });
+        }
+      }
+      const checkInterval = setInterval(waitForElement, 100);
+    }
 
-         function sendGroupPacket(uName) {
-           myuuid = customUuid();
-           const packet = {
-             type: "GetUserGroupList",
-             username: uName,
-             userID: myuuid,
-             token: mytoken,
-           };
-           socket.send(JSON.stringify(packet));
-         }
+    function sendGroupPacket(uName) {
+      myuuid = customUuid();
+      const packet = {
+        type: "GetUserGroupList",
+        username: uName,
+        userID: myuuid,
+        token: mytoken,
+      };
+      socket.send(JSON.stringify(packet));
+    }
 
-         function getGroupData() {
-           if (!currentGroup) return;
-           const packet = {
-             type: "requestGroupData",
-             groupID: currentGroup,
-             userID: myuuid,
-             username,
-             token: mytoken,
-           };
-           socket.send(JSON.stringify(packet));
-         }
+    function getGroupData() {
+      if (!currentGroup) return;
+      const packet = {
+        type: "requestGroupData",
+        groupID: currentGroup,
+        userID: myuuid,
+        username,
+        token: mytoken,
+      };
+      socket.send(JSON.stringify(packet));
+    }
 
-         function setGroupName(name) {
-           const groupNameSpan = document.querySelector(".group-name");
-           if (groupNameSpan) {
-             groupNameSpan.textContent = name;
-           }
-         }
+    function setGroupName(name) {
+      const groupNameSpan = document.querySelector(".group-name");
+      if (groupNameSpan) {
+        groupNameSpan.textContent = name;
+      }
+    }
 
-         function openGroupSettingsPopup(groupData) {
-           const popup = document.getElementById("GroupSettingsPopup");
-           const overlay = document.querySelector(".overlay");
+    function openGroupSettingsPopup(groupData) {
+      const popup = document.getElementById("GroupSettingsPopup");
+      const overlay = document.querySelector(".overlay");
 
-           popup.style.display = "flex";
-           popup.classList.remove("GroupSettingsPopupHide");
-           popup.classList.add("GroupSettingsPopupShow");
+      popup.style.display = "flex";
+      popup.classList.remove("GroupSettingsPopupHide");
+      popup.classList.add("GroupSettingsPopupShow");
 
-           overlay.style.display = "block";
-           overlay.classList.remove("HideOverlayAnim");
-           overlay.classList.add("ShowOverlayAnim");
+      overlay.style.display = "block";
+      overlay.classList.remove("HideOverlayAnim");
+      overlay.classList.add("ShowOverlayAnim");
 
-           document.getElementById("groupSettingsName").value =
-             groupData.groupName || "";
-           document.getElementById("groupSettingsIcon").value =
-             groupData.groupIcon || "";
-           currentGroupOwner = groupData.owner;
-           currentGroupMembers = groupData.allmembers || [];
+      document.getElementById("groupSettingsName").value =
+        groupData.groupName || "";
+      document.getElementById("groupSettingsIcon").value =
+        groupData.groupIcon || "";
+      currentGroupOwner = groupData.owner;
+      currentGroupMembers = groupData.allmembers || [];
 
-           const membersContainer = document.getElementById(
-             "groupSettingsMembers"
-           );
-           membersContainer.innerHTML = "";
+      const membersContainer = document.getElementById(
+        "groupSettingsMembers"
+      );
+      membersContainer.innerHTML = "";
 
-           currentGroupMembers.forEach((m) => {
-             const row = document.createElement("div");
-             row.classList.add("kick-list-item");
-             row.innerHTML = "<span>" + m.username + "</span>";
+      currentGroupMembers.forEach((m) => {
+        const row = document.createElement("div");
+        row.classList.add("kick-list-item");
+        row.innerHTML = "<span>" + m.username + "</span>";
 
-             if (
-               username === currentGroupOwner &&
-               m.username !== currentGroupOwner
-             ) {
-               const kickBtn = document.createElement("button");
-               kickBtn.classList.add("kick-button");
-               kickBtn.textContent = "Kick";
-               kickBtn.onclick = () => {
-                 kickUserFromGroup(m.username);
-               };
-               row.appendChild(kickBtn);
-             }
-             membersContainer.appendChild(row);
-           });
+        if (
+          username === currentGroupOwner &&
+          m.username !== currentGroupOwner
+        ) {
+          const kickBtn = document.createElement("button");
+          kickBtn.classList.add("kick-button");
+          kickBtn.textContent = "Kick";
+          kickBtn.onclick = () => {
+            kickUserFromGroup(m.username);
+          };
+          row.appendChild(kickBtn);
+        }
+        membersContainer.appendChild(row);
+      });
 
-           overlay.addEventListener("click", closeGroupSettingsPopup);
-         }
+      overlay.addEventListener("click", closeGroupSettingsPopup);
+    }
 
-         function closeGroupSettingsPopup() {
-           const popup = document.getElementById("GroupSettingsPopup");
-           const overlay = document.querySelector(".overlay");
+    function closeGroupSettingsPopup() {
+      const popup = document.getElementById("GroupSettingsPopup");
+      const overlay = document.querySelector(".overlay");
 
-           popup.classList.remove("GroupSettingsPopupShow");
-           popup.classList.add("GroupSettingsPopupHide");
-           popup.addEventListener("animationend", handlePopupAnimationEnd);
+      popup.classList.remove("GroupSettingsPopupShow");
+      popup.classList.add("GroupSettingsPopupHide");
+      popup.addEventListener("animationend", handlePopupAnimationEnd);
 
-           overlay.classList.remove("ShowOverlayAnim");
-           overlay.classList.add("HideOverlayAnim");
-           overlay.addEventListener("animationend", handleOverlayAnimationEnd);
-           overlay.removeEventListener("click", closeGroupSettingsPopup);
+      overlay.classList.remove("ShowOverlayAnim");
+      overlay.classList.add("HideOverlayAnim");
+      overlay.addEventListener("animationend", handleOverlayAnimationEnd);
+      overlay.removeEventListener("click", closeGroupSettingsPopup);
 
-           isRequestingSettings = false;
-         }
+      isRequestingSettings = false;
+    }
 
-         function handlePopupAnimationEnd(event) {
-           const popup = event.target;
-           popup.style.display = "none";
-           popup.removeEventListener("animationend", handlePopupAnimationEnd);
-         }
+    function handlePopupAnimationEnd(event) {
+      const popup = event.target;
+      popup.style.display = "none";
+      popup.removeEventListener("animationend", handlePopupAnimationEnd);
+    }
 
-         function handleOverlayAnimationEnd(event) {
-           const overlay = event.target;
-           overlay.style.display = "none";
-           overlay.removeEventListener("animationend", handleOverlayAnimationEnd);
-         }
+    function handleOverlayAnimationEnd(event) {
+      const overlay = event.target;
+      overlay.style.display = "none";
+      overlay.removeEventListener("animationend", handleOverlayAnimationEnd);
+    }
 
-         function kickUserFromGroup(user) {
-           MakeErrorMessage("Requested to kick " + user, true);
-           const packet = {
-             type: "updategroup",
-             groupID: currentGroup,
-             userID: myuuid,
-             requester: username,
-             username,
-             kickUser: user,
-             token: mytoken,
-           };
-           socket.send(JSON.stringify(packet));
-         }
+    function kickUserFromGroup(user) {
+      MakeErrorMessage("Requested to kick " + user, true);
+      const packet = {
+        type: "updategroup",
+        groupID: currentGroup,
+        userID: myuuid,
+        requester: username,
+        username,
+        kickUser: user,
+        token: mytoken,
+      };
+      socket.send(JSON.stringify(packet));
+    }
 
-         function saveGroupSettings() {
-           const newName = document
-             .getElementById("groupSettingsName")
-             .value.trim();
-           const newIcon = document
-             .getElementById("groupSettingsIcon")
-             .value.trim();
-           MakeErrorMessage("Requested to save new settings", true);
+    function saveGroupSettings() {
+      const newName = document
+        .getElementById("groupSettingsName")
+        .value.trim();
+      const newIcon = document
+        .getElementById("groupSettingsIcon")
+        .value.trim();
+      MakeErrorMessage("Requested to save new settings", true);
 
-           const packet = {
-             type: "updategroup",
-             groupID: currentGroup,
-             requester: username,
-             newName,
-             username,
-             newIcon,
-             token: mytoken,
-           };
-           socket.send(JSON.stringify(packet));
+      const packet = {
+        type: "updategroup",
+        groupID: currentGroup,
+        requester: username,
+        newName,
+        username,
+        newIcon,
+        token: mytoken,
+      };
+      socket.send(JSON.stringify(packet));
 
-           closeGroupSettingsPopup();
-         }
+      closeGroupSettingsPopup();
+    }
 
-         function refreshUserList(members) {
-           const userlistContent = document.getElementById("userlist-content");
-           if (userlistContent) {
-             userlistContent.innerHTML = "";
-             members.forEach((m) => {
-               const isOwner = m.username === currentGroupOwner;
-               makeUser(
-                 m.username,
-                 m.icon || "/assets/img/user.svg",
-                 m.badges || [],
-                 isOwner,
-                 m.status
-               );
-             });
-           }
-         }
+    function refreshUserList(members) {
+      const userlistContent = document.getElementById("userlist-content");
+      if (userlistContent) {
+        userlistContent.innerHTML = "";
+        members.forEach((m) => {
+          const isOwner = m.username === currentGroupOwner;
+          makeUser(
+            m.username,
+            m.icon || "/assets/img/user.svg",
+            m.badges || [],
+            isOwner,
+            m.status
+          );
+        });
+      }
+    }
 
-         function handleUserUpdate(action, user) {
-           const userlistContent = document.getElementById("userlist-content");
-           if (!userlistContent) return;
+    function handleUserUpdate(action, user) {
+      const userlistContent = document.getElementById("userlist-content");
+      if (!userlistContent) return;
 
-           if (action === "add") {
-             makeUser(
-               user.username,
-               user.icon || "/assets/img/user.svg",
-               user.badges || [],
-               user.isOwner || false,
-               user.status
-             );
-           } else if (action === "remove") {
-             const users = Array.from(userlistContent.children);
-             users.forEach((userElement) => {
-               if (
-                 userElement.querySelector("div") &&
-                 userElement
-                   .querySelector("div")
-                   .textContent.trim()
-                   .startsWith(user.username)
-               ) {
-                 userlistContent.removeChild(userElement);
-               }
-             });
-           }
-         }
-         function refreshCurrentGroup() {
-           if (currentGroup) {
-             const packet = {
-               type: "requestGroupData",
-               groupID: currentGroup,
-               userID: myuuid,
-               username,
-               token: mytoken,
-             };
-             socket.send(JSON.stringify(packet));
-           }
-         }
-         function pingServer() {
-           if (socket.readyState !== WebSocket.OPEN) return;
-           setTimeout(() => {
-             const packet = {
-               type: "ping",
-               username,
-               token: mytoken,
-             };
-             socket.send(JSON.stringify(packet));
-             pingServer();
-           }, 3000);
-         }
+      if (action === "add") {
+        makeUser(
+          user.username,
+          user.icon || "/assets/img/user.svg",
+          user.badges || [],
+          user.isOwner || false,
+          user.status
+        );
+      } else if (action === "remove") {
+        const users = Array.from(userlistContent.children);
+        users.forEach((userElement) => {
+          if (
+            userElement.querySelector("div") &&
+            userElement
+              .querySelector("div")
+              .textContent.trim()
+              .startsWith(user.username)
+          ) {
+            userlistContent.removeChild(userElement);
+          }
+        });
+      }
+    }
+    function refreshCurrentGroup() {
+      if (currentGroup) {
+        const packet = {
+          type: "requestGroupData",
+          groupID: currentGroup,
+          userID: myuuid,
+          username,
+          token: mytoken,
+        };
+        socket.send(JSON.stringify(packet));
+      }
+    }
+    function pingServer() {
+      if (socket.readyState !== WebSocket.OPEN) return;
+      setTimeout(() => {
+        const packet = {
+          type: "ping",
+          username,
+          token: mytoken,
+        };
+        socket.send(JSON.stringify(packet));
+        pingServer();
+      }, 3000);
+    }
 
-         function attemptReconnect() {
-           if (socket.readyState === WebSocket.OPEN) return;
-           setTimeout(() => {
-             ConnectToServer();
-             attemptReconnect();
-           }, 500);
-         }
-         function resetChatUI() {
-           const content = document.getElementById("content");
-           if (content) {
-             content.innerHTML = "";
-           }
+    function attemptReconnect() {
+      if (socket.readyState === WebSocket.OPEN) return;
+      setTimeout(() => {
+        ConnectToServer();
+        attemptReconnect();
+      }, 500);
+    }
+    function resetChatUI() {
+      const content = document.getElementById("content");
+      if (content) {
+        content.innerHTML = "";
+      }
 
-           const userList = document.getElementById("userlist-content");
-           if (userList) {
-             userList.innerHTML = "";
-           }
+      const userList = document.getElementById("userlist-content");
+      if (userList) {
+        userList.innerHTML = "";
+      }
 
-           setGroupName("No Group :(");
-           MakeErrorMessage("You have been kicked from the group.", false);
-         }
+      setGroupName("No Group :(");
+      MakeErrorMessage("You have been kicked from the group.", false);
+    }
 
-         function ConnectToServer() {
-           socket = new WebSocket(serverlocation);
+    function ConnectToServer() {
+      socket = new WebSocket(serverlocation);
 
-           socket.onopen = () => {
-             pingServer();
-           };
+      socket.onopen = () => {
+        pingServer();
+      };
 
-           socket.addEventListener("message", (event) => {
-             try {
-               const data = JSON.parse(event.data);
-               if (data.status !== "error") {
-                 if (data && data.userID === myuuid) {
-                   myuuid = customUuid();
-                   switch (data.type) {
-                     case "Login":
-                       InitChat();
-                       username = data.username;
-                       mytoken = data.token;
-                       MakeErrorMessage(data.message, true);
-                       sendGroupPacket(username);
-                       updateUserInfo(username);
-                       break;
+      socket.addEventListener("message", (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          console.log("Received data:", data);
+          if (data.status === "banned") {
+            showBannedScreen(data.reason || "No reason provided");
+          } else if (data.status !== "error") {
+            if (data && data.userID === myuuid) {
+              myuuid = customUuid();
+              switch (data.type) {
+                case "Login":
+                  if (data.banned) {
+                    showBannedScreen(data.reason);
+                  } else {
+                    if (data.failed) {
+                      MakeErrorMessage('Something went wrong. Please try again...');
+                    }
+                    InitChat();
+                    username = data.username;
+                    mytoken = data.token;
+                    MakeErrorMessage(data.message, true);
+                    sendGroupPacket(username);
+                    updateUserInfo(username);
+                  }
+                  break;
+                case "CreateAccount":
+                  MakeErrorMessage(data.message, true);
+                  break;
 
-                     case "CreateAccount":
-                       MakeErrorMessage(data.message, true);
-                       break;
+                case "MakeGroup":
+                  MakeErrorMessage(data.message, true);
+                  break;
 
-                     case "MakeGroup":
-                       MakeErrorMessage(data.message, true);
-                       break;
+                case "JoinGroup":
+                  MakeErrorMessage(data.message, true);
+                  sendGroupPacket(username);
+                  {
+                    const joinGroupPacket = {
+                      type: "requestGroupData",
+                      groupID: data.groupID,
+                      userID: myuuid,
+                      username,
+                      token: mytoken,
+                    };
+                    socket.send(JSON.stringify(joinGroupPacket));
+                  }
+                  break;
 
-                     case "JoinGroup":
-                       MakeErrorMessage(data.message, true);
-                       sendGroupPacket(username);
-                       {
-                         const joinGroupPacket = {
-                           type: "requestGroupData",
-                           groupID: data.groupID,
-                           userID: myuuid,
-                           username,
-                           token: mytoken,
-                         };
-                         socket.send(JSON.stringify(joinGroupPacket));
-                       }
-                       break;
+                case "groupMessages": {
+                  const content = document.getElementById("content");
+                  const memberslist =
+                    document.getElementById("userlist-content");
+                  if (content && memberslist) {
+                    content.innerHTML = "";
+                    memberslist.innerHTML = "";
 
-                     case "groupMessages": {
-                       const content = document.getElementById("content");
-                       const memberslist =
-                         document.getElementById("userlist-content");
-                       if (content && memberslist) {
-                         content.innerHTML = "";
-                         memberslist.innerHTML = "";
+                    const fixeddata = data.data;
+                    const messages = fixeddata.data;
+                    const members = fixeddata.allmembers;
+                    currentGroupOwner = fixeddata.owner || null;
 
-                         const fixeddata = data.data;
-                         const messages = fixeddata.data;
-                         const members = fixeddata.allmembers;
-                         currentGroupOwner = fixeddata.owner || null;
+                    messages.forEach((msg) => {
+                      const isOwner = msg.username === currentGroupOwner;
+                      makebox(
+                        msg.message,
+                        msg.username,
+                        false,
+                        msg.icon || "/assets/img/user.svg",
+                        msg.badges || [],
+                        isOwner,
+                        msg.time
+                      );
+                    });
 
-                         messages.forEach((msg) => {
-                           const isOwner = msg.username === currentGroupOwner;
-                           makebox(
-                             msg.message,
-                             msg.username,
-                             false,
-                             msg.icon || "/assets/img/user.svg",
-                             msg.badges || [],
-                             isOwner,
-                             msg.time
-                           );
-                         });
+                    refreshUserList(members);
+                    if (isRequestingSettings) {
+                      openGroupSettingsPopup(fixeddata);
+                    }
+                  }
+                  break;
+                }
+                case "CreateAccount":
+                  MakeErrorMessage(data.message, true);
+                  break;
+                case "getGroupList":
+                  UpdateGroupList(data.groups);
+                  break;
+                case "sendmessage":
+                  getGroupData();
+                  break;
 
-                         refreshUserList(members);
-                         if (isRequestingSettings) {
-                           openGroupSettingsPopup(fixeddata);
-                         }
-                       }
-                       break;
-                     }
-                     case "CreateAccount":
-                       MakeErrorMessage(data.message, true);
-                       break;
-                     case "getGroupList":
-                       UpdateGroupList(data.groups);
-                       break;
-                     case "sendmessage":
-                       getGroupData();
-                       break;
+                case "refreshGroupData":
+                  {
+                    console.log("got group data");
+                    loadData();
+                    initGroupContent();
+                    getGroupData();
+                    sendGroupPacket(username);
+                    if (data.data && data.data.groupid === currentGroup) {
+                      const cont = document.getElementById("content");
+                      const lst = document.getElementById("userlist-content");
+                      if (cont && lst) {
+                        cont.innerHTML = "";
+                        lst.innerHTML = "";
+                        const fix = data.data;
+                        const msgList = fix.data || [];
+                        const memList = fix.allmembers || [];
+                        currentGroupOwner = fix.owner || null;
 
-                     case "refreshGroupData":
-                       {
-                         console.log("got group data");
-                         loadData();
-                         initGroupContent();
-                         getGroupData();
-                         sendGroupPacket(username);
-                         if (data.data && data.data.groupid === currentGroup) {
-                           const cont = document.getElementById("content");
-                           const lst = document.getElementById("userlist-content");
-                           if (cont && lst) {
-                             cont.innerHTML = "";
-                             lst.innerHTML = "";
-                             const fix = data.data;
-                             const msgList = fix.data || [];
-                             const memList = fix.allmembers || [];
-                             currentGroupOwner = fix.owner || null;
+                        msgList.forEach((msg) => {
+                          makebox(
+                            msg.message,
+                            msg.username,
+                            false,
+                            "/assets/img/user.svg",
+                            msg.badges || [],
+                            msg.username === currentGroupOwner,
+                            msg.time
+                          );
+                        });
+                        refreshUserList(memList);
+                      }
+                    }
+                  }
+                  break;
+              }
+            } else {
+              switch (data.type) {
+                case "sendmessage":
+                  if (data.groupID == currentGroup) {
+                    console.log(data.IsOwner)
+                    makebox(data.message, data.username, false, data.icon, data.badges, data.IsOwner, data.time); 
+                  }
+                  break;
+                case "updateGroup":
+                  const { groupID, newName, kickUser, joinUser, allmembers } =
+                    data;
+                  if (groupID === currentGroup) {
+                    if (newName) {
+                      setGroupName(newName);
+                    }
+                    if (username == kickUser) {
+                      InitChat();
+                    }
+                  } else {
+                    if (username == kickUser) {
+                      sendGroupPacket(username);
+                    }
+                  }
+                  getGroupData();
+                  break;
+              }
+            }
+          } else {
+            MakeErrorMessage(data.message, false);
+          }
+        } catch (e) {
+          console.error("Error parsing message:", e);
+        }
+      });
+    }
+    function dumpTheme() {
+      const link = document.createElement("a");
+      link.style.display = "none";
 
-                             msgList.forEach((msg) => {
-                               makebox(
-                                 msg.message,
-                                 msg.username,
-                                 false,
-                                 "/assets/img/user.svg",
-                                 msg.badges || [],
-                                 msg.username === currentGroupOwner,
-                                 msg.time
-                               );
-                             });
-                             refreshUserList(memList);
-                           }
-                         }
-                       }
-                       break;
-                   }
-                 } else {
-                   switch (data.type) {
-                     case "sendmessage":
-                       getGroupData();
-                       break;
-                     case "updateGroup":
-                       const { groupID, newName, kickUser, joinUser, allmembers } =
-                         data;
-                       if (groupID === currentGroup) {
-                         if (newName) {
-                           setGroupName(newName);
-                         }
-                         if (username == kickUser) {
-                           InitChat();
-                         }
-                       } else {
-                         if (username == kickUser) {
-                           sendGroupPacket(username);
-                         }
-                       }
-                       getGroupData();
-                       break;
-                   }
-                 }
-               } else {
-                 MakeErrorMessage(data.message, false);
-               }
-             } catch (e) {
-               console.error("Error parsing message:", e);
-             }
-           });
-         }
-         function dumpTheme() {
-           const link = document.createElement("a");
-           link.style.display = "none";
+      let themeJson = {
+        accent: localStorage.getItem("--accent-color"),
+        secondary_bg: localStorage.getItem("--secondary-bg"),
+        primary_bg: localStorage.getItem("--background"),
+        sidebar: localStorage.getItem("--sidebar"),
+        text: localStorage.getItem("--text-color"),
+        input_bg: localStorage.getItem("--input-bg"),
+      };
+      const file = new Blob([JSON.stringify(themeJson)], {
+        type: "application/json",
+      });
 
-           let themeJson = {
-             accent: localStorage.getItem("--accent-color"),
-             secondary_bg: localStorage.getItem("--secondary-bg"),
-             primary_bg: localStorage.getItem("--background"),
-             sidebar: localStorage.getItem("--sidebar"),
-             text: localStorage.getItem("--text-color"),
-             input_bg: localStorage.getItem("--input-bg"),
-           };
-           const file = new Blob([JSON.stringify(themeJson)], {
-             type: "application/json",
-           });
+      link.href = URL.createObjectURL(file);
+      link.download = "theme.json";
+      link.click();
 
-           link.href = URL.createObjectURL(file);
-           link.download = "theme.json";
-           link.click();
+      URL.revokeObjectURL(link.href);
+    }
+    function setTheme(themejs) {
+      console.log("Setting theme...");
+      console.log(themejs);
+      const accentColor = themejs.accent;
+      document.body.style.setProperty("--accent-color", accentColor);
+      localStorage.setItem("--accent-color", accentColor);
 
-           URL.revokeObjectURL(link.href);
-         }
-         function setTheme(themejs) {
-           console.log("Setting theme...");
-           console.log(themejs);
-           const accentColor = themejs.accent;
-           document.body.style.setProperty("--accent-color", accentColor);
-           localStorage.setItem("--accent-color", accentColor);
+      const SecondaryBGColor = themejs.secondary_bg;
+      document.body.style.setProperty("--secondary-bg", SecondaryBGColor);
+      localStorage.setItem("--secondary-bg", SecondaryBGColor);
 
-           const SecondaryBGColor = themejs.secondary_bg;
-           document.body.style.setProperty("--secondary-bg", SecondaryBGColor);
-           localStorage.setItem("--secondary-bg", SecondaryBGColor);
+      const PrimaryBGColor = themejs.primary_bg;
+      document.body.style.setProperty("--background", PrimaryBGColor);
+      localStorage.setItem("--background", PrimaryBGColor);
 
-           const PrimaryBGColor = themejs.primary_bg;
-           document.body.style.setProperty("--background", PrimaryBGColor);
-           localStorage.setItem("--background", PrimaryBGColor);
+      const SidebarColor = themejs.sidebar;
+      document.body.style.setProperty("--sidebar", SidebarColor);
+      localStorage.setItem("--sidebar", SidebarColor);
 
-           const SidebarColor = themejs.sidebar;
-           document.body.style.setProperty("--sidebar", SidebarColor);
-           localStorage.setItem("--sidebar", SidebarColor);
+      const TextColor = themejs.text;
+      document.body.style.setProperty("--text-color", TextColor);
+      localStorage.setItem("--text-color", TextColor);
 
-           const TextColor = themejs.text;
-           document.body.style.setProperty("--text-color", TextColor);
-           localStorage.setItem("--text-color", TextColor);
+      const InputBGColor = themejs.input_bg;
+      document.body.style.setProperty("--input-bg", InputBGColor);
+      localStorage.setItem("--input-bg", InputBGColor);
+    }
 
-           const InputBGColor = themejs.input_bg;
-           document.body.style.setProperty("--input-bg", InputBGColor);
-           localStorage.setItem("--input-bg", InputBGColor);
-         }
+    function openUserSettingsPopup() {
+      const overlay = document.getElementById("UserSettingsOverlay");
+      const popup = document.getElementById("UserSettingsPopup");
 
-         function openUserSettingsPopup() {
-           const overlay = document.getElementById("UserSettingsOverlay");
-           const popup = document.getElementById("UserSettingsPopup");
+      overlay.style.display = "block";
+      popup.style.display = "flex";
 
-           overlay.style.display = "block";
-           popup.style.display = "flex";
-
-           popup.innerHTML = `
+      popup.innerHTML = `
          <div class='GroupSettingsTitle' style='margin-top:1vw;'>User Settings</div>
          <label style='width:90%;font-size:1vw;'>Profile Icon</label>
          <div class='usersettingscontainer'>
@@ -2543,130 +2606,131 @@
          </div>
          `;
 
-           document.getElementById("input-accent_color").value =
-             localStorage.getItem("--accent-color") ||
-             getComputedStyle(document.documentElement)
-               .getPropertyValue("--accent-color")
-               .trim();
-           document
-             .getElementById("save-accent_color")
-             .addEventListener("click", () => {
-               const newValue =
-                 document.getElementById("input-accent_color").value;
-               document.body.style.setProperty("--accent-color", newValue);
-               localStorage.setItem("--accent-color", newValue);
-             });
+      document.getElementById("input-accent_color").value =
+        localStorage.getItem("--accent-color") ||
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--accent-color")
+          .trim();
+      document
+        .getElementById("save-accent_color")
+        .addEventListener("click", () => {
+          const newValue =
+            document.getElementById("input-accent_color").value;
+          document.body.style.setProperty("--accent-color", newValue);
+          localStorage.setItem("--accent-color", newValue);
+        });
 
-           document.getElementById("input-secondary-background").value =
-             localStorage.getItem("--secondary-bg") ||
-             getComputedStyle(document.documentElement)
-               .getPropertyValue("--secondary-bg")
-               .trim();
-           document
-             .getElementById("save-secondary-background")
-             .addEventListener("click", () => {
-               const newValue = document.getElementById(
-                 "input-secondary-background"
-               ).value;
-               document.body.style.setProperty("--secondary-bg", newValue);
-               localStorage.setItem("--secondary-bg", newValue);
-             });
-           document.getElementById("input-background").value =
-             localStorage.getItem("--background") ||
-             getComputedStyle(document.documentElement)
-               .getPropertyValue("--background")
-               .trim();
-           document
-             .getElementById("save-background")
-             .addEventListener("click", () => {
-               const newValue = document.getElementById("input-background").value;
-               document.body.style.setProperty("--background", newValue);
-               localStorage.setItem("--background", newValue);
-             });
-           document.getElementById("input-sidebar").value =
-             localStorage.getItem("--sidebar") ||
-             getComputedStyle(document.documentElement)
-               .getPropertyValue("--sidebar")
-               .trim();
-           document
-             .getElementById("save-sidebar")
-             .addEventListener("click", () => {
-               const newValue = document.getElementById("input-sidebar").value;
-               document.body.style.setProperty("--sidebar", newValue);
-               localStorage.setItem("--sidebar", newValue);
-             });
+      document.getElementById("input-secondary-background").value =
+        localStorage.getItem("--secondary-bg") ||
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--secondary-bg")
+          .trim();
+      document
+        .getElementById("save-secondary-background")
+        .addEventListener("click", () => {
+          const newValue = document.getElementById(
+            "input-secondary-background"
+          ).value;
+          document.body.style.setProperty("--secondary-bg", newValue);
+          localStorage.setItem("--secondary-bg", newValue);
+        });
+      document.getElementById("input-background").value =
+        localStorage.getItem("--background") ||
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--background")
+          .trim();
+      document
+        .getElementById("save-background")
+        .addEventListener("click", () => {
+          const newValue = document.getElementById("input-background").value;
+          document.body.style.setProperty("--background", newValue);
+          localStorage.setItem("--background", newValue);
+        });
+      document.getElementById("input-sidebar").value =
+        localStorage.getItem("--sidebar") ||
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--sidebar")
+          .trim();
+      document
+        .getElementById("save-sidebar")
+        .addEventListener("click", () => {
+          const newValue = document.getElementById("input-sidebar").value;
+          document.body.style.setProperty("--sidebar", newValue);
+          localStorage.setItem("--sidebar", newValue);
+        });
 
-           document.getElementById("input-text_color").value =
-             localStorage.getItem("--text-color") ||
-             getComputedStyle(document.documentElement)
-               .getPropertyValue("--text-color")
-               .trim();
-           document
-             .getElementById("save-text_color")
-             .addEventListener("click", () => {
-               const newValue = document.getElementById("input-text_color").value;
-               document.body.style.setProperty("--text-color", newValue);
-               localStorage.setItem("--text-color", newValue);
-             });
-           document.getElementById("input-input-bg").value =
-             localStorage.getItem("--input-bg") ||
-             getComputedStyle(document.documentElement)
-               .getPropertyValue("--input-bg")
-               .trim();
-           document
-             .getElementById("save-input-bg")
-             .addEventListener("click", () => {
-               const newValue = document.getElementById("input-input-bg").value;
-               document.body.style.setProperty("--input-bg", newValue);
-               localStorage.setItem("--input-bg", newValue);
-             });
+      document.getElementById("input-text_color").value =
+        localStorage.getItem("--text-color") ||
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--text-color")
+          .trim();
+      document
+        .getElementById("save-text_color")
+        .addEventListener("click", () => {
+          const newValue = document.getElementById("input-text_color").value;
+          document.body.style.setProperty("--text-color", newValue);
+          localStorage.setItem("--text-color", newValue);
+        });
+      document.getElementById("input-input-bg").value =
+        localStorage.getItem("--input-bg") ||
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--input-bg")
+          .trim();
+      document
+        .getElementById("save-input-bg")
+        .addEventListener("click", () => {
+          const newValue = document.getElementById("input-input-bg").value;
+          document.body.style.setProperty("--input-bg", newValue);
+          localStorage.setItem("--input-bg", newValue);
+        });
 
-           document.getElementById("saveiconbt").addEventListener("click", () => {
-             const url = document.getElementById("UserIconURL").value;
-             if (url) {
-               if (socket.readyState === WebSocket.OPEN) {
-                 const payload = {
-                   type: "updateuser",
-                   userID: myuuid,
-                   username: username,
-                   newIcon: url,
-                   token: mytoken,
-                 };
-                 socket.send(JSON.stringify(payload));
-               }
-             }
-           });
+      document.getElementById("saveiconbt").addEventListener("click", () => {
+        const url = document.getElementById("UserIconURL").value;
+        if (url) {
+          if (socket.readyState === WebSocket.OPEN) {
+            const payload = {
+              type: "updateuser",
+              userID: myuuid,
+              username: username,
+              newIcon: url,
+              token: mytoken,
+            };
+            socket.send(JSON.stringify(payload));
+          }
+        }
+      });
 
-           overlay.classList.remove("HideOverlayAnim");
-           popup.classList.remove("UserSettingsPopupHide");
-           overlay.classList.add("ShowOverlayAnim");
-           popup.classList.add("UserSettingsPopupShow");
+      overlay.classList.remove("HideOverlayAnim");
+      popup.classList.remove("UserSettingsPopupHide");
+      overlay.classList.add("ShowOverlayAnim");
+      popup.classList.add("UserSettingsPopupShow");
 
-           overlay.addEventListener("click", closeUserSettingsPopup);
-         }
+      overlay.addEventListener("click", closeUserSettingsPopup);
+    }
 
-         function closeUserSettingsPopup() {
-           const overlay = document.getElementById("UserSettingsOverlay");
-           const popup = document.getElementById("UserSettingsPopup");
+    function closeUserSettingsPopup() {
+      const overlay = document.getElementById("UserSettingsOverlay");
+      const popup = document.getElementById("UserSettingsPopup");
 
-           overlay.classList.remove("ShowOverlayAnim");
-           popup.classList.remove("UserSettingsPopupShow");
-           overlay.classList.add("HideOverlayAnim");
-           popup.classList.add("UserSettingsPopupHide");
+      overlay.classList.remove("ShowOverlayAnim");
+      popup.classList.remove("UserSettingsPopupShow");
+      overlay.classList.add("HideOverlayAnim");
+      popup.classList.add("UserSettingsPopupHide");
 
-           overlay.addEventListener("animationend", function hideOverlay() {
-             overlay.style.display = "none";
-             overlay.removeEventListener("animationend", hideOverlay);
-           });
-           popup.addEventListener("animationend", function hidePopup() {
-             popup.style.display = "none";
-             popup.removeEventListener("animationend", hidePopup);
-           });
-           overlay.removeEventListener("click", closeUserSettingsPopup);
-         }
+      overlay.addEventListener("animationend", function hideOverlay() {
+        overlay.style.display = "none";
+        overlay.removeEventListener("animationend", hideOverlay);
+      });
+      popup.addEventListener("animationend", function hidePopup() {
+        popup.style.display = "none";
+        popup.removeEventListener("animationend", hidePopup);
+      });
+      overlay.removeEventListener("click", closeUserSettingsPopup);
+    }
 
-         InitLogin();
-         ConnectToServer();
-    </script>
-  </body>
+    InitLogin();
+    ConnectToServer();
+  </script>
+</body>
+
 </html>
