@@ -1077,11 +1077,6 @@
             <span style="font-size: 0.8vw; text-align: left; width: 20vw;">Password<code style="color: red">*</code></span>
             <input id="login-password" class="logininput" type="password" placeholder="Enter Password here">
             
-            <!-- Cloudflare Turnstile Widget -->
-            </br>
-            <center>
-            <div class="cf-turnstile" data-sitekey="0x4AAAAAAA6CH1nnSGPXUk04" data-theme="dark" id="login-turnstile"></div>
-            </center>
             <button class="login-bt" onclick="Login()">Login</button>
             
             <span style="font-size: 0.8vw; text-align: left; width: 20vw;">Don't have an account? 
@@ -1089,18 +1084,23 @@
             </span>
           </div>`;
 
-          // document
-          //   .getElementById("loginbox")
-          //   .addEventListener("keydown", (e) => {
-          //     if (e.key === "Enter") {
-          //       Login();
-          //     }
-          //   });
-          document.getElementById("login-username").focus();
-          turnstile.render('#login-turnstile', {
-            sitekey: '0x4AAAAAAA6CH1nnSGPXUk04',
-            theme: 'dark'
+          document.getElementById("loginbox").addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+              Login();
+            }
           });
+          const nuhuh =  `
+            <!-- Cloudflare Turnstile Widget -->
+            </br>
+            <center>
+              <div class="cf-turnstile" data-sitekey="0x4AAAAAAA6CH1nnSGPXUk04" data-theme="dark" id="login-turnstile"></div>
+            </center>
+          `;
+          document.getElementById("login-username").focus();
+          // turnstile.render('#login-turnstile', {
+          //   sitekey: '0x4AAAAAAA6CH1nnSGPXUk04',
+          //   theme: 'dark'
+          // });
 
         }
       );
@@ -1900,10 +1900,10 @@
       const passwordVal = document.getElementById("login-password").value.trim(); 7
       const turnstileResponse = document.querySelector('input[name="cf-turnstile-response"]').value;
 
-      if (!turnstileResponse) {
-        MakeErrorMessage("Please complete the CAPTCHA.");
-        return;
-      }
+      // if (!turnstileResponse) {
+      //   MakeErrorMessage("Please complete the CAPTCHA.");
+      //   return;
+      // }
 
 
       if (usernameVal && passwordVal) {
