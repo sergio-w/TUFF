@@ -1202,5 +1202,19 @@
         "url": "studyguide/b-w/index.html",
         "desc": "Try to sink your opponents battleship in this satisfying 3D title.",
         "category": "Science Lab"
+    },
+    {
+        "name": "Thorn and Balloons",
+        "img": "assets/icons/181.png",
+        "url": "studyguide/trnb/index.html",
+        "desc": "Throw and pop the balloons to advance in this rage game.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Townscaper",
+        "img": "assets/icons/182.png",
+        "url": "studyguide/twsc/index.html",
+        "desc": "Build and decorate your own town in this fun and relaxing game.",
+        "category": "Recess"
     }
 ]
