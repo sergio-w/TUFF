@@ -2,6 +2,7 @@
 	<img width="360" height="360" src="assets/img/icon_fullsize.png">
 </p>
 <p align="center">Definitely not an unblocked game website! 😉</p>
+
 ## Socials
 
 [![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/x34JUwP5WR)
