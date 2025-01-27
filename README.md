@@ -3,7 +3,9 @@
 </p>
 <p align="center">Definitely not an unblocked game website! 😉</p>
 ## Socials
+
 [![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/x34JUwP5WR)
+
 ## Deployment buttons (made by [BinBashBanana](https://github.com/BinBashBanana))
 
 [![Deploy to Heroku](https://binbashbanana.github.io/deploy-buttons/buttons/remade/heroku.svg)](https://heroku.com/deploy/?template=https://github.com/metalfoxdev/juststudy-site/)
