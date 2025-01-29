@@ -1216,5 +1216,12 @@
         "url": "studyguide/twsc/index.html",
         "desc": "Build and decorate your own town in this fun and relaxing game.",
         "category": "Recess"
+    },
+    {
+        "name": "Bad Egg",
+        "img": "assets/icons/183.png",
+        "url": "studyguide/bdgg/index.html",
+        "desc": "Fight off waves of chicken and survive untill the end!",
+        "category": "Gym Class"
     }
 ]
