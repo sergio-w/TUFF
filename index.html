@@ -137,8 +137,11 @@
           <strong> Update Numbre dos</strong>
          </p>
          <p>
-          CHAT IS BACK UP. the link is the same as usuall.
+          CHAT IS BACK UP. the link is <a id="chatLink">this</a>.
          </p>
+         <script>
+          document.getElementById("chatLink").href = `https://chat.${window.location.hostname}.com`;
+        </script>
          <hr style="
          border: none;
          border-top: 1px solid #7289da;
