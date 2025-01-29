@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html xmlns='http://www.w3.org/1999/xhtml' lang='' xml:lang=''>
+<head>
+	<meta charset='utf-8' />
+	<meta name='viewport' content='width=device-width, user-scalable=no' />
+
+	<!-- Primary Meta Tags -->
+	<title>Bad Egg - Blue Wizard Digital</title>
+	<meta name="title" content="Bad Egg - Blue Wizard Digital">
+	<meta name="description" content="Bad Egg: Help your egg fight hordes of zombie chickens and get to the chopper!">
+	<link rel="manifest" href="manifest.json">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://badegg.io/">
+    <meta property="og:title" content="Bad Egg - Blue Wizard Digital">
+    <meta property="og:description" content="Can one little egg defeat an army of zombie chickens?">
+    <meta property="og:image" content="/badEgg_webSplash.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://badegg.io/">
+    <meta property="twitter:title" content="Bad Egg - Blue Wizard Digital">
+    <meta property="twitter:description" content="Bad Egg: Help your egg fight hordes of zombie chickens and get to the chopper!">
+    <meta property="twitter:image" content="/badEgg_webSplash.png">
+
+	<title>Bad Egg - Blue Wizard Digital</title>
+	<style type='text/css'>
+		body {
+			touch-action: none;
+			margin: 0;
+			border: 0 none;
+			padding: 0;
+			text-align: center;
+			background-color: black;
+		}
+
+		#canvas {
+			display: block;
+			margin: 0;
+			color: white;
+		}
+
+		#canvas:focus {
+			outline: none;
+		}
+
+		.godot {
+			font-family: 'Noto Sans', 'Droid Sans', Arial, sans-serif;
+			color: #e0e0e0;
+			background-color: #3b3943;
+			background-image: linear-gradient(to bottom, #403e48, #35333c);
+			border: 1px solid #45434e;
+			box-shadow: 0 0 1px 1px #2f2d35;
+		}
+
+
+		/* Status display
+		 * ============== */
+
+		#status {
+			position: absolute;
+			left: 0;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			/* don't consume click events - make children visible explicitly */
+			visibility: hidden;
+		}
+
+		#status-progress {
+			width: 366px;
+			height: 7px;
+			background-color: #38363A;
+			border: 1px solid #444246;
+			padding: 1px;
+			box-shadow: 0 0 2px 1px #1B1C22;
+			border-radius: 2px;
+			visibility: visible;
+		}
+
+		@media only screen and (orientation:portrait) {
+			#status-progress {
+				width: 61.8%;
+			}
+		}
+
+		#status-progress-inner {
+			height: 100%;
+			width: 0;
+			box-sizing: border-box;
+			transition: width 0.5s linear;
+			background-color: #202020;
+			border: 1px solid #222223;
+			box-shadow: 0 0 1px 1px #27282E;
+			border-radius: 3px;
+		}
+
+		#status-indeterminate {
+			height: 42px;
+			visibility: visible;
+			position: relative;
+		}
+
+		#status-indeterminate > div {
+			width: 4.5px;
+			height: 0;
+			border-style: solid;
+			border-width: 9px 3px 0 3px;
+			border-color: #2b2b2b transparent transparent transparent;
+			transform-origin: center 21px;
+			position: absolute;
+		}
+
+		#status-indeterminate > div:nth-child(1) { transform: rotate( 22.5deg); }
+		#status-indeterminate > div:nth-child(2) { transform: rotate( 67.5deg); }
+		#status-indeterminate > div:nth-child(3) { transform: rotate(112.5deg); }
+		#status-indeterminate > div:nth-child(4) { transform: rotate(157.5deg); }
+		#status-indeterminate > div:nth-child(5) { transform: rotate(202.5deg); }
+		#status-indeterminate > div:nth-child(6) { transform: rotate(247.5deg); }
+		#status-indeterminate > div:nth-child(7) { transform: rotate(292.5deg); }
+		#status-indeterminate > div:nth-child(8) { transform: rotate(337.5deg); }
+
+		#status-notice {
+			margin: 0 100px;
+			line-height: 1.3;
+			visibility: visible;
+			padding: 4px 6px;
+			visibility: visible;
+		}
+	</style>
+	<link id='-gd-engine-icon' rel='icon' type='image/png' href='favicon-32x32.png' />
+	<link rel='apple-touch-icon' href='apple-touch-icon.png'/>
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-VDS8PQYKWN"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'G-VDS8PQYKWN', { cookie_flags: 'secure;samesite=none' });
+		gtag('config', 'UA-56271742-33', { cookie_flags: 'secure;samesite=none' });
+
+
+		//godot extern for completing video ads
+		window.godotFunctions = {};
+    	window.externalator = {
+        	addGodotFunction: (n,f) => {
+            	window.godotFunctions[n] = f;
+        	}
+    	}		
+	</script>
+
+	<script>
+		window.aiptag = window.aiptag || {cmd: []};
+		aiptag.cmd.display = aiptag.cmd.display || [];
+		aiptag.cmd.player = aiptag.cmd.player || [];
+		
+		//CMP tool settings
+		aiptag.cmp = {
+			show: true,
+			position: "centered",  //centered, bottom
+			button: true,
+			buttonText: "Privacy settings",
+			buttonPosition: "bottom-left" //bottom-left, bottom-right, top-left, top-right
+		}
+		
+		aiptag.cmd.player.push(function() {
+			adplayer = new aipPlayer({
+			AD_WIDTH: 960,
+			AD_HEIGHT: 540,
+			AD_FULLSCREEN: false,
+			AD_CENTERPLAYER: false,
+			LOADING_TEXT: 'loading advertisement',
+			PREROLL_ELEM: function(){return document.getElementById('preroll')},
+			AIP_BLOCKED: function (evt)  {
+				/*******************
+				 ***** WARNING *****
+				*******************
+				Please do not remove the PREROLL_ELEM
+				from the page, it will be hidden automaticly.
+				If you do want to remove it use the AIP_REMOVE callback.
+				*/
+				//alert("Preroll Ad Completed: " + evt);
+				_DoneVideoAd();
+			},
+			AIP_COMPLETE: function (evt)  {
+				/*******************
+				 ***** WARNING *****
+				*******************
+				Please do not remove the PREROLL_ELEM
+				from the page, it will be hidden automaticly.
+				If you do want to remove it use the AIP_REMOVE callback.
+				*/
+				//alert("Preroll Ad Completed: " + evt);
+				_DoneVideoAd();
+			},
+			AIP_REMOVE: function ()  {
+				// Here it's save to remove the PREROLL_ELEM from the page if you want. But it's not recommend.
+			}
+			});
+		});
+		
+		function show_preroll() {
+			//check if the adslib is loaded correctly or blocked by adblockers etc.
+			if (typeof adplayer !== 'undefined') {
+			aiptag.cmd.player.push(function() { adplayer.startPreRoll(); });
+			} else {
+			//Adlib didnt load this could be due to an adblocker, timeout etc.
+			//Please add your script here that starts the content, this usually is the same script as added in AIP_COMPLETE or AIP_REMOVE.
+			alert("Ad Could not be loaded, load your content here");
+			}
+		}
+	</script>
+		
+	<script>
+
+		function GamePlayStart() {
+			if(typeof gCrazySDK !== 'undefined')
+			{
+				console.log("GamePlayStart");
+				gCrazySDK.gameplayStart();
+			}
+		}
+
+		function GamePlayStop() {
+			if(typeof gCrazySDK !== 'undefined')
+			{
+				console.log("GamePlayStop");
+				gCrazySDK.gameplayStop();
+			}
+		}
+
+		function HappyTime() {
+			if(typeof gCrazySDK !== 'undefined')
+			{
+				console.log("happytime");
+				gCrazySDK.happytime();
+			}
+		}
+
+		function HideAllAds() {
+			HideAd('badegg-io_970x250');
+		}
+
+
+		var lastWidth = window.innerWidth;
+		var lastHeight = window.innerHeight;
+		function HideAd(theDivName) {
+			//if(typeof gCrazySDK == 'undefined') {
+			//aiptag.cmd.display.push(function() { aipDisplayTag.display(theDivName); });
+			//}
+
+			document.getElementById(theDivName).style.visibility = 'hidden';
+		}
+		
+		function ShowBannerAd(theDivName, adPosX, adPosY, aXAlign, aYAlign)
+		{
+			if(typeof gCrazySDK !== 'undefined') {
+				return;
+			}
+			window.scrollTo(0, 0);
+			document.documentElement.style.overflow = 'hidden';
+			let aDiv = document.getElementById(theDivName);
+			let aDivHeight = aDiv.offsetHeight;
+			let aDivWidth = aDiv.offsetWidth;
+			//if(aYAlign == 'center')	adPosY -= aDivHeight/2; 
+			//if(aYAlign == 'bottom') adPosY -= aDivHeight; 
+			//if(aXAlign == 'center')	adPosX -= aDivWidth/2; 
+			//else if(aXAlign == 'right')	adPosX -= aDivWidth; 
+		
+
+			var canvas = document.getElementById('canvas');
+			const canvasH = canvas.getBoundingClientRect().height;			
+			//if(adPosY + aDivHeight < window.innerHeight-100 || !theDivName.includes('multi'))
+			//{
+				aDiv.style.visibility = 'visible'; 
+				//aDiv.style.bottom = '100wh';
+				//aDiv.style.top = (canvasH-250)+'px'; 
+				//aDiv.style.left = ''+adPosX+'px'; 
+				lastWidth = window.innerWidth;
+				lastHeight = window.innerHeight;
+							//}
+		}
+
+		function DoneVideoAd()
+		{
+			if(typeof gCrazySDK !== 'undefined') {
+				godotFunctions.donevideoad('cg');
+			} else {
+				godotFunctions.donevideoad('aip');
+			}
+			document.getElementById("canvas").focus();
+		}
+
+		function DoneRewardedVideoAd()
+		{
+			if(typeof gCrazySDK !== 'undefined') {
+				godotFunctions.donerewardedvideoad('cg');
+			} else {
+				godotFunctions.donerewardedvideoad('aip');
+			}
+			document.getElementById("canvas").focus();
+		}
+
+
+		function ShowRewardedVideoAd()
+		{
+			console.log('SHOW_VIDEO');
+			
+			var aUnitName = "";
+
+			if(typeof gCrazySDK !== 'undefined') {
+				gCrazySDK.addEventListener("adFinished", DoneRewardedVideoAd); // reenable sound, enable ui
+				gCrazySDK.addEventListener("adError", DoneRewardedVideoAd); // reenable sound, enable ui
+				gCrazySDK.requestAd("rewarded");		
+				console.log('CG_REWARDED_AD_REQUESTED');		
+				return;
+			}
+			else
+			{
+				DoneRewardedVideoAd();
+			}
+			/*if (typeof adplayer === 'undefined') {
+				Main.DoneVideoAd(true);
+				SendEvent('event', 'video_adblocked');
+				console.log('VIDEO_ADBLOCKED');		
+
+			} else {
+				var aStr = 'preroll';
+				if(theUnitName != null) aStr = theUnitName;
+				lastUnitPlayed = aStr;
+				SendEvent('event', 'startvideo-'+aStr);
+
+
+				aiptag.cmd.player.push(function() { adplayer.startPreRoll(theUnitName); });
+			}*/
+		}		
+
+
+		function ShowVideoAd()
+		{
+			console.log('SHOW_VIDEO');
+			
+			var aUnitName = "";
+
+			if(typeof gCrazySDK !== 'undefined') {
+				gCrazySDK.addEventListener("adFinished", DoneVideoAd); // reenable sound, enable ui
+				gCrazySDK.addEventListener("adError", DoneVideoAd); // reenable sound, enable ui
+				gCrazySDK.requestAd();		
+				console.log('CG_AD_REQUESTED');		
+				return;
+			}
+			else
+			{
+				DoneVideoAd();
+			}
+			/*if (typeof adplayer === 'undefined') {
+				Main.DoneVideoAd(true);
+				SendEvent('event', 'video_adblocked');
+				console.log('VIDEO_ADBLOCKED');		
+
+			} else {
+				var aStr = 'preroll';
+				if(theUnitName != null) aStr = theUnitName;
+				lastUnitPlayed = aStr;
+				SendEvent('event', 'startvideo-'+aStr);
+
+
+				aiptag.cmd.player.push(function() { adplayer.startPreRoll(theUnitName); });
+			}*/
+		}		
+		
+		function CopyToClip(theString) {
+		if(typeof gCrazySDK !== 'undefined' && theString.length > 32) {
+			var aCode = theString.substr(theString.length-32);
+			theString = gCrazySDK.inviteLink({ roomId: aCode });
+		}
+		//SDL_SetClipboardText(theString);
+		const el = document.createElement('textarea');
+		el.value = theString;
+		document.body.appendChild(el);
+		el.select();
+		document.execCommand('copy');
+		document.body.removeChild(el);
+		}
+		
+		function move() 
+		{
+			//var aDiv = document.getElementById('badegg-io_970x250');
+			//aDiv.style.left = ''+20+'px';
+			//aDiv.style.top = ''+Math.floor(window.innerHeight - 270)+'px';
+
+
+		}
+		window.onresize = move;
+	</script>
+		<script async src="//api.adinplay.com/libs/aiptag/pub/SSK/badegg.io/tag.min.js"></script>
+	</head>
+<body>
+	<canvas id='canvas'>
+		HTML5 canvas appears to be unsupported in the current browser.<br />
+		Please try updating or use a different browser.
+	</canvas>
+			<div id='badegg-io_970x250' style="width:970; height:250px; visibility: hidden; z-index: 100; position: absolute; left: 50%; top: 100%; transform: translate(-50%, -100%);	margin: 0px;">
+			<script type='text/javascript'>
+				aiptag.cmd.display.push(function() { aipDisplayTag.display('badegg-io_970x250'); });
+			</script>
+		</div>
+	
+
+    <div id="preroll" style="width: 960px; height: 540px; visibility: hidden; position: fixed; top: 50%; left: 50%; z-index: 100; transform: translate(-50%, -50%);">
+    </div>
+	
+	<div id='status'>
+		<div id='status-progress' style='display: none;' oncontextmenu='event.preventDefault();'><div id ='status-progress-inner'></div></div>
+		<div id='status-indeterminate' style='display: none;' oncontextmenu='event.preventDefault();'>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+		</div>
+		<div id='status-notice' class='godot' style='display: none;'></div>
+	</div>
+
+	<script type='text/javascript' src='OneBadEgg.js?nocache=257'></script>
+	<script type='text/javascript'>//<![CDATA[
+
+		const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"executable":"OneBadEgg","experimentalVK":false,"fileSizes":{"OneBadEgg.js?nocache=257":70844848,"OneBadEgg.wasm?nocache=257":18790056},"focusCanvas":false,"gdnativeLibs":[],"serviceWorker":"OneBadEgg.service.worker.js"};
+		var engine = new Engine(GODOT_CONFIG);
+
+		(function() {
+			const INDETERMINATE_STATUS_STEP_MS = 100;
+			var statusProgress = document.getElementById('status-progress');
+			var statusProgressInner = document.getElementById('status-progress-inner');
+			var statusIndeterminate = document.getElementById('status-indeterminate');
+			var statusNotice = document.getElementById('status-notice');
+
+			var initializing = true;
+			var statusMode = 'hidden';
+
+			var animationCallbacks = [];
+			function animate(time) {
+				animationCallbacks.forEach(callback => callback(time));
+				requestAnimationFrame(animate);
+			}
+			requestAnimationFrame(animate);
+
+			function setStatusMode(mode) {
+
+				if (statusMode === mode || !initializing)
+					return;
+				[statusProgress, statusIndeterminate, statusNotice].forEach(elem => {
+					elem.style.display = 'none';
+				});
+				animationCallbacks = animationCallbacks.filter(function(value) {
+					return (value != animateStatusIndeterminate);
+				});
+				switch (mode) {
+					case 'progress':
+						statusProgress.style.display = 'block';
+						break;
+					case 'indeterminate':
+						statusIndeterminate.style.display = 'block';
+						animationCallbacks.push(animateStatusIndeterminate);
+						break;
+					case 'notice':
+						statusNotice.style.display = 'block';
+						break;
+					case 'hidden':
+						break;
+					default:
+						throw new Error('Invalid status mode');
+				}
+				statusMode = mode;
+			}
+
+			function animateStatusIndeterminate(ms) {
+				var i = Math.floor(ms / INDETERMINATE_STATUS_STEP_MS % 8);
+				if (statusIndeterminate.children[i].style.borderTopColor == '') {
+					Array.prototype.slice.call(statusIndeterminate.children).forEach(child => {
+						child.style.borderTopColor = '';
+					});
+					statusIndeterminate.children[i].style.borderTopColor = '#dfdfdf';
+				}
+			}
+
+			function setStatusNotice(text) {
+				while (statusNotice.lastChild) {
+					statusNotice.removeChild(statusNotice.lastChild);
+				}
+				var lines = text.split('\n');
+				lines.forEach((line) => {
+					statusNotice.appendChild(document.createTextNode(line));
+					statusNotice.appendChild(document.createElement('br'));
+				});
+			};
+
+			function displayFailureNotice(err) {
+				var msg = err.message || err;
+				console.error(msg);
+				setStatusNotice(msg);
+				setStatusMode('notice');
+				initializing = false;
+			};
+
+			if (!Engine.isWebGLAvailable()) {
+				displayFailureNotice('WebGL not available');
+			} else {
+				setStatusMode('indeterminate');
+				engine.startGame({
+					'onProgress': function (current, total) {
+						if (total > 0) {
+							statusProgressInner.style.width = current/total * 100 + '%';
+							setStatusMode('progress');
+							if (current === total) {
+								// wait for progress bar animation
+								setTimeout(() => {
+									setStatusMode('indeterminate');
+								}, 500);
+							}
+						} else {
+							setStatusMode('indeterminate');
+						}
+					},
+				}).then(() => {
+					setStatusMode('hidden');
+					initializing = false;
+				}, displayFailureNotice);
+			}
+		})();
+	//]]></script>
+
+</body>
+</html>
+
