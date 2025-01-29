@@ -525,18 +525,18 @@ function toggleWordWrap() {
     }
 }
 
-function createNewTxEditorTab(name,code,tabbt,tabcontainer,syntaxtype) {
+function createNewTxEditorTab(name, code, tabbt, tabcontainer, syntaxtype) {
     let tabnumber = 0;
     total_tab += 1;
     if (txEditorTabCount <= 20) {
         const baseName = `txEditorTab${total_tab}`;
         const tabId = createUniqueTabId(baseName, editors);
-        
+
         const newTab = document.createElement('div');
         newTab.classList.add('tx-editor-tab');
         newTab.setAttribute('data-target', tabId);
         current_txeditor_tab = tabId;
-        if (name == null){
+        if (name == null) {
             newTab.innerHTML = `
             <input type="text" class="tx-editor-tab-name" id="${tabId}_name" value="Untitled tab ${total_tab}">
             <button class="tx-editor-close-tab-btn" ">X</button>
@@ -548,11 +548,11 @@ function createNewTxEditorTab(name,code,tabbt,tabcontainer,syntaxtype) {
         `;
         }
         newTab.setAttribute('draggable', 'true');
-        
+
         const newContent = document.createElement('div');
         newContent.classList.add('tx-editor-tab-content');
         newContent.setAttribute('id', tabId);
-        newContent.innerHTML = `<div id="editor-${tabId}" class="pAdeblc-txeditor"></div>`; 
+        newContent.innerHTML = `<div id="editor-${tabId}" class="pAdeblc-txeditor"></div>`;
         tabcontainer.insertBefore(newTab, tabbt);
         document.getElementById('txEditorTabContainer').appendChild(newContent);
         const editor = ace.edit(`editor-${tabId}`);
@@ -567,7 +567,7 @@ function createNewTxEditorTab(name,code,tabbt,tabcontainer,syntaxtype) {
         editor.textInput.getElement().addEventListener('keydown', (event) => {
             event.stopPropagation();
         });
-        if (syntaxtype){
+        if (syntaxtype) {
             editor.session.setMode(`ace/mode/${syntaxtype}`);
         } else {
             editor.session.setMode("ace/mode/javascript");
@@ -581,8 +581,8 @@ function createNewTxEditorTab(name,code,tabbt,tabcontainer,syntaxtype) {
         newTab.addEventListener('click', (e) => {
             switchTxEditorTab(e, id, false);
         });
-        document.getElementById(tabId+"_name").addEventListener("keydown", (key) =>{
-            if (key.key == "enter"){
+        document.getElementById(tabId + "_name").addEventListener("keydown", (key) => {
+            if (key.key == "enter") {
                 const file_types_clean = {
                     "html": "html",
                     "css": "css",
@@ -591,7 +591,7 @@ function createNewTxEditorTab(name,code,tabbt,tabcontainer,syntaxtype) {
                     "txt": "plain",
                 }
                 const file_extension = file_types_clean[target.dataset.name.split('.').pop()];
-                if (syntaxtype){
+                if (syntaxtype) {
                     editors[`editor-${tabId}`].session.setMode(`ace/mode/${syntaxtype}`);
                 } else {
                     editors[`editor-${tabId}`].session.setMode("ace/mode/javascript");
@@ -606,7 +606,7 @@ function createNewTxEditorTab(name,code,tabbt,tabcontainer,syntaxtype) {
         });
         try {
             switchTxEditorTab(null, id[id.length - 1], false);
-        } catch(e) {
+        } catch (e) {
             console.error("No valid editor or ID array found.");
         }
     } else {
@@ -616,7 +616,7 @@ function createNewTxEditorTab(name,code,tabbt,tabcontainer,syntaxtype) {
 function openBackgroundDropdown(id) {
     const alldropdowns = document.querySelectorAll(".pAdeblc-dropdown-content-extra");
     alldropdowns.forEach((dropdown) => {
-        if (dropdown !== document.getElementById(id)){
+        if (dropdown !== document.getElementById(id)) {
             dropdown.style.display = 'none';
         };
     });
@@ -698,9 +698,9 @@ function CreateTextEditor() {
     `;
     document.body.appendChild(newWindow);
     const zoominput = document.getElementById("pAdeblc-txeditor-zoom");
-    zoominput.addEventListener("keydown", (event)=>{
+    zoominput.addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
-            HandleEditorZoom(zoominput.value,false);
+            HandleEditorZoom(zoominput.value, false);
         }
     });
     global_tabcontainer = document.getElementById('txEditorTabs');
@@ -723,44 +723,44 @@ function CreateTextEditor() {
             setTimeout(() => draggedTxEditorTab.style.display = 'none', 0);
         }
     });
-    
+
     global_tabcontainer.addEventListener('dragend', (event) => {
         setTimeout(() => {
             draggedTxEditorTab.style.display = 'block';
             draggedTxEditorTab = null;
         }, 0);
     });
-    
+
     global_tabcontainer.addEventListener('dragover', (event) => {
         event.preventDefault();
     });
-    
+
     global_tabcontainer.addEventListener('dragenter', (event) => {
         if (event.target.classList.contains('tx-editor-tab') || event.target.classList.contains('tx-editor-tab-name')) {
             event.target.closest('.tx-editor-tab').style.borderBottom = '0.1vw solid rgb(255, 211, 17)';
         }
     });
-    
+
     global_tabcontainer.addEventListener('dragleave', (event) => {
         if (event.target.classList.contains('tx-editor-tab') || event.target.classList.contains('tx-editor-tab-name')) {
             event.target.closest('.tx-editor-tab').style.borderBottom = '0.1vw solid rgb(51, 51, 51)';
         }
     });
-    
+
     global_tabcontainer.addEventListener('drop', (event) => {
         event.preventDefault();
         if (event.target.classList.contains('tx-editor-tab') || event.target.classList.contains('tx-editor-tab-name')) {
             event.target.closest('.tx-editor-tab').style.borderBottom = '0.1vw solid rgb(51, 51, 51)';
             global_tabcontainer.insertBefore(draggedTxEditorTab, event.target.closest('.tx-editor-tab'));
-            reorderEditors();   
+            reorderEditors();
         }
     });
-  
+
 }
 
 
 function closeTxEditorTab(event) {
-    if (txEditorTabCount <= 1){
+    if (txEditorTabCount <= 1) {
         console.warn("Cant close more tabs");
         return;
     }
@@ -771,10 +771,10 @@ function closeTxEditorTab(event) {
         txEditorTabCount -= 1;
 
         selectedTab.remove();
-        switchTxEditorTab(null,null,true); 
+        switchTxEditorTab(null, null, true);
 
     }
-    event.stopPropagation(); 
+    event.stopPropagation();
 }
 function reorderEditors() {
     let tabOrder = [];
@@ -800,15 +800,15 @@ function switchTxEditorTab(event, tabId, closingtab) {
             console.warn("No tabs to switch to");
             return;
         }
-    } 
+    }
     else if (event) {
         selectedTab = event.target.closest('.tx-editor-tab');
-    } 
+    }
     else if (tabId) {
         selectedTab = document.querySelector(`.tx-editor-tab[data-target="${tabId}"]`);
     }
     if (selectedTab) {
-        
+
         document.querySelectorAll('.tx-editor-tab').forEach(tab => tab.classList.remove('active'));
         document.querySelectorAll('.tx-editor-tab-content').forEach(content => content.classList.remove('active'));
         selectedTab.classList.add('active');
@@ -822,7 +822,7 @@ function switchTxEditorTab(event, tabId, closingtab) {
         const editor = editors[targetId];
         currenteditor = editor;
         document.getElementById('pAdeblc-txeditor-zoom').value = currenteditor.getFontSize();
-        
+
     } else {
         console.error("Selected tab not found.");
     }
@@ -866,7 +866,7 @@ id="pAdeblc-input" type="text" />
 consoleDiv.style.display = "none";
 document.body.appendChild(consoleDiv);
 consoleDiv.addEventListener("click", () => bringToFront(consoleDiv));
-logToConsole("JUSTSTUDY CONSOLE v1.0", "yellow",true);
+logToConsole("JUSTSTUDY CONSOLE v1.0", "yellow", true);
 let capturedLogs = [];
 const originalConsoleLog = console.log;
 const originalConsoleError = console.error;
@@ -878,12 +878,12 @@ function makeDraggable(element) {
     let currentPosX = 0, currentPosY = 0, previousPosX = 0, previousPosY = 0;
 
     if (element.querySelector('#pAdeblc-top') || element.querySelector('#pAdeblc-top-txeditor')) {
-       if (element.querySelector('#pAdeblc-top')) {
-        element.querySelector('#pAdeblc-top').onmousedown = dragMouseDown;
-       } else {
-        element.querySelector('#pAdeblc-top-txeditor').onmousedown = dragMouseDown;
-       }
-    } 
+        if (element.querySelector('#pAdeblc-top')) {
+            element.querySelector('#pAdeblc-top').onmousedown = dragMouseDown;
+        } else {
+            element.querySelector('#pAdeblc-top-txeditor').onmousedown = dragMouseDown;
+        }
+    }
     function dragMouseDown(e) {
         e.preventDefault();
         previousPosX = e.clientX;
@@ -930,11 +930,11 @@ function switchTab(tabName) {
         document.querySelector(`[data-tab="${tabName}"]`).style = "display: block;"
         const activeButton = document.querySelector(`[data-tab="${tabName}Tab"]`);
         hoverTabBtOut(activeButton);
-        current_tab = tabName;   
+        current_tab = tabName;
     }
 }
 makeDraggable(document.querySelector('#pAdeblc'));
-function logToConsole(message,text_colour,log,isnetwork) {
+function logToConsole(message, text_colour, log, isnetwork) {
     let consoleDiv = null;
     if (isnetwork) {
         consoleDiv = document.getElementById('pAdeblc-content-network');
@@ -950,7 +950,7 @@ function logToConsole(message,text_colour,log,isnetwork) {
     newMessage.textContent = "C:\\User> " + message;
     newMessage.style.color = text_colour;
     consoleDiv.appendChild(newMessage);
-    if (!log){
+    if (!log) {
         consoleDiv = document.getElementById('pAdeblc-content-output');
         const newMessage = document.createElement('p');
         const newLine = document.createElement('br');
@@ -992,7 +992,7 @@ pAdeblcinput.addEventListener("keyup", (event) => {
         const inputValue = pAdeblcinput.value.trim();
         logToConsole(inputValue, "wheat");
 
-        if (inputValue.toLowerCase() === "jsfm"){
+        if (inputValue.toLowerCase() === "jsfm") {
             document.getElementById("pAdeblc-filesystem-main").style.display = "block";
             bringToFront(document.getElementById("pAdeblc-filesystem-main"));
         }
@@ -1011,9 +1011,9 @@ pAdeblcinput.addEventListener("keyup", (event) => {
             logToConsole("loadcookies - Imports cookie data from the json file you saved", "white");
         } else if (inputValue === "clear") {
             if (current_tab == "LogOutput") {
-                document.getElementById("pAdeblc-content-output").innerHTML = "";   
+                document.getElementById("pAdeblc-content-output").innerHTML = "";
             } else {
-                document.getElementById("pAdeblc-content").innerHTML = ""; 
+                document.getElementById("pAdeblc-content").innerHTML = "";
             }
         } else if (inputValue === 'jste') {
             if (!textwindow_open) {
@@ -1049,10 +1049,10 @@ function saveFile() {
     var content = currenteditor.getValue();
     var blob = new Blob([content], {
         type: "text/plain;charset=utf-8",
-     });
-    
-     saveAs(blob, document.getElementById(current_txeditor_tab + "_name").value);
-     
+    });
+
+    saveAs(blob, document.getElementById(current_txeditor_tab + "_name").value);
+
 }
 function saveCookies() {
     CloseDropdowns();
@@ -1117,9 +1117,9 @@ function handleFileSelect(event) {
     const file = event.target.files[0];
     if (file) {
         const reader = new FileReader();
-        reader.onload = function(e) {
-            if (txEditorTabCount <= 20){
-                createNewTxEditorTab(file.name, e.target.result,global_tabbt,global_tabcontainer);
+        reader.onload = function (e) {
+            if (txEditorTabCount <= 20) {
+                createNewTxEditorTab(file.name, e.target.result, global_tabbt, global_tabcontainer);
                 txEditorTabCount += 1;
             }
         };
@@ -1128,19 +1128,19 @@ function handleFileSelect(event) {
 }
 loadAceScript(CreateTextEditor);
 
-function openLocalFile(){
+function openLocalFile() {
     CloseDropdowns();
     const picker = document.getElementById("pAdeblc-filepicker-main");
-    if (picker){
+    if (picker) {
         picker.remove()
     }
     MakeFilePicker(null);
     createPickerDivs(true);
 }
-function saveLocalFile(){
+function saveLocalFile() {
     CloseDropdowns();
     const picker = document.getElementById("pAdeblc-filepicker-main");
-    if (picker){
+    if (picker) {
         picker.remove()
     }
     MakeFilePicker(currenteditor.getValue());
@@ -1148,18 +1148,18 @@ function saveLocalFile(){
 }
 function run(isconsole) {
     const script = document.createElement("script");
-    if (isconsole){
+    if (isconsole) {
         script.textContent = `
         (function() {
             ${document.getElementById("pAdeblc-input").value}
         })();
-        `;  
+        `;
     } else {
         script.textContent = `
         (function() {
             ${currenteditor.getValue()}
         })();
-        `;  
+        `;
     }
     document.body.appendChild(script);
     document.body.removeChild(script);
@@ -1307,3 +1307,147 @@ window.addEventListener(
     size: entry.encodedBodySize
 });
 `
+
+
+// Inject CSS styles for the toast
+function injectToastStyles() {
+    const existingStyle = document.querySelector('#toast-styles');
+    if (existingStyle) return; // Prevent duplicate styles
+
+    const style = document.createElement('style');
+    style.id = 'toast-styles';
+    style.textContent = `
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999999; /* Very high z-index to ensure visibility */
+            pointer-events: none; /* Prevent blocking interaction with underlying elements */
+        }
+        .toast {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            background-color: #343a40;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            pointer-events: auto; /* Allow interaction with the toast itself */
+            animation: fade-in 0.3s ease-in-out, fade-out 0.5s ease-out 4.5s;
+        }
+        .toast-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #495057;
+            color: #fff;
+            padding: 5px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .toast-body {
+            padding: 10px;
+            font-size: 16px;
+        }
+        .btn-close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .btn-close:hover {
+            color: #ff6b6b;
+        }
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fade-out {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// Fetch alerts and show toast
+async function fetchAlerts() {
+    try {
+        const response = await fetch('/assets/data/alerts.json');
+        if (response.ok) {
+            const data = await response.json();
+            if (data.message) {
+                showToast(data.message);
+            }
+        } else {
+            console.error('Failed to fetch alerts:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error fetching alerts:', error);
+    }
+}
+
+// Create and display toast
+function showToast(message) {
+    // Ensure a container exists
+    let toastContainer = document.querySelector('.toast-container');
+    if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.className = 'toast-container';
+        document.body.appendChild(toastContainer);
+    }
+
+    // Create a toast element
+    const toastElement = document.createElement('div');
+    toastElement.className = 'toast show';
+    toastElement.setAttribute('role', 'alert');
+    toastElement.setAttribute('aria-live', 'assertive');
+    toastElement.setAttribute('aria-atomic', 'true');
+    toastElement.innerHTML = `
+        <div class="toast-header">
+            <strong class="me-auto">Notification</strong>
+            <button type="button" class="btn-close" aria-label="Close">&times;</button>
+        </div>
+        <div class="toast-body">
+            ${message}
+        </div>
+    `;
+
+    toastContainer.appendChild(toastElement);
+
+    // Close button handler
+    const closeButton = toastElement.querySelector('.btn-close');
+    closeButton.addEventListener('click', () => {
+        toastElement.remove();
+    });
+
+    // Auto-remove toast after 5 seconds
+    setTimeout(() => {
+        toastElement.classList.add('fade-out');
+        toastElement.addEventListener('animationend', () => {
+            toastElement.remove();
+            if (toastContainer.childNodes.length === 0) {
+                toastContainer.remove();
+            }
+        });
+    }, 5000);
+}
+
+// Initialize toast functionality
+document.addEventListener('DOMContentLoaded', () => {
+    injectToastStyles();
+    fetchAlerts();
+    setInterval(fetchAlerts, 5000);
+});

@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #2c2f33;
+            color: #ffffff;
+        }
+
+        .sidebar {
+            height: 100vh;
+            background-color: #23272a;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 2vw;
+            box-shadow: 2vw 0 5vw rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar h2 {
+            font-size: 1.8vw;
+            margin-bottom: 2vw;
+            color: #7289da;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 1.5vw 0;
+        }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 1.2vw;
+            padding: 0.5vw;
+            display: block;
+            border-radius: 0.5vw;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: #5865f2;
+        }
+
+        .main-content {
+            margin-left: 22vw;
+            padding: 2vw;
+        }
+
+        .main-content h1 {
+            font-size: 2vw;
+            color: #7289da;
+        }
+
+        .card {
+            background-color: #23272a;
+            border: 1vw solid #5865f2;
+            border-radius: 1vw;
+            padding: 2vw;
+            margin-bottom: 2vw;
+            position: relative;
+            margin-top: 2vw;
+        }
+
+        .card h2 {
+            font-size: 1.5vw;
+            margin-bottom: 1vw;
+        }
+
+        .card input {
+            padding: 0.5vw;
+            width: 60%;
+            border-radius: 0.5vw;
+            border: 1px solid #5865f2;
+            margin-bottom: 1vw;
+            background-color: #2c2f33;
+            color: #ffffff;
+        }
+
+        .autocomplete-items {
+            position: absolute;
+            top: calc(100% + 0.5vw);
+            left: 0;
+            width: 60%;
+            background-color: #23272a;
+            border: 1px solid #5865f2;
+            border-radius: 0.5vw;
+            z-index: 10;
+        }
+
+        .autocomplete-items div {
+            padding: 0.5vw;
+            cursor: pointer;
+        }
+
+        .autocomplete-items div:hover {
+            background-color: #5865f2;
+        }
+
+        .card button {
+            background-color: #5865f2;
+            color: #ffffff;
+            border: none;
+            padding: 1vw 2vw;
+            font-size: 1vw;
+            border-radius: 0.5vw;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 0.5vw;
+        }
+
+        .card button:hover {
+            background-color: #7289da;
+        }
+
+        .card button:active {
+            transform: scale(0.95);
+        }
+
+        .account-controls-section {
+            margin-top: 2vw;
+            background-color: #23272a;
+            border: 1vw solid #5865f2;
+            border-radius: 1vw;
+            padding: 2vw;
+        }
+
+        .account-controls-section h2 {
+            font-size: 1.5vw;
+            margin-bottom: 1vw;
+        }
+
+        .account-controls-section input {
+            padding: 0.5vw;
+            width: 60%;
+            border-radius: 0.5vw;
+            border: 1px solid #5865f2;
+            margin-bottom: 1vw;
+            background-color: #2c2f33;
+            color: #ffffff;
+        }
+
+        .account-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1vw;
+        }
+
+        .account-controls span {
+            font-size: 1.5vw;
+        }
+
+        .account-controls button {
+            background-color: #5865f2;
+            color: #ffffff;
+            border: none;
+            padding: 1vw 2vw;
+            font-size: 1vw;
+            border-radius: 0.5vw;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 0.5vw;
+        }
+
+        .account-controls button:hover {
+            background-color: #7289da;
+        }
+
+        .account-controls button:active {
+            transform: scale(0.95);
+        }
+
+        .checkbox-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5vw;
+            text-align: left;
+        }
+
+        .checkbox-list label {
+            display: flex;
+            align-items: center;
+            gap: 0.5vw;
+            font-size: 1.2vw;
+        }
+
+        .checkbox-list input[type="checkbox"] {
+            width: 1.2vw;
+            height: 1.2vw;
+            border-radius: 0.3vw;
+            border: 1px solid #5865f2;
+            background-color: #2c2f33;
+            cursor: pointer;
+        }
+
+        .checkbox-list input[type="checkbox"]:checked {
+            background-color: #5865f2;
+        }
+
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #2c2f33;
+            border: 1px solid #5865f2;
+            border-radius: 1vw;
+            padding: 2vw;
+            display: none;
+            z-index: 20;
+            width: 50vw;
+            box-shadow: 0 0 1vw rgba(0, 0, 0, 0.5);
+        }
+
+        .popup h3 {
+            margin-bottom: 1vw;
+            font-size: 1.5vw;
+            color: #7289da;
+        }
+
+        .popup input {
+            width: 90%;
+            padding: 0.5vw;
+            margin-bottom: 1vw;
+            border: 1px solid #5865f2;
+            border-radius: 0.5vw;
+            background-color: #2c2f33;
+            color: #ffffff;
+        }
+
+        .popup button {
+            background-color: #5865f2;
+            color: #ffffff;
+            border: none;
+            padding: 1vw 2vw;
+            font-size: 1vw;
+            border-radius: 0.5vw;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        .popup button:hover {
+            background-color: #7289da;
+        }
+
+        .popup button:active {
+            transform: scale(0.95);
+        }
+
+        .serverlist {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #2c2f33;
+            border: 1px solid #5865f2;
+            border-radius: 1vw;
+            padding: 2vw;
+            display: none;
+            z-index: 19;
+            width: 80vw;
+            box-shadow: 0 0 1vw rgba(0, 0, 0, 0.5);
+        }
+
+        .serverlist h3 {
+            margin-bottom: 1vw;
+            font-size: 1.5vw;
+            color: #7289da;
+        }
+        .serverlist span {
+            font-size: 1.5vw;
+            margin-bottom: 1vw;
+        }
+
+        .serverlist input {
+            width: 90%;
+            padding: 0.5vw;
+            margin-bottom: 1vw;
+            border: 1px solid #5865f2;
+            border-radius: 0.5vw;
+            background-color: #2c2f33;
+            color: #ffffff;
+        }
+
+        .serverlist button {
+            background-color: #5865f2;
+            color: #ffffff;
+            border: none;
+            padding: 0.5vw 1vw;
+            font-size: 1vw;
+            border-radius: 0.5vw;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            margin-left: 75vw;
+            margin-right: 0;
+        }
+
+        .serverlist button:hover {
+            background-color: #7289da;
+        }
+
+        .serverlist button:active {
+            transform: scale(0.95);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 10;
+        }
+
+        .servertable {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1vw;
+        }
+
+        .servercolumn {
+            display: flex;
+            flex-direction: column;
+            gap: 1vw;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="overlay"></div>
+    <div class="serverlist">
+        <button class="serverlistclose">X</button>
+        <div class="servertable">
+            <div class="servercolumn">
+                <h3>Group Names</h3>
+                <span>JustStudy</span>
+                <span>JustAdmins</span>
+            </div>
+            <div class="servercolumn">
+                <h3>Group Ids</h3>
+            </div>
+            <div class="servercolumn">
+                <h3>Group Members</h3>
+            </div>
+            <div class="servercolumn">
+                <h3>Group Owner</h3>
+            </div>
+        </div>
+    </div>
+    <div class="popup">
+        <h3>Provide Details</h3>
+        <input class="reason" type="text" placeholder="Enter Reason" style="display: none;">
+        <input class="warning-id" type="text" placeholder="Enter Warning ID" style="display: none;">
+        <button>Submit</button>
+    </div>
+
+    <div class="sidebar">
+        <h2>Admin Panel</h2>
+        <ul>
+            <li><a href="#manage-users">Manage Users</a></li>
+            <li><a href="#mod-logs">Mod Logs</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <h1>Admin Controls</h1>
+
+        <div id="manage-users" class="card">
+            <h2>Manage Users</h2>
+            <input type="text" placeholder="Enter User ID, Username, or Device ID">
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5vw;">
+                <button class="needs-group">Add User to Server</button>
+                <button class="needs-group">Remove User from Server</button>
+                <button class="needs-reason">Ban User</button>
+                <button class="needs-reason">Unban User</button>
+                <button class="needs-reason">Add Warning</button>
+                <button class="delete-warning">Delete Warning</button>
+            </div>
+        </div>
+
+        <div id="manage-users" class="card">
+            <h2>Manage Servers</h2>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5vw;">
+                <button class="groupname-user">Make Server</button>
+                <button class="needs-group">Delete Server</button>
+                <button class="list-groups">List Groups</button>
+            </div>
+        </div>
+
+        <div class="account-controls-section">
+            <h2>Account Limits</h2>
+            <input type="text" placeholder="Enter User ID or Device ID">
+            <div class="account-controls">
+                <button>-</button>
+                <span>3</span>
+                <button>+</button>
+            </div>
+        </div>
+
+        <div id="mod-logs" class="card">
+            <h2>Moderation Logs</h2>
+            <p>Search for a user's moderation logs:</p>
+            <input type="text" placeholder="Enter User ID or Username">
+            <button>Search Logs</button>
+        </div>
+
+        <div id="add-badge" class="card">
+            <h2>Manage Badges</h2>
+            <input type="text" placeholder="Enter User ID or Username">
+            <div class="checkbox-list">
+                <label><input type="checkbox" secretID="Staff" disabled> Staff</label>
+                <label><input type="checkbox" secretID="Developer" disabled> Developer</label>
+                <label><input type="checkbox" secretID="Verified" disabled> Verified</label>
+                <label><input type="checkbox" secretID="Annoying" disabled> Annoying</label>
+            </div>
+            <button>Save</button>
+        </div>
+    </div>
+
+
+
+
+    <script>
+
+
+        // Define all variables
+        let socket = null;
+        let serverlocation = `wss://chat-wss.${window.location.hostname}`;
+        let username = "";
+        let mytoken = null
+
+
+        // Connect to the server
+        async function connect() {
+            socket = new WebSocket(serverlocation);
+            socket.onopen = () => {
+                console.log("Connected to the server");
+            };
+
+            async function ConnectToServer() {
+                socket = new WebSocket(serverlocation);
+
+                socket.onopen = () => {
+                    pingServer();
+                };
+
+                socket.addEventListener("message", async (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        if (data.status === "banned") {
+                            await console.log(data);
+                            await console.log(data.message || "Something went wrong...")
+                            showBannedScreen(data.message || "No reason provided");
+                        } else if (data.status !== "error") {
+                            if (data && data.userID === myuuid && data.admin !== null) {
+
+                            } else if (data && data.userID === myuuid) {
+                                myuuid = customUuid();
+                                switch (data.type) {
+                                    case "Login":
+                                        if (data.banned) {
+                                            showBannedScreen(data.message || "No reason provided");
+                                        } else {
+                                            if (data.failed) {
+                                                MakeErrorMessage('Something went wrong. Please try again...');
+                                            }
+                                            InitChat();
+                                            username = data.username;
+                                            mytoken = data.token;
+                                            MakeErrorMessage(data.message, true);
+                                            sendGroupPacket(username);
+                                            updateUserInfo(username);
+                                        }
+                                        break;
+                                    case "CreateAccount":
+                                        MakeErrorMessage(data.message, true);
+                                        break;
+
+                                    case "MakeGroup":
+                                        MakeErrorMessage(data.message, true);
+                                        break;
+
+                                    case "JoinGroup":
+                                        MakeErrorMessage(data.message, true);
+                                        sendGroupPacket(username);
+                                        {
+                                            const joinGroupPacket = {
+                                                type: "requestGroupData",
+                                                groupID: data.groupID,
+                                                userID: myuuid,
+                                                username,
+                                                token: mytoken,
+                                            };
+                                            socket.send(JSON.stringify(joinGroupPacket));
+                                        }
+                                        break;
+
+                                    case "groupMessages": {
+                                        const content = document.getElementById("content");
+                                        const memberslist =
+                                            document.getElementById("userlist-content");
+                                        if (content && memberslist) {
+                                            content.innerHTML = "";
+                                            memberslist.innerHTML = "";
+
+                                            const fixeddata = data.data;
+                                            const messages = fixeddata.data;
+                                            const members = fixeddata.allmembers;
+                                            currentGroupOwner = fixeddata.owner || null;
+
+                                            messages.forEach((msg) => {
+                                                const isOwner = msg.username === currentGroupOwner;
+                                                makebox(
+                                                    msg.message,
+                                                    msg.username,
+                                                    false,
+                                                    msg.icon || "/assets/img/user.svg",
+                                                    msg.badges || [],
+                                                    isOwner,
+                                                    msg.time
+                                                );
+                                            });
+
+                                            refreshUserList(members);
+                                            if (isRequestingSettings) {
+                                                openGroupSettingsPopup(fixeddata);
+                                            }
+                                        }
+                                        break;
+                                    }
+                                    case "CreateAccount":
+                                        MakeErrorMessage(data.message, true);
+                                        break;
+                                    case "getGroupList":
+                                        UpdateGroupList(data.groups);
+                                        break;
+                                    case "refreshGroupData":
+                                        {
+                                            loadData();
+                                            initGroupContent();
+                                            getGroupData();
+                                            sendGroupPacket(username);
+                                            if (data.data && data.data.groupid === currentGroup) {
+                                                const cont = document.getElementById("content");
+                                                const lst = document.getElementById("userlist-content");
+                                                if (cont && lst) {
+                                                    cont.innerHTML = "";
+                                                    lst.innerHTML = "";
+                                                    const fix = data.data;
+                                                    const msgList = fix.data || [];
+                                                    const memList = fix.allmembers || [];
+                                                    currentGroupOwner = fix.owner || null;
+
+                                                    msgList.forEach((msg) => {
+                                                        makebox(
+                                                            msg.message,
+                                                            msg.username,
+                                                            false,
+                                                            "/assets/img/user.svg",
+                                                            msg.badges || [],
+                                                            msg.username === currentGroupOwner,
+                                                            msg.time
+                                                        );
+                                                    });
+                                                    refreshUserList(memList);
+                                                }
+                                            }
+                                        }
+                                        break;
+                                }
+                            } else {
+                                switch (data.type) {
+                                    case "updateUserList":
+                                        if (currentGroup == data.groupID) {
+                                            updateUserListUI(data.memList, data.Owner);
+                                        }
+                                        break;
+                                    case "requestGroupUserList":
+                                        const packet = {
+                                            type: "requestServerUserList",
+                                            groupID: currentGroup,
+                                            token: mytoken,
+                                            username: username,
+                                            userID: myuuid
+                                        };
+                                        socket.send(JSON.stringify(packet));
+                                        break;
+                                    case "sendmessage":
+                                        if (data.groupID == currentGroup) {
+                                            makebox(data.goodMessage, data.username, false, data.icon, data.badges, data.IsOwner, data.time);
+                                        }
+                                        break;
+                                    case "updateGroup":
+                                        const { groupID, newName, kickUser, joinUser, allmembers } =
+                                            data;
+                                        if (groupID === currentGroup) {
+                                            if (newName) {
+                                                setGroupName(newName);
+                                            }
+                                            if (username == kickUser) {
+                                                InitChat();
+                                            }
+                                        } else {
+                                            if (username == kickUser) {
+                                                sendGroupPacket(username);
+                                            }
+                                        }
+                                        getGroupData();
+                                        break;
+                                }
+                            }
+                        } else {
+                            MakeErrorMessage(data.message, false);
+                        }
+                    } catch (e) {
+                        console.error("Error parsing message:", e);
+                    }
+                });
+            }
+
+            socket.onclose = () => {
+                console.log("Connection closed");
+            };
+        }
+
+        // Handle sending to server
+
+        function getAllUsers() {
+            const users = [];
+            const userElements = document.querySelectorAll(".card input");
+
+            return users;
+        }
+
+
+        // Handle the form submission
+
+
+        function showPopup(actionType) {
+            const popup = document.querySelector(".popup");
+            const reasonInput = document.querySelector(".popup input.reason");
+            const warningIdInput = document.querySelector(".popup input.warning-id");
+
+            reasonInput.style.display = "none";
+            warningIdInput.style.display = "none";
+
+            if (actionType === "group") {
+                warningIdInput.style.display = "block";
+                warningIdInput.placeholder = "Enter Group ID";
+            } else if (actionType === "delete-warning") {
+                reasonInput.style.display = "block";
+                warningIdInput.style.display = "block";
+                reasonInput.placeholder = "Enter Reason";
+                warningIdInput.placeholder = "Enter Warning ID";
+            } else if (actionType === "reason") {
+                reasonInput.style.display = "block";
+                reasonInput.placeholder = "Enter Reason";
+            }
+            else if (actionType === "makegroup") {
+                reasonInput.style.display = "block";
+                reasonInput.placeholder = "Enter Owner Username";
+                warningIdInput.style.display = "block";
+                warningIdInput.placeholder = "Enter Group Name";
+            }
+
+
+            popup.style.display = "block";
+            document.querySelector(".overlay").style.display = "block";
+        }
+
+        function hidePopup() {
+            document.querySelector(".popup").style.display = "none";
+            document.querySelector(".overlay").style.display = "none";
+        }
+        function grouplistpopup() {
+            console.log("test1")
+            document.querySelector(".overlay").style.display = "block";
+            document.querySelector(".serverlist").style.display = "block";
+        }
+        function grouplistpopupclose() {
+            console.log("test2")
+            document.querySelector(".overlay").style.display = "none";
+            document.querySelector(".serverlist").style.display = "none";
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            // const inputs = document.querySelectorAll(".card input");
+            // const userSuggestions = ["User1", "User2", "Admin", "Moderator"];
+            // inputs.forEach((input) => autocomplete(input, userSuggestions));
+
+            document.querySelectorAll(".needs-group").forEach((button) => {
+                button.addEventListener("click", () => showPopup("group"));
+            });
+
+            document.querySelectorAll(".list-groups").forEach((button) => {
+                button.addEventListener("click", () => grouplistpopup());
+            });
+            document.querySelectorAll(".serverlistclose").forEach((button) => {
+                button.addEventListener("click", () => grouplistpopupclose());
+            });
+
+            document.querySelectorAll(".groupname-user").forEach((button) => {
+                button.addEventListener("click", () => showPopup("makegroup"));
+            });
+
+            document.querySelector(".delete-warning").addEventListener("click", () => showPopup("delete-warning"));
+
+            document.querySelectorAll(".needs-reason").forEach((button) => {
+                button.addEventListener("click", () => showPopup("reason"));
+            });
+
+            document.querySelector(".popup button").addEventListener("click", hidePopup);
+        });
+
+    </script>
+</body>
+
+</html>

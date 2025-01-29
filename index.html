@@ -83,6 +83,128 @@
   <script src="assets/js/teacher.js"> </script>
   <!-- start of what i added -->
 
+  <div class="announcementcontainer" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    z-index: 2000;
+    color: white;
+    align-items: center;
+    justify-content: center;
+  ">
+    <div class="AnnouncementBox" style="
+      max-height: 90%;
+      width: 80%;
+      max-width: 900px;
+      background-color: #2f3136;
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: left;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+      color: #ffffff;
+      position: relative;
+      overflow-y: auto;
+    ">
+      <button onclick="document.querySelector('.announcementcontainer').style.display='none';" style="
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: none;
+        border: none;
+        font-size: 2rem;
+        color: #ffffff;
+        cursor: pointer;
+      ">
+        &times;
+      </button>
+
+      <h2 style="
+        margin-bottom: 1.5rem;
+        font-family: Comfortaa, sans-serif;
+        font-size: 2rem;
+        text-align: center;
+      ">
+        JustStudy Announcements and Updates
+      </h2>
+
+      <div class="announcementmaincontent" style="font-size: 1.2rem; line-height: 1.8; color: #dcddde">
+        <p>Hello,</p>
+        <p>
+          We thank you for your continued support and dedication to JustStudy
+          with all of our services. Last week, we experienced an issue where
+          our main site became blocked due to our chat system. From this, we
+          are making creative and important changes and improvements to the
+          service we provide. We will be implementing a chat filter to the
+          service and will not hesitate to take action if users engage in:
+        </p>
+        <ul style="margin-left: 1.5rem; list-style-type: disc">
+          <li>Racism</li>
+          <li>Bullying</li>
+          <li>General hate speech</li>
+          <li>Harassment</li>
+        </ul>
+        <p>
+          If you are found breaking any of these rules, punishments will be
+          enforced strictly, including the potential termination of your
+          account. Additionally, banned users will not be able to create new
+          accounts. If you have any queries about this, please send them to
+          the Q&A.
+        </p>
+        <hr style="
+          border: none;
+          border-top: 1px solid #7289da;
+          margin: 1.5rem 0;
+        " />
+        <p><strong>Sad News</strong></p>
+        <p>
+          Sadly, one of our staff members/developers has left our team. He was
+          a crucial part of our service, and we are deeply saddened by his
+          departure. However, we remain committed to improving our service and
+          delivering new and exciting features to you.
+        </p>
+        <hr style="
+          border: none;
+          border-top: 1px solid #7289da;
+          margin: 1.5rem 0;
+        " />
+        <p>
+          Over the next couple of days, we will be looking for a few people to
+          become beta testers and staff members for our chat service. A link
+          will be posted here soon, so keep an eye out!
+        </p>
+        <p>
+          Thank you for your support and dedication to JustStudy.
+        </p>
+        
+        <p style="text-align: center; font-weight: bold">
+          The JustStudy Admin Team
+        </p>
+      </div>
+
+      <button onclick="document.querySelector('.announcementcontainer').style.display='none';" style="
+        margin-top: 1.5rem;
+        padding: 0.8rem 1.5rem;
+        background-color: #7289da;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        cursor: pointer;
+        font-size: 1.2rem;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+      ">
+        Close
+      </button>
+    </div>
+  </div>
+
+
+
   <div class="toast-container position-fixed  text-white bottom-0 end-0 p-3">
     <div id="welcomeToast" class="toast Not_color_bottom" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header Not_color_top">
@@ -345,6 +467,12 @@
 
       document.getElementById("desc").textContent = array[randomIndex];
     }
+
+    function showAnnouncement() {
+      document.querySelector(".announcementcontainer").style.display = "flex";
+    }
+
+    window.onload = showAnnouncement;
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="assets/js/random_bg.js"></script>
