@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
-  <head>
+  <head referrerpolicy="origin">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, user-scalable=no" />
     <link rel="shortcut icon" id="favi" href="" />
@@ -131,10 +131,28 @@
         visibility: visible;
       }
     </style>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-VDS8PQYKWN"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'G-VDS8PQYKWN', { cookie_flags: 'secure;samesite=none' });
+		gtag('config', 'UA-56271742-33', { cookie_flags: 'secure;samesite=none' });
+
+
+		//godot extern for completing video ads
+		window.godotFunctions = {};
+    	window.externalator = {
+        	addGodotFunction: (n,f) => {
+            	window.godotFunctions[n] = f;
+        	}
+    	}		
+	</script>
     <script>
-      window.aiptag = window.aiptag || { cmd: [] };
-      aiptag.cmd.display = aiptag.cmd.display || [];
-      aiptag.cmd.player = aiptag.cmd.player || [];
+		window.aiptag = window.aiptag || { cmd: [] };
+		aiptag.cmd.display = aiptag.cmd.display || [];
+		aiptag.cmd.player = aiptag.cmd.player || [];
+
 
       //CMP tool settings
       aiptag.cmp = {
@@ -145,58 +163,43 @@
         buttonPosition: "bottom-left", //bottom-left, bottom-right, top-left, top-right
       };
 
-      aiptag.cmd.player.push(function () {
-        adplayer = new aipPlayer({
-          AD_WIDTH: 960,
-          AD_HEIGHT: 540,
-          AD_FULLSCREEN: false,
-          AD_CENTERPLAYER: false,
-          LOADING_TEXT: "loading advertisement",
-          PREROLL_ELEM: function () {
-            return document.getElementById("preroll");
-          },
-          AIP_BLOCKED: function (evt) {
-            /*******************
-				 ***** WARNING *****
-				*******************
-				Please do not remove the PREROLL_ELEM
-				from the page, it will be hidden automaticly.
-				If you do want to remove it use the AIP_REMOVE callback.
-				*/
-            //alert("Preroll Ad Completed: " + evt);
-            _DoneVideoAd();
-          },
-          AIP_COMPLETE: function (evt) {
-            /*******************
-				 ***** WARNING *****
-				*******************
-				Please do not remove the PREROLL_ELEM
-				from the page, it will be hidden automaticly.
-				If you do want to remove it use the AIP_REMOVE callback.
-				*/
-            //alert("Preroll Ad Completed: " + evt);
-            _DoneVideoAd();
-          },
-          AIP_REMOVE: function () {
-            // Here it's save to remove the PREROLL_ELEM from the page if you want. But it's not recommend.
-          },
-        });
-      });
+		aiptag.cmd.player.push(function () {
+			adplayer = new aipPlayer({
+				AD_WIDTH: 960,
+				AD_HEIGHT: 540,
+				AD_FULLSCREEN: false,
+				AD_CENTERPLAYER: false,
+				LOADING_TEXT: "Loading advertisement...",
+				PREROLL_ELEM: function () {
+					return document.getElementById("preroll");
+				},
+				AIP_BLOCKED: function (evt) {
+					console.log("Ad Blocked:", evt);
+					DoneVideoAd();
+				},
+				AIP_COMPLETE: function (evt) {
+					console.log("Ad Completed:", evt);
+					DoneVideoAd();
+				},
+				AIP_REMOVE: function () {
+					console.log("Ad Removed");
+				}
+			});
+		});
 
-      function show_preroll() {
-        //check if the adslib is loaded correctly or blocked by adblockers etc.
+
+		function show_preroll() {
         if (typeof adplayer !== "undefined") {
-          aiptag.cmd.player.push(function () {
-            adplayer.startPreRoll();
-          });
+            aiptag.cmd.player.push(function () {
+                adplayer.startPreRoll();
+            });
         } else {
-          //Adlib didnt load this could be due to an adblocker, timeout etc.
-          //Please add your script here that starts the content, this usually is the same script as added in AIP_COMPLETE or AIP_REMOVE.
-          alert("Ad Could not be loaded, load your content here");
+            console.warn("Ad Could not be loaded, proceeding with content.");
+            DoneVideoAd();
         }
-      }
+    }
     </script>
-
+		<script src="https://sdk.crazygames.com/crazygames-sdk-v1.js"></script>
     <script>
       function GamePlayStart() {
         if (typeof gCrazySDK !== "undefined") {
@@ -262,51 +265,34 @@
 
       function DoneVideoAd() {
         if (typeof gCrazySDK !== "undefined") {
-          godotFunctions.donevideoad("cg");
+            godotFunctions.donevideoad("cg");
         } else {
-          godotFunctions.donevideoad("aip");
+            godotFunctions.donevideoad("aip");
         }
         document.getElementById("canvas").focus();
-      }
+    }
 
-      function DoneRewardedVideoAd() {
+
+    function DoneRewardedVideoAd() {
         if (typeof gCrazySDK !== "undefined") {
-          godotFunctions.donerewardedvideoad("cg");
+            godotFunctions.donerewardedvideoad("cg");
         } else {
-          godotFunctions.donerewardedvideoad("aip");
+            godotFunctions.donerewardedvideoad("aip");
         }
         document.getElementById("canvas").focus();
-      }
+    }
 
-      function ShowRewardedVideoAd() {
-        console.log("SHOW_VIDEO");
-
-        var aUnitName = "";
-
+	function ShowRewardedVideoAd() {
+        console.log("Attempting to show rewarded ad...");
         if (typeof gCrazySDK !== "undefined") {
-          gCrazySDK.addEventListener("adFinished", DoneRewardedVideoAd); // reenable sound, enable ui
-          gCrazySDK.addEventListener("adError", DoneRewardedVideoAd); // reenable sound, enable ui
-          gCrazySDK.requestAd("rewarded");
-          console.log("CG_REWARDED_AD_REQUESTED");
-          return;
+            gCrazySDK.addEventListener("adFinished", DoneRewardedVideoAd);
+            gCrazySDK.addEventListener("adError", DoneRewardedVideoAd);
+            gCrazySDK.requestAd("rewarded");
+            console.log("CrazyGames Rewarded Ad Requested");
         } else {
-          DoneRewardedVideoAd();
+            show_preroll();
         }
-        /*if (typeof adplayer === 'undefined') {
-				Main.DoneVideoAd(true);
-				SendEvent('event', 'video_adblocked');
-				console.log('VIDEO_ADBLOCKED');		
-
-			} else {
-				var aStr = 'preroll';
-				if(theUnitName != null) aStr = theUnitName;
-				lastUnitPlayed = aStr;
-				SendEvent('event', 'startvideo-'+aStr);
-
-
-				aiptag.cmd.player.push(function() { adplayer.startPreRoll(theUnitName); });
-			}*/
-      }
+    }
 
       function ShowVideoAd() {
         console.log("SHOW_VIDEO");
@@ -322,20 +308,6 @@
         } else {
           DoneVideoAd();
         }
-        /*if (typeof adplayer === 'undefined') {
-				Main.DoneVideoAd(true);
-				SendEvent('event', 'video_adblocked');
-				console.log('VIDEO_ADBLOCKED');		
-
-			} else {
-				var aStr = 'preroll';
-				if(theUnitName != null) aStr = theUnitName;
-				lastUnitPlayed = aStr;
-				SendEvent('event', 'startvideo-'+aStr);
-
-
-				aiptag.cmd.player.push(function() { adplayer.startPreRoll(theUnitName); });
-			}*/
       }
 
       function CopyToClip(theString) {
@@ -369,40 +341,23 @@
       HTML5 canvas appears to be unsupported in the current browser.<br />
       Please try updating or use a different browser.
     </canvas>
-    <div
-      id="badegg-io_970x250"
-      style="
-        width: 970;
-        height: 250px;
-        visibility: hidden;
-        z-index: 100;
-        position: absolute;
-        left: 50%;
-        top: 100%;
-        transform: translate(-50%, -100%);
-        margin: 0px;
-      "
-    >
-      <script type="text/javascript">
+    <div id="badegg-io_970x250"
+     style="width: 970px; height: 250px; visibility: hidden; z-index: 100;
+            position: absolute; left: 50%; top: 100%; transform: translate(-50%, -100%);
+            margin: 0px;">
+    <script type="text/javascript">
         aiptag.cmd.display.push(function () {
-          aipDisplayTag.display("badegg-io_970x250");
+            aipDisplayTag.display("badegg-io_970x250");
         });
-      </script>
-    </div>
+    </script>
+</div>
 
-    <div
-      id="preroll"
-      style="
-        width: 960px;
-        height: 540px;
-        visibility: hidden;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        z-index: 100;
-        transform: translate(-50%, -50%);
-      "
-    ></div>
+
+<div id="preroll"
+     style="width: 960px; height: 540px; visibility: hidden;
+            position: fixed; top: 50%; left: 50%;
+            z-index: 100; transform: translate(-50%, -50%);">
+</div>
 
     <div id="status">
       <div

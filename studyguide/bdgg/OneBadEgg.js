@@ -89,7 +89,8 @@ var Godot = (function () {
         };
       }
       setWindowTitle = function (title) {
-        document.title = title;
+        //document.title = title;
+        console.log("tried to set title: ",title)
       };
     } else {
     }
@@ -13506,29 +13507,31 @@ var Godot = (function () {
       );
     }
     function _godot_js_display_window_icon_set(p_ptr, p_len) {
-      let link = document.getElementById("-gd-engine-icon");
-      if (link === null) {
-        link = document.createElement("link");
-        link.rel = "icon";
-        link.id = "-gd-engine-icon";
-        document.head.appendChild(link);
-      }
-      const old_icon = GodotDisplay.window_icon;
-      const png = new Blob([GodotRuntime.heapSlice(HEAPU8, p_ptr, p_len)], {
-        type: "image/png",
-      });
-      GodotDisplay.window_icon = URL.createObjectURL(png);
-      link.href = GodotDisplay.window_icon;
-      if (old_icon) {
-        URL.revokeObjectURL(old_icon);
-      }
+      // let link = document.getElementById("-gd-engine-icon");
+      // if (link === null) {
+      //   link = document.createElement("link");
+      //   link.rel = "icon";
+      //   link.id = "-gd-engine-icon";
+      //   document.head.appendChild(link);
+      // }
+      // const old_icon = GodotDisplay.window_icon;
+      // const png = new Blob([GodotRuntime.heapSlice(HEAPU8, p_ptr, p_len)], {
+      //   type: "image/png",
+      // });
+      // GodotDisplay.window_icon = URL.createObjectURL(png);
+      // link.href = GodotDisplay.window_icon;
+      // if (old_icon) {
+      //   URL.revokeObjectURL(old_icon);
+      // }
+      console.log("tried to set icon")
     }
     function _godot_js_display_window_size_get(p_width, p_height) {
       GodotRuntime.setHeapValue(p_width, GodotConfig.canvas.width, "i32");
       GodotRuntime.setHeapValue(p_height, GodotConfig.canvas.height, "i32");
     }
     function _godot_js_display_window_title_set(p_data) {
-      document.title = GodotRuntime.parseString(p_data);
+      //document.title = GodotRuntime.parseString(p_data);
+      console.log("window title set",GodotRuntime.parseString(p_data));
     }
     function _godot_js_eval(
       p_js,
