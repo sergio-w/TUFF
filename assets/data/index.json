@@ -1223,5 +1223,12 @@
         "url": "studyguide/bdgg/index.html",
         "desc": "Fight off waves of chicken and survive untill the end!",
         "category": "Gym Class"
+    },
+    {
+        "name": "Build Now",
+        "img": "assets/icons/184.png",
+        "url": "studyguide/bngg/index.html",
+        "desc": "Fight and Build in this intense and fun shooting game!",
+        "category": "Gym Class"
     }
 ]
