@@ -82,21 +82,21 @@
 <body onload="LoadData()">
   <script src="assets/js/teacher.js"> </script>
   <!-- start of what i added -->
-
-  <div class="announcementcontainer" style="
+  <center>
+    <div class="announcementcontainer" style="
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.8);
-    display: none;
     z-index: 2000;
     color: white;
     align-items: center;
     justify-content: center;
+
   ">
-    <div class="AnnouncementBox" style="
+      <div class="AnnouncementBox" style="
       max-height: 90%;
       width: 80%;
       max-width: 900px;
@@ -109,7 +109,7 @@
       position: relative;
       overflow-y: auto;
     ">
-      <button onclick="document.querySelector('.announcementcontainer').style.display='none';" style="
+        <button onclick="document.querySelector('.announcementcontainer').style.display='none';" style="
         position: absolute;
         top: 15px;
         right: 15px;
@@ -119,68 +119,70 @@
         color: #ffffff;
         cursor: pointer;
       ">
-        &times;
-      </button>
+          &times;
+        </button>
 
-      <h2 style="
+        <h2 style="
         margin-bottom: 1.5rem;
         font-family: Comfortaa, sans-serif;
         font-size: 2rem;
         text-align: center;
       ">
-        JustStudy Announcements and Updates
-      </h2>
+          JustStudy Announcements and Updates
+        </h2>
 
-      <div class="announcementmaincontent" style="font-size: 1.2rem; line-height: 1.8; color: #dcddde">
-        <p>This is the JustStudy announcements and updates page from now on i think</p>
-        <p>
-          <strong> Update Numbre dos</strong>
-         </p>
-         <p>
-          CHAT IS BACK UP. the link is <a id="chatLink">this</a>.
-         </p>
-         <script>
-          document.getElementById("chatLink").href = `https://chat.${window.location.hostname}.com`;
-        </script>
-         <hr style="
+        <div class="announcementmaincontent" style="font-size: 1.2rem; line-height: 1.8; color: #dcddde">
+          <p>This is the JustStudy announcements and updates page from now on i think</p>
+          <p>
+            <strong> Update Numbre dos</strong>
+          </p>
+          <p>
+            CHAT IS BACK UP. the link is <a id="chatLink" style="color: blue;">this</a>.
+          </p>
+          <script>
+            document.getElementById("chatLink").href = `https://chat.${window.location.hostname}`;
+          </script>
+          <hr style="
          border: none;
          border-top: 1px solid #7289da;
          margin: 1.5rem 0;
        " />
-        <p>
-         <strong> Update Numbre uno</strong>
-        </p>
-        <p>
-          How to update your saved data from one site to the next. good for backup
-        </p>
-        <video src="assets/Vids/transfertut.mp4" autoplay="true" muted width="80%" style="left: 20%; transform: translateX(12.5%);" height="auto"> </video>
-        <hr style="
+          <p>
+            <strong> Update Numbre uno</strong>
+          </p>
+          <p>
+            How to update your saved data from one site to the next. good for backup
+          </p>
+          <video src="assets/Vids/transfertut.mp4" autoplay="true" muted width="80%"
+            style="left: 20%; transform: translateX(12.5%);" height="auto"> </video>
+          <hr style="
           border: none;
           border-top: 1px solid #7289da;
           margin: 1.5rem 0;
         " />
-        <p><strong>Could help this fellow person. if you backed up your save send it over to us in the chat</strong></p>
-        <img src="assets/img/New_Img/skib.png" style="width: 100%"></img>
-        <hr style="
+          <p><strong>Could help this fellow person. if you backed up your save send it over to us in the chat</strong>
+          </p>
+          <img src="assets/img/New_Img/skib.png" style="width: 100%"></img>
+          <hr style="
           border: none;
           border-top: 1px solid #7289da;
           margin: 1.5rem 0;
         " />
-        <p>
-          Over the next couple of days, we will be looking for a few people to
-          become beta testers and staff members for our chat service. A link
-          will be posted here soon, so keep an eye out!
-        </p>
-        <p>
-          Thank you for your support and dedication to JustStudy.
-        </p>
-        
-        <p style="text-align: center; font-weight: bold">
-          The JustStudy Admin Team
-        </p>
-      </div>
+          <p>
+            Over the next couple of days, we will be looking for a few people to
+            become beta testers and staff members for our chat service. A link
+            will be posted here soon, so keep an eye out!
+          </p>
+          <p>
+            Thank you for your support and dedication to JustStudy.
+          </p>
 
-      <button onclick="document.querySelector('.announcementcontainer').style.display='none';" style="
+          <p style="text-align: center; font-weight: bold">
+            The JustStudy Admin Team
+          </p>
+        </div>
+
+        <button onclick="document.querySelector('.announcementcontainer').style.display='none';" style="
         margin-top: 1.5rem;
         padding: 0.8rem 1.5rem;
         background-color: #7289da;
@@ -193,11 +195,11 @@
         margin-left: auto;
         margin-right: auto;
       ">
-        Close
-      </button>
+          Close
+        </button>
+      </div>
     </div>
-  </div>
-
+  </center>
 
 
   <div class="toast-container position-fixed  text-white bottom-0 end-0 p-3">
