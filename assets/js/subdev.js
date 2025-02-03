@@ -130,13 +130,14 @@ async function loadPageContent() {
     }
 
     document.documentElement.innerHTML = tempContainer.innerHTML;
-    for (const script of inlineScripts) {
-      await executeInlineScript(script);
-    }
-    for (const script of externalScripts) {
-      await loadExternalScript(script.src, script.type, script.async);
-    }
-    // observeDynamicScripts();
+    for (const script of scripts) {
+      if (script.src){
+        await loadExternalScript(script.src, script.type, script.async);
+      } else {
+        await executeInlineScript(script);
+      }
+    };
+  
     if (onloaddata) {
       console.log("Executing onload function...");
       setTimeout(() => {
@@ -186,38 +187,6 @@ async function loadExternalScript(src, type = "text/javascript", async = false,i
       document.head.appendChild(newScript);
     }
   });
-}
-
-function observeDynamicScripts() {
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      mutation.addedNodes.forEach(async (node) => {
-        if (node.tagName === "SCRIPT") {
-          const isInHead = document.head.contains(node);
-          const appendToBody = !isInHead;
-
-          if (node.src) {
-            if (loadedScripts.has(node.src)) {
-              console.log(`Ignoring already executed script: ${node.src}`);
-              return;
-            }
-            loadedScripts.add(node.src);
-            
-            console.log(`Executing new script: ${node.src} in ${appendToBody ? "body" : "head"}`);
-            await loadExternalScript(node.src, node.type, node.async, appendToBody);
-          } else {
-            if (node.hasAttribute("data-executed")) return;
-            node.setAttribute("data-executed", "true");
-            console.log(`Executing new inline script`);
-            await executeInlineScript(node);
-          }
-        }
-      });
-    });
-  });
-
-  observer.observe(document.head, { childList: true, subtree: true });
-  observer.observe(document.body, { childList: true, subtree: true });
 }
 
 function initload() {
