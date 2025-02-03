@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1, shrink-to-fit=no, user-scalable=no, minimal-ui"
+    />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <link rel="shortcut icon" id="favi" href="">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KW15Q1QG97"></script>
+    <script type="text/javascript" src="/assets/js/LoadData.js"></script>
+    <style>
+      * {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      body,
+      html {
+        width: 100%;
+        height: 100%;
+        background: #444;
+      }
+      body,
+      html {
+        overflow: hidden;
+      }
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        line-height: 1.5em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      canvas {
+        width: 100%;
+        height: 100%;
+      }
+      @keyframes pulse {
+        0% {
+          transform: scale(0.9);
+        }
+        50% {
+          transform: scale(1);
+        }
+        to {
+          transform: scale(0.9);
+        }
+      }
+      img#preload {
+        animation: pulse 2s ease-in-out infinite both;
+        max-height: 50%;
+        max-width: 50%;
+        border-radius: 20px;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+      }
+      #container {
+        position: relative;
+        display: none;
+      }
+      #container:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        box-shadow: inset 0 0 0 0.5vh #000;
+        pointer-events: none;
+      }
+      @media (display-mode: fullscreen) {
+        #container:before {
+          display: none;
+        }
+      }
+      #container,
+      canvas {
+        vertical-align: bottom;
+      }
+    </style>
+  </head>
+  <body>
+    <img
+      id="preload"
+      src="icon.png"
+    />
+    <div id="container"></div>
+    <script src="dist-prod-tmp.5fdede97.js"></script>
+    <script async src="scripts/v2/poki-sdk.js"></script>
+  </body>
+</html>

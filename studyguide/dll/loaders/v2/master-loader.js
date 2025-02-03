@@ -1,7 +1,7 @@
 "use strict";
 var scripts = document.getElementsByTagName("script"),
   scriptUrl = scripts[scripts.length - 1].src,
-  root = scriptUrl.split("master-loader.js")[0],
+  root = "loaders/v2/",
   loaders = {
     unity: "unity.js",
     "unity-beta": "unity-beta.js",
@@ -43,3 +43,4 @@ var sdkScript = document.createElement("script");
     (i.src = root + loader), document.body.appendChild(i);
   }),
   document.body.appendChild(sdkScript);
+  

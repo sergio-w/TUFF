@@ -1230,5 +1230,26 @@
         "url": "studyguide/bngg/index.html",
         "desc": "Fight and Build in this intense and fun shooting game!",
         "category": "Gym Class"
+    },
+    {
+        "name": "Super market simulator",
+        "img": "assets/icons/185.png",
+        "url": "studyguide/ss-sm/index.html",
+        "desc": "Manage and sell products in your own supermarket",
+        "category": "Recess"
+    },
+    {
+        "name": "Candy Crush",
+        "img": "assets/icons/186.png",
+        "url": "studyguide/cd-cr/index.html",
+        "desc": "Match 3 types of candies to destroy rows in this iconic puzzle game!",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "JoyRider",
+        "img": "assets/icons/187.png",
+        "url": "studyguide/jyrd/index.html",
+        "desc": "Drive a motorbike up crazy terrain to show your skills!",
+        "category": "Sports Club"
     }
 ]
