@@ -6429,7 +6429,6 @@
             (void 0 !== this.config.runtime.initialScripts &&
               0 !== this.config.runtime.initialScripts.length) ||
               this.run.push(async () => {
-                console.warn("Loading TinyLoader... the sdk is" + window.sdk.load());
                 await window.sdk.load();
               });
             try {

@@ -5314,7 +5314,6 @@
         void 0 !== globalTinyLoader &&
           (globalTinyLoader.run.push(async () => {
             const e = new SDK(globalTinyLoader);
-            console.error("the sdk is", e)
             await e.init(),
               (e.images =
                 void 0 !== globalTinyLoader.imageLoader
