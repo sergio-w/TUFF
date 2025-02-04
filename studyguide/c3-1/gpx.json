@@ -1,5 +1,5 @@
 {
-  "name": "Qplaze_Casino-Collection-3in1",
+  "name": "Casino-Collection-3in1",
   "version": "1",
   "symbols": "1",
   "origin": "unity",
@@ -17,10 +17,10 @@
       }
     ]
   },
-  "tinyLoaderScript": "https://d13m0wt5um9hyu.cloudfront.net/loader/23.0.0/tiny-loader.js",
+  "tinyLoaderScript": "tiny-loader.js",
   "sdkScripts": [
-    "https://d13m0wt5um9hyu.cloudfront.net/loader/23.0.0/sdk.js",
-    "https://d13m0wt5um9hyu.cloudfront.net/loader/23.0.0/gamepix-adapter.js"
+    "loader/23.0.0/sdk.js",
+    "loader/23.0.0/gamepix-adapter.js"
   ],
   "sizes": {
     "br/bin.data.js.br": 7423,
