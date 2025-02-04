@@ -75,21 +75,19 @@ function MakeThing(){
     document.body.appendChild(script);
 }
 LoadData();
-document.addEventListener('DOMContentLoaded', function() {
-    function MakeThing() {
-        const style = document.createElement('style');
-        style.innerHTML = `
-        body{
-            overflow: hidden;
-        }
-        `;
-        document.body.appendChild(style);
-        const script = document.createElement("script");
-        script.src = "/assets/js/teacher.js";
-        script.onerror = function() {
-            console.error("Failed to load the script:", script.src);
-        };
-        document.head.appendChild(script);
+function MakeThing() {
+    const style = document.createElement('style');
+    style.innerHTML = `
+    body{
+        overflow: hidden;
     }
-    MakeThing();
-});
+    `;
+    document.body.appendChild(style);
+    const script = document.createElement("script");
+    script.src = "/assets/js/teacher.js";
+    script.onerror = function() {
+        console.error("Failed to load the script:", script.src);
+    };
+    document.head.appendChild(script);
+}
+MakeThing();

@@ -1251,5 +1251,12 @@
         "url": "studyguide/jyrd/index.html",
         "desc": "Drive a motorbike up crazy terrain to show your skills!",
         "category": "Sports Club"
+    },
+    {
+        "name": "Casino Collection",
+        "img": "assets/icons/188.png",
+        "url": "studyguide/c3-1/index.html",
+        "desc": "Play a collection of 3 classic casino games!",
+        "category": "Recess"
     }
 ]

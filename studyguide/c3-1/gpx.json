@@ -1,0 +1,39 @@
+{
+  "name": "Qplaze_Casino-Collection-3in1",
+  "version": "1",
+  "symbols": "1",
+  "origin": "unity",
+  "engineVersion": "2019.4",
+  "runtime": {
+    "aspect": [
+      2.5,
+      2
+    ],
+    "orientation": "landscape",
+    "res": [
+      {
+        "glob": "emscripten/**",
+        "root": "emscripten/"
+      }
+    ]
+  },
+  "tinyLoaderScript": "https://d13m0wt5um9hyu.cloudfront.net/loader/23.0.0/tiny-loader.js",
+  "sdkScripts": [
+    "https://d13m0wt5um9hyu.cloudfront.net/loader/23.0.0/sdk.js",
+    "https://d13m0wt5um9hyu.cloudfront.net/loader/23.0.0/gamepix-adapter.js"
+  ],
+  "sizes": {
+    "br/bin.data.js.br": 7423,
+    "br/wbin._.js.br": 6366188,
+    "br/wbin.js.br": 92485,
+    "br/bin.data._.js.br": 26880408,
+    "gz/bin.data._.js.gz": 33501402,
+    "gz/bin.data.js.gz": 9866,
+    "gz/wbin._.js.g z": 8885151,
+    "gz/wbin.js.gz": 113542,
+    "bin.data._.js": 54340026,
+    "bin.data.js": 35933,
+    "wbin._.js": 27760725,
+    "wbin.js": 627148
+  }
+}
