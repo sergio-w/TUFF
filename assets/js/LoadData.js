@@ -1,25 +1,25 @@
 window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
+function gtag() { dataLayer.push(arguments); }
 gtag('js', new Date());
 gtag('config', 'G-KW15Q1QG97');
 var can_redirect = false;
 
-function LoadData(){
+function LoadData() {
     var TitleData = localStorage.getItem("Title");
     var FaviData = localStorage.getItem("Favi");
-    console.log("Loaded title `" + TitleData  + "` with icon `" + "/" + FaviData + "`");
+    console.log("Loaded title `" + TitleData + "` with icon `" + "/" + FaviData + "`");
     if (TitleData === null) {
-    document.title = "JustStudy";
-    document.querySelector("link[rel='shortcut icon']").href = '/assets/img/favicon.ico';
+        document.title = "JustStudy";
+        document.querySelector("link[rel='shortcut icon']").href = '/assets/img/favicon.ico';
     }
     else {
         document.title = TitleData;
         document.querySelector("link[rel='shortcut icon']").href = "/" + FaviData;
     }
-    
+
 };
 let key_input_data = "";
-document.addEventListener('keydown', function(event) {
+document.addEventListener('keydown', function (event) {
     key_input_data = "";
     const keys = new Set();
 
@@ -38,7 +38,7 @@ document.addEventListener('keydown', function(event) {
 
     if (key_input_data == localStorage.getItem("panickey")) {
         if (localStorage.getItem("Title") == "Seneca - Learn 2x Faster") {
-            window.location.href = urls[0];   
+            window.location.href = urls[0];
         } else if (localStorage.getItem("Title") == "Sparx Maths - Home") {
             window.location.href = urls[1];
         } else if (localStorage.getItem("Title") == "Tassomai") {
@@ -49,7 +49,7 @@ document.addEventListener('keydown', function(event) {
     }
 
 });
-window.addEventListener("blur",()=>{
+window.addEventListener("blur", () => {
     if (key_input_data == "Alt" && localStorage.getItem("redirect") === 'true') {
         const urls = [
             "https://senecalearning.com/",
@@ -58,7 +58,7 @@ window.addEventListener("blur",()=>{
         ];
         if (localStorage.getItem("Title") == "Seneca - Learn 2x Faster") {
             console.log("redirecting")
-            window.location.href = urls[0];   
+            window.location.href = urls[0];
         } else if (localStorage.getItem("Title") == "Sparx Maths - Home") {
             window.location.href = urls[1];
         } else if (localStorage.getItem("Title") == "Tassomai") {
@@ -69,11 +69,25 @@ window.addEventListener("blur",()=>{
         }
     }
 })
-function MakeThing(){
+function MakeThing() {
+    if (!document.body || !document.head) {
+        console.error("DOM not ready, delaying script execution.");
+        document.addEventListener("DOMContentLoaded", MakeThing);
+        return;
+    }
+
+    const style = document.createElement('style');
+    style.innerHTML = `body { overflow: hidden; }`;
+    document.head.appendChild(style);
+
     const script = document.createElement("script");
-    script.src = "/assets/js/teacherfilesystem.js";
-    document.body.appendChild(script);
+    script.src = "/assets/js/teacher.js";
+    script.onerror = function () {
+        console.error("Failed to load the script:", script.src);
+    };
+    document.head.appendChild(script);
 }
+
 LoadData();
 function MakeThing() {
     const style = document.createElement('style');
@@ -85,9 +99,12 @@ function MakeThing() {
     document.body.appendChild(style);
     const script = document.createElement("script");
     script.src = "/assets/js/teacher.js";
-    script.onerror = function() {
+    script.onerror = function () {
         console.error("Failed to load the script:", script.src);
     };
     document.head.appendChild(script);
 }
-MakeThing();
+
+document.addEventListener("DOMContentLoaded", function () {
+    MakeThing();
+});

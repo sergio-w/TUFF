@@ -94,7 +94,6 @@
     color: white;
     align-items: center;
     justify-content: center;
-
   ">
       <div class="AnnouncementBox" style="
       max-height: 90%;
@@ -109,6 +108,19 @@
       position: relative;
       overflow-y: auto;
     ">
+        <!-- Loading Bar -->
+        <div id="loadingBar" style="
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 0%;
+          height: 5px;
+          background-color: #7289da;
+        "></div>
+        <center id="loadingText">
+          <p>Loading...</p>
+        </center>
+
         <button onclick="document.querySelector('.announcementcontainer').style.display='none';" style="
         position: absolute;
         top: 15px;
@@ -118,7 +130,7 @@
         font-size: 2rem;
         color: #ffffff;
         cursor: pointer;
-      ">
+      " id="closeAnnouncement">
           &times;
         </button>
 
@@ -134,11 +146,17 @@
         <div class="announcementmaincontent" style="font-size: 1.2rem; line-height: 1.8; color: #dcddde">
           <p>This is the JustStudy announcements and updates page from now on i think</p>
           <p>
-            <strong> Update Numbre dos</strong>
+            <center><strong> !!NEW UPDATES!!</strong></center>
           </p>
+
           <p>
-            CHAT IS BACK UP. the link is <a id="chatLink" style="color: blue;">this</a>.
+            Our chat is currently down whilst we work on a new name system, this includes the implementation of AI. We
+            are sorry for any inconvenience caused however we are making it a better environment!
           </p>
+
+          <!-- <p>
+            CHAT IS BACK UP. the link is <a id="chatLink" style="color: blue;">this</a>.
+          </p> -->
           <script>
             document.getElementById("chatLink").href = `https://chat.${window.location.hostname}`;
           </script>
@@ -147,8 +165,28 @@
          border-top: 1px solid #7289da;
          margin: 1.5rem 0;
        " />
+
           <p>
-            <strong> Update Numbre uno</strong>
+            <strong>Game Updates and announcements!</strong>
+          </p>
+          <p>
+            We have received a lot of game requests and I mean a lot. Around 50+! - We will be working on getting as
+            many games into the site as we can and this will be done over the half term!
+          </p>
+
+          <p>Please also don't forgot Olly no longer works with us! Please don't direct questions to him! We are
+            slightly working in collaboration however he is no longer part of our team!</p>
+
+          <p>
+            Don't forget! School doesn't last too long, spend your time wisely! And also: CORNELL NOTES!!
+          </p>
+          <hr style="
+border: none;
+border-top: 1px solid #7289da;
+margin: 1.5rem 0;
+" />
+          <p>
+            <strong>Update Numbre uno</strong>
           </p>
           <p>
             How to update your saved data from one site to the next. good for backup
@@ -180,6 +218,25 @@
           <p style="text-align: center; font-weight: bold">
             The JustStudy Admin Team
           </p>
+
+          <script>
+            document.onreadystatechange = function () {
+              let loadingBar = document.getElementById("loadingBar");
+              if (document.readyState === "interactive") {
+                loadingBar.style.transition = "width 2s ease";
+                loadingBar.style.width = "50%";
+              }
+              if (document.readyState === "complete") {
+                loadingBar.style.transition = "width 1.5s ease";
+                loadingBar.style.width = "100%";
+                setTimeout(() => {
+                  loadingBar.style.display = "none";
+                  document.getElementById("closeAnnouncement").style.display = "block";
+                  document.getElementById("loadingText").style.display = "none";
+                }, 1500);
+              }
+            };
+          </script>
         </div>
 
         <button onclick="document.querySelector('.announcementcontainer').style.display='none';" style="
@@ -194,13 +251,106 @@
         display: block;
         margin-left: auto;
         margin-right: auto;
-      ">
+      " id="closeAnnouncement">
           Close
         </button>
       </div>
     </div>
   </center>
 
+
+  <div id="loadercontainer" class="loaderbg">
+    <div class="loader">
+      <!-- <img src="./assets/img/icon_fullsize.png" alt="JustStudy Logo"> -->
+    </div>
+    </br>
+    <div class="loadertext">
+      Loading<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+    </div>
+    <div class="loaderbarparent">
+      <div id="loaderbar" class="loaderbar"></div>
+    </div>
+    <div id="loaderpercent" class="loaderpercent">0%</div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const announcement = document.querySelector(".announcementcontainer");
+      const closeAnnouncementBtn = document.getElementById("closeAnnouncement");
+      const loaderContainer = document.getElementById("loadercontainer");
+      const loaderBar = document.getElementById("loaderbar");
+      const loaderPercent = document.getElementById("loaderpercent");
+
+      let totalResources = 0;
+      let loadedResources = 0;
+
+      // Function to update the progress bar dynamically
+      function updateLoader() {
+        let percent = Math.round((loadedResources / totalResources) * 100);
+        loaderBar.style.width = percent + "%";
+        loaderPercent.textContent = percent + "%";
+
+        if (percent >= 100) {
+          setTimeout(() => {
+            loaderContainer.style.opacity = "0";
+            setTimeout(() => {
+              loaderContainer.style.display = "none";
+            }, 500);
+          }, 500);
+        }
+      }
+
+      // Count all images, scripts, and stylesheets
+      function countResources() {
+        const images = document.images;
+        const scripts = document.getElementsByTagName("script");
+        const stylesheets = document.getElementsByTagName("link");
+
+        totalResources = images.length + scripts.length + stylesheets.length;
+
+        // If no resources found, instantly hide the loader
+        if (totalResources === 0) {
+          updateLoader();
+        }
+      }
+
+      // Function to listen for resource loading
+      function trackResourceLoading() {
+        const elements = [...document.images, ...document.scripts, ...document.styleSheets];
+
+        elements.forEach(element => {
+          if (element.tagName === "SCRIPT" || element.tagName === "IMG") {
+            element.onload = () => {
+              loadedResources++;
+              updateLoader();
+            };
+            element.onerror = () => {
+              loadedResources++;
+              updateLoader();
+            };
+          }
+        });
+
+        window.addEventListener("load", () => {
+          loadedResources = totalResources;
+          updateLoader();
+        });
+      }
+
+      // Close the announcement and show the loader
+      function closeAnnouncement() {
+        announcement.style.display = "none";
+      }
+
+      // Attach event listener to close button
+      closeAnnouncementBtn.addEventListener("click", closeAnnouncement);
+
+      loaderContainer.style.top = "0";
+      countResources();
+      trackResourceLoading();
+    });
+
+  </script>
 
   <div class="toast-container position-fixed  text-white bottom-0 end-0 p-3">
     <div id="welcomeToast" class="toast Not_color_bottom" role="alert" aria-live="assertive" aria-atomic="true">
@@ -367,9 +517,12 @@
       <img src="assets/img/cog.png" style="width: 4vw; height: 4vw; position: fixed;">
     </a>
     <h1 class="page-title"
-      style="font-size: 4vw; color: white; margin: 0; text-align: center; flex-grow: 1; position: relative; right: 8vw; z-index: -1; font-weight: bold;">
-      JustStudy
+      style="font-size: 4vw; color: white; margin: 0; text-align: center; flex-grow: 1; position: relative; right: 8vw; z-index: 1; font-weight: bold;">
+      Just<span style="cursor: pointer; position: relative; z-index: 10;"
+        onclick="window.location.href='ahh.html'">S</span>tudy
     </h1>
+
+
     <input class="topBarItems searchBar" type="text" id="search-bar" placeholder="Search">
   </div>
 
@@ -402,7 +555,6 @@
     }
     document.getElementById("search-bar").addEventListener("input", handleSearch);
   </script>
-  <!-- <center> <div class="devbox"> <h6>this aint the main site, only dev.<a href="https://metalfoxdev.codeberg.page/juststudy-site/"> Click here to go to the main one</h6> </div> </center> -->
   <script>
     function FeelingLucky() {
       fetch('assets/data/index.json')
@@ -465,11 +617,11 @@
       document.getElementById("desc").textContent = array[randomIndex];
     }
 
-    function showAnnouncement() {
-      document.querySelector(".announcementcontainer").style.display = "flex";
-    }
+    // function showAnnouncement() {
+    //   document.querySelector(".announcementcontainer").style.display = "flex";
+    // }
 
-    window.onload = showAnnouncement;
+    // window.onload = showAnnouncement;
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="assets/js/random_bg.js"></script>
@@ -551,6 +703,9 @@
       Card.classList.add('FrameFadeOutAnimation');
       Card.style.display = 'none';
     });
+
+    showLoader();
+
   </script>
   <div class="text-center bottom-text" style="height:auto;">
     <p style="font-size: 1.5vw;">JustStudy CE is proudly ad-free and open source! Get the source code and host yourself
