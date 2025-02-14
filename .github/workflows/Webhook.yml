@@ -12,8 +12,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '16'
-          - name: Send Discord Webhook
-            env:
-              DISCORD_WEBHOOK: 'https://discord.com/api/webhooks/1339895868073054249/TIwC3p--GFKmlGyxBNLhukJeW3SndQ1ZLIGVJRcg3vnDrHibxgaRRvj_Dgs6j_KIABL3'
-              GITHUB_EVENT_PATH: ${{ github.event_path }}
-            run: node .github/scripts/discordNotify.js
+      - name: Send Discord Webhook
+        env:
+          DISCORD_WEBHOOK: 'https://discord.com/api/webhooks/1339895868073054249/TIwC3p--GFKmlGyxBNLhukJeW3SndQ1ZLIGVJRcg3vnDrHibxgaRRvj_Dgs6j_KIABL3'
+          GITHUB_EVENT_PATH: ${{ github.event_path }}
+        run: node .github/scripts/discordNotify.js
