@@ -108,3 +108,94 @@ function MakeThing() {
 document.addEventListener("DOMContentLoaded", function () {
     MakeThing();
 });
+
+
+// Very secret things
+
+// (function () {
+//     const STATUS_PAGE_URL = `${window.location.protocol}//${window.location.host}`;
+//     const STATUS_API = `${STATUS_PAGE_URL}/status`;
+
+//     document.addEventListener("DOMContentLoaded", function() {
+//         var banner = document.createElement('div');
+//         banner.style.position = 'fixed';
+//         banner.style.top = '0';
+//         banner.style.left = '0';
+//         banner.style.width = '100vw';
+//         banner.style.background = '#ffa500';
+//         banner.style.color = '#000';
+//         banner.style.padding = '1vh 2vw';
+//         banner.style.textAlign = 'center';
+//         banner.style.fontSize = '2vh';
+//         banner.style.fontFamily = 'Arial, sans-serif';
+//         banner.style.display = 'none';
+//         banner.style.zIndex = '10000';
+//         banner.style.overflow = 'hidden';
+//         banner.style.display = 'flex';
+//         banner.style.alignItems = 'center';
+//         banner.style.justifyContent = 'space-between';
+
+//         var bannerTextWrapper = document.createElement('div');
+//         bannerTextWrapper.style.flex = '1';
+//         bannerTextWrapper.style.overflow = 'hidden';
+        
+//         var bannerText = document.createElement('span');
+//         bannerText.style.overflow = 'hidden';
+//         bannerText.style.whiteSpace = 'nowrap';
+//         bannerText.style.textOverflow = 'ellipsis';
+//         bannerText.style.display = 'inline-block';
+//         bannerText.style.maxWidth = '65vw';
+//         bannerTextWrapper.appendChild(bannerText);
+//         banner.appendChild(bannerTextWrapper);
+
+//         var controlsWrapper = document.createElement('div');
+//         controlsWrapper.style.display = 'flex';
+//         controlsWrapper.style.alignItems = 'center';
+
+//         var viewDetails = document.createElement('a');
+//         viewDetails.innerText = ' View Details';
+//         viewDetails.href = 'https://status.juststudying.uk';
+//         viewDetails.target = '_blank';
+//         viewDetails.style.marginLeft = '1vw';
+//         viewDetails.style.color = '#000';
+//         viewDetails.style.textDecoration = 'underline';
+//         controlsWrapper.appendChild(viewDetails);
+
+//         var bannerClose = document.createElement('span');
+//         bannerClose.innerText = ' ✖';
+//         bannerClose.style.cursor = 'pointer';
+//         bannerClose.style.marginLeft = '1vw';
+//         bannerClose.style.fontWeight = 'bold';
+//         bannerClose.style.padding = '0 1vw';
+//         bannerClose.onclick = function() {
+//             banner.style.display = 'none';
+//         };
+//         controlsWrapper.appendChild(bannerClose);
+
+//         banner.appendChild(controlsWrapper);
+//         document.body.appendChild(banner);
+
+//         function fetchStatus() {
+//             fetch(STATUS_API)
+//                 .then(response => response.json())
+//                 .then(data => {
+//                     if (data.incident && data.incident.title) {
+//                         let message = `${data.incident.title}: ${data.incident.content}`;
+//                         bannerText.innerText = message;
+//                         bannerText.title = message;
+//                         banner.style.display = 'flex';
+//                     } else {
+//                         banner.style.display = 'none';
+//                     }
+//                 })
+//                 .catch(err => {
+//                     console.error('Error fetching Uptime Kuma status:', err);
+//                     bannerText.innerText = 'Error fetching status';
+//                 });
+//         }
+        
+//         fetchStatus();
+//         setInterval(fetchStatus, 60000);
+//     });
+// })(); 
+

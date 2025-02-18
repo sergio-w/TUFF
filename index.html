@@ -717,7 +717,85 @@ margin: 1.5rem 0;
         src="https://counter6.optistats.ovh/private/freecounterstat.php?c=e7q6e6dd17hut31lkgpqpjpzlrbjlbgt" border="0"
         title="website counter" alt="website counter"></a>
   </div>
-  <script src="https://juststudy.statuspage.io/embed/script.js"></script>
+  <script>
+    (function () {
+      const STATUS_PAGE_URL = `${window.location.protocol}//${window.location.host}`; // Replace with your Uptime Kuma instance
+      const STATUS_API = `${STATUS_PAGE_URL}/status`; // Replace with the correct ID
+
+      var frame = document.createElement('div');
+      frame.style.position = 'fixed';
+      frame.style.bottom = '2vh';
+      frame.style.right = '2vw';
+      frame.style.width = '320px';
+      frame.style.background = '#ffffff';
+      frame.style.borderRadius = '2vh';
+      frame.style.boxShadow = '0 10px 20px rgba(0,0,0,0.2)';
+      frame.style.zIndex = '9999';
+      frame.style.padding = '2vh';
+      frame.style.fontFamily = 'Arial, sans-serif';
+      frame.style.display = 'none';
+
+      var title = document.createElement('h3');
+      title.style.margin = '0 0 1vh';
+      title.style.fontSize = '2.5vh';
+      title.style.color = '#333';
+      frame.appendChild(title);
+
+      var incidentText = document.createElement('p');
+      incidentText.style.fontSize = '2vh';
+      incidentText.style.color = '#666';
+      frame.appendChild(incidentText);
+
+      var closeButton = document.createElement('button');
+      closeButton.innerText = 'Dismiss';
+      closeButton.style.background = '#d9534f';
+      closeButton.style.color = '#fff';
+      closeButton.style.border = 'none';
+      closeButton.style.padding = '1vh 2vw';
+      closeButton.style.marginTop = '1vh';
+      closeButton.style.borderRadius = '1vh';
+      closeButton.style.cursor = 'pointer';
+      closeButton.onclick = function () {
+        frame.style.display = 'none';
+      };
+      frame.appendChild(closeButton);
+
+      document.body.appendChild(frame);
+
+      function fetchStatus() {
+        fetch(STATUS_API)
+          .then(response => response.json())
+          .then(data => {
+            if (data.incident && data.incident.title) {
+              incidentText.innerText = `${data.incident.content}`;
+              title.innerText = `Incident Update: ${data.incident.title}`;
+              frame.style.display = 'block';
+            } else {
+              frame.style.display = 'none';
+            }
+          })
+          .catch(err => {
+            console.error('Error fetching Uptime Kuma status:', err);
+            incidentText.innerText = 'Error fetching status';
+          });
+      }
+
+      fetchStatus();
+    })();
+  </script>
+  <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
+    data-id="juststudy" data-description="Support me on Buy me a coffee!" data-message="Support the project!"
+    data-color="#5F7FFF" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+  <script src="//d2wy8f7a9ursnm.cloudfront.net/v8/bugsnag.min.js"></script>
+  <script type="module">
+    import BugsnagPerformance from '//d2wy8f7a9ursnm.cloudfront.net/v1/bugsnag-performance.min.js'
+    Bugsnag.start({ apiKey: '5dd4372f94a80e6a7c4326803b4e2639' })
+    BugsnagPerformance.start({ apiKey: '5dd4372f94a80e6a7c4326803b4e2639' })
+  </script>
+  <script type="module">
+    import BugsnagPerformance from '//d2wy8f7a9ursnm.cloudfront.net/v1/bugsnag-performance.min.js'
+    BugsnagPerformance.start({ apiKey: '5dd4372f94a80e6a7c4326803b4e2639' })
+  </script>
 </body>
 
 </html>
