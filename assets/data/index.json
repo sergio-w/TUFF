@@ -1253,10 +1253,17 @@
         "category": "Sports Club"
     },
     {
-        "name": "Casino Collection",
+        "name": "Casino Collection NOT WORKING",
         "img": "assets/icons/188.png",
         "url": "studyguide/c3-1/index.html",
         "desc": "Play a collection of 3 classic casino games!",
         "category": "Recess"
+    },
+    {
+        "name": "Super Mario 64",
+        "img": "assets/icons/37.jpg",
+        "url": "studyguide/sm64/index.html",
+        "desc": "Beat bowser and rescue princess peach in the first and one of the best platformers of all time!",
+        "category": "Gym Class"
     }
 ]

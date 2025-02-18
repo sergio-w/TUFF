@@ -2382,6 +2382,7 @@
                     (e = t.contentWindow.document).open(),
                     e.write(h("document.F=Object")),
                     e.close(),
+                    console.warn("the src is:", t.src),
                     e.F)
                 : d(r);
             for (var n = a.length; n--; ) delete g.prototype[a[n]];
@@ -6060,6 +6061,7 @@
                 (a.src = o),
                 i && a.setAttribute("crossorigin", "anonymous"),
                 document.body.appendChild(a);
+                console.warn(`Mounting ${o}`);
             });
           };
           for (const n of null != e ? e : [])

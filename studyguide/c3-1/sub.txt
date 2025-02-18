@@ -115,4 +115,6 @@
     </script>
 
 
-<div class="gpxForce-bckgr-gamefrm"></div></body></html>
+<div class="gpxForce-bckgr-gamefrm"></div>
+
+</body></html>
