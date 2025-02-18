@@ -258,6 +258,100 @@ margin: 1.5rem 0;
     </div>
   </center>
 
+  <style>
+    #welcome-screen {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      /* Black overlay */
+      z-index: 9998;
+      /* Just behind the loader's 9999 */
+      display: none;
+      /* Hidden until loader finishes */
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* "WELCOME" and "TO" (centered text) */
+    #welcome-text,
+    #to-text {
+      font-size: 3rem;
+      margin: 10px 0;
+      color: #fa709a;
+      text-shadow: 0 0 15px #fa709a;
+      opacity: 1;
+    }
+
+    /* "JustStudy" text (absolute center, hidden initially) */
+    #juststudy-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3.5rem;
+      color: #21d4fd;
+      text-shadow: 0 0 15px #21d4fd;
+      opacity: 0;
+    }
+
+    /* Keyframes for "WELCOME" moving up */
+    @keyframes slideUp {
+      to {
+        transform: translateY(-120vh);
+        opacity: 0;
+      }
+    }
+
+    /* Keyframes for "TO" moving down */
+    @keyframes slideDown {
+      to {
+        transform: translateY(120vh);
+        opacity: 0;
+      }
+    }
+
+    /* Keyframes for "JustStudy":
+       2s total (will start at 1s delay => finishes at 3s) */
+    @keyframes scaleFadeSpin {
+
+      /* 0% -> 20%: fade in */
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8) rotate(0deg);
+      }
+
+      20% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+      }
+
+      /* 20% -> 60%: remain fully visible, no spin */
+      60% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+      }
+
+      /* 60% -> 100%: spin, grow, fade out */
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.3) rotate(360deg);
+      }
+    }
+
+    /* Trigger animations via .start class */
+    #welcome-text.start {
+      animation: slideUp 1s ease-in-out 1s forwards;
+    }
+
+    #to-text.start {
+      animation: slideDown 1s ease-in-out 1s forwards;
+    }
+
+    #juststudy-text.start {
+      animation: scaleFadeSpin 2s ease-in-out 1s forwards;
+    }
+  </style>
 
   <div id="loadercontainer" class="loaderbg">
     <div class="loader">
@@ -273,6 +367,12 @@ margin: 1.5rem 0;
     <div id="loaderpercent" class="loaderpercent">0%</div>
   </div>
 
+  <div id="welcome-screen">
+    <h1 id="welcome-text">WELCOME</h1>
+    <h1 id="to-text">TO</h1>
+    <h1 id="juststudy-text">JustStudy</h1>
+  </div>
+
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       const announcement = document.querySelector(".announcementcontainer");
@@ -284,7 +384,6 @@ margin: 1.5rem 0;
       let totalResources = 0;
       let loadedResources = 0;
 
-      // Function to update the progress bar dynamically
       function updateLoader() {
         let percent = Math.round((loadedResources / totalResources) * 100);
         loaderBar.style.width = percent + "%";
@@ -295,12 +394,12 @@ margin: 1.5rem 0;
             loaderContainer.style.opacity = "0";
             setTimeout(() => {
               loaderContainer.style.display = "none";
+              StartWelcome();
             }, 500);
           }, 500);
         }
       }
 
-      // Count all images, scripts, and stylesheets
       function countResources() {
         const images = document.images;
         const scripts = document.getElementsByTagName("script");
@@ -308,15 +407,17 @@ margin: 1.5rem 0;
 
         totalResources = images.length + scripts.length + stylesheets.length;
 
-        // If no resources found, instantly hide the loader
         if (totalResources === 0) {
           updateLoader();
         }
       }
 
-      // Function to listen for resource loading
       function trackResourceLoading() {
-        const elements = [...document.images, ...document.scripts, ...document.styleSheets];
+        const elements = [
+          ...document.images,
+          ...document.scripts,
+          ...document.styleSheets
+        ];
 
         elements.forEach(element => {
           if (element.tagName === "SCRIPT" || element.tagName === "IMG") {
@@ -337,452 +438,471 @@ margin: 1.5rem 0;
         });
       }
 
-      // Close the announcement and show the loader
       function closeAnnouncement() {
         announcement.style.display = "none";
       }
 
-      // Attach event listener to close button
-      closeAnnouncementBtn.addEventListener("click", closeAnnouncement);
+      if (closeAnnouncementBtn) {
+        closeAnnouncementBtn.addEventListener("click", closeAnnouncement);
+      }
 
       loaderContainer.style.top = "0";
       countResources();
       trackResourceLoading();
     });
 
-  </script>
+    // =========================
+    // WELCOME ANIMATION LOGIC
+    // =========================
+    function StartWelcome() {
+      const welcomeScreen = document.getElementById("welcome-screen");
+      welcomeScreen.style.display = "flex";
 
-  <div class="toast-container position-fixed  text-white bottom-0 end-0 p-3">
-    <div id="welcomeToast" class="toast Not_color_bottom" role="alert" aria-live="assertive" aria-atomic="true">
-      <div class="toast-header Not_color_top">
-        <i class="fa fa-bell white-text" aria-hidden="true"></i>
-        <strong class="me-auto white-text">&nbsp;&nbsp;&nbsp;Welcome!</strong>
-        <small></small>
-        <button type="button" class="btn-close white-bg" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
-      <div class="toast-body">
-        Welcome to JustStudy! Definitely a study website. Enjoy your time here!
-      </div>
-    </div>
-  </div>
+      document.getElementById('welcome-text').classList.add('start');
+      document.getElementById('to-text').classList.add('start');
+      document.getElementById('juststudy-text').classList.add('start');
 
-  <!-- BEGIN Notify Scripts -->
-  <script>
-
-    function updateToastText(id, text) {
-      document.getElementById(id).innerText = text;
-    };
-
-    if (localStorage.getItem('visited')) {
-    } else {
-      localStorage.setItem('visited', true);
-      document.addEventListener("DOMContentLoaded", () => {
-        const welcomeToast = bootstrap.Toast.getOrCreateInstance(document.getElementById("welcomeToast"));
-        TabCloak('JustStudy', 'assets/img/favicon.ico', 'JustStudy CE')
-        localStorage.setItem("panickey", "Alt+`");
-        localStorage.setItem("Title", "JustStudy");
-        localStorage.setItem("Favi", "assets/img/favicon.ico`");
-        welcomeToast.show()
-      });
-    };
-  </script>
-  <!-- END Notify Scripts -->
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById('settings-box').style.display = 'none';
-      document.getElementById('News').style.display = 'none';
-      document.getElementById('fade-under-settings').style.display = 'none';
-    })
-  </script>
-  <script src="assets/js/renderlist.js" defer></script>
-  <!-- for the sneaky will here is what i added this update. it was supprisingly easy-->
-  <div class="settings-box setting scrollable" style="text-align: center;" id="settings-box">
-    <h2 class="white-text" style="text-align: center;">Settings / apps</h2>
-    <div class="setting">
-      <center>
-        <hr class="rounded">
-        <h3 class="white-text" style="text-align: center;"> Page Options </h3>
-        <div class="dropdown" id="TabCloakOption" style="width: 20vw;">
-          <button class="btn btn-warning dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
-            id="SettingDropdown">
-            Tab Cloaker - JustStudy - CE
-          </button>
-          <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item"
-                onclick="TabCloak('JustStudy','assets/img/favicon.ico' , 'JustStudy CE' )">JustStudy CE</a></li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item"
-                onclick="TabCloak('Seneca - Learn 2x Faster','assets/img/TabCloak/Seneca.ico' , 'Seneca' )">Seneca</a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item"
-                onclick="TabCloak('Sparx Maths - Home', 'assets/img/TabCloak/Sparx.png', 'Sparx Maths ')">Sparx</a></li>
-            <li>
-              <hr class="dropdown-divider""></li>
-                  <li><a class=" dropdown-item"
-                onclick="TabCloak('Tassomai', 'assets/img/TabCloak/Tassomai.ico' , 'Tassomai')">Tassomai</a>
-            </li>
-          </ul>
-        </div>
-        <h4 class="white-text"> Sort by: </h4>
-        <div class="dropdown" style="width: 20vw;">
-          <button class="btn btn-warning dropdown-toggle" id="SortList" type="button" data-bs-toggle="dropdown"
-            aria-expanded="false" id="SettingDropdown">
-            Sort list
-          </button>
-          <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item" onclick="renderList('name')">Name</a></li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item" onclick="renderList('category')">Category</a></li>
-          </ul>
-        </div>
-        <hr class="rounded">
-        <h3 class="white-text" style="text-align: center;"> bootstrapper </h3>
-
-        <div class="mb-3 outline-warning">
-          <label for="basic-url" class="form-label">Url</label>
-          <div class="input-group">
-            <span class="input-group-text" id="basic-addon3">https://</span>
-            <input type="text" class="form-control" id="UrlBt" aria-describedby="basic-addon3 basic-addon4">
-            <button class="btn btn-outline-warning" type="button" onclick="" id="UrlButton">Open Link</button>
-          </div>
-          <div class="form-text" id="basic-addon4"></div>
-        </div>
-        <!-- Files -->
-        <label for="basic-url" class="form-label">File</label>
-        <div class="input-group">
-          <input type="file" class="form-control" id="FileInputBt" aria-describedby="inputGroupFileAddon04"
-            aria-label="Upload">
-          <button class="btn btn-outline-warning" type="button" id="inputGroupFileAddon04"
-            onmousedown="applyBootstrapFile()">Open File</button>
-        </div>
-        <hr class="rounded">
-        <h3 class="white-text" style="text-align: center;"> Panic button keybind </h3>
-        <button id="panicbutton" type="button" class="btn btn-warning">Start Detecting Keys</button>
-        <input type="text" id="result" style="color: white; text-align: center;" readonly
-          placeholder="Press a key or combination">
-        <br>
-        <label class="switch-container">
-          <div class="switch">
-            <input type="checkbox" id="redirectswitch">
-            <span class="slider round"></span>
-          </div>
-          <h3 class="white-text switch-text">Redirect on Alt Tab</h3>
-        </label>
-        <h4 class="white-text" style="text-align: center; font-size: 1vw; margin-top: 0.5vw">press enter to stop input
-          detection</h4>
-        <hr class="rounded">
-        <h3 class="white-text" style="text-align: center;"> Extra </h3>
-        <a class="btn btn-outline-warning" href="./sandbox.html" style="text-align: left;"><i class="fa fa-code"
-            aria-hidden="true"></i>| Sandbox</a>
-        <a class="btn btn-outline-warning" href="./fetcher.html" style="text-align: left;"><i
-            class="fa fa-file-archive-o" aria-hidden="true"></i>| File fetcher</a>
-      </center>
-    </div>
-  </div>
-  <div class="mainbox" style="align-items: center;" id="iframe-box">
-    <div class="mainbox-top-margin">
-    </div>
-    <iframe id="frame-main" src="" width="95%" height="95%"> </iframe>
-  </div>
-  <div class="fade-under-settings" id="fade-under-settings"></div>
-  <script src="/assets/js/jss.js"></script>
-  <!-- end of what i added-->
-
-  <div class="gradient" id="gradient"></div>
-  <div style="display: flex; align-items: center; width: 50vw; margin: 0 auto; position: relative;">
-    <a class="topbutton" href="qa.html" style="margin: 0 auto; position: relative; right: 8vw; cursor: pointer;">
-      <img src="assets/img/qna.png"
-        style="width: 3vw; height: 3vw; position: fixed; top: 50%; transform: translate(20%,-50%);">
-    </a>
-    <a class="topbutton" onclick="FeelingLucky()"
-      style="margin: 0 auto; position: relative; right: 7vw; cursor: pointer;">
-      <img src="assets/img/random.png"
-        style="width: 3vw; height: 3vw; position: fixed; top: 50%; transform: translate(20%,-50%);">
-    </a>
-    <a class="topbutton" onclick="toggleNews()"
-      style="margin: 0 auto; position: relative; right: 6vw; cursor: pointer;">
-      <img src="assets/img/news.png"
-        style="width: 3vw; height: 3vw; position: fixed; top: 50%; transform: translate(20%,-50%);">
-    </a>
-    <a class="topbutton" onclick="toggleSettings()"
-      style="margin: 0 auto; position: relative; right: 5vw; cursor: pointer;">
-      <img src="assets/img/cog.png" style="width: 4vw; height: 4vw; position: fixed;">
-    </a>
-    <h1 class="page-title"
-      style="font-size: 4vw; color: white; margin: 0; text-align: center; flex-grow: 1; position: relative; right: 8vw; z-index: 1; font-weight: bold;">
-      Just<span style="cursor: pointer; position: relative; z-index: 10;"
-        onclick="window.location.href='ahh.html'">S</span>tudy
-    </h1>
-
-
-    <input class="topBarItems searchBar" type="text" id="search-bar" placeholder="Search">
-  </div>
-
-  <div class="page-desc" id="desc"></div>
-
-  <script>
-    function handleSearch() {
-      const searchTerm = document.getElementById("search-bar").value.toLowerCase();
-      const gridItems = document.querySelectorAll(".griditem");
-      const categoryContainers = document.querySelectorAll(".category-container");
-
-      gridItems.forEach(item => {
-        const itemName = item.querySelector(".listing-text").textContent.toLowerCase();
-
-        if (itemName.includes(searchTerm)) {
-          item.style.display = "block";
-        } else {
-          item.style.display = "none";
-        }
-      });
-      categoryContainers.forEach(container => {
-        const visibleItems = container.querySelectorAll('.griditem[style="display: block;"]');
-        const text = document.getElementById(container.id + "-text");
-        if (visibleItems.length == 0) {
-          text.style.display = "none";
-        } else {
-          text.style.display = "block";
-        }
-      });
+      setTimeout(() => {
+        welcomeScreen.style.display = "none";
+        document.getElementById("main-site").style.display = "block";
+      }, 3000);
     }
-    document.getElementById("search-bar").addEventListener("input", handleSearch);
   </script>
-  <script>
-    function FeelingLucky() {
-      fetch('assets/data/index.json')
-        .then(response => response.json())
-        .then(data => {
-          const randomarray = data[Math.floor(Math.random() * data.length)];
-          const link = randomarray["url"]
-          window.location.href = link;
-        })
-        .catch((error) => console.error("Error:", error))
-        .finally(() => {
-          document.getElementById("loader").style.display = "none";
+  <div id="main-site">
+    <div class="toast-container position-fixed  text-white bottom-0 end-0 p-3">
+      <div id="welcomeToast" class="toast Not_color_bottom" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header Not_color_top">
+          <i class="fa fa-bell white-text" aria-hidden="true"></i>
+          <strong class="me-auto white-text">&nbsp;&nbsp;&nbsp;Welcome!</strong>
+          <small></small>
+          <button type="button" class="btn-close white-bg" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+          Welcome to JustStudy! Definitely a study website. Enjoy your time here!
+        </div>
+      </div>
+    </div>
+
+    <!-- BEGIN Notify Scripts -->
+    <script>
+
+      function updateToastText(id, text) {
+        document.getElementById(id).innerText = text;
+      };
+
+      if (localStorage.getItem('visited')) {
+      } else {
+        localStorage.setItem('visited', true);
+        document.addEventListener("DOMContentLoaded", () => {
+          const welcomeToast = bootstrap.Toast.getOrCreateInstance(document.getElementById("welcomeToast"));
+          TabCloak('JustStudy', 'assets/img/favicon.ico', 'JustStudy CE')
+          localStorage.setItem("panickey", "Alt+`");
+          localStorage.setItem("Title", "JustStudy");
+          localStorage.setItem("Favi", "assets/img/favicon.ico`");
+          welcomeToast.show()
         });
-    }
+      };
+    </script>
+    <!-- END Notify Scripts -->
 
-    function RandomColour() {
-      var colour = Math.floor(Math.random() * 6) + 1;
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById('settings-box').style.display = 'none';
+        document.getElementById('News').style.display = 'none';
+        document.getElementById('fade-under-settings').style.display = 'none';
+      })
+    </script>
+    <script src="assets/js/renderlist.js" defer></script>
+    <!-- for the sneaky will here is what i added this update. it was supprisingly easy-->
+    <div class="settings-box setting scrollable" style="text-align: center;" id="settings-box">
+      <h2 class="white-text" style="text-align: center;">Settings / apps</h2>
+      <div class="setting">
+        <center>
+          <hr class="rounded">
+          <h3 class="white-text" style="text-align: center;"> Page Options </h3>
+          <div class="dropdown" id="TabCloakOption" style="width: 20vw;">
+            <button class="btn btn-warning dropdown-toggle" type="button" data-bs-toggle="dropdown"
+              aria-expanded="false" id="SettingDropdown">
+              Tab Cloaker - JustStudy - CE
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark">
+              <li><a class="dropdown-item"
+                  onclick="TabCloak('JustStudy','assets/img/favicon.ico' , 'JustStudy CE' )">JustStudy CE</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item"
+                  onclick="TabCloak('Seneca - Learn 2x Faster','assets/img/TabCloak/Seneca.ico' , 'Seneca' )">Seneca</a>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item"
+                  onclick="TabCloak('Sparx Maths - Home', 'assets/img/TabCloak/Sparx.png', 'Sparx Maths ')">Sparx</a>
+              </li>
+              <li>
+                <hr class="dropdown-divider""></li>
+                  <li><a class=" dropdown-item"
+                  onclick="TabCloak('Tassomai', 'assets/img/TabCloak/Tassomai.ico' , 'Tassomai')">Tassomai</a>
+              </li>
+            </ul>
+          </div>
+          <h4 class="white-text"> Sort by: </h4>
+          <div class="dropdown" style="width: 20vw;">
+            <button class="btn btn-warning dropdown-toggle" id="SortList" type="button" data-bs-toggle="dropdown"
+              aria-expanded="false" id="SettingDropdown">
+              Sort list
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark">
+              <li><a class="dropdown-item" onclick="renderList('name')">Name</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" onclick="renderList('category')">Category</a></li>
+            </ul>
+          </div>
+          <hr class="rounded">
+          <h3 class="white-text" style="text-align: center;"> bootstrapper </h3>
 
-      if (colour == 1) {
-        document.getElementById("desc").style.color = '#ffda8b'
-      }
-      else if (colour == 2) {
-        document.getElementById("desc").style.color = '#ffa08b'
-      }
-      else if (colour == 3) {
-        document.getElementById("desc").style.color = '#8bffa0'
-      }
-      else if (colour == 4) {
-        document.getElementById("desc").style.color = '#eaff8b'
-      }
-      else if (colour == 5) {
-        document.getElementById("desc").style.color = '#b0ff8b'
-      }
-      else if (colour == 6) {
-        document.getElementById("desc").style.color = '#8bffda'
-      }
-    }
-    document.addEventListener('DOMContentLoaded', function () {
-      const animationBox = document.getElementById('desc');
-      RandomColour();
-
-      function startDescAnimation() {
-        animationBox.classList.add('descslideout');
-        animationBox.addEventListener('animationend', handleAnimationEnd, { once: true });
-      }
-      randomdesc()
-
-
-    });
-    async function randomdesc() {
-      const response = await fetch('./assets/data/statusWords.json');
-      if (!response.ok) {
-        throw new Error('Failed to load JSON file');
-      }
-
-      const array = await response.json();
-
-      const randomIndex = Math.floor(Math.random() * array.length);
-
-      document.getElementById("desc").textContent = array[randomIndex];
-    }
-
-    // function showAnnouncement() {
-    //   document.querySelector(".announcementcontainer").style.display = "flex";
-    // }
-
-    // window.onload = showAnnouncement;
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/js/random_bg.js"></script>
-  <!-- Load Bootstrap JS -->
-  <div class="News" id="CardBox">
-    <center>
-      <h1 style="font-size: 3vw;"> news <span class="badge text-bg-warning"></span> </h1>
-    </center>
-    <button class="closebt" onclick="toggleNews()">X</button>
-    </center>
-    <iframe src="news.html" width="100%" height="91%" style="border-radius: 1vh;"> </iframe>
-  </div>
-  <script>
-    var NewsOpen = true;
-
-    function toggleNews() {
-      var Card = document.getElementById('CardBox');
-      if (NewsOpen) {
-        Card.classList.remove('fadeOutAnimation');
-        Card.style.display = 'block';
-        Card.classList.add('fadeInAnimation');
-      } else {
-        Card.classList.remove('fadeInAnimation');
-        Card.classList.add('fadeOutAnimation');
-      }
-      NewsOpen = !NewsOpen;
-    }
-    var SettingOpen = true;
-
-    function toggleSettings() {
-      var Card = document.getElementById('settings-box');
-      if (SettingOpen) {
-        Card.classList.remove('SettingsFadeOutAnimation');
-        Card.style.display = 'block';
-        Card.classList.add('SettingsFadeInAnimation');
-      } else {
-        Card.classList.remove('SettingsFadeInAnimation');
-        Card.classList.add('SettingsFadeOutAnimation');
-      }
-      SettingOpen = !SettingOpen;
-    }
-  </script>
-  <div class="text-center" id="loader">
-    <img src="assets/img/loader.gif" alt="Loader">
-    <p class="loader-text">Loading...</p>
-  </div>
-  <center>
-    <div class="mainbox" id="main-panel">
+          <div class="mb-3 outline-warning">
+            <label for="basic-url" class="form-label">Url</label>
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon3">https://</span>
+              <input type="text" class="form-control" id="UrlBt" aria-describedby="basic-addon3 basic-addon4">
+              <button class="btn btn-outline-warning" type="button" onclick="" id="UrlButton">Open Link</button>
+            </div>
+            <div class="form-text" id="basic-addon4"></div>
+          </div>
+          <!-- Files -->
+          <label for="basic-url" class="form-label">File</label>
+          <div class="input-group">
+            <input type="file" class="form-control" id="FileInputBt" aria-describedby="inputGroupFileAddon04"
+              aria-label="Upload">
+            <button class="btn btn-outline-warning" type="button" id="inputGroupFileAddon04"
+              onmousedown="applyBootstrapFile()">Open File</button>
+          </div>
+          <hr class="rounded">
+          <h3 class="white-text" style="text-align: center;"> Panic button keybind </h3>
+          <button id="panicbutton" type="button" class="btn btn-warning">Start Detecting Keys</button>
+          <input type="text" id="result" style="color: white; text-align: center;" readonly
+            placeholder="Press a key or combination">
+          <br>
+          <label class="switch-container">
+            <div class="switch">
+              <input type="checkbox" id="redirectswitch">
+              <span class="slider round"></span>
+            </div>
+            <h3 class="white-text switch-text">Redirect on Alt Tab</h3>
+          </label>
+          <h4 class="white-text" style="text-align: center; font-size: 1vw; margin-top: 0.5vw">press enter to stop input
+            detection</h4>
+          <hr class="rounded">
+          <h3 class="white-text" style="text-align: center;"> Extra </h3>
+          <a class="btn btn-outline-warning" href="./sandbox.html" style="text-align: left;"><i class="fa fa-code"
+              aria-hidden="true"></i>| Sandbox</a>
+          <a class="btn btn-outline-warning" href="./fetcher.html" style="text-align: left;"><i
+              class="fa fa-file-archive-o" aria-hidden="true"></i>| File fetcher</a>
+        </center>
+      </div>
+    </div>
+    <div class="mainbox" style="align-items: center;" id="iframe-box">
       <div class="mainbox-top-margin">
       </div>
-      <div class="container">
-        <div class="row row-cols-3" id="itembox">
-        </div>
-      </div>
-      <div id="category-container" class="container">
-      </div>
+      <iframe id="frame-main" src="" width="95%" height="95%"> </iframe>
     </div>
-  </center>
+    <div class="fade-under-settings" id="fade-under-settings"></div>
+    <script src="/assets/js/jss.js"></script>
+    <!-- end of what i added-->
+
+    <div class="gradient" id="gradient"></div>
+    <div style="display: flex; align-items: center; width: 50vw; margin: 0 auto; position: relative;">
+      <a class="topbutton" href="qa.html" style="margin: 0 auto; position: relative; right: 8vw; cursor: pointer;">
+        <img src="assets/img/qna.png"
+          style="width: 3vw; height: 3vw; position: fixed; top: 50%; transform: translate(20%,-50%);">
+      </a>
+      <a class="topbutton" onclick="FeelingLucky()"
+        style="margin: 0 auto; position: relative; right: 7vw; cursor: pointer;">
+        <img src="assets/img/random.png"
+          style="width: 3vw; height: 3vw; position: fixed; top: 50%; transform: translate(20%,-50%);">
+      </a>
+      <a class="topbutton" onclick="toggleNews()"
+        style="margin: 0 auto; position: relative; right: 6vw; cursor: pointer;">
+        <img src="assets/img/news.png"
+          style="width: 3vw; height: 3vw; position: fixed; top: 50%; transform: translate(20%,-50%);">
+      </a>
+      <a class="topbutton" onclick="toggleSettings()"
+        style="margin: 0 auto; position: relative; right: 5vw; cursor: pointer;">
+        <img src="assets/img/cog.png" style="width: 4vw; height: 4vw; position: fixed;">
+      </a>
+      <h1 class="page-title"
+        style="font-size: 4vw; color: white; margin: 0; text-align: center; flex-grow: 1; position: relative; right: 8vw; z-index: 1; font-weight: bold;">
+        Just<span style="cursor: pointer; position: relative; z-index: 10;"
+          onclick="window.location.href='ahh.html'">S</span>tudy
+      </h1>
 
 
-  <script>
+      <input class="topBarItems searchBar" type="text" id="search-bar" placeholder="Search">
+    </div>
 
-    function openFrame(url) {
-      optimizeForIframe()
-      var Card = document.getElementById('iframe-box');
-      var iframe = document.getElementById('frame-main');
-      Card.style.display = 'block';
-      Card.classList.remove('FrameFadeInAnimation');
-      Card.classList.add('FrameFadeOutAnimation');
-      Card.classList.remove('FrameFadeOutAnimation');
-      Card.classList.add('FrameFadeInAnimation');
-      iframe.src = url;
-    }
-    document.addEventListener('DOMContentLoaded', function () {
-      const switchElement = document.getElementById('redirectswitch');
-      switchElement.checked = localStorage.getItem('redirect') === 'true';
-      var Card = document.getElementById('iframe-box');
-      Card.classList.remove('FrameFadeInAnimation');
-      Card.classList.add('FrameFadeOutAnimation');
-      Card.style.display = 'none';
-    });
+    <div class="page-desc" id="desc"></div>
 
-    showLoader();
+    <script>
+      function handleSearch() {
+        const searchTerm = document.getElementById("search-bar").value.toLowerCase();
+        const gridItems = document.querySelectorAll(".griditem");
+        const categoryContainers = document.querySelectorAll(".category-container");
 
-  </script>
-  <div class="text-center bottom-text" style="height:auto;">
-    <p style="font-size: 1.5vw;">JustStudy CE is proudly ad-free and open source! Get the source code and host yourself
-      on <a style="font-size: 1.5vw;" href="https://github.com/JustStudy-CE/juststudy-ce">𝔾𝕚𝕥𝕙𝕦𝕓</a>.</p>
-    <p style="font-size: 1.5vw;">Join our <a style="font-size: 1.5vw;" href="assets/img/qr.png">𝔻𝕚𝕤𝕔𝕠𝕣𝕕
-        𝕤𝕖𝕣𝕧𝕖𝕣</a>!</p>
-    <p style="font-size: 1.5vw;">Hit counter:</p>
-    <a href="https://www.freecounterstat.com" title="website counter"><img
-        src="https://counter6.optistats.ovh/private/freecounterstat.php?c=e7q6e6dd17hut31lkgpqpjpzlrbjlbgt" border="0"
-        title="website counter" alt="website counter"></a>
-  </div>
-  <script>
-    (function () {
-      const STATUS_PAGE_URL = `${window.location.protocol}//${window.location.host}`; // Replace with your Uptime Kuma instance
-      const STATUS_API = `${STATUS_PAGE_URL}/status`; // Replace with the correct ID
+        gridItems.forEach(item => {
+          const itemName = item.querySelector(".listing-text").textContent.toLowerCase();
 
-      var frame = document.createElement('div');
-      frame.style.position = 'fixed';
-      frame.style.bottom = '2vh';
-      frame.style.right = '2vw';
-      frame.style.width = '320px';
-      frame.style.background = '#ffffff';
-      frame.style.borderRadius = '2vh';
-      frame.style.boxShadow = '0 10px 20px rgba(0,0,0,0.2)';
-      frame.style.zIndex = '9999';
-      frame.style.padding = '2vh';
-      frame.style.fontFamily = 'Arial, sans-serif';
-      frame.style.display = 'none';
-
-      var title = document.createElement('h3');
-      title.style.margin = '0 0 1vh';
-      title.style.fontSize = '2.5vh';
-      title.style.color = '#333';
-      frame.appendChild(title);
-
-      var incidentText = document.createElement('p');
-      incidentText.style.fontSize = '2vh';
-      incidentText.style.color = '#666';
-      frame.appendChild(incidentText);
-
-      var closeButton = document.createElement('button');
-      closeButton.innerText = 'Dismiss';
-      closeButton.style.background = '#d9534f';
-      closeButton.style.color = '#fff';
-      closeButton.style.border = 'none';
-      closeButton.style.padding = '1vh 2vw';
-      closeButton.style.marginTop = '1vh';
-      closeButton.style.borderRadius = '1vh';
-      closeButton.style.cursor = 'pointer';
-      closeButton.onclick = function () {
-        frame.style.display = 'none';
-      };
-      frame.appendChild(closeButton);
-
-      document.body.appendChild(frame);
-
-      function fetchStatus() {
-        fetch(STATUS_API)
+          if (itemName.includes(searchTerm)) {
+            item.style.display = "block";
+          } else {
+            item.style.display = "none";
+          }
+        });
+        categoryContainers.forEach(container => {
+          const visibleItems = container.querySelectorAll('.griditem[style="display: block;"]');
+          const text = document.getElementById(container.id + "-text");
+          if (visibleItems.length == 0) {
+            text.style.display = "none";
+          } else {
+            text.style.display = "block";
+          }
+        });
+      }
+      document.getElementById("search-bar").addEventListener("input", handleSearch);
+    </script>
+    <script>
+      function FeelingLucky() {
+        fetch('assets/data/index.json')
           .then(response => response.json())
           .then(data => {
-            if (data.incident && data.incident.title) {
-              incidentText.innerText = `${data.incident.content}`;
-              title.innerText = `Incident Update: ${data.incident.title}`;
-              frame.style.display = 'block';
-            } else {
-              frame.style.display = 'none';
-            }
+            const randomarray = data[Math.floor(Math.random() * data.length)];
+            const link = randomarray["url"]
+            window.location.href = link;
           })
-          .catch(err => {
-            console.error('Error fetching Uptime Kuma status:', err);
-            incidentText.innerText = 'Error fetching status';
+          .catch((error) => console.error("Error:", error))
+          .finally(() => {
+            document.getElementById("loader").style.display = "none";
           });
       }
 
-      fetchStatus();
-    })();
-  </script>
+      function RandomColour() {
+        var colour = Math.floor(Math.random() * 6) + 1;
+
+        if (colour == 1) {
+          document.getElementById("desc").style.color = '#ffda8b'
+        }
+        else if (colour == 2) {
+          document.getElementById("desc").style.color = '#ffa08b'
+        }
+        else if (colour == 3) {
+          document.getElementById("desc").style.color = '#8bffa0'
+        }
+        else if (colour == 4) {
+          document.getElementById("desc").style.color = '#eaff8b'
+        }
+        else if (colour == 5) {
+          document.getElementById("desc").style.color = '#b0ff8b'
+        }
+        else if (colour == 6) {
+          document.getElementById("desc").style.color = '#8bffda'
+        }
+      }
+      document.addEventListener('DOMContentLoaded', function () {
+        const animationBox = document.getElementById('desc');
+        RandomColour();
+
+        function startDescAnimation() {
+          animationBox.classList.add('descslideout');
+          animationBox.addEventListener('animationend', handleAnimationEnd, { once: true });
+        }
+        randomdesc()
+
+
+      });
+      async function randomdesc() {
+        const response = await fetch('./assets/data/statusWords.json');
+        if (!response.ok) {
+          throw new Error('Failed to load JSON file');
+        }
+
+        const array = await response.json();
+
+        const randomIndex = Math.floor(Math.random() * array.length);
+
+        document.getElementById("desc").textContent = array[randomIndex];
+      }
+
+      // function showAnnouncement() {
+      //   document.querySelector(".announcementcontainer").style.display = "flex";
+      // }
+
+      // window.onload = showAnnouncement;
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/random_bg.js"></script>
+    <!-- Load Bootstrap JS -->
+    <div class="News" id="CardBox">
+      <center>
+        <h1 style="font-size: 3vw;"> news <span class="badge text-bg-warning"></span> </h1>
+      </center>
+      <button class="closebt" onclick="toggleNews()">X</button>
+      </center>
+      <iframe src="news.html" width="100%" height="91%" style="border-radius: 1vh;"> </iframe>
+    </div>
+    <script>
+      var NewsOpen = true;
+
+      function toggleNews() {
+        var Card = document.getElementById('CardBox');
+        if (NewsOpen) {
+          Card.classList.remove('fadeOutAnimation');
+          Card.style.display = 'block';
+          Card.classList.add('fadeInAnimation');
+        } else {
+          Card.classList.remove('fadeInAnimation');
+          Card.classList.add('fadeOutAnimation');
+        }
+        NewsOpen = !NewsOpen;
+      }
+      var SettingOpen = true;
+
+      function toggleSettings() {
+        var Card = document.getElementById('settings-box');
+        if (SettingOpen) {
+          Card.classList.remove('SettingsFadeOutAnimation');
+          Card.style.display = 'block';
+          Card.classList.add('SettingsFadeInAnimation');
+        } else {
+          Card.classList.remove('SettingsFadeInAnimation');
+          Card.classList.add('SettingsFadeOutAnimation');
+        }
+        SettingOpen = !SettingOpen;
+      }
+    </script>
+    <div class="text-center" id="loader">
+      <img src="assets/img/loader.gif" alt="Loader">
+      <p class="loader-text">Loading...</p>
+    </div>
+    <center>
+      <div class="mainbox" id="main-panel">
+        <div class="mainbox-top-margin">
+        </div>
+        <div class="container">
+          <div class="row row-cols-3" id="itembox">
+          </div>
+        </div>
+        <div id="category-container" class="container">
+        </div>
+      </div>
+    </center>
+
+
+    <script>
+
+      function openFrame(url) {
+        optimizeForIframe()
+        var Card = document.getElementById('iframe-box');
+        var iframe = document.getElementById('frame-main');
+        Card.style.display = 'block';
+        Card.classList.remove('FrameFadeInAnimation');
+        Card.classList.add('FrameFadeOutAnimation');
+        Card.classList.remove('FrameFadeOutAnimation');
+        Card.classList.add('FrameFadeInAnimation');
+        iframe.src = url;
+      }
+      document.addEventListener('DOMContentLoaded', function () {
+        const switchElement = document.getElementById('redirectswitch');
+        switchElement.checked = localStorage.getItem('redirect') === 'true';
+        var Card = document.getElementById('iframe-box');
+        Card.classList.remove('FrameFadeInAnimation');
+        Card.classList.add('FrameFadeOutAnimation');
+        Card.style.display = 'none';
+      });
+
+      showLoader();
+
+    </script>
+    <div class="text-center bottom-text" style="height:auto;">
+      <p style="font-size: 1.5vw;">JustStudy CE is proudly ad-free and open source! Get the source code and host
+        yourself
+        on <a style="font-size: 1.5vw;" href="https://github.com/JustStudy-CE/juststudy-ce">𝔾𝕚𝕥𝕙𝕦𝕓</a>.</p>
+      <p style="font-size: 1.5vw;">Join our <a style="font-size: 1.5vw;" href="assets/img/qr.png">𝔻𝕚𝕤𝕔𝕠𝕣𝕕
+          𝕤𝕖𝕣𝕧𝕖𝕣</a>!</p>
+      <p style="font-size: 1.5vw;">Hit counter:</p>
+      <a href="https://www.freecounterstat.com" title="website counter"><img
+          src="https://counter6.optistats.ovh/private/freecounterstat.php?c=e7q6e6dd17hut31lkgpqpjpzlrbjlbgt" border="0"
+          title="website counter" alt="website counter"></a>
+    </div>
+    <script>
+      (function () {
+        const STATUS_PAGE_URL = `${window.location.protocol}//${window.location.host}`; // Replace with your Uptime Kuma instance
+        const STATUS_API = `${STATUS_PAGE_URL}/status`; // Replace with the correct ID
+
+        var frame = document.createElement('div');
+        frame.style.position = 'fixed';
+        frame.style.bottom = '2vh';
+        frame.style.right = '2vw';
+        frame.style.width = '320px';
+        frame.style.background = '#ffffff';
+        frame.style.borderRadius = '2vh';
+        frame.style.boxShadow = '0 10px 20px rgba(0,0,0,0.2)';
+        frame.style.zIndex = '9999';
+        frame.style.padding = '2vh';
+        frame.style.fontFamily = 'Arial, sans-serif';
+        frame.style.display = 'none';
+
+        var title = document.createElement('h3');
+        title.style.margin = '0 0 1vh';
+        title.style.fontSize = '2.5vh';
+        title.style.color = '#333';
+        frame.appendChild(title);
+
+        var incidentText = document.createElement('p');
+        incidentText.style.fontSize = '2vh';
+        incidentText.style.color = '#666';
+        frame.appendChild(incidentText);
+
+        var closeButton = document.createElement('button');
+        closeButton.innerText = 'Dismiss';
+        closeButton.style.background = '#d9534f';
+        closeButton.style.color = '#fff';
+        closeButton.style.border = 'none';
+        closeButton.style.padding = '1vh 2vw';
+        closeButton.style.marginTop = '1vh';
+        closeButton.style.borderRadius = '1vh';
+        closeButton.style.cursor = 'pointer';
+        closeButton.onclick = function () {
+          frame.style.display = 'none';
+        };
+        frame.appendChild(closeButton);
+
+        document.body.appendChild(frame);
+
+        function fetchStatus() {
+          fetch(STATUS_API)
+            .then(response => response.json())
+            .then(data => {
+              if (data.incident && data.incident.title) {
+                incidentText.innerText = `${data.incident.content}`;
+                title.innerText = `Incident Update: ${data.incident.title}`;
+                frame.style.display = 'block';
+              } else {
+                frame.style.display = 'none';
+              }
+            })
+            .catch(err => {
+              console.error('Error fetching Uptime Kuma status:', err);
+              incidentText.innerText = 'Error fetching status';
+            });
+        }
+
+        fetchStatus();
+      })();
+    </script>
+  </div>
   <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
     data-id="juststudy" data-description="Support me on Buy me a coffee!" data-message="Support the project!"
     data-color="#5F7FFF" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
