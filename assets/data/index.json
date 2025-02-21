@@ -1269,8 +1269,15 @@
     {
         "name": "Bananamania",
         "img": "assets/icons/189.jpeg",
-        "url": "studyguide/bananamania/index.html",
+        "url": "studyguide/b-ma/index.html",
         "desc": "Toss the bananas at the two gorillas and watch as they change costumes. Your arrow will spin faster and faster.",
         "category": "Science Lab"
+    },
+    {
+        "name": "A Small World Cup",
+        "img": "assets/icons/190.jpeg",
+        "url": "studyguide/aswc/index.html",
+        "desc": "Experience a miniature version of the World Cup with fast-paced action and exciting gameplay.",
+        "category": "Sports"
     }
 ]
