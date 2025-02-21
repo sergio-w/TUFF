@@ -1265,5 +1265,12 @@
         "url": "studyguide/sm64/index.html",
         "desc": "Beat bowser and rescue princess peach in the first and one of the best platformers of all time!",
         "category": "Gym Class"
+    },
+    {
+        "name": "Bananamania",
+        "img": "assets/icons/189.jpeg",
+        "url": "studyguide/bananamania/index.html",
+        "desc": "Toss the bananas at the two gorillas and watch as they change costumes. Your arrow will spin faster and faster.",
+        "category": "Science Lab"
     }
 ]
