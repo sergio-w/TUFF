@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Request Form</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .form-container {
+            background: #ffffff;
+            padding: 2vw;
+            border-radius: 1vw;
+            box-shadow: 0 0 1vw rgba(0, 0, 0, 0.1);
+            width: 55vw;
+            box-sizing: border-box;
+        }
+
+        .form-group {
+            margin-bottom: 2vw;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5vw;
+            font-size: 3vw;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 1vw;
+            font-size: 2vw;
+            border: 0.2vw solid #ccc;
+            border-radius: 0.5vw;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 1vw 2vw;
+            font-size: 2vw;
+            border: none;
+            background: #007BFF;
+            color: #fff;
+            border-radius: 0.5vw;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-container">
+        <form id="requestForm">
+            <div class="form-group">
+                <label for="requestType">Request Type:</label>
+                <select id="requestType" required>
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="fix">Fix</option>
+                    <option value="gamereq">Game Request</option>
+                    <option value="takedown">Takedown</option>
+                </select>
+            </div>
+            <div class="form-group hidden" id="fixGroup">
+                <label for="siteField">Site:</label>
+                <input type="text" id="siteField">
+            </div>
+            <div class="form-group hidden" id="gamereqGroup">
+                <label for="gameField">Game:</label>
+                <input type="text" id="gameField">
+            </div>
+            <div class="form-group hidden" id="takedownGroup">
+                <label for="takedownField">Takedown:</label>
+                <input type="text" id="takedownField">
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        const requestTypeEl = document.getElementById('requestType');
+        const fixGroup = document.getElementById('fixGroup');
+        const gamereqGroup = document.getElementById('gamereqGroup');
+        const takedownGroup = document.getElementById('takedownGroup');
+
+        requestTypeEl.addEventListener('change', function () {
+            fixGroup.classList.add('hidden');
+            gamereqGroup.classList.add('hidden');
+            takedownGroup.classList.add('hidden');
+
+            if (this.value === 'fix') {
+                fixGroup.classList.remove('hidden');
+            } else if (this.value === 'gamereq') {
+                gamereqGroup.classList.remove('hidden');
+            } else if (this.value === 'takedown') {
+                takedownGroup.classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('requestForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const requestType = requestTypeEl.value;
+            const data = { data: { type: requestType } };
+
+            if (requestType === 'fix') {
+                data.data.site = document.getElementById('siteField').value;
+            } else if (requestType === 'gamereq') {
+                data.data.game = document.getElementById('gameField').value;
+            } else if (requestType === 'takedown') {
+                data.data.takedown = document.getElementById('takedownField').value;
+            }
+
+            console.log('Form submission data:', data);
+            fetch('https://api.willgray.uk/api/juststudy', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            alert('Success! Someone will have a look shortly. Thank you.\n Redirecting back home...');
+            window.history.back();
+        });
+    </script>
+</body>
+
+</html>

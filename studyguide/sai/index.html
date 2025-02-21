@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat Assistant</title>
+  <style>
+    /* Base styles */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .chat-container {
+      width: 90%;
+      max-width: 600px;
+      height: 80vh;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+    .chat-header {
+      padding: 15px;
+      background: #4CAF50;
+      color: #fff;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      font-size: 1.5rem;
+      text-align: center;
+    }
+    .chat-history {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      background: #fafafa;
+    }
+    .chat-message {
+      margin-bottom: 15px;
+      display: flex;
+    }
+    .chat-message.user .message-content {
+      background: #DCF8C6;
+      align-self: flex-end;
+      border-top-right-radius: 0;
+    }
+    .chat-message.ai .message-content {
+      background: #eee;
+      align-self: flex-start;
+      border-top-left-radius: 0;
+    }
+    .message-content {
+      padding: 10px 15px;
+      border-radius: 10px;
+      max-width: 80%;
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+    .chat-input {
+      display: flex;
+      border-top: 1px solid #ccc;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      font-size: 1rem;
+      border: none;
+      outline: none;
+    }
+    .chat-input button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      background: #4CAF50;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .chat-input button:hover {
+      background: #45a049;
+    }
+    /* Spinner animation for "AI thinking" */
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #ccc;
+      border-top: 3px solid #4CAF50;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">Chat Assistant</div>
+    <div class="chat-history" id="chatHistory">
+      <!-- Chat messages will be appended here -->
+    </div>
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="Type your message..." />
+      <button id="sendButton">Send</button>
+    </div>
+  </div>
+
+  <script>
+    // Generate a random user ID for this session
+    const userId = Math.floor(Math.random() * 10000000);
+    const chatHistory = document.getElementById('chatHistory');
+    const userInput = document.getElementById('userInput');
+    const sendButton = document.getElementById('sendButton');
+
+    // Append a message to the chat history
+    function appendMessage(sender, text, isSpinner = false) {
+      const messageWrapper = document.createElement('div');
+      messageWrapper.className = 'chat-message ' + sender;
+      
+      const messageContent = document.createElement('div');
+      messageContent.className = 'message-content';
+      
+      if (isSpinner) {
+        const spinner = document.createElement('div');
+        spinner.className = 'spinner';
+        messageContent.appendChild(spinner);
+      } else {
+        messageContent.textContent = text;
+      }
+      
+      messageWrapper.appendChild(messageContent);
+      chatHistory.appendChild(messageWrapper);
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+
+    // Send message to the API and handle the response
+    async function sendMessage() {
+      const message = userInput.value.trim();
+      if (!message) return;
+
+      // Append user's message
+      appendMessage('user', message);
+      // Append AI "thinking" spinner
+      appendMessage('ai', '', true);
+      const spinnerMessage = chatHistory.lastElementChild;
+      
+      userInput.value = '';
+
+      try {
+        const response = await fetch('https://dev.ai.getcorgi.com/corgi_chatgpt/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            entity: "send_one_message",
+            user_id: userId,
+            message: message,
+            isSound: false
+          })
+        });
+        const data = await response.json();
+        spinnerMessage.remove();
+        if (data && data.messages) {
+          appendMessage('ai', `${data.messages[1].content}`);
+        } else {
+          appendMessage('ai', 'Sorry, something went wrong.');
+        }
+      } catch (error) {
+        spinnerMessage.remove();
+        appendMessage('ai', 'Error: ' + error.message);
+      }
+    }
+
+    // Event listeners for button click and Enter key
+    sendButton.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+  </script>
+</body>
+</html>
