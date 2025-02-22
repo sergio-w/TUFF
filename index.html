@@ -615,7 +615,7 @@ margin: 1.5rem 0;
     <!-- end of what i added-->
 
     <div class="gradient" id="gradient"></div>
-    <div style="display: flex; align-items: center; width: 50vw; margin: 0 auto; position: relative;">
+    <div style="display: flex; align-items: center; width: 50vw; margin: 0 auto; position: relative; z-index: 1;">
       <a class="topbutton" href="qa.html" style="margin: 0 auto; position: relative; right: 8vw; cursor: pointer;">
         <img src="assets/img/qna.png" alt="qna"
           style="width: 3vw; height: 3vw; position: fixed; top: 50%; transform: translate(20%,-50%);">
@@ -634,10 +634,8 @@ margin: 1.5rem 0;
         style="margin: 0 auto; position: relative; right: 5vw; cursor: pointer;">
         <img src="assets/img/cog.png" alt="settings" style="width: 4vw; height: 4vw; position: fixed;">
       </a>
-      <h1 class="page-title"
-        style="font-size: 4vw; color: white; margin: 0; text-align: center; flex-grow: 1; position: relative; right: 8vw; z-index: 1; font-weight: bold;">
-        Just<span style="cursor: pointer; position: relative; z-index: 10;"
-          onclick="window.location.href='ahh.html'">S</span>tudy
+      <h1 class="page-title" style="font-size: 4vw; color: white; margin: 0; text-align: center; flex-grow: 1; position: relative; right: 8vw; z-index: 1; font-weight: bold; z-index: -1; pointer-events: none;">
+        Just<span style="cursor: pointer; position: relative; pointer-events: auto; cursor: pointer;" onclick="window.location.href='ahh.html'">S</span>tudy
       </h1>
 
 
@@ -903,10 +901,10 @@ margin: 1.5rem 0;
       })();
     </script>
   </div>
-  <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
+  <!-- <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
     data-id="juststudy" data-description="Support me on Buy me a coffee!" data-message="Support the project!"
     data-color="#5F7FFF" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
-  <script src="//d2wy8f7a9ursnm.cloudfront.net/v8/bugsnag.min.js"></script>
+  <script src="//d2wy8f7a9ursnm.cloudfront.net/v8/bugsnag.min.js"></script> -->
   <script type="module">
     import BugsnagPerformance from '//d2wy8f7a9ursnm.cloudfront.net/v1/bugsnag-performance.min.js'
     Bugsnag.start({ apiKey: '5dd4372f94a80e6a7c4326803b4e2639' })
