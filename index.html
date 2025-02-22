@@ -83,12 +83,13 @@
   <script src="assets/js/teacher.js"> </script>
   <!-- start of what i added -->
   <center>
-    <div class="announcementcontainer" style="
+    <div class="announcementcontainer" id="announcementcontainer" style="
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    display: none;
     background-color: rgba(0, 0, 0, 0.8);
     z-index: 2000;
     color: white;
@@ -261,7 +262,7 @@ margin: 1.5rem 0;
     </div>
   </center>
 
-  <style>
+  <!-- <style>
     #welcome-screen {
       position: fixed;
       inset: 0;
@@ -354,7 +355,7 @@ margin: 1.5rem 0;
     #juststudy-text.start {
       animation: scaleFadeSpin 2s ease-in-out 1s forwards;
     }
-  </style>
+  </style> -->
 
   <div id="loadercontainer" class="loaderbg">
     <div class="loader">
@@ -369,11 +370,11 @@ margin: 1.5rem 0;
     <div id="loaderpercent" class="loaderpercent">0%</div>
   </div>
 
-  <div id="welcome-screen">
+  <!-- <div id="welcome-screen">
     <h1 id="welcome-text">WELCOME</h1>
     <h1 id="to-text">TO</h1>
     <h1 id="juststudy-text">JustStudy</h1>
-  </div>
+  </div> -->
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -453,21 +454,18 @@ margin: 1.5rem 0;
       trackResourceLoading();
     });
 
-    // =========================
-    // WELCOME ANIMATION LOGIC
-    // =========================
     function StartWelcome() {
-      const welcomeScreen = document.getElementById("welcome-screen");
-      welcomeScreen.style.display = "flex";
+      // const welcomeScreen = document.getElementById("welcome-screen");
+      // welcomeScreen.style.display = "flex";
 
-      document.getElementById('welcome-text').classList.add('start');
-      document.getElementById('to-text').classList.add('start');
-      document.getElementById('juststudy-text').classList.add('start');
-
-      setTimeout(() => {
-        welcomeScreen.style.display = "none";
-        document.getElementById("main-site").style.display = "block";
-      }, 3000);
+      // document.getElementById('welcome-text').classList.add('start');
+      // document.getElementById('to-text').classList.add('start');
+      // document.getElementById('juststudy-text').classList.add('start');
+      document.getElementById(`announcementcontainer`).style.display = "block";
+      // setTimeout(() => {
+      //   welcomeScreen.style.display = "none";
+      //   document.getElementById("main-site").style.display = "block";
+      // }, 3000);
     }
   </script>
   <div id="main-site">

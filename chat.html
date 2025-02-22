@@ -2436,7 +2436,6 @@
         pingServer();
       }, 3000);
     }
-
     function attemptReconnect() {
       if (socket.readyState === WebSocket.OPEN) return;
       setTimeout(() => {
