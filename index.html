@@ -364,6 +364,7 @@ margin: 1.5rem 0;
     <div class="loadertext">
       Loading<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
     </div>
+    <div id="loadingquote" class="loadingquote"></div>
     <div class="loaderbarparent">
       <div id="loaderbar" class="loaderbar"></div>
     </div>
@@ -378,6 +379,21 @@ margin: 1.5rem 0;
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
+      async function randomquote() {
+        const response = await fetch('./assets/data/quotes.json');
+        if (!response.ok) {
+          throw new Error('Failed to load JSON file');
+        }
+
+        const array = await response.json();
+
+        const randomIndex = Math.floor(Math.random() * array.length);
+
+        document.getElementById("loadingquote").textContent = array[randomIndex];
+      }
+
+      randomquote();
+
       const announcement = document.querySelector(".announcementcontainer");
       const closeAnnouncementBtn = document.getElementById("closeAnnouncement");
       const loaderContainer = document.getElementById("loadercontainer");
@@ -397,11 +413,12 @@ margin: 1.5rem 0;
             loaderContainer.style.opacity = "0";
             setTimeout(() => {
               loaderContainer.style.display = "none";
-              StartWelcome();
+              document.getElementById("announcementcontainer").style.display = "flex";
             }, 500);
           }, 500);
         }
       }
+
 
       function countResources() {
         const images = document.images;
@@ -454,19 +471,7 @@ margin: 1.5rem 0;
       trackResourceLoading();
     });
 
-    function StartWelcome() {
-      // const welcomeScreen = document.getElementById("welcome-screen");
-      // welcomeScreen.style.display = "flex";
 
-      // document.getElementById('welcome-text').classList.add('start');
-      // document.getElementById('to-text').classList.add('start');
-      // document.getElementById('juststudy-text').classList.add('start');
-      document.getElementById(`announcementcontainer`).style.display = "block";
-      // setTimeout(() => {
-      //   welcomeScreen.style.display = "none";
-      //   document.getElementById("main-site").style.display = "block";
-      // }, 3000);
-    }
   </script>
   <div id="main-site">
     <div class="toast-container position-fixed  text-white bottom-0 end-0 p-3">
@@ -634,8 +639,10 @@ margin: 1.5rem 0;
         style="margin: 0 auto; position: relative; right: 5vw; cursor: pointer;">
         <img src="assets/img/cog.png" alt="settings" style="width: 4vw; height: 4vw; position: fixed;">
       </a>
-      <h1 class="page-title" style="font-size: 4vw; color: white; margin: 0; text-align: center; flex-grow: 1; position: relative; right: 8vw; z-index: 1; font-weight: bold; z-index: -1; pointer-events: none;">
-        Just<span style="cursor: pointer; position: relative; pointer-events: auto; cursor: pointer;" onclick="window.location.href='ahh.html'">S</span>tudy
+      <h1 class="page-title"
+        style="font-size: 4vw; color: white; margin: 0; text-align: center; flex-grow: 1; position: relative; right: 8vw; z-index: 1; font-weight: bold; z-index: -1; pointer-events: none;">
+        Just<span style="cursor: pointer; position: relative; pointer-events: auto; cursor: pointer;"
+          onclick="window.location.href='ahh.html'">S</span>tudy
       </h1>
 
 

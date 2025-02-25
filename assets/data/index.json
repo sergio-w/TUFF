@@ -1279,5 +1279,12 @@
         "url": "studyguide/aswc/index.html",
         "desc": "Experience a miniature version of the World Cup with fast-paced action and exciting gameplay.",
         "category": "Sports"
+    },
+	{
+        "name": "Obby Robby Only Up",
+        "img": "assets/icons/191.png",
+        "url": "studyguide/orou/index.html",
+        "desc": "Obby Parkour Game",
+        "category": "Obby"
     }
 ]
