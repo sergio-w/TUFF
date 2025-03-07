@@ -1286,5 +1286,12 @@
         "url": "studyguide/orou/index.html",
         "desc": "Obby Parkour Game",
         "category": "Obby"
+    },
+    {
+        "name": "Mini Putt III",
+        "img": "assets/icons/192.png",
+        "url": "ruf.html?p=studyguide/mp-3/file.swf",
+        "desc": "Fun mini golf game",
+        "category": "Racing & Sports"
     }
 ]
