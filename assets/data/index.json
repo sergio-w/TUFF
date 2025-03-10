@@ -1293,5 +1293,12 @@
         "url": "ruf.html?p=studyguide/mp-3/file.swf",
         "desc": "Fun mini golf game",
         "category": "Racing & Sports"
+    },
+    {
+        "name": "Riddle School 5",
+        "img": "assets/icons/193.jpg",
+        "url": "ruf.html?p=studyguide/mp-3/file.swf",
+        "desc": "Yet another Riddle School game",
+        "category": "Science Lab"
     }
 ]
