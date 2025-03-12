@@ -1,0 +1,168 @@
+/* The Modal (background) */
+.modal {
+    display: none;
+    position: fixed;
+    padding-top: 5%;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4) !important;
+    z-index: 99999 !important;
+    pointer-events: all;
+	
+
+}
+
+/* Modal Content */
+.modal-content {
+    color: white;
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+  height: 65vh;
+  font-family: verdana;
+  background-image: linear-gradient(#6a7ea5, #1b222f);
+  font-size: 14px;
+  flex-direction: column;
+    overflow-y: hidden;
+	
+		 display: flex; /* use flexbox */
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btnLink {
+    padding: 20px;
+    color: white;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 16px;
+}
+
+
+/* Tab Styling */
+.tab {
+	height: 7.5%;
+    padding: 5px 0px 5px 0px;
+}
+
+.tab button {
+	color: #4a8fb7;
+    background-color: #13252f;
+    width: 120px;
+    height: 100%;
+    font-weight: bolder;
+    font-size: initial;
+	border: none;
+}
+
+.tab button.active {
+  background-color: #ccc;
+}
+
+.thumbnail-gallery {
+overflow-x: auto;
+    overflow-y: hidden;
+height: 40%;
+    padding-top: 1%;
+}
+
+.thumbnails {
+height: 100%;
+    position: relative;
+    display: flex;
+    word-break: break-word;
+}
+
+.thumbnails img {
+    text-align: center;
+    height: 80%;
+    width: auto;
+}
+
+.thumbnail {
+    display: inline-flex;
+    position: relative;
+    height: 100%;
+    flex-direction: column;
+    margin-left: 20px;
+}
+
+.thumb-title{
+position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 20%;
+    font-size: small;
+    font-weight: bold;
+    text-align: center;
+    padding: 5% 0;
+    margin-bottom: -1vh;
+    font-family: sans-serif;
+    color: #4a8fb7;
+}
+
+#featuredContent{
+z-index: 1001;
+    width: 350px;
+    position: absolute;
+    transform-origin: top left;
+    pointer-events: visible;
+    display: none;
+    top: 12%;
+    left: .25%;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    height: 85px;
+    background: #000000c9;
+}
+
+.featuredStreamers{
+
+}
+
+.featured-content-video{
+	display: flex;
+    overflow: hidden;
+    height: 100px;
+    margin-left: 5px;
+    transform: translateY(-10px);
+}
+
+
+.featuredEntry{
+    display: none;
+    margin: 1px;
+    background: #0a0a0ac4;
+    border-radius: 7.5px;
+}
+
+.featuredIcon{
+	border-radius: 5px;
+}
+
+.featuredText{
+font-family: verdana;
+    text-align: left;
+    margin-left: 10px;
+    color: white;
+	width: 200px;
+}

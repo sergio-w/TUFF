@@ -1,0 +1,208 @@
+<!DOCTYPE html><html><head>
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/world.css">
+    <link rel="stylesheet" type="text/css" href="css/screen.css">
+    <link rel="stylesheet" type="text/css" href="css/popup.css">
+    <link rel="stylesheet" type="text/css" href="css/tabs.css">
+</head>
+  <body id="body">
+    <div id="inner_loading">
+        <h1>Ice Dodo 3</h1>
+        <h1>...Loading...</h1>
+        <p class="arial">Use left and right arrow keys<br>to move to the finish line!</p>
+    </div>
+    <!-- render section -->
+    <canvas id="renderCanvas"></canvas>
+    <button class="button" id="backtomenu2">MENU</button>
+    <div id="curr_time">TIME: 0</div>
+    <div id="best_time"></div>
+    <!-- controls -->
+    <div id="left" class="mobile_controls">◀</div>
+    <div id="right" class="mobile_controls">▶</div>
+    <!-- popup -->
+    <div id="popup">
+        <center>
+            <p style="font-size: 12px;">
+                <a class="my_ad" target="_blank" href="https://www.onionfist.com/icedodo">PLAY FULL SCREEN</a>
+            </p>
+            <p class="arial" style="width: 300px;">Welcome to ice dodo! Use left and right arrow keys to go to the finish line. <span id="incomplete_maps_top"></span></p>
+            <div id="cups"></div>
+            <br>
+            <p style="font-size: 12px;">
+                <a class="my_ad" target="_blank" href="https://www.onionfist.com/icedodo">SHOW 20 MORE MAPS</a>
+            </p>
+
+            <div id="mystats" class="arial">
+                <h1>Your Dodo Score: <span id="dodo_score">...</span></h1>
+                <h1>Total Completes: <span id="total_completes">...</span></h1>
+                <h1>Incomplete Maps: <span id="incomplete_maps">...</span></h1>
+                <h1>Your Name: <input type="text" id="mem_name" maxlength="15" style="width: 130px;" placeholder="type here"></h1>
+                <a target="_blank" id="leaderboard_button" class="leaderboard_buttons">Open Leaderboard</a>
+                <p id="name_error">Name must contain only A-Z, 0-9, dot, underscore and space.</p>
+            </div>
+            <br>
+            <div style="color: #808080; margin: 15px 0px; font-family: Arial; font-size: 14px; width: 300px;">
+                2021 Onionfist Studio. All Rights Reserved. Contact: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fd9b918494939a99929992c4cdcdcdbd9a909c9491d39e9290">[email&#160;protected]</a> <br>
+                By using Ice Dodo, you agree to our <a href="https://onionfist.com/privacy_policy/" target="_blank" style="color: #808080; text-decoration: underline !important; color: #b5b5b5; border: none !important;">Privacy Policy</a> and 
+                <a href="https://onionfist.com/terms_of_service/" target="_blank" style="color: #808080; text-decoration: underline !important; color: #b5b5b5; border: none !important;">Terms of Service</a>
+            </div>
+        </center>
+        <br>
+        <br>
+        <br>
+    </div>
+    <!-- screens -->
+    <div id="screen">
+        <div style="height: 30px;"></div>
+        <h1 id="screen_map_name"></h1>
+        <h1 id="screen_map_about"></h1>
+        <h1 id="screen_dialog"></h1>
+        <h1 id="screen_info"></h1>
+        <table>
+            <tbody><tr>
+                <th><button class="button" id="restart">error</button></th>
+                <th><button class="button" id="backtomenu">MENU</button></th>
+            </tr>
+            <tr>
+                <th><i id="shortcut_label">SPACEBAR</i></th>
+                <th><i id="shortcut_label"></i></th>
+            </tr>
+        </tbody></table>
+        <br>
+        <a target="_blank" id="map_leaderboard" class="leaderboard_buttons">Open Leaderboard</a>
+        <h1 class="speedrun_info" id="speedrun_best"></h1>
+        <h1 class="speedrun_info" id="speedrun_now"></h1>
+    </div>
+    <table id="menu">
+        <tbody><tr>
+            <th class="btn" id="settings_btn">SETTINGS</th>
+            <th class="btn" id="discord_btn">SKINS</th>
+            <th class="btn" id="notifs_btn">ABOUT</th>
+        </tr>
+    </tbody></table>
+    <!-- music -->
+    <audio controls id="audio">
+    <source src id="audiosource">
+    </audio>
+    <!-- tabs -->
+
+    <div class="tab" id="notifs_tab" style="visibility: hidden; position: absolute; z-index: -10;">
+        <div class="close_tab"><img src="assets/icons/close.png"></div>
+        <p class="title">
+            
+        </p>
+        <p>
+            DISCORD <a href="https://discord.gg/S8kZjgb" target="_blank">Join Server</a>
+        </p>
+        <p>
+            INSTAGRAM <a href="https://www.instagram.com/onionfist/" target="_blank">Follow</a>
+        </p>
+        <p class="title">
+            DEVELOPER
+        </p>
+        <p class="arial">
+            Jason (<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f6909a8f9f989192999299cfc6c6c6b6919b979f9ad895999b">[email&#160;protected]</a>)
+        </p>
+        <p class="title">
+            MAP MAKERS
+        </p>
+        <p class="arial">
+            Kazil, Carrots, Squirrel, June K, Parke, Dododo73, Usern, Maplez, Neonturtle, Milesrad, Skywolf, Helloe, Sungjoon, Datoneguy246, Bearded Baby
+        </p>
+        <p class="title">
+            MUSIC
+        </p>
+        <p class="arial">
+            Music is made by EnV. <br>
+            Check out his music!
+        </p>
+    </div>
+
+    <div class="tab" id="settings_tab" style="visibility: hidden; position: absolute; z-index: -10;">
+        <div class="close_tab"><img src="assets/icons/close.png"></div>
+        <p class="title">
+            SETTINGS
+        </p>
+        <p>
+            </p><div class="select_list">
+                MUSIC
+                <div class="select_item" id="musicEnabled_on">
+                    ON
+                </div>
+                <div class="select_item" id="musicEnabled_off">
+                    OFF
+                </div>
+            </div>
+        <p></p>
+        <p>
+            </p><div class="select_list">
+                AUTO RESTART
+                <div class="select_item" id="autoRestart_on">
+                    ON
+                </div>
+                <div class="select_item" id="autoRestart_off">
+                    OFF
+                </div>
+            </div>
+        <p></p>
+        <p>
+            </p><div class="select_list">
+                TEXTURE
+                <div class="select_item" id="platformTexture_bright">
+                    BRIGHT
+                </div>
+                <div class="select_item" id="platformTexture_dark">
+                    DARK
+                </div>
+            </div>
+        <p></p>
+        <p class="title">
+            ADVANCED SETTINGS
+        </p>
+        <p>
+            </p><div class="select_list">
+                FRAME RATE
+                <div class="select_item" id="frameRate_fixed">
+                    FIXED
+                </div>
+                <div class="select_item" id="frameRate_vsync">
+                    VSYNC
+                </div>
+            </div>
+        <p></p>
+    </div>
+
+    <div class="tab arial" id="discord_tab" style="visibility: hidden; position: absolute; z-index: -10;">
+        <div class="close_tab"><img src="assets/icons/close.png"></div>
+
+        <p class="title">
+            SKINS
+        </p>
+        <p>
+            </p><div class="select_list" id="unlocked_skins">
+            </div>
+        <p></p>
+        <p class="title">
+            UNLOCK FREE SKINS
+        </p>
+        <p class="title">
+            </p><div id="locked_skins">
+                
+            </div>
+        <p></p>
+        <p>
+
+        </p>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="text/javascript" src="https://d3j03l4awavryx.cloudfront.net/babylon.js"></script>
+
+<script type="text/javascript" src="auto_gen.js"></script>
+
+  
+
+</body></html>

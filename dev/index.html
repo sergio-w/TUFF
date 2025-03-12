@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Application Forms</title>
+  <style>
+    /* Global Styles */
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    /* Centered container with a subtle background and shadow */
+    #app-container {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 2vw;
+      border-radius: 1vw;
+      box-shadow: 0 0 2vw rgba(255, 255, 255, 0.2);
+      max-width: 40vw;
+      width: 90%;
+    }
+
+    h1 {
+      font-size: 2vw;
+      text-align: center;
+      margin-bottom: 1vw;
+    }
+
+    p {
+      font-size: 1.2vw;
+      text-align: center;
+      margin-bottom: 2vw;
+    }
+
+    .form-field {
+      margin-bottom: 1vw;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5vw;
+      font-size: 1.2vw;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 0.5vw;
+      font-size: 1vw;
+      border: none;
+      border-radius: 0.5vw;
+    }
+
+    /* --- Custom Checkbox Styling --- */
+    input[type="checkbox"] {
+      /* Remove default appearance */
+      -webkit-appearance: none;
+      appearance: none;
+      outline: none;
+      cursor: pointer;
+
+      /* Size and shape */
+      width: 1.5vw;
+      height: 1.5vw;
+      margin-right: 0.5vw;
+      border: 0.15vw solid #444;
+      border-radius: 0.3vw;
+      background-color: transparent;
+      position: relative;
+    }
+
+    /* Hover effect */
+    input[type="checkbox"]:hover {
+      border-color: #1e90ff;
+    }
+
+    /* Checked state background and border color */
+    input[type="checkbox"]:checked {
+      background-color: #1e90ff;
+      border-color: #1e90ff;
+    }
+
+    /* Checkmark using ::after */
+    input[type="checkbox"]:checked::after {
+      content: "";
+      position: absolute;
+      top: 0.2vw;
+      left: 0.45vw;
+      width: 0.3vw;
+      height: 0.8vw;
+      border: 0.15vw solid #fff;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
+    }
+
+    button {
+      padding: 0.8vw 1.5vw;
+      font-size: 1vw;
+      cursor: pointer;
+      border: none;
+      border-radius: 0.5vw;
+      background-color: #1e90ff;
+      color: #fff;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0d6efd;
+    }
+
+    select {
+      font-size: 1vw;
+      padding: 0.5vw;
+      margin-bottom: 2vw;
+      width: 100%;
+      border: none;
+      border-radius: 0.5vw;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app-container">
+    <!-- Dropdown for Selecting an Application -->
+    <div id="app-selection">
+      <label for="application-select">Select an Application:</label>
+      <select id="application-select">
+        <option value="">-- Choose an Application --</option>
+      </select>
+    </div>
+
+    <!-- Container where the dynamic form will be loaded -->
+    <div id="form-container"></div>
+  </div>
+
+  <script>
+    let applications = [];
+
+    // Load the applications from the JSON file.
+    fetch('applications.json')
+      .then(response => response.json())
+      .then(data => {
+        applications = data;
+        const appSelect = document.getElementById('application-select');
+        applications.forEach((app, index) => {
+          const option = document.createElement('option');
+          option.value = index;
+          option.textContent = app.Title;
+          appSelect.appendChild(option);
+        });
+      })
+      .catch(error => {
+        console.error('Error loading applications:', error);
+      });
+
+    // Build and display the form for the selected application.
+    function loadForm(appData) {
+      const container = document.getElementById('form-container');
+      container.innerHTML = '';
+
+      // Title and description.
+      const title = document.createElement('h1');
+      title.textContent = appData.Title;
+      container.appendChild(title);
+
+      const description = document.createElement('p');
+      description.textContent = appData.Description;
+      container.appendChild(description);
+
+      // Create the form element.
+      const form = document.createElement('form');
+      form.id = 'application-form';
+
+      // Dynamically create form fields based on the Questions array.
+      appData.Questions.forEach(question => {
+        const fieldDiv = document.createElement('div');
+        fieldDiv.className = 'form-field';
+
+        const label = document.createElement('label');
+        label.htmlFor = question.Name;
+        label.textContent = question.Message;
+        fieldDiv.appendChild(label);
+
+        let input;
+        if (question.Type === 'input') {
+          if (question.name === 'email') {
+            input = document.createElement('input');
+            input.type = 'email';
+            input.required = true;
+          } else if (question.name === 'questions') {
+            input = document.createElement('input');
+            input.type = 'text';
+          } else {
+            input = document.createElement('input');
+            input.type = 'text';
+            input.required = true;
+          }
+        } else if (question.Type === 'boolean') {
+          input = document.createElement('input');
+          input.type = 'checkbox';
+          input.required = true;
+        }
+        input.id = question.Name;
+        input.name = question.Name;
+        fieldDiv.appendChild(input);
+        form.appendChild(fieldDiv);
+      });
+
+      // Add a submit button.
+      const submitBtn = document.createElement('button');
+      submitBtn.type = 'submit';
+      submitBtn.textContent = 'Submit';
+      form.appendChild(submitBtn);
+
+      // Handle form submission.
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        const formData = {};
+        appData.Questions.forEach(question => {
+          const element = form.elements[question.Name];
+          formData[question.Name] =
+            question.Type === 'boolean' ? element.checked : element.value;
+        });
+        console.log('Form Data:', formData);
+        alert('Thank you for your application. One of our members of staff will review your application shortly. We look forward to speaking with you.');
+      });
+
+      container.appendChild(form);
+    }
+
+    // Listen for changes in the dropdown to load the selected application form.
+    document.getElementById('application-select').addEventListener('change', event => {
+      const selectedIndex = event.target.value;
+      if (selectedIndex !== '') {
+        loadForm(applications[selectedIndex]);
+      } else {
+        document.getElementById('form-container').innerHTML = '';
+      }
+    });
+  </script>
+</body>
+
+</html>

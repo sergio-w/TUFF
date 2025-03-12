@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hall of Shame</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #2c3e50, #4ca1af);
+            text-align: center;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .shame-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .shame-item {
+            display: flex;
+            align-items: center;
+            background: #34495e;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+
+        .shame-item:hover {
+            transform: scale(1.05);
+        }
+
+        .shame-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .shame-content {
+            text-align: left;
+        }
+
+        .shame-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .shame-lesson,
+        .shame-reason {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="title">🏆 Hall of Shame 🏆</div>
+        <ul id="shame-list" class="shame-list"></ul>
+    </div>
+
+    <script>
+        const shameData = [
+            {
+                "Name": "Mike Illsley",
+                "Lesson": "Safeguarding and Head of taking us down.",
+                "Image": "/assets/img/sexyillsley.png",
+                "Reason": "Continuously trying to take JustStudy down on all of our domains. You won't be able to and you will be here for a while. We have over 50 different domains so as soon as you take one down another one comes along!"
+            },
+            {
+                "Name": "Michelle Stanley",
+                "Lesson": "Head of physics",
+                "Image": "/",
+                "Reason": "Being a cunty bitch"
+            },
+            {
+                "Name": "Neal Metcalf",
+                "Lesson": "Head of maths",
+                "Image": "/assets/img/metcalf.png",
+                "Reason": "Kind of annoying. completelly fucking boring and built like the guy from up and. And lastly just to much sparx homework, probably will divorce his wife for it"
+            },
+            {
+                "Name": "Stephen Jegede",
+                "Lesson": "Head of homework, Science Teacher",
+                "Image": "/assets/img/jegede.png",
+                "Reason": "Cornell notes. Why does he want to wank off to them so much"
+            },
+        ];
+
+        function loadShameList() {
+            const shameList = document.getElementById("shame-list");
+            shameData.forEach((person, index) => {
+                const item = document.createElement("li");
+                item.classList.add("shame-item");
+
+                item.innerHTML = `
+                    <img class="shame-image" src="${person.Image}" alt="${person.Name}">
+                    <div class="shame-content">
+                        <div class="shame-name">${index === 0 ? "🔥 " : ""}${person.Name}</div>
+                        <div class="shame-lesson"><strong>Lesson:</strong> ${person.Lesson}</div>
+                        <div class="shame-reason"><strong>Reason:</strong> ${person.Reason}</div>
+                    </div>
+                `;
+                shameList.appendChild(item);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", loadShameList);
+    </script>
+</body>
+
+</html>

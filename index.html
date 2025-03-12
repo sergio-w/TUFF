@@ -6,7 +6,26 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="The best revision website ever!">
+  <script type="text/javascript" src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
   <!-- Google tag (gtag.js) yay :D -->
+
+  <script>
+    performance.mark("main-content-loaded");
+
+    window.onload = function () {
+      performance.mark("fully-loaded");
+
+      const measure = performance.measure(
+        "Time-to-Full-Load",
+        "main-content-loaded",
+        "fully-loaded"
+      );
+
+      console.log("Time to fully load assets:", measure.duration, "ms");
+    };
+  </script>
+
+
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
@@ -150,13 +169,23 @@
             <center><strong> !!NEW UPDATES!!</strong></center>
           </p>
 
+          <strong>
+            <p>
+              Whoever requested to watch Formula 1, I have added a live stream of it to the site - <a id="f1link"
+                style="color: blue;">HERE</a>
+            </p>
+          </strong>
+
+          <script>
+            document.getElementById("f1link").href = `https://${window.location.hostname}/studyguide/f1live/`;
+          </script>
+
+          </br></br>
+
           <p>
-            I need to make this straight so everyone knows this. Unfortunately we cannot in any way currently add the
-            ability for you to search the internet freely to get past bl0cking on your schools network. Most to all
-            blocking systems have keywords and systems in place that can detect this occurance. We will work hard behind
-            the scenes to try and get something working that doesn't get bl0cked however this may take some time. We are
-            sorry for any inconvenience caused and we hope you understand.
+            Please meet our new mascot!!!
           </p>
+          <img src="/assets/img/sexyillsley.png" style="height: 151px;">
 
           <!-- <p>
             CHAT IS BACK UP. the link is <a id="chatLink" style="color: blue;">this</a>.
@@ -364,9 +393,11 @@ margin: 1.5rem 0;
     <div class="loadertext">
       Loading<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
     </div>
-    <div id="loadingquote" class="loadingquote"></div>
+    <div id="loadingquote" class="loadingquote" style="color: white;"></div>
     <div class="loaderbarparent">
-      <div id="loaderbar" class="loaderbar"></div>
+      <div id="loaderbar" class="loaderbar">
+
+      </div>
     </div>
     <div id="loaderpercent" class="loaderpercent">0%</div>
   </div>
@@ -599,14 +630,19 @@ margin: 1.5rem 0;
             </div>
             <h3 class="white-text switch-text">Redirect on Alt Tab</h3>
           </label>
-          <h4 class="white-text" style="text-align: center; font-size: 1vw; margin-top: 0.5vw">press enter to stop input
-            detection</h4>
+          <h4 class="white-text" style="text-align: center; font-size: 1vw; margin-top: 0.5vw">Press enter to stop input
+            detection!</h4>
           <hr class="rounded">
           <h3 class="white-text" style="text-align: center;"> Extra </h3>
           <a class="btn btn-outline-warning" href="./sandbox.html" style="text-align: left;"><i class="fa fa-code"
               aria-hidden="true"></i>| Sandbox</a>
           <a class="btn btn-outline-warning" href="./fetcher.html" style="text-align: left;"><i
               class="fa fa-file-archive-o" aria-hidden="true"></i>| File fetcher</a>
+          <br>
+          <div class="trustpilot-widget" data-locale="en-GB" data-template-id="56278e9abfbbba0bdcd568bc"
+            data-businessunit-id="67c8a5b0e6f7b850ba0d8afb" data-style-height="52px" data-style-width="100%">
+            <a href="https://uk.trustpilot.com/review/juststudy.uk" target="_blank" rel="noopener">Trustpilot</a>
+          </div>
         </center>
       </div>
     </div>
@@ -630,7 +666,7 @@ margin: 1.5rem 0;
         <img src="assets/img/random.png" alt="random game picker"
           style="width: 3vw; height: 3vw; position: fixed; top: 50%; transform: translate(20%,-50%);">
       </a>
-      <a class="topbutton" onclick="toggleNews()"
+      <a class="topbutton" onclick="showAnnouncement ()"
         style="margin: 0 auto; position: relative; right: 6vw; cursor: pointer;">
         <img src="assets/img/news.png" alt="Toggle The News"
           style="width: 3vw; height: 3vw; position: fixed; top: 50%; transform: translate(20%,-50%);">
@@ -740,9 +776,9 @@ margin: 1.5rem 0;
         document.getElementById("desc").textContent = array[randomIndex];
       }
 
-      // function showAnnouncement() {
-      //   document.querySelector(".announcementcontainer").style.display = "flex";
-      // }
+      function showAnnouncement() {
+        document.querySelector(".announcementcontainer").style.display = "flex";
+      }
 
       // window.onload = showAnnouncement;
     </script>

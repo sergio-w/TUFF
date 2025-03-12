@@ -7327,15 +7327,10 @@
       176: (e, t, n) => {
         "use strict";
         Object.defineProperty(t, "__esModule", { value: !0 });
+        console.warn(n(930));
         var r = n(930),
           o = (function () {
             function e() {
-              (this.message =
-                "CrazySDK is disabled on this domain. Check ".concat(
-                  r.DOCS_URL,
-                  " for more info."
-                )),
-                (this.code = "sdkDisabled");
             }
             return (
               Object.defineProperty(e.prototype, "ad", {
@@ -11101,13 +11096,7 @@
                       return window.location.href.startsWith(e);
                     })
                       ? [2, !1]
-                      : (e =
-                          [
-                            "localhost",
-                            "127.0.0.1",
-                            "preview.construct.net",
-                          ].includes(window.location.hostname) ||
-                          "true" === (0, l.getQueryStringValue)("useLocalSdk"))
+                      : (e = true)
                       ? [4, (0, f.wait)(500)]
                       : [3, 2];
                   case 1:

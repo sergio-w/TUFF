@@ -1278,14 +1278,63 @@
         "img": "assets/icons/190.jpeg",
         "url": "studyguide/aswc/index.html",
         "desc": "Experience a miniature version of the World Cup with fast-paced action and exciting gameplay.",
-        "category": "Sports"
+        "category": "Sports Club"
     },
-	{
+    {
         "name": "Obby Robby Only Up",
         "img": "assets/icons/191.png",
         "url": "studyguide/orou/index.html",
         "desc": "Obby Parkour Game",
-        "category": "Obby"
+        "category": "Gym Class"
+    },
+    {
+        "name": "Super Fighters",
+        "img": "assets/icons/199.png",
+        "url": "studyguide/sf/index.html",
+        "desc": "Fight with your friends or against a computer in this fun 2d game!",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Blocops",
+        "img": "assets/icons/200.png",
+        "url": "studyguide/blcp/index.html",
+        "desc": "Ravenfield type game, got lazy here XD",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Blumgi Paintball",
+        "img": "assets/icons/194.jpg",
+        "url": "studyguide/blgp/index.html",
+        "desc": "Cover the map in your colour of paint",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Fireboy And Watergirl 1",
+        "img": "assets/icons/195.png",
+        "url": "studyguide/fbnwg1/index.html",
+        "desc": "2 player puzzle game and platformer!",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "The impossible quiz",
+        "img": "assets/icons/196.png",
+        "url": "studyguide/tiq/index.html",
+        "desc": "Quiz",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Ice dodo",
+        "img": "assets/icons/197.png",
+        "url": "studyguide/id/index.html",
+        "desc": "Platformer",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Basket Random",
+        "img": "assets/icons/198.png",
+        "url": "studyguide/br/index.html",
+        "desc": "Basket ball game i guess",
+        "category": "Gym Class"
     },
     {
         "name": "Mini Putt III",

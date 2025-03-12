@@ -1,0 +1,1 @@
+const evGameStarted = new CustomEvent('OnGameStarted');

@@ -1,0 +1,89 @@
+[
+    {
+        "Title": "Beta Tester",
+        "Description": "JustStudyCE Beta Tester",
+        "Questions": [
+            {
+                "Type": "input",
+                "Name": "name",
+                "Message": "What is your name?"
+            },
+            {
+                "Type": "input",
+                "Name": "email",
+                "Message": "What is your email?"
+            },
+            {
+                "Type": "input",
+                "Name": "general",
+                "Message": "Why should we choose you to become a beta tester for JustStudy?"
+            },
+            {
+                "Type": "input",
+                "Name": "github",
+                "Message": "What is your GitHub username?"
+            },
+            {
+                "Type": "boolean",
+                "Name": "terms",
+                "Message": "Do you agree to the terms and conditions including our privacy policy?"
+            },
+            {
+                "Type": "boolean",
+                "Name": "nda",
+                "Message": "Do you agree to fill a non-disclosure agreement?"
+            },
+            {
+                "Type": "input",
+                "Name": "questions",
+                "Message": "Do you have any questions?"
+            }
+        ]
+    },
+    {
+        "Title": "Staff Application",
+        "Description": "JustStudy Staff Application",
+        "Questions": [
+            {
+                "Type": "input",
+                "Name": "name",
+                "Message": "What is your full name?"
+            },
+            {
+                "Type": "input",
+                "Name": "email",
+                "Message": "What is your email address?"
+            },
+            {
+                "Type": "input",
+                "Name": "experience",
+                "Message": "What relevant experience do you have that qualifies you for this role?"
+            },
+            {
+                "Type": "input",
+                "Name": "motivation",
+                "Message": "Why do you want to join our staff team?"
+            },
+            {
+                "Type": "input",
+                "Name": "availability",
+                "Message": "What is your availability?"
+            },
+            {
+                "Type": "boolean",
+                "Name": "terms",
+                "Message": "Do you agree to the terms and conditions including our privacy policy?"
+            },
+            {
+                "Type": "boolean",
+                "Name": "nda",
+                "Message": "Are you willing to sign a non-disclosure agreement if selected?"
+            },
+            {
+                "Type": "input",
+                "Name": "questions",
+                "Message": "Do you have any questions for us?"
+            }
+        ]
+    }
+]

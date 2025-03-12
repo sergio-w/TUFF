@@ -18,6 +18,7 @@ function LoadData() {
     }
 
 };
+
 let key_input_data = "";
 document.addEventListener('keydown', function (event) {
     key_input_data = "";
@@ -69,6 +70,7 @@ window.addEventListener("blur", () => {
         }
     }
 })
+
 function MakeThing() {
     if (!document.body || !document.head) {
         console.error("DOM not ready, delaying script execution.");

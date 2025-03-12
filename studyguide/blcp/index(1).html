@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>JustStudy</title>
+	
+    
+    <link rel="stylesheet" href="https://blocops.io/data/style.css">
+	<link rel="stylesheet" href="https://blocops.io/social/socialStyle.css">
+	<script src="https://blocops.io/data/events.js" type="abe1bfe38aab0824dc275939-text/javascript"></script>
+	<script src="https://blocops.io/data/logging.js" type="abe1bfe38aab0824dc275939-text/javascript"></script>
+	<script src="https://blocops.io/data/loader.js" type="abe1bfe38aab0824dc275939-text/javascript"></script>
+	<!-- <script src="https://sdk.crazygames.com/crazygames-sdk-v3.js"></script> -->
+	<script src="data/main.js" type="abe1bfe38aab0824dc275939-text/javascript"></script>
+	<script src="data/loginMethods.js" type="abe1bfe38aab0824dc275939-text/javascript"></script>
+	<script src="https://accounts.google.com/gsi/client" onload="initClient()" async defer type="abe1bfe38aab0824dc275939-text/javascript"></script>
+	<script src="https://blocops.io/maintennance.js" type="abe1bfe38aab0824dc275939-text/javascript"></script>
+	<script src="https://blocops.io/social/socialMethods.js" type="abe1bfe38aab0824dc275939-text/javascript"></script>
+	<!-- adinplay --->
+	<link rel="stylesheet" href="https://blocops.io/data/styleAdinplay.css">
+	<script src="data/adinplay.js" type="abe1bfe38aab0824dc275939-text/javascript"></script>
+	<script async src="tag.min.js" type="abe1bfe38aab0824dc275939-text/javascript"></script>
+	
+		<!-- Google tag (gtag.js) -->
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-EBFQSK3FZ9" type="abe1bfe38aab0824dc275939-text/javascript"></script>
+<script type="abe1bfe38aab0824dc275939-text/javascript">
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EBFQSK3FZ9');
+</script> -->
+
+<!-- value impression
+   <script type="text/javascript" src="//cdn.vlitag.com/w/5c258b85-99ea-4717-8b1f-924610f3cb93.js" async defer></script><script>var vitag = vitag || {};vitag.gdprShowConsentToolButton = false;</script><script type="text/javascript" src="//cdn.vlitag.com/ata/adv/5c258b85-99ea-4717-8b1f-924610f3cb93.js" async defer></script> -->
+   
+  </head>
+  <body>
+  
+     <div id="loadingScreen">
+        <div class="title">Blocops.io</div>
+        <div class="spinner"></div>
+        <div class="tips" id="tips">We promise it's worth the wait.</div>
+    </div>
+	
+    <div id="unity-container" class="unity-desktop">
+      <canvas id="unity-canvas"></canvas>
+      <div id="unity-loading-bar">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div>
+      <div id="unity-warning"> </div>
+	  
+    </div>
+    <!-- <script type="abe1bfe38aab0824dc275939-text/javascript"></script> -->
+    <script>
+		var container = document.querySelector("#unity-container");
+		var canvas = document.querySelector("#unity-canvas");
+		var loadingBar = document.querySelector("#unity-loading-bar");
+		var progressBarFull = document.querySelector("#unity-progress-bar-full");
+		/*var fullscreenButton = document.querySelector("#unity-fullscreen-button");*/
+		var warningBanner = document.querySelector("#unity-warning");
+		var buildUrl = "Build";
+		var buildVersion = "v97"; //last: 85
+		var loaderUrl = buildUrl + "/blocops."+buildVersion+".loader.js";
+		
+		window.inIframe = window.self !== window.top;
+		
+		// Initialize variables
+		window.inCrazygames = true;
+		window.iframeParentUrl = '';
+
+
+			
+      // Shows a temporary message banner/ribbon for a few seconds, or
+      // a permanent error message on top of the canvas if type=='error'.
+      // If type=='warning', a yellow highlight color is used.
+      // Modify or remove this function to customize the visually presented
+      // way that non-critical warnings and error messages are presented to the
+      // user.
+      function unityShowBanner(msg, type) {
+        function updateBannerVisibility() {
+          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        }
+        var div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        else {
+          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+          setTimeout(function() {
+            warningBanner.removeChild(div);
+            updateBannerVisibility();
+          }, 5000);
+        }
+        updateBannerVisibility();
+      }
+
+
+      var config = {
+        dataUrl: buildUrl + "/blocops."+buildVersion+".data",
+        frameworkUrl: buildUrl + "/blocops."+buildVersion+".framework.js",
+        codeUrl: buildUrl + "/blocops."+buildVersion+".wasm",
+        symbolsUrl: buildUrl + "/blocops."+buildVersion+".symbols.json",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "docski",
+        productName: "blocops",
+        productVersion: "v2.10",
+        showBanner: unityShowBanner,
+      };
+
+      // By default, Unity keeps WebGL canvas render target size matched with
+      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
+      // Set this to false if you want to decouple this synchronization from
+      // happening inside the engine, and you would instead like to size up
+      // the canvas DOM size and WebGL render target sizes yourself.
+      // config.matchWebGLToCanvasSize = false;
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        // Mobile device style: fill the whole browser client area with the game canvas:
+
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        container.className = "unity-mobile";
+        canvas.className = "unity-mobile";
+
+        // To lower canvas resolution on mobile devices to gain some
+        // performance, uncomment the following line:
+         config.devicePixelRatio = 0.9;
+
+        unityShowBanner('WebGL builds are not supported on mobile devices.');
+      } else {
+        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
+
+        canvas.style.width = "100%";
+        canvas.style.height = "100%";
+      }
+
+      loadingBar.style.display = "block";
+
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        unityGameInstance = createUnityInstance(canvas, config, (progress) => {
+          progressBarFull.style.width = 100 * progress + "%";
+        }).then((unityInstance) => {
+			unityGameInstance = unityInstance;
+          loadingBar.style.display = "none";
+          /*fullscreenButton.onclick = () => {
+            unityInstance.SetFullscreen(1);
+          };*/
+        }).catch((message) => {
+          alert(message);
+        });
+      };
+      document.body.appendChild(script);
+	  
+	  
+	function initPokiBridge(){}
+	
+	function ext_setPixelRatio  (ratio){}
+			  
+    </script>
+	
+	 <!--<div id="ad_300x250"><div class="adsbyvli" data-ad-slot="pw_38384"></div> <script type="text/javascript">(vitag.Init = window.vitag.Init || []).push(function () { viAPItag.display("pw_38384") })</script></div>
+	 <div id="ad_300x600"><div class="adsbyvli" data-ad-slot="pw_39284"></div> <script type="text/javascript">(vitag.Init = window.vitag.Init || []).push(function () { viAPItag.display("pw_39284") })</script></div>-->
+
+	   <!-- Include the fullscreen logic after container -->
+ <script src="data/fullscreen.js" type="abe1bfe38aab0824dc275939-text/javascript"></script>
+ 
+	<!--<div id="videoad"></div>-->
+	<div id="blocops-io_300x250">
+		<script type="abe1bfe38aab0824dc275939-text/javascript">
+		aiptag.cmd.display.push(function() { aipDisplayTag.display('blocops-io_300x250'); });
+		</script>
+	</div>
+	
+	<div id="blocops-io_300x600">
+			<script type="abe1bfe38aab0824dc275939-text/javascript">
+			aiptag.cmd.display.push(function() { aipDisplayTag.display('blocops-io_300x600'); });
+			</script>
+	</div>
+	 
+	 <div id="blocops-io_728x90">
+	 <script type="abe1bfe38aab0824dc275939-text/javascript">
+	 aiptag.cmd.display.push(function() { aipDisplayTag.display('blocops-io_728x90'); });
+	 </script>
+	 </div>
+	
+  <script src="cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js" data-cf-settings="abe1bfe38aab0824dc275939-|49" defer></script></body>
+  
+     <div id="featuredContent">
+
+<!--	<div class="textHeader1">Watch</div>-->
+
+	<div id="featuredStreamers">
+
+		<div id="featuredVideos" class="featured-content-video">
+		
+		 <a id="yt_thumb" onclick="if (!window.__cfRLUnblockHandlers) return false; ShowYtModal();" style="width:40%;" target="_BLANK" data-cf-modified-abe1bfe38aab0824dc275939-=""><img id="yt_img" src="https://img.youtube.com/vi/tK0Mw_MKgRk/0.jpg" style="width:100%; height:auto; " /></a>
+			<a id="yt_info" onclick="if (!window.__cfRLUnblockHandlers) return false; ShowYtModal();" target="_BLANK" style="margin-top: 10px;" data-cf-modified-abe1bfe38aab0824dc275939-="">
+				<div id='feature_title' class="featuredText" style="font-weight: bold;width: 200px;">Youtube Highlight</div>
+				<div id='feature_content_title' class="featuredText"></div>
+			</a>
+		</div> 
+
+	</div>
+
+	</div>
+	
+	
+	<div id="modal_youtube" class="modal">
+    <div class="modal-content" style="overflow-y:hidden; background-image:none; background-color:black; padding: 0px 10px 15px 10px;">
+
+        <span id="closeYt" class="close">&times;</span>
+
+        <iframe id="yt_vid" width="100%" height="90%" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+    </div>
+	
+		<script type="abe1bfe38aab0824dc275939-text/javascript">
+// Get the modal
+var modalYT= document.getElementById("modal_youtube");
+// Get the element that closes the modal
+var span = document.getElementById("closeYt");
+function ShowYtModal()
+{
+    modalYT.style.display = "block";
+	OpenFeaturedVideo();
+    // document.getElementById("yt_vid").src = feature_yt_embed;
+    yt_isPlaying = true;
+    if (game_isLoaded)
+      MuteGame(1);
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() 
+{
+    document.getElementById("yt_vid").src = "";
+    modalYT.style.display = "none";
+    yt_isPlaying = false;
+	
+    if (game_isLoaded)
+      MuteGame(0);
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) 
+{
+  if (event.target == modalYT) 
+  {
+    document.getElementById("yt_vid").src = "";
+    modalYT.style.display = "none";
+    yt_isPlaying = false;
+
+    if (game_isLoaded)
+      MuteGame(0);
+  }
+}
+</script>
+
+
+</html>

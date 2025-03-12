@@ -1,0 +1,1353 @@
+[
+    {
+        "name": "0hh1",
+        "img": "assets/icons/1.png",
+        "url": "studyguide/0hh1/index.html",
+        "desc": "Solve relaxing logic puzzles in a grid-based challenge.",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "1v1 LoL",
+        "img": "assets/icons/2.png",
+        "url": "studyguide/1vl/index.html",
+        "desc": "Battle your friends in this intense multiplayer shooter.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "2048",
+        "img": "assets/icons/3.png",
+        "url": "studyguide/2048/index.html",
+        "desc": "Merge tiles to reach the ultimate 2048 score!",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "2048 Cupcakes",
+        "img": "assets/icons/4.png",
+        "url": "studyguide/2048c/index.html",
+        "desc": "A sweet twist on the classic 2048 puzzle game.",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "A Dance of Fire and Ice",
+        "img": "assets/icons/55.jpg",
+        "url": "studyguide/adofai/index.html",
+        "desc": "Test your rhythm in this one-button music challenge.",
+        "category": "Music Room"
+    },
+    {
+        "name": "Backfire",
+        "img": "assets/icons/5.png",
+        "url": "studyguide/backfire/index.html",
+        "desc": "Dodge and shoot in this reverse bullet-hell game.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Basketball Bros",
+        "img": "assets/icons/62.jpg",
+        "url": "studyguide/b-b/index.html",
+        "desc": "Play fast-paced hoops with quirky characters.",
+        "category": "Sports Club"
+    },
+    {
+        "name": "Basketball Stars",
+        "img": "assets/icons/43.png",
+        "url": "studyguide/b-stars/index.html",
+        "desc": "Shoot and dunk your way to victory!",
+        "category": "Sports Club"
+    },
+    {
+        "name": "Bloons TD",
+        "img": "assets/icons/39.png",
+        "url": "studyguide/btd1/index.html",
+        "desc": "Defend towers by popping balloons in strategic gameplay.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Bloons TD 2",
+        "img": "assets/icons/40.png",
+        "url": "studyguide/btd2/index.html",
+        "desc": "The balloon-popping tower defense returns!",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Bloons TD 3",
+        "img": "assets/icons/41.png",
+        "url": "studyguide/btd3/index.html",
+        "desc": "Battle endless waves of bloons with upgraded towers.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Calculator",
+        "img": "assets/icons/68.jpg",
+        "url": "studyguide/calc/index.html",
+        "desc": "A functional, interactive calculator for everyday use.",
+        "category": "Math Class"
+    },
+    {
+        "name": "Chrome Dino",
+        "img": "assets/icons/6.png",
+        "url": "studyguide/cdino/index.html",
+        "desc": "Jump and duck to survive as the pixel dinosaur!",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Cookie Clicker",
+        "img": "assets/icons/42.png",
+        "url": "studyguide/cc/index.html",
+        "desc": "Build your cookie empire with addictive clicking.",
+        "category": "Recess"
+    },
+    {
+        "name": "Crossy Road",
+        "img": "assets/icons/7.png",
+        "url": "studyguide/cr/index.html",
+        "desc": "Help animals cross busy roads in endless fun!",
+        "category": "Recess"
+    },
+    {
+        "name": "Cut the Rope",
+        "img": "assets/icons/8.png",
+        "url": "studyguide/ctr/index.html",
+        "desc": "Solve puzzles to feed candy to Om Nom.",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Cut the Rope: Time Travel",
+        "img": "assets/icons/9.png",
+        "url": "studyguide/ctrtimetravel/index.html",
+        "desc": "Join Om Nom in time-traveling candy adventures.",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Dadish",
+        "img": "assets/icons/76.png",
+        "url": "studyguide/d-d/index.html",
+        "desc": "Guide a radish dad to save his lost kids.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Dante",
+        "img": "assets/icons/10.png",
+        "url": "studyguide/dante/index.html",
+        "desc": "Dive into an action-packed journey with this platformer.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Dogeminer",
+        "img": "assets/icons/64.png",
+        "url": "studyguide/d-mi/index.html",
+        "desc": "Mine Dogecoins and upgrade your mining empire!",
+        "category": "Recess"
+    },
+    {
+        "name": "Doodle Cricket",
+        "img": "assets/icons/11.png",
+        "url": "studyguide/dcricket/index.html",
+        "desc": "Play cricket with adorable doodle characters.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Dreadhead Parkour",
+        "img": "assets/icons/63.png",
+        "url": "studyguide/dh-p/index.html",
+        "desc": "Master parkour moves in a fast-paced urban setting.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Drive Mad",
+        "img": "assets/icons/60.png",
+        "url": "studyguide/d-m/index.html",
+        "desc": "Drive wild courses with thrilling stunts and challenges.",
+        "category": "Sports Club"
+    },
+    {
+        "name": "Duck Life",
+        "img": "assets/icons/44.png",
+        "url": "studyguide/dl-1/index.html",
+        "desc": "Train ducks and win exciting races!",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Duck Life 2",
+        "img": "assets/icons/45.png",
+        "url": "studyguide/dl-2/index.html",
+        "desc": "Continue your duck training journey for greater glory.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Duck Life 3",
+        "img": "assets/icons/46.png",
+        "url": "studyguide/dl-3/index.html",
+        "desc": "Evolve your ducks for ultimate racing action.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Duck Life 4",
+        "img": "assets/icons/47.png",
+        "url": "studyguide/dl-4/index.html",
+        "desc": "The duck training and racing saga continues!",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Elastic Face",
+        "img": "assets/icons/65.png",
+        "url": "studyguide/e-f/index.html",
+        "desc": "Stretch and squish faces for endless fun.",
+        "category": "Recess"
+    },
+    {
+        "name": "FNAF Classic",
+        "img": "assets/icons/66.jpg",
+        "url": "studyguide/fn-af/index.html",
+        "desc": "Survive 5 nights in the horror game that started them all",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Frogger",
+        "img": "assets/icons/12.png",
+        "url": "studyguide/frog/index.html",
+        "desc": "Guide your frog safely across busy roads and rivers.",
+        "category": "Recess"
+    },
+    {
+        "name": "Geometry Dash",
+        "img": "assets/icons/67.png",
+        "url": "studyguide/gd/index.html",
+        "desc": "Jump and dash through challenging rhythm-based levels.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Geometry Dash Remastered",
+        "img": "assets/icons/56.png",
+        "url": "studyguide/gdr/index.html",
+        "desc": "An upgraded version of the iconic rhythm platformer.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Getaway Shootout",
+        "img": "assets/icons/13.png",
+        "url": "studyguide/ga-s/index.html",
+        "desc": "Race and shoot your way to freedom!",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Hacker Typer",
+        "img": "assets/icons/49.jpg",
+        "url": "studyguide/ht/index.html",
+        "desc": "Feel like a hacker by typing random code!",
+        "category": "Math Class"
+    },
+    {
+        "name": "Hill Climb Racing 2",
+        "img": "assets/icons/14.png",
+        "url": "studyguide/hcr2/index.html",
+        "desc": "Conquer hills with crazy vehicles and upgrades.",
+        "category": "Sports Club"
+    },
+    {
+        "name": "Hextris",
+        "img": "assets/icons/15.png",
+        "url": "studyguide/hextris/index.html",
+        "desc": "Spin and stack hexagons for high scores.",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "HexGL",
+        "img": "assets/icons/16.png",
+        "url": "studyguide/hgl/index.html",
+        "desc": "Race through futuristic tracks at lightning speed.",
+        "category": "Sports Club"
+    },
+    {
+        "name": "Iron Dash",
+        "img": "assets/icons/17.png",
+        "url": "studyguide/i-dash/index.html",
+        "desc": "Fast-paced combat in a world of iron and fire.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Jetpack Joyride",
+        "img": "assets/icons/18.png",
+        "url": "studyguide/j-j/index.html",
+        "desc": "Fly with a jetpack, dodge obstacles, and collect coins.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Jelly Jump",
+        "img": "assets/icons/19.png",
+        "url": "studyguide/jelly-j/index.html",
+        "desc": "Jump higher and survive in this sticky adventure.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Line Rider",
+        "img": "assets/icons/58.png",
+        "url": "studyguide/l-r/index.html",
+        "desc": "Draw and ride tracks in this creative physics-based game.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Little Alchemy 2",
+        "img": "assets/icons/77.jpg",
+        "url": "studyguide/la2/index.html",
+        "desc": "Combine elements to discover new creations!",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Madalin Stunt Cars 2",
+        "img": "assets/icons/25.png",
+        "url": "studyguide/msc2/index.html",
+        "desc": "Perform epic stunts in high-speed supercars.",
+        "category": "Sports Club"
+    },
+    {
+        "name": "Moto X3M",
+        "img": "assets/icons/20.png",
+        "url": "studyguide/mx3m/index.html",
+        "desc": "Race through daring tracks filled with stunts.",
+        "category": "Sports Club"
+    },
+    {
+        "name": "Moto X3M Winter",
+        "img": "assets/icons/52.png",
+        "url": "studyguide/mx3m-w/index.html",
+        "desc": "Experience thrilling motorbike stunts in a snowy wonderland.",
+        "category": "Sports Club"
+    },
+    {
+        "name": "MS Edge Surf",
+        "img": "assets/icons/21.png",
+        "url": "studyguide/ms-edgesurf/index.html",
+        "desc": "Ride waves and dodge obstacles in this endless runner.",
+        "category": "Sports Club"
+    },
+    {
+        "name": "MS Minesweeper",
+        "img": "assets/icons/22.png",
+        "url": "studyguide/ms-minesweeper/index.html",
+        "desc": "Classic logic-based puzzle game with mines to avoid.",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "MS Solitaire",
+        "img": "assets/icons/23.png",
+        "url": "studyguide/ms-solitaire/index.html",
+        "desc": "The timeless card game, now digital and more engaging.",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "MS Sudoku",
+        "img": "assets/icons/24.png",
+        "url": "studyguide/ms-sudoku/index.html",
+        "desc": "Test your logic skills with this classic number puzzle.",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Papa's Pizzeria",
+        "img": "assets/icons/69.jpg",
+        "url": "studyguide/p-p/index.html",
+        "desc": "Serve up delicious pizzas to satisfy hungry customers.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Paper.io 2",
+        "img": "assets/icons/48.png",
+        "url": "studyguide/pio2/index.html",
+        "desc": "Expand your territory in this fun multiplayer game.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Quake",
+        "img": "assets/icons/59.jpg",
+        "url": "studyguide/quake/index.html",
+        "desc": "Classic first-person shooter with intense combat action.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Raft Wars",
+        "img": "assets/icons/70.png",
+        "url": "studyguide/r-w/index.html",
+        "desc": "Defend your treasure from pirates with hilarious battles.",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Retro Bowl",
+        "img": "assets/icons/36.jpg",
+        "url": "studyguide/r-b/index.html",
+        "desc": "Lead your team to victory in this retro football game.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Rooftop Snipers",
+        "img": "assets/icons/53.png",
+        "url": "studyguide/r-s/index.html",
+        "desc": "Take down opponents in rooftop duels.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Run 3",
+        "img": "assets/icons/26.png",
+        "url": "studyguide/r3/index.html",
+        "desc": "Run and jump through challenging space tunnels.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Sky City Riders",
+        "img": "assets/icons/61.png",
+        "url": "studyguide/scr/index.html",
+        "desc": "Race bikes through a futuristic floating city.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Slope",
+        "img": "assets/icons/29.png",
+        "url": "studyguide/sl/index.html",
+        "desc": "Navigate a rolling ball through a neon 3D slope.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Snake",
+        "img": "assets/icons/51.jpg",
+        "url": "studyguide/snake/index.html",
+        "desc": "Classic arcade game where you grow your snake.",
+        "category": "Recess"
+    },
+    {
+        "name": "Space Invaders",
+        "img": "assets/icons/28.png",
+        "url": "studyguide/si/index.html",
+        "desc": "Defend Earth from alien invaders in this arcade classic.",
+        "category": "Recess"
+    },
+    {
+        "name": "Stack",
+        "img": "assets/icons/33.png",
+        "url": "studyguide/stack/index.html",
+        "desc": "Build the tallest tower by stacking perfectly aligned blocks.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Stickman Hook",
+        "img": "assets/icons/35.jpg",
+        "url": "studyguide/smhook/index.html",
+        "desc": "Swing through levels with gravity-defying stickman tricks.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Subway Surfers",
+        "img": "assets/icons/34.jpg",
+        "url": "studyguide/s-surf/index.html",
+        "desc": "Dash, dodge, and collect coins in this endless runner.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Subway Surfers - World Tour: Tokyo",
+        "img": "assets/icons/38.png",
+        "url": "studyguide/ss-tokyo/index.html",
+        "desc": "Explore Tokyo in the iconic Subway Surfers series.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Supercold",
+        "img": "assets/icons/27.png",
+        "url": "studyguide/sc/index.html",
+        "desc": "Manipulate time and defeat enemies in this unique shooter.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Super Mario 63",
+        "img": "assets/icons/57.png",
+        "url": "studyguide/s63/index.html",
+        "desc": "Fan-made Mario game with exciting new challenges.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Tanuki Sunset",
+        "img": "assets/icons/31.png",
+        "url": "studyguide/ts/index.html",
+        "desc": "Skateboard as a raccoon in this chill, retro-style game.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Temple Run 2",
+        "img": "assets/icons/30.png",
+        "url": "studyguide/tempr2/index.html",
+        "desc": "Escape danger in this fast-paced endless runner.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Tube Jumpers",
+        "img": "assets/icons/54.png",
+        "url": "studyguide/t-j/index.html",
+        "desc": "Battle friends in a wacky, physics-based jumping game.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Tunnel Rush",
+        "img": "assets/icons/32.png",
+        "url": "studyguide/tunru/index.html",
+        "desc": "Dodge obstacles in a fast-paced 3D tunnel.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "World's Hardest Game",
+        "img": "assets/icons/78.png",
+        "url": "studyguide/whg/index.html",
+        "desc": "Can you beat this infamously tough puzzle game?",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Vex 3",
+        "img": "assets/icons/71.jpg",
+        "url": "studyguide/v3/index.html",
+        "desc": "Run, jump, and dodge traps in challenging platform levels.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Vex 4",
+        "img": "assets/icons/72.png",
+        "url": "studyguide/v4/index.html",
+        "desc": "More intense challenges in the Vex platformer series.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Vex 5",
+        "img": "assets/icons/73.jpg",
+        "url": "studyguide/v5/index.html",
+        "desc": "Conquer tougher levels with new obstacles and tricks.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Vex 6",
+        "img": "assets/icons/74.jpg",
+        "url": "studyguide/v6/index.html",
+        "desc": "The ultimate platformer challenge for Vex fans.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "WebRetro",
+        "img": "assets/icons/75.jpg",
+        "url": "studyguide/wr/index.html",
+        "desc": "Relive classic retro games on the web.",
+        "category": "Math Class"
+    },
+    {
+        "name": "Snow Rider 3D",
+        "img": "assets/icons/79.png",
+        "url": "studyguide/sr3d/index.html",
+        "desc": "Snowboard through stunning landscapes in this endless game.",
+        "category": "Recess"
+    },
+    {
+        "name": "Neverball",
+        "img": "assets/icons/80.png",
+        "url": "studyguide/nb/index.html",
+        "desc": "Tilt and roll your way to victory in this physics game.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "PolyTrack",
+        "img": "assets/icons/81.png",
+        "url": "studyguide/pt/index.html",
+        "desc": "Navigate complex tracks in this futuristic racer.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Tennis Physics",
+        "img": "assets/icons/82.jpg",
+        "url": "studyguide/tp/index.html",
+        "desc": "Enjoy quirky tennis matches with physics-based gameplay.",
+        "category": "Sports Club"
+    },
+    {
+        "name": "Tap Tap Shots",
+        "img": "assets/icons/83.jpg",
+        "url": "studyguide/tts/index.html",
+        "desc": "Score baskets with perfect timing and taps.",
+        "category": "Recess"
+    },
+    {
+        "name": "Car Stunt King",
+        "img": "assets/icons/84.jpg",
+        "url": "studyguide/csk/index.html",
+        "desc": "Perform jaw-dropping car stunts in this action-packed game.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Spacebar Clicker",
+        "img": "assets/icons/85.png",
+        "url": "studyguide/sp-c/index.html",
+        "desc": "How fast can you click the spacebar? Test your speed!",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Eggy Car",
+        "img": "assets/icons/86.png",
+        "url": "studyguide/e-c/index.html",
+        "desc": "Drive carefully to keep the egg from cracking!",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Getting Over It",
+        "img": "assets/icons/87.jpg",
+        "url": "studyguide/goi/index.html",
+        "desc": "Overcome steep challenges in this physics-based climbing game.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Drift Boss",
+        "img": "assets/icons/88.jpg",
+        "url": "studyguide/d-b/index.html",
+        "desc": "Master the art of drifting in this endless driving game.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "RoBeats",
+        "img": "assets/icons/89.jpg",
+        "url": "studyguide/rbe/index.html",
+        "desc": "Groove to the beat in this rhythm-based multiplayer game.",
+        "category": "Music Room"
+    },
+    {
+        "name": "PolyRhythm",
+        "img": "assets/icons/90.png",
+        "url": "studyguide/pr/index.html",
+        "desc": "Challenge your musical timing with rhythm-based puzzles.",
+        "category": "Music Room"
+    },
+    {
+        "name": "Fancy Pants Adventures 2",
+        "img": "assets/icons/91.png",
+        "url": "studyguide/fpa-2/index.html",
+        "desc": "Run, jump, and slide through whimsical platforming levels.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "QWOP",
+        "img": "assets/icons/92.jpg",
+        "url": "studyguide/qp/index.html",
+        "desc": "Control each leg and stumble to the finish line!",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Bad Piggies",
+        "img": "assets/icons/93.jpg",
+        "url": "studyguide/b-p/index.html",
+        "desc": "Design contraptions to help the pigs collect eggs.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "JustFall.LoL",
+        "img": "assets/icons/94.jpg",
+        "url": "studyguide/jf/index.html",
+        "desc": "Compete in a battle royale with quirky penguins.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Super Liquid Soccer",
+        "img": "assets/icons/95.png",
+        "url": "studyguide/sls/index.html",
+        "desc": "Score goals in this dynamic, fluid soccer game.",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Dadish 2",
+        "img": "assets/icons/96.jpg",
+        "url": "studyguide/d2/index.html",
+        "desc": "Help a radish dad rescue his kids in this sequel.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Friday Night Funkin'",
+        "img": "assets/icons/97.png",
+        "url": "studyguide/ff/index.html",
+        "desc": "Groove to the beat in this popular rhythm game.",
+        "category": "Music Room"
+    },
+    {
+        "name": "SandBoxels",
+        "img": "assets/icons/98.jpg",
+        "url": "studyguide/sb/index.html",
+        "desc": "Create and explore in this sandbox game.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Spelunky",
+        "img": "assets/icons/99.jpg",
+        "url": "studyguide/sp/index.html",
+        "desc": "Explore caves, collect treasure, and dodge traps.",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Samurai Rabbit 1",
+        "img": "assets/icons/100.jpg",
+        "url": "studyguide/sr-1/index.html",
+        "desc": "Embark on an epic adventure with a samurai rabbit.",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Samurai Rabbit 2",
+        "img": "assets/icons/101.jpg",
+        "url": "studyguide/sr-2/index.html",
+        "desc": "Continue the thrilling journey of the samurai rabbit.",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Rooftop Snipers 2",
+        "img": "assets/icons/102.jpg",
+        "url": "studyguide/rts-2/index.html",
+        "desc": "Challenge your friends in intense rooftop duels.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Burrito Bison: Launcha Libre",
+        "img": "assets/icons/103.jpg",
+        "url": "studyguide/bb-ll/index.html",
+        "desc": "Launch Burrito Bison to stop an evil gummy invasion.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Burrito Bison Revenge",
+        "img": "assets/icons/104.webp",
+        "url": "studyguide/bb-r/index.html",
+        "desc": "Bounce back and fight off gummy bears in style.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "GrindCraft",
+        "img": "assets/icons/106.jpg",
+        "url": "studyguide/gc/index.html",
+        "desc": "Craft and grind resources to expand your empire.",
+        "category": "Recess"
+    },
+    {
+        "name": "Monkey Mart",
+        "img": "assets/icons/107.jpg",
+        "url": "studyguide/mm/index.html",
+        "desc": "Run your own quirky monkey market and expand it.",
+        "category": "Recess"
+    },
+    {
+        "name": "Blumgi Slime",
+        "img": "assets/icons/108.webp",
+        "url": "studyguide/b-s/index.html",
+        "desc": "Bounce your slime to victory in tricky levels.",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Moto X3M 2",
+        "img": "assets/icons/111.jpg",
+        "url": "studyguide/mx3m-2/index.html",
+        "desc": "New challenges and stunts await in this sequel.",
+        "category": "Sports Club"
+    },
+    {
+        "name": "Moto X3M Spooky Land",
+        "img": "assets/icons/113.png",
+        "url": "studyguide/mx3m-s/index.html",
+        "desc": "Experience haunting tracks and eerie stunts.",
+        "category": "Sports Club"
+    },
+    {
+        "name": "Moto X3M Pool Party",
+        "img": "assets/icons/112.jpg",
+        "url": "studyguide/mx3m-p/index.html",
+        "desc": "Splash into thrilling motorbike stunts at the pool.",
+        "category": "Sports Club"
+    },
+    {
+        "name": "Wordle Unlimited",
+        "img": "assets/icons/109.png",
+        "url": "studyguide/w-u/index.html",
+        "desc": "Guess words and challenge your vocabulary skills.",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Parking Fury",
+        "img": "assets/icons/114.jpg",
+        "url": "studyguide/pf1/index.html",
+        "desc": "Test your parking skills with tricky levels.",
+        "category": "Sports Club"
+    },
+    {
+        "name": "Parking Fury 2",
+        "img": "assets/icons/115.jpg",
+        "url": "studyguide/pf2/index.html",
+        "desc": "New challenges await in this parking simulator sequel.",
+        "category": "Sports Club"
+    },
+    {
+        "name": "Parking Fury 3",
+        "img": "assets/icons/116.jpg",
+        "url": "studyguide/pf3/index.html",
+        "desc": "Master even tougher parking challenges.",
+        "category": "Sports Club"
+    },
+    {
+        "name": "Gun Mayhem Redux",
+        "img": "assets/icons/117.png",
+        "url": "studyguide/gmr/index.html",
+        "desc": "Shoot, jump, and dominate your opponents in chaos.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Tag",
+        "img": "assets/icons/118.webp",
+        "url": "studyguide/t/index.html",
+        "desc": "Play an exciting game of virtual tag with friends.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Fruit Ninja",
+        "img": "assets/icons/120.png",
+        "url": "studyguide/fn/index.html",
+        "desc": "Slice fruits and avoid bombs in this arcade hit.",
+        "category": "Recess"
+    },
+    {
+        "name": "Iron Snout",
+        "img": "assets/icons/119.jpg",
+        "url": "studyguide/is/index.html",
+        "desc": "Fight off wolves as a martial artist pig.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Blumgi Rocket",
+        "img": "assets/icons/122.jpg",
+        "url": "studyguide/b-r/index.html",
+        "desc": "Blast through levels with a rocket-powered vehicle.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Dadish 3",
+        "img": "assets/icons/123.jpg",
+        "url": "studyguide/d3/index.html",
+        "desc": "Embark on another veggie-saving adventure with Dadish.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Osu!",
+        "img": "assets/icons/124.jpeg",
+        "url": "studyguide/w-o/index.html",
+        "desc": "Hit the beat in this fast-paced rhythm game.",
+        "category": "Music Room"
+    },
+    {
+        "name": "10 Minutes Before Dawn",
+        "img": "assets/icons/125.png",
+        "url": "studyguide/10mbd/index.html",
+        "desc": "Survive waves of enemies before dawn arrives.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Drift Hunters",
+        "img": "assets/icons/126.avif",
+        "url": "studyguide/db-c/index.html",
+        "desc": "Master drifting techniques in this driving simulator.",
+        "category": "Sports Club"
+    },
+    {
+        "name": "Factory Balls",
+        "img": "assets/icons/128.png",
+        "url": "studyguide/fb/index.html",
+        "desc": "Solve puzzles to create custom balls in a factory.",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Edge Not Found",
+        "img": "assets/icons/129.jpg",
+        "url": "studyguide/enf/index.html",
+        "desc": "Test your platforming skills in this unique game.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Pandemic 2",
+        "img": "assets/icons/130.avif",
+        "url": "studyguide/p2/index.html",
+        "desc": "Strategize to spread your disease and dominate the globe.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Papery Planes",
+        "img": "assets/icons/131.png",
+        "url": "studyguide/paper-planes/index.html",
+        "desc": "Fly paper planes through relaxing, colorful skies.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Big Tower Tiny Cube",
+        "img": "assets/icons/132.png",
+        "url": "studyguide/bttc/index.html",
+        "desc": "Climb a big tower as a tiny cube in this platformer.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "BitLife",
+        "img": "assets/icons/133.jpg",
+        "url": "studyguide/btlf/index.html",
+        "desc": "Live out a simulated life with endless choices.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Pizza Tower",
+        "img": "assets/icons/134.jpg",
+        "url": "studyguide/pizza/betterrunner.html",
+        "desc": "Deliver pizzas in this quirky, high-energy platformer.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Bottle Flip",
+        "img": "assets/icons/135.png",
+        "url": "studyguide/b-f/index.html",
+        "desc": "Land perfect flips with this simple yet addictive game.",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Tower Crush 3D",
+        "img": "assets/icons/136.png",
+        "url": "studyguide/tc3d/index.html",
+        "desc": "Build and destroy towers in 3D battles.",
+        "category": "Recess"
+    },
+    {
+        "name": "Tiny Fishing",
+        "img": "assets/icons/137.jpg",
+        "url": "studyguide/tf/index.html",
+        "desc": "Catch fish and upgrade your gear in this casual game.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Blumgi Swingo",
+        "img": "assets/icons/138.jpg",
+        "url": "studyguide/swg/index.html",
+        "desc": "Swing through levels and conquer tricky obstacles.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "8 Ball Pool",
+        "img": "assets/icons/139.png",
+        "url": "studyguide/8bp/index.html",
+        "desc": "Play classic pool against players worldwide.",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Gobdun",
+        "img": "assets/icons/140.png",
+        "url": "studyguide/gbdn/index.html",
+        "desc": "Explore dungeons and conquer foes in this adventure.",
+        "category": "Music Room"
+    },
+    {
+        "name": "Interactive Buddy",
+        "img": "assets/icons/141.jpg",
+        "url": "studyguide/ib/index.html",
+        "desc": "Interact with and customize your buddy in fun ways.",
+        "category": "Recess"
+    },
+    {
+        "name": "Learn to Fly 1",
+        "img": "assets/icons/142.png",
+        "url": "studyguide/l2f1/index.html",
+        "desc": "Help a determined penguin master the art of flight.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Ace Blackjack",
+        "img": "assets/icons/143.png",
+        "url": "studyguide/bj-p/index.html",
+        "desc": "Test your luck and skill in this classic card game.",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Block Blast",
+        "img": "assets/icons/144.png",
+        "url": "studyguide/blb/index.html",
+        "desc": "Viral block puzzle using Tetris logic.",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Body Drop 3D",
+        "img": "assets/icons/145.jpeg",
+        "url": "studyguide/bd3d/index.html",
+        "desc": "Fun dummy game, rushed and in Russian.",
+        "category": "Recess"
+    },
+    {
+        "name": "Boom Slingers",
+        "img": "assets/icons/146.jpeg",
+        "url": "studyguide/bs/index.html",
+        "desc": "Battle game, similar to Worms.",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Big Tower Tiny Square 2",
+        "img": "assets/icons/147.jpeg",
+        "url": "studyguide/btts2/index.html",
+        "desc": "Sequel to the fun cube game.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "CS:GO Clicker",
+        "img": "assets/icons/148.jpeg",
+        "url": "studyguide/cgc/index.html",
+        "desc": "Addictive clicker based on the popular shooter CS:GO.",
+        "category": "Recess"
+    },
+    {
+        "name": "Sling Kong",
+        "img": "assets/icons/150.png",
+        "url": "studyguide/sk/index.html",
+        "desc": "Bounce, swing and more to go as far as you can in Sling Kong.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Dadish 3D",
+        "img": "assets/icons/151.png",
+        "url": "studyguide/d3d/index.html",
+        "desc": "Dadish 3D is a dadish 3D quest to find his kids!",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Rodeo Stampede Mountains",
+        "img": "assets/icons/152.png",
+        "url": "studyguide/rsm/index.html",
+        "desc": "Rodeo Stampede lets you lasso animals, build a sky zoo, and ride through endless wild terrains.",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Daily Dadish",
+        "img": "assets/icons/153.png",
+        "url": "studyguide/dl-d/index.html",
+        "desc": "If dadish had a new level every day!",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Ragdoll Archers",
+        "img": "assets/icons/154.png",
+        "url": "studyguide/r-a/index.html",
+        "desc": "Shoot endless waves of ragdolls and upgrade your gear.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Mowing Mazes",
+        "img": "assets/icons/155.png",
+        "url": "studyguide/m-m/index.html",
+        "desc": "Mow mazes while playing a fun puzzle!",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Zooplop",
+        "img": "assets/icons/156.png",
+        "url": "studyguide/zpl/index.html",
+        "desc": "A fun suika game with a nice style",
+        "category": "Recess"
+    },
+    {
+        "name": "Red ball 4",
+        "img": "assets/icons/157.png",
+        "url": "studyguide/rb4/index.html",
+        "desc": "Explore over 70 levels as an amazing red ball!",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Roller Builder Tycoon 2",
+        "img": "assets/icons/158.png",
+        "url": "studyguide/rcb2/index.html",
+        "desc": "Create and manage your own tycoon",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Gold Digger frvr",
+        "img": "assets/icons/159.png",
+        "url": "studyguide/gdfrv/index.html",
+        "desc": "Mine, collect, upgrade in this 2D infinate mining game!",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Total Party Kill",
+        "img": "assets/icons/160.png",
+        "url": "studyguide/tpk/index.html",
+        "desc": "Eliminate your allies to get to the end!",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "GladiHoppers",
+        "img": "assets/icons/161.png",
+        "url": "studyguide/gh/index.html",
+        "desc": "Hop and fight gladiator style",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Level Devil",
+        "img": "assets/icons/162.png",
+        "url": "studyguide/l-d/index.html",
+        "desc": "In this puzzle platformer dont trust anything.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Golf Champions",
+        "img": "assets/icons/163.png",
+        "url": "studyguide/gcmp/index.html",
+        "desc": "Play golf on a variety of levels!",
+        "category": "Sports Club"
+    },
+    {
+        "name": "Gun Spin",
+        "img": "assets/icons/164.png",
+        "url": "studyguide/gsp/index.html",
+        "desc": "Shoot your gun to get as far as possible!",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Ragdoll Hit",
+        "img": "assets/icons/165.png",
+        "url": "studyguide/rg-h/index.html",
+        "desc": "Fight onslaugh of enemys or 1v1 with your friends in this 2d ragdoll fighter!",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Sand Tetris",
+        "img": "assets/icons/166.png",
+        "url": "studyguide/str/index.html",
+        "desc": "A tetris game but with sand when the blocks land",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Daddy long legs",
+        "img": "assets/icons/167.png",
+        "url": "studyguide/dll/index.html",
+        "desc": "Try not to fall as you try to balance your self in this cute walking game",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Johnny Upgrade",
+        "img": "assets/icons/168.png",
+        "url": "studyguide/j-u/index.html",
+        "desc": "you start weak and unlock abilities like jumping and running through upgrades. Collect coins, power up, and defeat the boss!",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Slice Master",
+        "img": "assets/icons/169.png",
+        "url": "studyguide/sl-mst/index.html",
+        "desc": "Cut objects precisely and master every challenge!",
+        "category": "Recess"
+    },
+    {
+        "name": "Under The Red Sky",
+        "img": "assets/icons/170.png",
+        "url": "studyguide/utrs/index.html",
+        "desc": "Climb, jump, bounce and wall run your way around the maps and see if you can beat your best time!",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Bloxorz",
+        "img": "assets/icons/172.png",
+        "url": "studyguide/bxrz/index.html",
+        "desc": "Flip and turn the cubes to reach the end in this fun iconic puzzle game",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Push Your Luck",
+        "img": "assets/icons/173.png",
+        "url": "studyguide/pyl/index.html",
+        "desc": "Pick higher or lower, then spin the wheel and push your luck!",
+        "category": "Recess"
+    },
+    {
+        "name": "Riddle School",
+        "img": "assets/icons/174.png",
+        "url": "studyguide/rdsch/index.html",
+        "desc": "Escape from school in the hilarious and iconic first chapter.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Riddle School 2",
+        "img": "assets/icons/175.png",
+        "url": "studyguide/rdsch2/index.html",
+        "desc": "The adventure continues as you try to escape yet another school!",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Riddle School 3",
+        "img": "assets/icons/176.png",
+        "url": "studyguide/rdsch3/index.html",
+        "desc": "Solve puzzles and make your way out of an even trickier situation.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Riddle School 4",
+        "img": "assets/icons/177.png",
+        "url": "studyguide/rdsch4/index.html",
+        "desc": "Experience the unexpected twist in the fourth installment of the series.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Riddle Transfer",
+        "img": "assets/icons/178.png",
+        "url": "studyguide/rdscht/index.html",
+        "desc": "Escape the mysterious facility and uncover the secrets hidden within.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Riddle Transfer 2",
+        "img": "assets/icons/179.png",
+        "url": "studyguide/rdscht2/index.html",
+        "desc": "Continue your journey in the thrilling sequel to the escape adventure.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Battleship War",
+        "img": "assets/icons/180.png",
+        "url": "studyguide/b-w/index.html",
+        "desc": "Try to sink your opponents battleship in this satisfying 3D title.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "Thorn and Balloons",
+        "img": "assets/icons/181.png",
+        "url": "studyguide/trnb/index.html",
+        "desc": "Throw and pop the balloons to advance in this rage game.",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Townscaper",
+        "img": "assets/icons/182.png",
+        "url": "studyguide/twsc/index.html",
+        "desc": "Build and decorate your own town in this fun and relaxing game.",
+        "category": "Recess"
+    },
+    {
+        "name": "Bad Egg",
+        "img": "assets/icons/183.png",
+        "url": "studyguide/bdgg/index.html",
+        "desc": "Fight off waves of chicken and survive untill the end!",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Build Now",
+        "img": "assets/icons/184.png",
+        "url": "studyguide/bngg/index.html",
+        "desc": "Fight and Build in this intense and fun shooting game!",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Super market simulator",
+        "img": "assets/icons/185.png",
+        "url": "studyguide/ss-sm/index.html",
+        "desc": "Manage and sell products in your own supermarket",
+        "category": "Recess"
+    },
+    {
+        "name": "Candy Crush",
+        "img": "assets/icons/186.png",
+        "url": "studyguide/cd-cr/index.html",
+        "desc": "Match 3 types of candies to destroy rows in this iconic puzzle game!",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "JoyRider",
+        "img": "assets/icons/187.png",
+        "url": "studyguide/jyrd/index.html",
+        "desc": "Drive a motorbike up crazy terrain to show your skills!",
+        "category": "Sports Club"
+    },
+    {
+        "name": "Casino Collection NOT WORKING",
+        "img": "assets/icons/188.png",
+        "url": "studyguide/c3-1/index.html",
+        "desc": "Play a collection of 3 classic casino games!",
+        "category": "Recess"
+    },
+    {
+        "name": "Super Mario 64",
+        "img": "assets/icons/37.jpg",
+        "url": "studyguide/sm64/index.html",
+        "desc": "Beat bowser and rescue princess peach in the first and one of the best platformers of all time!",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Bananamania",
+        "img": "assets/icons/189.jpeg",
+        "url": "studyguide/b-ma/index.html",
+        "desc": "Toss the bananas at the two gorillas and watch as they change costumes. Your arrow will spin faster and faster.",
+        "category": "Science Lab"
+    },
+    {
+        "name": "A Small World Cup",
+        "img": "assets/icons/190.jpeg",
+        "url": "studyguide/aswc/index.html",
+        "desc": "Experience a miniature version of the World Cup with fast-paced action and exciting gameplay.",
+        "category": "Sports Club"
+    },
+    {
+        "name": "Obby Robby Only Up",
+        "img": "assets/icons/191.png",
+        "url": "studyguide/orou/index.html",
+        "desc": "Obby Parkour Game",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Super Fighters",
+        "img": "assets/icons/199.png",
+        "url": "studyguide/sf/index.html",
+        "desc": "Fight with your friends or against a computer in this fun 2d game!",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Blocops",
+        "img": "assets/icons/200.png",
+        "url": "studyguide/blcp/index.html",
+        "desc": "Ravenfield type game, got lazy here XD",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Blumgi Paintball",
+        "img": "assets/icons/194.jpg",
+        "url": "studyguide/blgp/index.html",
+        "desc": "Cover the map in your colour of paint",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Fireboy And Watergirl 1",
+        "img": "assets/icons/195.png",
+        "url": "studyguide/fbnwg1/index.html",
+        "desc": "2 player puzzle game and platformer!",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "The impossible quiz",
+        "img": "assets/icons/196.png",
+        "url": "studyguide/tiq/index.html",
+        "desc": "Quiz",
+        "category": "Pen & Paper"
+    },
+    {
+        "name": "Ice dodo",
+        "img": "assets/icons/197.png",
+        "url": "studyguide/id/index.html",
+        "desc": "Platformer",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Basket Random",
+        "img": "assets/icons/198.png",
+        "url": "studyguide/br/index.html",
+        "desc": "Basket ball game i guess",
+        "category": "Gym Class"
+    },
+    {
+        "name": "Mini Putt III",
+        "img": "assets/icons/192.png",
+        "url": "ruf.html?p=studyguide/mp-3/file.swf",
+        "desc": "Fun mini golf game",
+        "category": "Racing & Sports"
+    },
+    {
+        "name": "Riddle School 5",
+        "img": "assets/icons/193.jpg",
+        "url": "ruf.html?p=studyguide/rdsch5/file.swf",
+        "desc": "Yet another Riddle School game",
+        "category": "Science Lab"
+    }
+]

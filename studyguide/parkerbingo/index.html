@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mrs Parker Bingo Card</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .bingo-card {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            max-width: 600px;
+            margin: auto;
+        }
+        .bingo-cell {
+            border: 2px solid black;
+            padding: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .crossed {
+            text-decoration: line-through;
+            background-color: lightgray;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mrs Parker Bingo Card</h1>
+    <div class="bingo-card" id="bingoBoard">
+        <div class="bingo-cell">Example that adds nothing</div>
+        <div class="bingo-cell">Fat bitch (referencing food constantly)</div>
+        <div class="bingo-cell">Awkward pause</div>
+        <div class="bingo-cell">Sitting on desk</div>
+        <div class="bingo-cell">Extremely long yap about something irrelevant</div>
+        <div class="bingo-cell">Covers board in crap that's useless</div>
+        <div class="bingo-cell">Crap video made on Google Slides</div>
+        <div class="bingo-cell">Standing in the most awkward spot</div>
+        <div class="bingo-cell">Question that makes no sense</div>
+        <div class="bingo-cell">Skipping slides</div>
+        <div class="bingo-cell">Hypocrite</div>
+        <div class="bingo-cell">Never gives out a reward point</div>
+        <div class="bingo-cell">FREE SPACE (Idk what to put here)</div>
+        <div class="bingo-cell">Expects reaction from class</div>
+        <div class="bingo-cell">BLT</div>
+        <div class="bingo-cell">Ignores student asking for help</div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.bingo-cell').forEach(cell => {
+            cell.addEventListener('click', () => {
+                cell.classList.toggle('crossed');
+            });
+        });
+    </script>
+</body>
+</html>

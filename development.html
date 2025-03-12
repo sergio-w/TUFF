@@ -1,0 +1,960 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="The best revision website ever!">
+  <script type="text/javascript" src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
+  <!-- Google tag (gtag.js) yay :D -->
+
+  <script>
+    performance.mark("main-content-loaded");
+
+    window.onload = function () {
+      performance.mark("fully-loaded");
+
+      const measure = performance.measure(
+        "Time-to-Full-Load",
+        "main-content-loaded",
+        "fully-loaded"
+      );
+
+      console.log("Time to fully load assets:", measure.duration, "ms");
+    };
+  </script>
+  <div class="loginsignshit">
+    <style scoped>
+      /* GLOBAL RESET AND BASE STYLES */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: sans-serif;
+        background: #f0f0f0;
+        /* A tall body so we can see the blur effect if you scroll */
+        height: 300vh;
+      }
+
+      /* BUTTON TO DEMO OPENING THE MODAL */
+      .open-btn {
+        display: block;
+        margin: 10vh auto;
+        padding: 2vw 4vw;
+        font-size: 2vw;
+        background: #3498db;
+        color: #fff;
+        border: none;
+        border-radius: 1vw;
+        cursor: pointer;
+        text-align: center;
+        width: fit-content;
+      }
+
+      .open-btn:hover {
+        background: #2980b9;
+      }
+
+      /* OVERLAY COVERS ENTIRE SCREEN WHEN VISIBLE */
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        display: none;
+        /* Hidden by default, shown by JS */
+        justify-content: center;
+        align-items: center;
+        z-index: 99999;
+        /* Super high z-index */
+        backdrop-filter: blur(1vw);
+        /* Blurs whatever is behind it */
+        background: rgba(0, 0, 0, 0.3);
+        /* Slight dark tint */
+      }
+
+      /* MODAL CONTAINER, ALWAYS CENTERED INSIDE OVERLAY */
+      .containerlog {
+        width: 70vw;
+        max-width: 40vw;
+        background: #fff;
+        border-radius: 1vw;
+        box-shadow: 0 0.5vw 1vw rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* CLOSE BUTTON IN TOP-RIGHT CORNER */
+      .close-btn {
+        position: absolute;
+        top: 1vw;
+        right: 1vw;
+        font-size: 2vw;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: #999;
+      }
+
+      .close-btn:hover {
+        color: #666;
+      }
+
+      /* TAB BUTTON AREA */
+      .tab-buttons {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .tab-buttons button {
+        flex: 1;
+        padding: 1vw;
+        background: #eee;
+        border: none;
+        cursor: pointer;
+        transition: background 0.3s;
+        font-size: 1.5vw;
+      }
+
+      .tab-buttons button.active {
+        background: #fff;
+        font-weight: bold;
+        border-bottom: 0.5vw solid #3498db;
+      }
+
+      /* FORM CONTAINER */
+      .form-container {
+        padding: 2vw;
+        transition: opacity 0.6s ease-in;
+      }
+
+      .form-container h2 {
+        text-align: center;
+        margin-bottom: 2vw;
+        font-size: 2vw;
+      }
+
+      .form-container input {
+        width: 100%;
+        padding: 1vw;
+        margin: 1vw 0;
+        border: 0.2vw solid #ddd;
+        border-radius: 0.5vw;
+        font-size: 1.2vw;
+      }
+
+      .form-container button.submit {
+        width: 100%;
+        padding: 1.2vw;
+        background: #3498db;
+        border: none;
+        color: #fff;
+        border-radius: 0.5vw;
+        cursor: pointer;
+        font-size: 1.5vw;
+        margin-top: 1.5vw;
+        transition: background 0.3s;
+      }
+
+      .form-container button.submit:hover {
+        background: #2980b9;
+      }
+
+      /* FADE-IN ANIMATION FOR FORM TRANSITIONS */
+      .fade-in {
+        opacity: 0;
+        animation: fadeIn 0.6s forwards;
+      }
+
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+        }
+      }
+    </style>
+    <div class="overlay" id="overlay">
+      <div class="containerlog">
+        <button class="close-btn" onclick="closeModal()">✕</button>
+
+        <div class="tab-buttons">
+          <button id="loginTab" class="active">Login</button>
+          <button id="signupTab">Sign Up</button>
+        </div>
+
+        <div id="loginForm" class="form-container fade-in">
+          <h2>Login</h2>
+          <input type="text" placeholder="Username" id="loginUsername" />
+          <input type="password" placeholder="Password" id="loginPassword" />
+          <button class="submit" onclick="login()">Login</button>
+        </div>
+
+        <div id="signupForm" class="form-container" style="display: none;">
+          <h2>Sign Up</h2>
+          <input type="text" placeholder="Username" id="signupUsername" />
+          <input type="email" placeholder="Email" id="signupEmail" />
+          <input type="password" placeholder="Password" id="signupPassword" />
+          <button class="submit" onclick="signup()">Sign Up</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const overlay = document.getElementById('overlay');
+    const loginTab = document.getElementById('loginTab');
+    const signupTab = document.getElementById('signupTab');
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+
+    function openModal() {
+      overlay.style.display = 'flex';
+      loginTab.classList.add('active');
+      signupTab.classList.remove('active');
+      loginForm.style.display = 'block';
+      signupForm.style.display = 'none';
+      loginForm.classList.remove('fade-in');
+      void loginForm.offsetWidth;
+      loginForm.classList.add('fade-in');
+    }
+
+    function closeModal() {
+      overlay.style.display = 'none';
+    }
+
+    loginTab.addEventListener('click', () => {
+      loginTab.classList.add('active');
+      signupTab.classList.remove('active');
+      signupForm.style.display = 'none';
+      loginForm.style.display = 'block';
+      loginForm.classList.remove('fade-in');
+      void loginForm.offsetWidth;
+      loginForm.classList.add('fade-in');
+    });
+
+    signupTab.addEventListener('click', () => {
+      signupTab.classList.add('active');
+      loginTab.classList.remove('active');
+      loginForm.style.display = 'none';
+      signupForm.style.display = 'block';
+      signupForm.classList.remove('fade-in');
+      void signupForm.offsetWidth;
+      signupForm.classList.add('fade-in');
+    });
+
+    function login() {
+      alert("Logging in...");
+      closeModal();
+    }
+
+    function signup() {
+      alert("Signing up...");
+      closeModal();
+    }
+  </script>
+
+
+
+  <!-- <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-KW15Q1QG97');
+
+    function LoadData() {
+      var TitleData = localStorage.getItem("Title");
+      var FaviData = localStorage.getItem("Favi");
+      console.log("Loaded title `" + TitleData + "` with icon `" + "/" + FaviData + "`");
+      if (TitleData === null) {
+        document.title = "JustStudy";
+        document.querySelector("link[rel='shortcut icon']").href = '/assets/img/favicon.ico';
+      }
+      else {
+        document.title = TitleData;
+        document.querySelector("link[rel='shortcut icon']").href = "/" + FaviData;
+      }
+    };
+    if (Notification.permission !== 'granted') {
+      Notification.requestPermission();
+    }
+    document.addEventListener('keydown', function (event) {
+      if (!detecting) {
+        //Renable this if it can be used and not disable the search bar
+        //event.preventDefault();
+        let input = "";
+        const keys = [];
+        if (event.ctrlKey) keys.push('Ctrl');
+        if (event.altKey) keys.push('Alt');
+        if (event.shiftKey) keys.push('Shift');
+        if (event.metaKey) keys.push('Meta');
+        keys.push(event.key);
+        input = keys.join('+');
+        const urls = [
+          "https://senecalearning.com/",
+          "https://www.sparxmaths.com",
+          "https://www.tassomai.com"
+        ]
+        if (input == localStorage.getItem("panickey")) {
+          if (localStorage.getItem("Title") == "Seneca - Learn 2x Faster") {
+            window.location.href = urls[0];
+          } if (localStorage.getItem("Title") == "Sparx Maths - Home") {
+            window.location.href = urls[1];
+          } if (localStorage.getItem("Title") == "Tassomai") {
+            window.location.href = urls[2];
+          } if (localStorage.getItem("Title") == "JustStudy") {
+            const randomIndex = Math.floor(Math.random() * 3);
+            window.location.href = urls[randomIndex];
+          }
+        }
+      }
+    });
+  </script> -->
+  <script src="assets/js/dontsavecookies.js"></script>
+
+  <!-- Get the Comfortaa font -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
+
+  <!-- more images -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+
+  <link rel="stylesheet" href="assets/css/main.css">
+
+</head>
+
+<body>
+  <!-- <script src="assets/js/teacher.js"> </script> -->
+
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      async function randomquote() {
+        const response = await fetch('./assets/data/quotes.json');
+        if (!response.ok) {
+          throw new Error('Failed to load JSON file');
+        }
+
+        const array = await response.json();
+
+        const randomIndex = Math.floor(Math.random() * array.length);
+
+        document.getElementById("loadingquote").textContent = array[randomIndex];
+      }
+
+      randomquote();
+
+      const announcement = document.querySelector(".announcementcontainer");
+      const closeAnnouncementBtn = document.getElementById("closeAnnouncement");
+      const loaderContainer = document.getElementById("loadercontainer");
+      const loaderBar = document.getElementById("loaderbar");
+      const loaderPercent = document.getElementById("loaderpercent");
+
+      let totalResources = 0;
+      let loadedResources = 0;
+
+      function updateLoader() {
+        let percent = Math.round((loadedResources / totalResources) * 100);
+        loaderBar.style.width = percent + "%";
+        loaderPercent.textContent = percent + "%";
+
+        if (percent >= 100) {
+          setTimeout(() => {
+            loaderContainer.style.opacity = "0";
+            setTimeout(() => {
+              loaderContainer.style.display = "none";
+              document.getElementById("announcementcontainer").style.display = "flex";
+            }, 500);
+          }, 500);
+        }
+      }
+
+
+      function countResources() {
+        const images = document.images;
+        const scripts = document.getElementsByTagName("script");
+        const stylesheets = document.getElementsByTagName("link");
+
+        totalResources = images.length + scripts.length + stylesheets.length;
+
+        if (totalResources === 0) {
+          updateLoader();
+        }
+      }
+
+      function trackResourceLoading() {
+        const elements = [
+          ...document.images,
+          ...document.scripts,
+          ...document.styleSheets
+        ];
+
+        elements.forEach(element => {
+          if (element.tagName === "SCRIPT" || element.tagName === "IMG") {
+            element.onload = () => {
+              loadedResources++;
+              updateLoader();
+            };
+            element.onerror = () => {
+              loadedResources++;
+              updateLoader();
+            };
+          }
+        });
+
+        window.addEventListener("load", () => {
+          loadedResources = totalResources;
+          updateLoader();
+        });
+      }
+
+      function closeAnnouncement() {
+        announcement.style.display = "none";
+      }
+
+      if (closeAnnouncementBtn) {
+        closeAnnouncementBtn.addEventListener("click", closeAnnouncement);
+      }
+
+      loaderContainer.style.top = "0";
+      countResources();
+      trackResourceLoading();
+    });
+
+
+  </script>
+  <div id="main-site">
+    <div class="toast-container position-fixed  text-white bottom-0 end-0 p-3">
+      <div id="welcomeToast" class="toast Not_color_bottom" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header Not_color_top">
+          <i class="fa fa-bell white-text" aria-hidden="true"></i>
+          <strong class="me-auto white-text">&nbsp;&nbsp;&nbsp;Welcome!</strong>
+          <small></small>
+          <button type="button" class="btn-close white-bg" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+          Welcome to JustStudy! Definitely a study website. Enjoy your time here!
+        </div>
+      </div>
+    </div>
+
+    <!-- BEGIN Notify Scripts -->
+    <script>
+
+      function updateToastText(id, text) {
+        document.getElementById(id).innerText = text;
+      };
+
+      if (localStorage.getItem('visited')) {
+      } else {
+        localStorage.setItem('visited', true);
+        document.addEventListener("DOMContentLoaded", () => {
+          const welcomeToast = bootstrap.Toast.getOrCreateInstance(document.getElementById("welcomeToast"));
+          TabCloak('JustStudy', 'assets/img/favicon.ico', 'JustStudy CE')
+          localStorage.setItem("panickey", "Alt+`");
+          localStorage.setItem("Title", "JustStudy");
+          localStorage.setItem("Favi", "assets/img/favicon.ico`");
+          welcomeToast.show()
+        });
+      };
+    </script>
+    <!-- END Notify Scripts -->
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById('settings-box').style.display = 'none';
+        document.getElementById('News').style.display = 'none';
+        document.getElementById('fade-under-settings').style.display = 'none';
+      })
+    </script>
+    <script src="assets/js/renderlist.js" defer></script>
+    <!-- for the sneaky will here is what i added this update. it was supprisingly easy-->
+    <div class="settings-box setting scrollable" style="text-align: center;" id="settings-box">
+      <h2 class="white-text" style="text-align: center;">Settings / apps</h2>
+      <div class="setting">
+        <center>
+          <hr class="rounded">
+          <h3 class="white-text" style="text-align: center;"> Page Options </h3>
+          <div class="dropdown" id="TabCloakOption" style="width: 20vw;">
+            <button class="btn btn-warning dropdown-toggle" type="button" data-bs-toggle="dropdown"
+              aria-expanded="false" id="SettingDropdown">
+              Tab Cloaker - JustStudy - CE
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark">
+              <li><a class="dropdown-item"
+                  onclick="TabCloak('JustStudy','assets/img/favicon.ico' , 'JustStudy CE' )">JustStudy CE</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item"
+                  onclick="TabCloak('Seneca - Learn 2x Faster','assets/img/TabCloak/Seneca.ico' , 'Seneca' )">Seneca</a>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item"
+                  onclick="TabCloak('Sparx Maths - Home', 'assets/img/TabCloak/Sparx.png', 'Sparx Maths ')">Sparx</a>
+              </li>
+              <li>
+                <hr class="dropdown-divider""></li>
+                  <li><a class=" dropdown-item"
+                  onclick="TabCloak('Tassomai', 'assets/img/TabCloak/Tassomai.ico' , 'Tassomai')">Tassomai</a>
+              </li>
+            </ul>
+          </div>
+          <h4 class="white-text"> Sort by: </h4>
+          <div class="dropdown" style="width: 20vw;">
+            <button class="btn btn-warning dropdown-toggle" id="SortList" type="button" data-bs-toggle="dropdown"
+              aria-expanded="false" id="SettingDropdown">
+              Sort list
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark">
+              <li><a class="dropdown-item" onclick="renderList('name')">Name</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" onclick="renderList('category')">Category</a></li>
+            </ul>
+          </div>
+          <hr class="rounded">
+          <h3 class="white-text" style="text-align: center;"> bootstrapper </h3>
+
+          <div class="mb-3 outline-warning">
+            <label for="basic-url" class="form-label">Url</label>
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon3">https://</span>
+              <input type="text" class="form-control" id="UrlBt" aria-describedby="basic-addon3 basic-addon4">
+              <button class="btn btn-outline-warning" type="button" onclick="" id="UrlButton">Open Link</button>
+            </div>
+            <div class="form-text" id="basic-addon4"></div>
+          </div>
+          <!-- Files -->
+          <label for="basic-url" class="form-label">File</label>
+          <div class="input-group">
+            <input type="file" class="form-control" id="FileInputBt" aria-describedby="inputGroupFileAddon04"
+              aria-label="Upload">
+            <button class="btn btn-outline-warning" type="button" id="inputGroupFileAddon04"
+              onmousedown="applyBootstrapFile()">Open File</button>
+          </div>
+          <hr class="rounded">
+          <h3 class="white-text" style="text-align: center;"> Panic button keybind </h3>
+          <button id="panicbutton" type="button" class="btn btn-warning">Start Detecting Keys</button>
+          <input type="text" id="result" style="color: white; text-align: center;" readonly
+            placeholder="Press a key or combination">
+          <br>
+          <label class="switch-container">
+            <div class="switch">
+              <input type="checkbox" id="redirectswitch">
+              <span class="slider round"></span>
+            </div>
+            <h3 class="white-text switch-text">Redirect on Alt Tab</h3>
+          </label>
+          <h4 class="white-text" style="text-align: center; font-size: 1vw; margin-top: 0.5vw">Press enter to stop input
+            detection!</h4>
+          <hr class="rounded">
+          <h3 class="white-text" style="text-align: center;"> Extra </h3>
+          <a class="btn btn-outline-warning" href="./sandbox.html" style="text-align: left;"><i class="fa fa-code"
+              aria-hidden="true"></i>| Sandbox</a>
+          <a class="btn btn-outline-warning" href="./fetcher.html" style="text-align: left;"><i
+              class="fa fa-file-archive-o" aria-hidden="true"></i>| File fetcher</a>
+          <br>
+          <div class="trustpilot-widget" data-locale="en-GB" data-template-id="56278e9abfbbba0bdcd568bc"
+            data-businessunit-id="67c8a5b0e6f7b850ba0d8afb" data-style-height="52px" data-style-width="100%">
+            <a href="https://uk.trustpilot.com/review/juststudy.uk" target="_blank" rel="noopener">Trustpilot</a>
+          </div>
+        </center>
+      </div>
+    </div>
+    <div class="mainbox" style="align-items: center;" id="iframe-box">
+      <div class="mainbox-top-margin">
+      </div>
+      <iframe id="frame-main" src="" width="95%" height="95%"> </iframe>
+    </div>
+    <div class="fade-under-settings" id="fade-under-settings"></div>
+    <script src="/assets/js/jss.js"></script>
+    <!-- end of what i added-->
+
+    <div class="gradient" id="gradient"></div>
+    <div style="display: flex; align-items: center; width: 50vw; margin: 0 auto; position: relative; z-index: 1;">
+      <a class="topbutton" href="qa.html" style="margin: 0 auto; position: relative; right: 8vw; cursor: pointer;">
+        <img src="assets/img/qna.png" alt="qna"
+          style="width: 3vw; height: 3vw; position: fixed; top: 50%; transform: translate(20%,-50%);">
+      </a>
+      <a class="topbutton" onclick="FeelingLucky()"
+        style="margin: 0 auto; position: relative; right: 7vw; cursor: pointer;">
+        <img src="assets/img/random.png" alt="random game picker"
+          style="width: 3vw; height: 3vw; position: fixed; top: 50%; transform: translate(20%,-50%);">
+      </a>
+      <a class="topbutton" onclick="showAnnouncement ()"
+        style="margin: 0 auto; position: relative; right: 6vw; cursor: pointer;">
+        <img src="assets/img/news.png" alt="Toggle The News"
+          style="width: 3vw; height: 3vw; position: fixed; top: 50%; transform: translate(20%,-50%);">
+      </a>
+      <a class="topbutton" onclick="toggleSettings()"
+        style="margin: 0 auto; position: relative; right: 5vw; cursor: pointer;">
+        <img src="assets/img/cog.png" alt="settings" style="width: 4vw; height: 4vw; position: fixed;">
+      </a>
+      <h1 class="page-title"
+        style="font-size: 4vw; color: white; margin: 0; text-align: center; flex-grow: 1; position: relative; right: 8vw; z-index: 1; font-weight: bold; z-index: -1; pointer-events: none;">
+        Just<span style="cursor: pointer; position: relative; pointer-events: auto; cursor: pointer;"
+          onclick="window.location.href='ahh.html'">S</span>tudy
+      </h1>
+
+      <input class="topBarItems searchBar" type="text" id="search-bar" placeholder="Search">
+      <div id="account-container" style="position: relative; margin-left: 1vw;">
+        <button id="account-button"
+          style="background: none; border: none; cursor: pointer; font-size: 2vw; color: white;">
+          <i class="fa fa-user"></i>
+        </button>
+        <!-- Account Menu -->
+        <div id="account-menu"
+          style="display: none; position: absolute; top: 120%; right: 0; background: #fff; border: 1px solid #ccc; border-radius: 0.5vw; padding: 1vw; min-width: 10vw; z-index: 100;">
+          <!-- Not logged in menu -->
+          <div id="not-logged-in-menu">
+            <button onclick="openModal()"
+              style="display: block; width: 100%; margin-bottom: 0.5vw;">Login/Signup</button>
+          </div>
+          <!-- Logged in menu -->
+          <div id="logged-in-menu" style="display: none;">
+            <a href="/profile.html" style="display: block; padding: 0.5vw 0;">Profile</a>
+            <a href="/settings.html" style="display: block; padding: 0.5vw 0;">Settings</a>
+            <a href="#" onclick="logout()" style="display: block; padding: 0.5vw 0;">Logout</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <script>
+      var isLoggedIn = false;
+
+      const accountButton = document.getElementById('account-button');
+      const accountMenu = document.getElementById('account-menu');
+      const notLoggedInMenu = document.getElementById('not-logged-in-menu');
+      const loggedInMenu = document.getElementById('logged-in-menu');
+
+      accountButton.addEventListener('click', function (e) {
+        e.stopPropagation();
+        // Toggle menu display
+        if (accountMenu.style.display === 'none' || accountMenu.style.display === '') {
+          accountMenu.style.display = 'block';
+          if (isLoggedIn) {
+            loggedInMenu.style.display = 'block';
+            notLoggedInMenu.style.display = 'none';
+          } else {
+            loggedInMenu.style.display = 'none';
+            notLoggedInMenu.style.display = 'block';
+          }
+        } else {
+          accountMenu.style.display = 'none';
+        }
+      });
+
+      // Hide the menu when clicking outside
+      document.addEventListener('click', function () {
+        accountMenu.style.display = 'none';
+      });
+
+      // Sample functions for login, signup, and logout
+      function login() {
+        alert('Login clicked');
+        isLoggedIn = true;
+      }
+
+      function signup() {
+        alert('Signup clicked');
+        // Add your signup logic here.
+      }
+
+      function logout() {
+        alert('Logout clicked');
+        // Add your logout logic here.
+        isLoggedIn = false;
+      }
+    </script>
+
+    <div class="page-desc" id="desc"></div>
+
+    <script>
+      function handleSearch() {
+        const searchTerm = document.getElementById("search-bar").value.toLowerCase();
+        const gridItems = document.querySelectorAll(".griditem");
+        const categoryContainers = document.querySelectorAll(".category-container");
+
+        gridItems.forEach(item => {
+          const itemName = item.querySelector(".listing-text").textContent.toLowerCase();
+
+          if (itemName.includes(searchTerm)) {
+            item.style.display = "block";
+          } else {
+            item.style.display = "none";
+          }
+        });
+        categoryContainers.forEach(container => {
+          const visibleItems = container.querySelectorAll('.griditem[style="display: block;"]');
+          const text = document.getElementById(container.id + "-text");
+          if (visibleItems.length == 0) {
+            text.style.display = "none";
+          } else {
+            text.style.display = "block";
+          }
+        });
+      }
+      document.getElementById("search-bar").addEventListener("input", handleSearch);
+    </script>
+    <script>
+      function FeelingLucky() {
+        fetch('assets/data/index.json')
+          .then(response => response.json())
+          .then(data => {
+            const randomarray = data[Math.floor(Math.random() * data.length)];
+            const link = randomarray["url"]
+            window.location.href = link;
+          })
+          .catch((error) => console.error("Error:", error))
+          .finally(() => {
+            document.getElementById("loader").style.display = "none";
+          });
+      }
+
+      function RandomColour() {
+        var colour = Math.floor(Math.random() * 6) + 1;
+
+        if (colour == 1) {
+          document.getElementById("desc").style.color = '#ffda8b'
+        }
+        else if (colour == 2) {
+          document.getElementById("desc").style.color = '#ffa08b'
+        }
+        else if (colour == 3) {
+          document.getElementById("desc").style.color = '#8bffa0'
+        }
+        else if (colour == 4) {
+          document.getElementById("desc").style.color = '#eaff8b'
+        }
+        else if (colour == 5) {
+          document.getElementById("desc").style.color = '#b0ff8b'
+        }
+        else if (colour == 6) {
+          document.getElementById("desc").style.color = '#8bffda'
+        }
+      }
+      document.addEventListener('DOMContentLoaded', function () {
+        const animationBox = document.getElementById('desc');
+        RandomColour();
+
+        function startDescAnimation() {
+          animationBox.classList.add('descslideout');
+          animationBox.addEventListener('animationend', handleAnimationEnd, { once: true });
+        }
+        randomdesc()
+
+
+      });
+      async function randomdesc() {
+        const response = await fetch('./assets/data/statusWords.json');
+        if (!response.ok) {
+          throw new Error('Failed to load JSON file');
+        }
+
+        const array = await response.json();
+
+        const randomIndex = Math.floor(Math.random() * array.length);
+
+        document.getElementById("desc").textContent = array[randomIndex];
+      }
+
+      function showAnnouncement() {
+        document.querySelector(".announcementcontainer").style.display = "flex";
+      }
+
+      // window.onload = showAnnouncement;
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/random_bg.js"></script>
+    <!-- Load Bootstrap JS -->
+    <div class="News" id="CardBox">
+      <center>
+        <h1 style="font-size: 3vw;"> news <span class="badge text-bg-warning"></span> </h1>
+      </center>
+      <button class="closebt" onclick="toggleNews()">X</button>
+      </center>
+      <iframe title="News" src="news.html" width="100%" height="91%" style="border-radius: 1vh;"> </iframe>
+    </div>
+    <script>
+      var NewsOpen = true;
+
+      function toggleNews() {
+        var Card = document.getElementById('CardBox');
+        if (NewsOpen) {
+          Card.classList.remove('fadeOutAnimation');
+          Card.style.display = 'block';
+          Card.classList.add('fadeInAnimation');
+        } else {
+          Card.classList.remove('fadeInAnimation');
+          Card.classList.add('fadeOutAnimation');
+        }
+        NewsOpen = !NewsOpen;
+      }
+      var SettingOpen = true;
+
+      function toggleSettings() {
+        var Card = document.getElementById('settings-box');
+        if (SettingOpen) {
+          Card.classList.remove('SettingsFadeOutAnimation');
+          Card.style.display = 'block';
+          Card.classList.add('SettingsFadeInAnimation');
+        } else {
+          Card.classList.remove('SettingsFadeInAnimation');
+          Card.classList.add('SettingsFadeOutAnimation');
+        }
+        SettingOpen = !SettingOpen;
+      }
+    </script>
+    <div class="text-center" id="loader">
+      <img src="assets/img/loader.gif" alt="Loader">
+      <p class="loader-text">Loading...</p>
+    </div>
+    <center>
+      <div class="mainbox" id="main-panel">
+        <div class="mainbox-top-margin">
+        </div>
+        <div class="container">
+          <div class="row row-cols-3" id="itembox">
+          </div>
+        </div>
+        <div id="category-container" class="container">
+        </div>
+      </div>
+    </center>
+
+
+    <script>
+
+      function openFrame(url) {
+        optimizeForIframe()
+        var Card = document.getElementById('iframe-box');
+        var iframe = document.getElementById('frame-main');
+        Card.style.display = 'block';
+        Card.classList.remove('FrameFadeInAnimation');
+        Card.classList.add('FrameFadeOutAnimation');
+        Card.classList.remove('FrameFadeOutAnimation');
+        Card.classList.add('FrameFadeInAnimation');
+        iframe.src = url;
+      }
+      document.addEventListener('DOMContentLoaded', function () {
+        const switchElement = document.getElementById('redirectswitch');
+        switchElement.checked = localStorage.getItem('redirect') === 'true';
+        var Card = document.getElementById('iframe-box');
+        Card.classList.remove('FrameFadeInAnimation');
+        Card.classList.add('FrameFadeOutAnimation');
+        Card.style.display = 'none';
+      });
+
+      showLoader();
+
+    </script>
+    <div class="text-center bottom-text" style="height:auto;">
+      <p style="font-size: 1.5vw;">JustStudy CE is proudly ad-free and open source! Get the source code and host
+        yourself
+        on <a style="font-size: 1.5vw;" href="https://github.com/JustStudy-CE/juststudy-ce">𝔾𝕚𝕥𝕙𝕦𝕓</a>.</p>
+      <p style="font-size: 1.5vw;">Join our <a style="font-size: 1.5vw;" href="assets/img/qr.png">𝔻𝕚𝕤𝕔𝕠𝕣𝕕
+          𝕤𝕖𝕣𝕧𝕖𝕣</a>!</p>
+      <p style="font-size: 1.5vw;">Hit counter:</p>
+      <a href="https://www.freecounterstat.com" title="website counter"><img
+          src="https://counter6.optistats.ovh/private/freecounterstat.php?c=e7q6e6dd17hut31lkgpqpjpzlrbjlbgt" border="0"
+          title="website counter" alt="website counter"></a>
+    </div>
+    <script>
+      (function () {
+        const STATUS_PAGE_URL = `${window.location.protocol}//${window.location.host}`; // Replace with your Uptime Kuma instance
+        const STATUS_API = `${STATUS_PAGE_URL}/status`; // Replace with the correct ID
+
+        var frame = document.createElement('div');
+        frame.style.position = 'fixed';
+        frame.style.bottom = '2vh';
+        frame.style.right = '2vw';
+        frame.style.width = '320px';
+        frame.style.background = '#ffffff';
+        frame.style.borderRadius = '2vh';
+        frame.style.boxShadow = '0 10px 20px rgba(0,0,0,0.2)';
+        frame.style.zIndex = '9999';
+        frame.style.padding = '2vh';
+        frame.style.fontFamily = 'Arial, sans-serif';
+        frame.style.display = 'none';
+
+        var title = document.createElement('h3');
+        title.style.margin = '0 0 1vh';
+        title.style.fontSize = '2.5vh';
+        title.style.color = '#333';
+        frame.appendChild(title);
+
+        var incidentText = document.createElement('p');
+        incidentText.style.fontSize = '2vh';
+        incidentText.style.color = '#666';
+        frame.appendChild(incidentText);
+
+        var closeButton = document.createElement('button');
+        closeButton.innerText = 'Dismiss';
+        closeButton.style.background = '#d9534f';
+        closeButton.style.color = '#fff';
+        closeButton.style.border = 'none';
+        closeButton.style.padding = '1vh 2vw';
+        closeButton.style.marginTop = '1vh';
+        closeButton.style.borderRadius = '1vh';
+        closeButton.style.cursor = 'pointer';
+        closeButton.onclick = function () {
+          frame.style.display = 'none';
+        };
+        frame.appendChild(closeButton);
+
+        document.body.appendChild(frame);
+
+        function fetchStatus() {
+          fetch(STATUS_API)
+            .then(response => response.json())
+            .then(data => {
+              if (data.incident && data.incident.title) {
+                incidentText.innerText = `${data.incident.content}`;
+                title.innerText = `Incident Update: ${data.incident.title}`;
+                frame.style.display = 'block';
+              } else {
+                frame.style.display = 'none';
+              }
+            })
+            .catch(err => {
+              console.error('Error fetching Uptime Kuma status:', err);
+              incidentText.innerText = 'Error fetching status';
+            });
+        }
+
+        fetchStatus();
+      })();
+    </script>
+  </div>
+  <!-- <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
+    data-id="juststudy" data-description="Support me on Buy me a coffee!" data-message="Support the project!"
+    data-color="#5F7FFF" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+  <script src="//d2wy8f7a9ursnm.cloudfront.net/v8/bugsnag.min.js"></script> -->
+  <script type="module">
+    import BugsnagPerformance from '//d2wy8f7a9ursnm.cloudfront.net/v1/bugsnag-performance.min.js'
+    Bugsnag.start({ apiKey: '5dd4372f94a80e6a7c4326803b4e2639' })
+    BugsnagPerformance.start({ apiKey: '5dd4372f94a80e6a7c4326803b4e2639' })
+  </script>
+  <script type="module">
+    import BugsnagPerformance from '//d2wy8f7a9ursnm.cloudfront.net/v1/bugsnag-performance.min.js'
+    BugsnagPerformance.start({ apiKey: '5dd4372f94a80e6a7c4326803b4e2639' })
+  </script>
+</body>
+
+</html>

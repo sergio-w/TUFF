@@ -1,0 +1,158 @@
+:root {
+  --stark: #10A800;
+  --purple: #4F1B8A;
+  --pink: #C546C4;
+  --pink_dark: #F421A7;
+  --red: #D70779;
+  --red_dark: #8A0468;
+  --pastel: #F2ECC4;
+  --p1: #70E36D;
+  --p2: #5CBDAE;
+  --p3: #5B7CE3;
+}
+
+@font-face {
+    font-family: 'pixeled'; /*a name to be used later*/
+    src: url('../assets/pixeled.ttf'); /*URL to font*/
+}
+
+body {
+  font-family: "pixeled", Arial;
+  height: 200px;
+}
+
+#name_error {
+  color: red;
+}
+
+.speedrun_info {
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.leaderboard_buttons {
+  font-family: 'pixeled';
+  background: black;
+}
+
+
+#inner_loading {
+  z-index: 60;
+  position: fixed;
+  background: black;
+  color: white;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  font-family: Arial;
+}
+
+#popup {
+  color: white;
+  visibility: hidden;
+  background: rgba(0,0,0,0.9);
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 22;
+  overflow-y: scroll;
+}
+
+
+/* CUP */
+.cup {
+  padding-top: 10px;
+  margin-bottom: 20px;
+}
+
+.cup_name {
+  color: white;
+  font-size: 28px;
+}
+
+.play_cup {
+  display: inline-block;
+  border: 4px solid white;
+  padding: 18px 54px;
+  margin: 2px 4px;
+  font-size: 18px;
+  cursor: pointer;
+  background: rgba(0,0,0,0.3);
+  box-shadow: 0px 0px 10px white;
+  border-radius: 10px;
+}
+.progress_inner {
+  background: white;
+}
+
+.progress_outer {
+  background: rgba(0,0,0,0.3);
+  padding: 10px;
+  width: 200px;
+  margin-bottom: 10px;
+  text-align: left;
+  border-radius: 10px;
+}
+
+/* MAP */
+.more_info {
+  margin-top: 30px;
+}
+.map {
+  padding: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  background: black;
+}
+
+.map_name {
+  font-size: 14px;
+}
+
+.map_desc {
+  font-size: 10px;
+}
+
+div.map:hover , .play_cup:hover , .leaderboard_buttons:hover {
+  background: rgb(79,27,138);
+  background: linear-gradient(90deg, var(--red_dark) 0%, var(--red) 100%);
+  box-shadow: inset 0 0 20px var(--pink);
+}
+div.map:hover , div.map:hover * {
+  color: white !important;
+}
+
+/* achievement colors */
+.done_z * {
+  color: #CFA569 !important;
+}
+
+.done_a * {
+  color: #70E36D !important;
+}
+
+.done_b * {
+  color: #5CBDAE !important;
+}
+
+.done_c * {
+  color: #5B7CE3 !important;
+}
+
+.done_d * {
+  color: #965be3 !important;
+}
+.done_e * {
+  color: #e35b9d !important;
+}
+
+
+.my_ad {
+  width: 200px;
+}
+.my_ad:hover {
+  color: #e35b9d;
+  border-color: #e35b9d;
+}
