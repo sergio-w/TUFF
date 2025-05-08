@@ -7,7 +7,7 @@
 
 [![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/x34JUwP5WR)
 
-## Deployment buttons (made by [BinBashBanana](https://github.com/BinBashBanana))
+## Deployment buttons
 
 [![Deploy to Heroku](https://binbashbanana.github.io/deploy-buttons/buttons/remade/heroku.svg)](https://heroku.com/deploy/?template=https://github.com/metalfoxdev/juststudy-site/)
 [![Run on Replit](https://binbashbanana.github.io/deploy-buttons/buttons/remade/replit.svg)](https://replit.com/github/metalfoxdev/juststudy-site)
