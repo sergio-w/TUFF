@@ -37,7 +37,7 @@
       var FaviData = localStorage.getItem("Favi");
       console.log("Loaded title `" + TitleData + "` with icon `" + "/" + FaviData + "`");
       if (TitleData === null) {
-        document.title = "JustStudy";
+        document.title = "SuperStudy";
         document.querySelector("link[rel='shortcut icon']").href = '/assets/img/favicon.ico';
       }
       else {
@@ -160,7 +160,7 @@
         font-size: 2rem;
         text-align: center;
       ">
-          JustStudy Announcements and Updates
+          SuperStudy Announcements and Updates
         </h2>
 
         <div class="announcementmaincontent" style="font-size: 1.2rem; line-height: 1.8; color: #dcddde">
@@ -316,8 +316,8 @@ margin: 1.5rem 0;
       opacity: 1;
     }
 
-    /* "JustStudy" text (absolute center, hidden initially) */
-    #juststudy-text {
+    /* "SuperStudy" text (absolute center, hidden initially) */
+    #superstudy-text {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -344,7 +344,7 @@ margin: 1.5rem 0;
       }
     }
 
-    /* Keyframes for "JustStudy":
+    /* Keyframes for "SuperStudy":
        2s total (will start at 1s delay => finishes at 3s) */
     @keyframes scaleFadeSpin {
 
@@ -405,7 +405,7 @@ margin: 1.5rem 0;
   <!-- <div id="welcome-screen">
     <h1 id="welcome-text">WELCOME</h1>
     <h1 id="to-text">TO</h1>
-    <h1 id="juststudy-text">JustStudy</h1>
+    <h1 id="juststudy-text">SuperStudy</h1>
   </div> -->
 
   <script>
